@@ -14,7 +14,18 @@ import argparse
 from datetime import datetime, timezone, timedelta
 from typing import Dict, Any, List, Optional
 
+# Fix Windows console encoding for emoji/unicode
+if sys.platform == 'win32':
+    try:
+        sys.stdout.reconfigure(encoding='utf-8')
+        sys.stderr.reconfigure(encoding='utf-8')
+    except Exception:
+        pass
+
 import pandas as pd
+from dotenv import load_dotenv
+
+load_dotenv()
 
 from config import (
     DATA_DIR,
@@ -164,6 +175,7 @@ def format_game_card(analysis: Dict[str, Any], game_info: Dict[str, Any], odds_d
 
 
 def run_alert_cycle(
+    target_date_str: Optional[str] = None,
     dry_run: bool = False,
     force: bool = False,
     window_min: int = 20,
@@ -172,7 +184,10 @@ def run_alert_cycle(
 ) -> int:
     """Run one alert check cycle. Returns count of dispatched games."""
     now_thai = datetime.now(THAI_TZ)
-    today_thai_date = now_thai.date()
+    if target_date_str:
+        today_thai_date = datetime.strptime(target_date_str, '%Y-%m-%d').date()
+    else:
+        today_thai_date = now_thai.date()
     date_str = today_thai_date.strftime('%Y-%m-%d')
 
     logger.info(f"Scanning scoreboard for {date_str} (current Thai time: {now_thai.strftime('%H:%M:%S')})...")
@@ -306,6 +321,7 @@ def run_alert_cycle(
 
 def main():
     parser = argparse.ArgumentParser(description="NBA 30-Minute Pre-Game Alert Dispatcher")
+    parser.add_argument('--date', type=str, default=None, help="Target date YYYY-MM-DD (default: today in Thai time)")
     parser.add_argument('--dry-run', action='store_true', help="Preview output without sending Telegram message")
     parser.add_argument('--force', action='store_true', help="Force evaluate upcoming games regardless of 20-45m window")
     parser.add_argument('--test-message', action='store_true', help="Send test ping to Telegram to verify setup")
@@ -332,6 +348,7 @@ def main():
             sys.exit(1)
 
     dispatched = run_alert_cycle(
+        target_date_str=args.date,
         dry_run=args.dry_run,
         force=args.force,
         window_min=args.window_min,
