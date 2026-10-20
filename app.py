@@ -13,7 +13,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from collectors.espn_collector import ESPNCollector
 from processing.feature_engineering import FeatureEngineer
 from analysis.trend_analyzer import TrendAnalyzer
-from config import parse_spread, calculate_home_spread, resolve_team_info
+from config import parse_spread, calculate_home_spread, resolve_team_info, normalize_team_name
 
 # Translation mapping for recommendations
 def t_rec(rec):
