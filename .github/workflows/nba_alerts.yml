@@ -39,7 +39,7 @@ jobs:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
           STREAMLIT_APP_URL: ${{ secrets.STREAMLIT_APP_URL }}
         run: |
-          python run_alerts.py
+          python run_alerts.py --window-min 10 --window-max 48
 
       - name: Commit & Push Alert State
         run: |
