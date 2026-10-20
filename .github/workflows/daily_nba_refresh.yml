@@ -1,0 +1,42 @@
+name: Daily NBA Data Refresh
+
+on:
+  schedule:
+    # Run once daily at 06:00 AM Thai Time (UTC 23:00 previous day)
+    - cron: '0 23 * * *'
+  workflow_dispatch: # Allows manual trigger anytime from GitHub Web UI
+
+jobs:
+  daily-refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Refresh NBA Datasets & Stats
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: |
+          python main.py refresh
+
+      - name: Commit & Push Fresh Datasets
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add data/raw/
+          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: daily NBA data refresh [skip ci]" && git push)
