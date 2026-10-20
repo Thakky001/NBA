@@ -743,12 +743,6 @@
     "ast_hash": "4f71000a62ea979692d905847df8a7eb",
     "semantic_hash": ""
   },
-  "verify_collectors.py": {
-    "mtime": 1791902775.3472502,
-    "seen": 1792470278.632546,
-    "ast_hash": "0d8578896e02c1bb70634dfeeaab9107",
-    "semantic_hash": ""
-  },
   ".agents/skills/deploy-to-vercel/SKILL.md": {
     "mtime": 1792405403.1716473,
     "seen": 1792470278.6325471,
@@ -2021,18 +2015,6 @@
     "ast_hash": "29f58ed0b13c290b859979bab77fa97d",
     "semantic_hash": ""
   },
-  "1.txt": {
-    "mtime": 1792498599.8525522,
-    "seen": 1792498945.9435384,
-    "ast_hash": "07526d5eb79258d7af251f6776f1991f",
-    "semantic_hash": ""
-  },
-  "QA_REPORT.md": {
-    "mtime": 1792376057.1430004,
-    "seen": 1792470278.6328552,
-    "ast_hash": "2477012f9a4d790e0ab6bc2d41f087f1",
-    "semantic_hash": ""
-  },
   "requirements.txt": {
     "mtime": 1792372352.2190506,
     "seen": 1792470278.6328566,
@@ -2118,15 +2100,15 @@
     "semantic_hash": ""
   },
   ".github/workflows/daily_nba_refresh.yml": {
-    "mtime": 1792490052.4422915,
-    "seen": 1792490201.2356942,
-    "ast_hash": "6058ac85b7c704671155aadeb45742d9",
+    "mtime": 1792499766.4390078,
+    "seen": 1792501625.6377323,
+    "ast_hash": "dd7d327af52534ea9c26191f650b5217",
     "semantic_hash": ""
   },
   ".github/workflows/nba_alerts.yml": {
-    "mtime": 1792490045.3722186,
-    "seen": 1792490201.235696,
-    "ast_hash": "f932ae0b3154d094565b58b9034126b7",
+    "mtime": 1792499758.6820838,
+    "seen": 1792501625.6377354,
+    "ast_hash": "dc9c227f47e940c0d0f4f67c893093cf",
     "semantic_hash": ""
   },
   ".devcontainer/devcontainer.json": {
