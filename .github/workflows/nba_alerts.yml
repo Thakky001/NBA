@@ -6,6 +6,9 @@ on:
     - cron: '*/25 18-23,0-5 * * *'
   workflow_dispatch: # Allows manual trigger anytime from GitHub Web UI
 
+permissions:
+  contents: write
+
 jobs:
   pre-game-alert:
     runs-on: ubuntu-latest
