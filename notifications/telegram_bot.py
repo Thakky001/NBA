@@ -15,8 +15,8 @@ class TelegramNotifier:
     """Client for dispatching rich HTML notifications to Telegram channels or users."""
 
     def __init__(self, bot_token: Optional[str] = None, chat_id: Optional[str] = None):
-        self.bot_token = bot_token or os.getenv('TELEGRAM_BOT_TOKEN', '')
-        self.chat_id = chat_id or os.getenv('TELEGRAM_CHAT_ID', '')
+        self.bot_token = os.getenv('TELEGRAM_BOT_TOKEN', '') if bot_token is None else bot_token
+        self.chat_id = os.getenv('TELEGRAM_CHAT_ID', '') if chat_id is None else chat_id
         self.base_url = f"https://api.telegram.org/bot{self.bot_token}"
 
     @property

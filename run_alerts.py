@@ -51,7 +51,7 @@ logger = logging.getLogger('nba_alerts')
 
 THAI_TZ = timezone(timedelta(hours=7))
 ALERT_LEDGER_PATH = os.path.join(RAW_DIR, 'alerted_games.json')
-DEFAULT_DASHBOARD_URL = os.getenv('STREAMLIT_APP_URL', 'https://nba-edge-trends.streamlit.app')
+DEFAULT_DASHBOARD_URL = os.getenv('STREAMLIT_APP_URL', 'https://hetu8dr75jdcavumnqk6jz.streamlit.app/')
 
 
 def load_alerted_ledger() -> Dict[str, List[str]]:
@@ -296,7 +296,8 @@ def run_alert_cycle(
     separator = "\n────────────────────\n"
     footer = (
         f"\n━━━━━━━━━━━━━━━━━━━━\n"
-        f"👉 <a href='{dashboard_url}'>เปิดดูตารางวิเคราะห์สดเต็มรูปแบบบน Dashboard</a>"
+        f"📊 <b>เปิดดู Dashboard วิเคราะห์สดเต็มรูปแบบ:</b>\n"
+        f"👉 <a href='{dashboard_url}'>{dashboard_url}</a>"
     )
 
     full_message = header + separator.join(cards) + footer
