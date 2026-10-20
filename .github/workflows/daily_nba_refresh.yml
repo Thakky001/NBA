@@ -2,8 +2,8 @@ name: Daily NBA Data Refresh
 
 on:
   schedule:
-    # Run once daily at 06:00 AM Thai Time (UTC 23:00 previous day)
-    - cron: '0 23 * * *'
+    # Run once daily at 06:15 AM Thai Time (UTC 23:15 previous day) to avoid top-of-hour congestion
+    - cron: '15 23 * * *'
   workflow_dispatch: # Allows manual trigger anytime from GitHub Web UI
 
 permissions:
