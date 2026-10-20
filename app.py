@@ -218,7 +218,7 @@ with st.spinner("กำลังประมวลผลการวิเคร
                 # O/U Column
                 with col1:
                     st.markdown("### 📊 วิเคราะห์ สูง/ต่ำ (Over/Under)")
-                    st.markdown(f"**เรตราคาเปิดมาที่:** `{ou_val if ou_val else 'ยังไม่ออกราคา'}`")
+                    st.markdown(f"**เรตราคาเปิดมาที่:** `{ou_val:.1f}`" if ou_val is not None else "**เรตราคาเปิดมาที่:** `ยังไม่ออกราคา`")
                     
                     ou_res = analysis.get('over_under')
                     if ou_res:
@@ -288,7 +288,11 @@ with st.spinner("กำลังประมวลผลการวิเคร
                 # Spread Column
                 with col2:
                     st.markdown("### ⚖️ วิเคราะห์ แต้มต่อ (Spread)")
-                    st.markdown(f"**เรตราคาเปิดมาที่:** `{home} {sp_val}`" if sp_val else "**เรตราคาเปิดมาที่:** `ยังไม่ออกราคา`")
+                    if sp_val is not None:
+                        sp_str = f"{home} {sp_val:+.1f}" if sp_val != 0.0 else f"{home} PK (0.0)"
+                        st.markdown(f"**เรตราคาเปิดมาที่:** `{sp_str}`")
+                    else:
+                        st.markdown("**เรตราคาเปิดมาที่:** `ยังไม่ออกราคา`")
                     
                     sp_res = analysis.get('spread')
                     if sp_res:

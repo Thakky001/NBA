@@ -32,6 +32,12 @@ CDN_BOXSCORE_TEMPLATE: str = "https://cdn.nba.com/static/json/liveData/boxscore/
 
 # API Keys
 ODDS_API_KEY: str = os.getenv("ODDS_API_KEY", "")
+if not ODDS_API_KEY:
+    try:
+        import streamlit as st
+        ODDS_API_KEY = st.secrets.get("ODDS_API_KEY", "")
+    except Exception:
+        pass
 
 # stats.nba.com Headers (required for nba_api / direct requests)
 STATS_HEADERS: Dict[str, str] = {

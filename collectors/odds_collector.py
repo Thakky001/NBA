@@ -18,6 +18,12 @@ class OddsCollector:
             self.api_key = ODDS_API_KEY
         except Exception:
             self.api_key = ""
+        if not self.api_key:
+            try:
+                import streamlit as st
+                self.api_key = st.secrets.get("ODDS_API_KEY", "")
+            except Exception:
+                pass
         self.base_url = 'https://api.the-odds-api.com/v4/sports/basketball_nba/odds'
         self.max_retries = max_retries
         self.retry_delay = retry_delay
@@ -118,8 +124,8 @@ class OddsCollector:
             return self._cached_games
 
         if not self.api_key:
-            logger.warning("ODDS_API_KEY not set in config; activating fallback data from local cache.")
-            return self._load_fallback_odds_list()
+            logger.info("ODDS_API_KEY not set; skipping live bookmakers fetch.")
+            return []
 
         params = {
             'apiKey': self.api_key,
@@ -156,16 +162,19 @@ class OddsCollector:
                     self.time.sleep(sleep_time)
 
         logger.warning(
-            f"All {self.max_retries} attempts failed to fetch live odds: {last_error}; activating fallback data from local cache."
+            f"All {self.max_retries} attempts failed to fetch live odds: {last_error}"
         )
-        return self._load_fallback_odds_list()
+        return []
 
     def get_game_odds(self, home_team: str, away_team: str) -> Dict:
         """Fetch odds for a specific matchup from multiple bookmakers."""
         try:
             games = self._fetch_all_odds()
             if not games:
-                games = self._load_fallback_odds_list()
+                return {
+                    'spreads': {},
+                    'totals': {}
+                }
 
             from config import normalize_team_name, resolve_team_info
 
