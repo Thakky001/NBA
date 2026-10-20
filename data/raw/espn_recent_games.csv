@@ -1,0 +1,139 @@
+game_id,date,status,home_team,home_id,home_score,away_team,away_id,away_score,spread,over_under,home_ml,away_ml,venue
+401869411,2026-04-22 23:00:00+00:00,STATUS_FINAL,Detroit Pistons,8,98,Orlando Magic,19,83,,,,,Little Caesars Arena
+401869368,2026-04-23 01:30:00+00:00,STATUS_FINAL,Oklahoma City Thunder,25,120,Phoenix Suns,21,107,,,,,Paycom Center
+401869389,2026-04-23 23:00:00+00:00,STATUS_FINAL,Atlanta Hawks,1,109,New York Knicks,18,108,,,,,State Farm Arena
+401869375,2026-04-24 00:00:00+00:00,STATUS_FINAL,Toronto Raptors,28,126,Cleveland Cavaliers,5,104,,,,,Scotiabank Arena
+401869398,2026-04-24 01:30:00+00:00,STATUS_FINAL,Minnesota Timberwolves,16,113,Denver Nuggets,7,96,,,,,Target Center
+401869404,2026-04-24 23:00:00+00:00,STATUS_FINAL,Philadelphia 76ers,20,100,Boston Celtics,2,108,,,,,Xfinity Mobile Arena
+401869400,2026-04-25 00:00:00+00:00,STATUS_FINAL,Houston Rockets,10,108,Los Angeles Lakers,13,112,,,,,Toyota Center (Houston)
+401869382,2026-04-25 02:30:00+00:00,STATUS_FINAL,Portland Trail Blazers,22,108,San Antonio Spurs,24,120,,,,,Moda Center
+401869414,2026-04-25 17:00:00+00:00,STATUS_FINAL,Orlando Magic,19,113,Detroit Pistons,8,105,,,,,Kia Center
+401869370,2026-04-25 19:30:00+00:00,STATUS_FINAL,Phoenix Suns,21,109,Oklahoma City Thunder,25,121,,,,,Mortgage Matchup Center
+401869391,2026-04-25 22:00:00+00:00,STATUS_FINAL,Atlanta Hawks,1,98,New York Knicks,18,114,,,,,State Farm Arena
+401869399,2026-04-26 00:30:00+00:00,STATUS_FINAL,Minnesota Timberwolves,16,112,Denver Nuggets,7,96,,,,,Target Center
+401869377,2026-04-26 17:00:00+00:00,STATUS_FINAL,Toronto Raptors,28,93,Cleveland Cavaliers,5,89,,,,,Scotiabank Arena
+401869385,2026-04-26 19:30:00+00:00,STATUS_FINAL,Portland Trail Blazers,22,93,San Antonio Spurs,24,114,,,,,Moda Center
+401869406,2026-04-26 23:00:00+00:00,STATUS_FINAL,Philadelphia 76ers,20,96,Boston Celtics,2,128,,,,,Xfinity Mobile Arena
+401869405,2026-04-27 01:30:00+00:00,STATUS_FINAL,Houston Rockets,10,115,Los Angeles Lakers,13,96,,,,,Toyota Center (Houston)
+401869415,2026-04-28 00:00:00+00:00,STATUS_FINAL,Orlando Magic,19,94,Detroit Pistons,8,88,,,,,Kia Center
+401869373,2026-04-28 01:30:00+00:00,STATUS_FINAL,Phoenix Suns,21,122,Oklahoma City Thunder,25,131,,,,,Mortgage Matchup Center
+401869401,2026-04-28 02:30:00+00:00,STATUS_FINAL,Denver Nuggets,7,125,Minnesota Timberwolves,16,113,,,,,Ball Arena
+401869408,2026-04-28 23:00:00+00:00,STATUS_FINAL,Boston Celtics,2,97,Philadelphia 76ers,20,113,,,,,TD Garden
+401869392,2026-04-29 00:00:00+00:00,STATUS_FINAL,New York Knicks,18,126,Atlanta Hawks,1,97,,,,,Madison Square Garden
+401869386,2026-04-29 01:30:00+00:00,STATUS_FINAL,San Antonio Spurs,24,114,Portland Trail Blazers,22,95,,,,,Frost Bank Center
+401869416,2026-04-29 23:00:00+00:00,STATUS_FINAL,Detroit Pistons,8,116,Orlando Magic,19,109,,,,,Little Caesars Arena
+401869380,2026-04-29 23:30:00+00:00,STATUS_FINAL,Cleveland Cavaliers,5,125,Toronto Raptors,28,120,,,,,Rocket Arena
+401869407,2026-04-30 02:00:00+00:00,STATUS_FINAL,Los Angeles Lakers,13,93,Houston Rockets,10,99,,,,,crypto.com Arena
+401869393,2026-04-30 23:00:00+00:00,STATUS_FINAL,Atlanta Hawks,1,89,New York Knicks,18,140,,,,,State Farm Arena
+401869410,2026-05-01 00:00:00+00:00,STATUS_FINAL,Philadelphia 76ers,20,106,Boston Celtics,2,93,,,,,Xfinity Mobile Arena
+401869402,2026-05-01 01:30:00+00:00,STATUS_FINAL,Minnesota Timberwolves,16,110,Denver Nuggets,7,98,,,,,Target Center
+401869417,2026-05-01 23:00:00+00:00,STATUS_FINAL,Orlando Magic,19,79,Detroit Pistons,8,93,,,,,Kia Center
+401869381,2026-05-01 23:30:00+00:00,STATUS_FINAL,Toronto Raptors,28,112,Cleveland Cavaliers,5,110,,,,,Scotiabank Arena
+401869409,2026-05-02 01:30:00+00:00,STATUS_FINAL,Houston Rockets,10,78,Los Angeles Lakers,13,98,,,,,Toyota Center (Houston)
+401869412,2026-05-02 23:30:00+00:00,STATUS_FINAL,Boston Celtics,2,100,Philadelphia 76ers,20,109,,,,,TD Garden
+401869418,2026-05-03 19:30:00+00:00,STATUS_FINAL,Detroit Pistons,8,116,Orlando Magic,19,94,,,,,Little Caesars Arena
+401869384,2026-05-03 23:30:00+00:00,STATUS_FINAL,Cleveland Cavaliers,5,114,Toronto Raptors,28,102,,,,,Rocket Arena
+401871159,2026-05-05 00:00:00+00:00,STATUS_FINAL,New York Knicks,18,137,Philadelphia 76ers,20,98,,,,,Madison Square Garden
+401871152,2026-05-05 01:30:00+00:00,STATUS_FINAL,San Antonio Spurs,24,102,Minnesota Timberwolves,16,104,,,,,Frost Bank Center
+401871333,2026-05-05 23:00:00+00:00,STATUS_FINAL,Detroit Pistons,8,111,Cleveland Cavaliers,5,101,,,,,Little Caesars Arena
+401871326,2026-05-06 00:30:00+00:00,STATUS_FINAL,Oklahoma City Thunder,25,108,Los Angeles Lakers,13,90,,,,,Paycom Center
+401871160,2026-05-06 23:00:00+00:00,STATUS_FINAL,New York Knicks,18,108,Philadelphia 76ers,20,102,,,,,Madison Square Garden
+401871153,2026-05-07 01:30:00+00:00,STATUS_FINAL,San Antonio Spurs,24,133,Minnesota Timberwolves,16,95,,,,,Frost Bank Center
+401871334,2026-05-07 23:00:00+00:00,STATUS_FINAL,Detroit Pistons,8,107,Cleveland Cavaliers,5,97,,,,,Little Caesars Arena
+401871327,2026-05-08 01:30:00+00:00,STATUS_FINAL,Oklahoma City Thunder,25,125,Los Angeles Lakers,13,107,,,,,Paycom Center
+401871161,2026-05-08 23:00:00+00:00,STATUS_FINAL,Philadelphia 76ers,20,94,New York Knicks,18,108,,,,,Xfinity Mobile Arena
+401871154,2026-05-09 01:30:00+00:00,STATUS_FINAL,Minnesota Timberwolves,16,108,San Antonio Spurs,24,115,,,,,Target Center
+401871335,2026-05-09 19:00:00+00:00,STATUS_FINAL,Cleveland Cavaliers,5,116,Detroit Pistons,8,109,,,,,Rocket Arena
+401871328,2026-05-10 00:30:00+00:00,STATUS_FINAL,Los Angeles Lakers,13,108,Oklahoma City Thunder,25,131,,,,,crypto.com Arena
+401871162,2026-05-10 19:30:00+00:00,STATUS_FINAL,Philadelphia 76ers,20,114,New York Knicks,18,144,,,,,Xfinity Mobile Arena
+401871155,2026-05-10 23:30:00+00:00,STATUS_FINAL,Minnesota Timberwolves,16,114,San Antonio Spurs,24,109,,,,,Target Center
+401871336,2026-05-12 00:00:00+00:00,STATUS_FINAL,Cleveland Cavaliers,5,112,Detroit Pistons,8,103,,,,,Rocket Arena
+401871329,2026-05-12 02:30:00+00:00,STATUS_FINAL,Los Angeles Lakers,13,110,Oklahoma City Thunder,25,115,,,,,crypto.com Arena
+401871156,2026-05-13 00:00:00+00:00,STATUS_FINAL,San Antonio Spurs,24,126,Minnesota Timberwolves,16,97,,,,,Frost Bank Center
+401871337,2026-05-14 00:00:00+00:00,STATUS_FINAL,Detroit Pistons,8,113,Cleveland Cavaliers,5,117,,,,,Little Caesars Arena
+401871338,2026-05-15 23:00:00+00:00,STATUS_FINAL,Cleveland Cavaliers,5,94,Detroit Pistons,8,115,,,,,Rocket Arena
+401871157,2026-05-16 01:30:00+00:00,STATUS_FINAL,Minnesota Timberwolves,16,109,San Antonio Spurs,24,139,,,,,Target Center
+401871339,2026-05-18 00:00:00+00:00,STATUS_FINAL,Detroit Pistons,8,94,Cleveland Cavaliers,5,125,,,,,Little Caesars Arena
+401873197,2026-05-19 00:30:00+00:00,STATUS_FINAL,Oklahoma City Thunder,25,115,San Antonio Spurs,24,122,,,,,Paycom Center
+401873341,2026-05-20 00:00:00+00:00,STATUS_FINAL,New York Knicks,18,115,Cleveland Cavaliers,5,104,,,,,Madison Square Garden
+401873198,2026-05-21 00:30:00+00:00,STATUS_FINAL,Oklahoma City Thunder,25,122,San Antonio Spurs,24,113,,,,,Paycom Center
+401873342,2026-05-22 00:00:00+00:00,STATUS_FINAL,New York Knicks,18,109,Cleveland Cavaliers,5,93,,,,,Madison Square Garden
+401873199,2026-05-23 00:30:00+00:00,STATUS_FINAL,San Antonio Spurs,24,108,Oklahoma City Thunder,25,123,,,,,Frost Bank Center
+401873343,2026-05-24 00:00:00+00:00,STATUS_FINAL,Cleveland Cavaliers,5,108,New York Knicks,18,121,,,,,Rocket Arena
+401873200,2026-05-25 00:00:00+00:00,STATUS_FINAL,San Antonio Spurs,24,103,Oklahoma City Thunder,25,82,,,,,Frost Bank Center
+401873344,2026-05-26 00:00:00+00:00,STATUS_FINAL,Cleveland Cavaliers,5,93,New York Knicks,18,130,,,,,Rocket Arena
+401873201,2026-05-27 00:30:00+00:00,STATUS_FINAL,Oklahoma City Thunder,25,127,San Antonio Spurs,24,114,,,,,Paycom Center
+401873202,2026-05-29 00:30:00+00:00,STATUS_FINAL,San Antonio Spurs,24,118,Oklahoma City Thunder,25,91,,,,,Frost Bank Center
+401873203,2026-05-31 00:00:00+00:00,STATUS_FINAL,Oklahoma City Thunder,25,103,San Antonio Spurs,24,111,,,,,Paycom Center
+401859963,2026-06-04 00:30:00+00:00,STATUS_FINAL,San Antonio Spurs,24,95,New York Knicks,18,105,,,,,Frost Bank Center
+401859964,2026-06-06 00:30:00+00:00,STATUS_FINAL,San Antonio Spurs,24,104,New York Knicks,18,105,,,,,Frost Bank Center
+401859965,2026-06-09 00:30:00+00:00,STATUS_FINAL,New York Knicks,18,111,San Antonio Spurs,24,115,,,,,Madison Square Garden
+401859966,2026-06-11 00:30:00+00:00,STATUS_FINAL,New York Knicks,18,107,San Antonio Spurs,24,106,,,,,Madison Square Garden
+401859967,2026-06-14 00:30:00+00:00,STATUS_FINAL,San Antonio Spurs,24,90,New York Knicks,18,94,,,,,Frost Bank Center
+401902644,2026-10-03 23:00:00+00:00,STATUS_FINAL,Toronto Raptors,28,105,Miami Heat,14,129,,,,,Videotron Centre
+401914127,2026-10-04 23:00:00+00:00,STATUS_FINAL,Denver Nuggets,7,97,Utah Jazz,26,109,,,,,CU Events Center
+401918010,2026-10-04 23:00:00+00:00,STATUS_FINAL,LA Clippers,12,104,Golden State Warriors,9,101,,,,,Stan Sheriff Center
+401898388,2026-10-05 23:00:00+00:00,STATUS_FINAL,Atlanta Hawks,1,123,Memphis Grizzlies,29,132,,,,,State Farm Arena
+401908947,2026-10-05 23:00:00+00:00,STATUS_FINAL,Detroit Pistons,8,109,Phoenix Suns,21,107,,,,,Little Caesars Arena
+401914101,2026-10-05 23:00:00+00:00,STATUS_FINAL,Philadelphia 76ers,20,120,New York Knicks,18,97,,,,,Xfinity Mobile Arena
+401914102,2026-10-06 00:00:00+00:00,STATUS_FINAL,Milwaukee Bucks,15,97,Minnesota Timberwolves,16,116,,,,,Fiserv Forum
+401898716,2026-10-06 02:00:00+00:00,STATUS_FINAL,Sacramento Kings,23,103,Los Angeles Lakers,13,127,,,,,Golden 1 Center
+401901820,2026-10-06 23:00:00+00:00,STATUS_FINAL,Charlotte Hornets,30,90,Brooklyn Nets,17,124,,,,,Spectrum Center
+401898389,2026-10-07 00:00:00+00:00,STATUS_FINAL,Oklahoma City Thunder,25,110,New Orleans Pelicans,3,116,,,,,BOK Center
+401914128,2026-10-07 01:00:00+00:00,STATUS_FINAL,Utah Jazz,26,106,Denver Nuggets,7,117,,,,,Delta Center
+401898390,2026-10-07 02:00:00+00:00,STATUS_FINAL,Golden State Warriors,9,124,Los Angeles Lakers,13,98,,,,,Chase Center
+401914123,2026-10-07 23:00:00+00:00,STATUS_FINAL,Indiana Pacers,11,123,Minnesota Timberwolves,16,112,,,,,Hilton Coliseum
+401898391,2026-10-08 00:00:00+00:00,STATUS_FINAL,Memphis Grizzlies,29,118,Orlando Magic,19,122,,,,,FedExForum
+401908620,2026-10-08 00:00:00+00:00,STATUS_FINAL,Oklahoma City Thunder,25,126,Milwaukee Bucks,15,128,,,,,Paycom Center
+401908939,2026-10-08 00:00:00+00:00,STATUS_FINAL,Chicago Bulls,4,124,Phoenix Suns,21,117,,,,,United Center
+401914129,2026-10-08 02:00:00+00:00,STATUS_FINAL,Portland Trail Blazers,22,123,Golden State Warriors,9,118,,,,,Moda Center
+401898392,2026-10-08 23:00:00+00:00,STATUS_FINAL,Cleveland Cavaliers,5,113,Boston Celtics,2,124,,,,,Rocket Arena
+401898393,2026-10-08 23:30:00+00:00,STATUS_FINAL,Miami Heat,14,128,New Orleans Pelicans,3,118,,,,,Kaseya Center
+401901823,2026-10-08 23:30:00+00:00,STATUS_FINAL,Brooklyn Nets,17,114,Philadelphia 76ers,20,108,,,,,Barclays Center
+401906508,2026-10-08 23:30:00+00:00,STATUS_FINAL,New York Knicks,18,109,Washington Wizards,27,111,,,,,Madison Square Garden
+401898394,2026-10-09 00:00:00+00:00,STATUS_FINAL,San Antonio Spurs,24,116,Atlanta Hawks,1,123,,,,,Frost Bank Center
+401898717,2026-10-09 02:45:00+00:00,STATUS_FINAL,Los Angeles Lakers,13,114,Sacramento Kings,23,110,,,,,crypto.com Arena
+401898395,2026-10-09 12:00:00+00:00,STATUS_FINAL,Dallas Mavericks,6,117,Houston Rockets,10,135,,,,,Venetian Arena
+401908940,2026-10-10 00:00:00+00:00,STATUS_FINAL,Chicago Bulls,4,100,Memphis Grizzlies,29,104,,,,,United Center
+401902645,2026-10-10 22:30:00+00:00,STATUS_FINAL,Toronto Raptors,28,114,LA Clippers,12,106,,,,,Rogers Arena
+401898396,2026-10-10 23:00:00+00:00,STATUS_FINAL,Indiana Pacers,11,117,Atlanta Hawks,1,119,,,,,Gainbridge Fieldhouse
+401906510,2026-10-10 23:00:00+00:00,STATUS_FINAL,Washington Wizards,27,114,Detroit Pistons,8,108,,,,,Capital One Arena
+401898397,2026-10-11 00:00:00+00:00,STATUS_FINAL,Miami Heat,14,124,Minnesota Timberwolves,16,125,,,,,Kaseya Center
+401898398,2026-10-11 00:00:00+00:00,STATUS_FINAL,Boston Celtics,2,144,Philadelphia 76ers,20,106,,,,,TD Garden
+401898399,2026-10-11 00:30:00+00:00,STATUS_FINAL,Golden State Warriors,9,111,Sacramento Kings,23,106,,,,,Chase Center
+401898720,2026-10-11 02:30:00+00:00,STATUS_FINAL,Phoenix Suns,21,102,San Antonio Spurs,24,98,,,,,Mortgage Matchup Center
+401898400,2026-10-11 10:00:00+00:00,STATUS_FINAL,Houston Rockets,10,115,Dallas Mavericks,6,132,,,,,Venetian Arena
+401898401,2026-10-11 22:30:00+00:00,STATUS_FINAL,Cleveland Cavaliers,5,119,Orlando Magic,19,105,,,,,Rocket Arena
+401901821,2026-10-11 23:00:00+00:00,STATUS_FINAL,Charlotte Hornets,30,105,Milwaukee Bucks,15,90,,,,,Spectrum Center
+401908941,2026-10-12 01:00:00+00:00,STATUS_FINAL,Denver Nuggets,7,133,Chicago Bulls,4,128,,,,,Ball Arena
+401914130,2026-10-12 20:00:00+00:00,STATUS_FINAL,Portland Trail Blazers,22,119,London Lions,134478,66,,,,,Moda Center
+401898402,2026-10-12 23:00:00+00:00,STATUS_FINAL,Atlanta Hawks,1,113,Oklahoma City Thunder,25,110,,,,,State Farm Arena
+401901824,2026-10-12 23:00:00+00:00,STATUS_FINAL,Washington Wizards,27,122,Brooklyn Nets,17,131,,,,,Capital One Arena
+401914124,2026-10-12 23:30:00+00:00,STATUS_FINAL,New York Knicks,18,104,Minnesota Timberwolves,16,122,,,,,Madison Square Garden
+401898721,2026-10-13 01:00:00+00:00,STATUS_FINAL,Utah Jazz,26,119,San Antonio Spurs,24,109,,,,,Delta Center
+401898403,2026-10-13 23:00:00+00:00,STATUS_FINAL,Orlando Magic,19,132,Cleveland Cavaliers,5,116,,,,,Kia Center
+401908944,2026-10-13 23:00:00+00:00,STATUS_FINAL,Toronto Raptors,28,148,New York Knicks,18,98,,,,,Scotiabank Arena
+401908621,2026-10-14 00:00:00+00:00,STATUS_FINAL,Oklahoma City Thunder,25,114,Indiana Pacers,11,112,,,,,Paycom Center
+401898718,2026-10-14 02:00:00+00:00,STATUS_FINAL,Los Angeles Lakers,13,89,Golden State Warriors,9,101,,,,,T-Mobile Arena
+401901826,2026-10-14 02:00:00+00:00,STATUS_FINAL,Sacramento Kings,23,98,Portland Trail Blazers,22,110,,,,,Golden 1 Center
+401898404,2026-10-14 23:30:00+00:00,STATUS_FINAL,Miami Heat,14,144,Brooklyn Nets,17,128,,,,,Kaseya Center
+401898405,2026-10-14 23:30:00+00:00,STATUS_FINAL,Boston Celtics,2,114,Charlotte Hornets,30,93,,,,,TD Garden
+401898722,2026-10-15 00:00:00+00:00,STATUS_FINAL,San Antonio Spurs,24,123,Phoenix Suns,21,103,,,,,Frost Bank Center
+401901825,2026-10-15 00:00:00+00:00,STATUS_FINAL,Dallas Mavericks,6,97,New Orleans Pelicans,3,101,,,,,American Airlines Center
+401908942,2026-10-15 00:00:00+00:00,STATUS_FINAL,Milwaukee Bucks,15,104,Chicago Bulls,4,125,,,,,Fiserv Forum
+401914125,2026-10-15 00:00:00+00:00,STATUS_FINAL,Minnesota Timberwolves,16,106,Detroit Pistons,8,128,,,,,Target Center
+401918011,2026-10-15 02:30:00+00:00,STATUS_FINAL,LA Clippers,12,122,Denver Nuggets,7,110,,,,,Intuit Dome
+401908945,2026-10-15 23:30:00+00:00,STATUS_FINAL,New York Knicks,18,122,Toronto Raptors,28,120,,,,,Madison Square Garden
+401908622,2026-10-16 00:30:00+00:00,STATUS_FINAL,Houston Rockets,10,116,Oklahoma City Thunder,25,89,,,,,Toyota Center (Houston)
+401898406,2026-10-16 23:00:00+00:00,STATUS_FINAL,Orlando Magic,19,136,Miami Heat,14,115,,,,,Kia Center
+401898407,2026-10-16 23:00:00+00:00,STATUS_FINAL,Philadelphia 76ers,20,120,Boston Celtics,2,125,,,,,Xfinity Mobile Arena
+401908946,2026-10-16 23:00:00+00:00,STATUS_FINAL,Detroit Pistons,8,129,Toronto Raptors,28,125,,,,,Little Caesars Arena
+401914126,2026-10-16 23:00:00+00:00,STATUS_FINAL,Indiana Pacers,11,127,Milwaukee Bucks,15,128,,,,,Gainbridge Fieldhouse
+401908943,2026-10-17 00:00:00+00:00,STATUS_FINAL,Chicago Bulls,4,133,Minnesota Timberwolves,16,116,,,,,United Center
+401906509,2026-10-17 00:00:00+00:00,STATUS_FINAL,New Orleans Pelicans,3,107,Washington Wizards,27,106,,,,,Smoothie King Center
+401901822,2026-10-17 00:00:00+00:00,STATUS_FINAL,Memphis Grizzlies,29,116,Charlotte Hornets,30,98,,,,,FedExForum
+401898843,2026-10-17 00:00:00+00:00,STATUS_FINAL,San Antonio Spurs,24,126,Sacramento Kings,23,97,,,,,Frost Bank Center
+401898408,2026-10-17 00:00:00+00:00,STATUS_FINAL,Dallas Mavericks,6,111,Atlanta Hawks,1,135,,,,,American Airlines Center
+401898409,2026-10-17 02:00:00+00:00,STATUS_FINAL,Golden State Warriors,9,128,Portland Trail Blazers,22,118,,,,,Chase Center
+401908948,2026-10-17 02:00:00+00:00,STATUS_FINAL,Phoenix Suns,21,116,Utah Jazz,26,119,,,,,Mortgage Matchup Center
+401898719,2026-10-17 02:30:00+00:00,STATUS_FINAL,Los Angeles Lakers,13,106,Denver Nuggets,7,121,,,,,crypto.com Arena

@@ -78,8 +78,10 @@ class FeatureEngineer:
 
     def _get_team_games(self, team: str, before_date: Optional[pd.Timestamp] = None) -> pd.DataFrame:
         """Helper to get all games for a specific team, sorted by date."""
+        from config import normalize_team_name
+        norm_team = normalize_team_name(team) or team
         df = self.game_logs[
-            (self.game_logs['home_team'] == team) | (self.game_logs['away_team'] == team)
+            (self.game_logs['home_team'] == norm_team) | (self.game_logs['away_team'] == norm_team)
         ].copy()
         
         if before_date is not None:
@@ -124,12 +126,16 @@ class FeatureEngineer:
             target_date = None
         games = self._get_team_games(team, before_date=target_date).tail(n_games)
         
+        LEAGUE_BASELINE_PTS = 114.5
         result = {
-            'wins': 0, 'losses': 0, 'win_pct': 0.0,
-            'avg_points_scored': 0.0, 'avg_points_allowed': 0.0,
-            'avg_total_points': 0.0, 'avg_point_diff': 0.0,
+            'wins': 0, 'losses': 0, 'win_pct': 0.5,
+            'avg_points_scored': LEAGUE_BASELINE_PTS, 'avg_points_allowed': LEAGUE_BASELINE_PTS,
+            'avg_total_points': LEAGUE_BASELINE_PTS * 2, 'avg_point_diff': 0.0,
             'over_count': 0, 'under_count': 0,
-            'current_streak': 'None'
+            'current_streak': 'None',
+            'raw_points_scored': LEAGUE_BASELINE_PTS,
+            'raw_points_allowed': LEAGUE_BASELINE_PTS,
+            'sample_size_regressed': True
         }
         
         if games.empty:
@@ -228,8 +234,10 @@ class FeatureEngineer:
 
     def get_home_away_splits(self, team: str) -> dict:
         """Calculate home vs away performance splits."""
-        home_games = self.game_logs[self.game_logs['home_team'] == team]
-        away_games = self.game_logs[self.game_logs['away_team'] == team]
+        from config import normalize_team_name
+        norm_team = normalize_team_name(team) or team
+        home_games = self.game_logs[self.game_logs['home_team'] == norm_team]
+        away_games = self.game_logs[self.game_logs['away_team'] == norm_team]
         
         def agg_split(df, is_home):
             scored_col = 'home_score' if is_home else 'away_score'
@@ -334,7 +342,9 @@ class FeatureEngineer:
     def _get_team_adv_stat(self, team: str, stat: str) -> float:
         if self.team_advanced is None or 'team' not in self.team_advanced.columns:
             return None
-        row = self.team_advanced[self.team_advanced['team'] == team]
+        from config import normalize_team_name
+        norm_team = normalize_team_name(team) or team
+        row = self.team_advanced[self.team_advanced['team'] == norm_team]
         if row.empty or stat not in row.columns:
             return None
         val = row.iloc[0][stat]

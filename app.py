@@ -139,8 +139,10 @@ with st.spinner("กำลังประมวลผลการวิเคร
             return abbr.strip().lower() == full_name.strip().lower()
 
         for _, game in scoreboard.iterrows():
-            home = game.get('home_team', 'Unknown')
-            away = game.get('away_team', 'Unknown')
+            raw_home = game.get('home_team', 'Unknown')
+            raw_away = game.get('away_team', 'Unknown')
+            home = normalize_team_name(raw_home) or raw_home
+            away = normalize_team_name(raw_away) or raw_away
             
             # Fetch from cache
             odds_data = odds_coll.get_game_odds(home, away)

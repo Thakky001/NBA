@@ -254,8 +254,10 @@ def run_alert_cycle(
     for item in candidate_games:
         game = item['game']
         gid = str(game.get('game_id', ''))
-        home = game.get('home_team', 'Unknown')
-        away = game.get('away_team', 'Unknown')
+        raw_home = game.get('home_team', 'Unknown')
+        raw_away = game.get('away_team', 'Unknown')
+        home = normalize_team_name(raw_home) or raw_home
+        away = normalize_team_name(raw_away) or raw_away
 
         # Odds & Line movement
         odds_data = odds_coll.get_game_odds(home, away)
