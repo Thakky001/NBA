@@ -11,9 +11,16 @@ THAI_TZ = timezone(timedelta(hours=7))
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from collectors.espn_collector import ESPNCollector
+from collectors.odds_collector import OddsCollector
 from processing.feature_engineering import FeatureEngineer
 from analysis.trend_analyzer import TrendAnalyzer
 from analysis.betting_math import calculate_live_pace_projection
+from analysis.prediction_tracker import (
+    load_ledger,
+    grade_finished_games,
+    calculate_track_record,
+    record_slate_predictions,
+)
 from config import parse_spread, calculate_home_spread, resolve_team_info, normalize_team_name
 
 # Translation mapping for recommendations
@@ -53,9 +60,6 @@ st.markdown("""
 
 st.title("🏀 ระบบวิเคราะห์สถิติและแต้มต่อ NBA (Advanced Statistical Trends & Edge Engine)")
 st.markdown("ระบบวิเคราะห์เชิงสถิติขั้นสูง คำนวณจากฟอร์มการเล่น ความเร็วเกม (Pace) สภาพความพร้อมผู้เล่นบาดเจ็บ และราคาต่อรองสด (ESPN / The Odds API)")
-
-from collectors.espn_collector import ESPNCollector
-from collectors.odds_collector import OddsCollector
 
 espn = ESPNCollector()
 odds_coll = OddsCollector()
@@ -155,6 +159,13 @@ def render_game_slate(selected_date, is_live_refresh):
         if scoreboard.empty:
             st.info(f"ไม่มีโปรแกรมแข่งขันในวันที่ {selected_date.strftime('%d/%m/%Y')} (เวลาไทย) ครับ")
         else:
+            # Auto-grade finished games & lock in predictions in background
+            try:
+                grade_finished_games(scoreboard)
+                record_slate_predictions(selected_date.strftime('%Y-%m-%d'), scoreboard, analyzer, espn=espn, odds_coll=odds_coll)
+            except Exception:
+                pass
+
             def is_team_match(abbr, full_name):
                 if not abbr or not full_name: return False
                 abbr_info = resolve_team_info(abbr)
@@ -510,4 +521,176 @@ def render_game_slate(selected_date, is_live_refresh):
                             st.write("ไม่สามารถวิเคราะห์ได้เนื่องจากไม่มีราคา")
 
 
-render_game_slate(selected_date, auto_refresh and is_today)
+
+def render_track_record_tab():
+    st.subheader("🏆 สถิติความแม่นยำและการตรวจสอบผลย้อนหลัง (Track Record)")
+    st.caption("ระบบบันทึกราคาปิด (Closing Line) และคำทำนายก่อนเริ่มแข่งอัตโนมัติ พร้อมตรวจผลสกอร์จริงเมื่อจบการแข่งขัน (`WIN` / `LOSS` / `PUSH`)")
+
+    # Sync button row
+    c_btn1, c_btn2 = st.columns([3, 1])
+    with c_btn2:
+        if st.button("🔄 ตรวจผลและอัปเดตสถิติทันที", use_container_width=True, key="btn_sync_ledger"):
+            with st.spinner("กำลังดึงผลการแข่งขันล่าสุดและอัปเดตสถานะ..."):
+                g1 = grade_finished_games(espn.get_scoreboard_by_thai_date(today_thai))
+                g2 = grade_finished_games(espn.get_scoreboard_by_thai_date(today_thai - timedelta(days=1)))
+                st.success(f"ตรวจผลสำเร็จ! มีการอัปเดตผลใหม่ {g1 + g2} รายการ")
+                st.rerun()
+
+    ledger_df = load_ledger()
+    if ledger_df.empty:
+        st.info("ยังไม่มีข้อมูลบันทึกคำทำนายในระบบ (ระบบจะบันทึกอัตโนมัติก่อนเริ่มแข่ง 15-30 นาที)")
+        return
+
+    stats = calculate_track_record(ledger_df)
+
+    # 4 Main KPI Cards
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        wr = stats['overall']['win_rate']
+        st.metric(
+            label="🎯 Overall Win Rate",
+            value=f"{wr:.1f}%",
+            delta=f"{stats['overall']['wins']}W - {stats['overall']['losses']}L ({stats['overall']['bets']} บิล)"
+        )
+    with col2:
+        swr = stats['strong']['win_rate']
+        st.metric(
+            label="🔥 ไม้เน้น (Strong Picks)",
+            value=f"{swr:.1f}%",
+            delta=f"{stats['strong']['wins']}W - {stats['strong']['losses']}L ({stats['strong']['bets']} บิล)"
+        )
+    with col3:
+        ou_wr = stats['over_under']['win_rate']
+        sp_wr = stats['spread']['win_rate']
+        st.metric(
+            label="⚖️ O/U vs แต้มต่อ",
+            value=f"{ou_wr:.0f}% / {sp_wr:.0f}%",
+            delta=f"สูง-ต่ำ {stats['over_under']['wins']}W | แต้มต่อ {stats['spread']['wins']}W"
+        )
+    with col4:
+        roi = stats['overall']['roi_pct']
+        units = stats['overall']['net_units']
+        d_color = "normal" if roi >= 0 else "inverse"
+        st.metric(
+            label="💰 ผลตอบแทนจำลอง (Flat ROI)",
+            value=f"{roi:+.1f}%",
+            delta=f"{units:+.2f} Units",
+            delta_color=d_color
+        )
+
+    st.markdown("---")
+
+    # Detailed Category Breakdown in expander
+    with st.expander("📊 ดูรายละเอียดแยกตามหมวดหมู่ (Breakdown by Category)", expanded=True):
+        b_cols = st.columns(4)
+        with b_cols[0]:
+            st.markdown("##### 🏀 สูง/ต่ำ (Over/Under)")
+            ou = stats['over_under']
+            st.write(f"- ชนะ/แพ้: **{ou['wins']}W - {ou['losses']}L - {ou['pushes']}P**")
+            st.write(f"- Win Rate: **{ou['win_rate']:.1f}%**")
+            st.write(f"- กำไร/ขาดทุน: **{ou['net_units']:+.2f} Units** (`{ou['roi_pct']:+.1f}% ROI`)")
+        with b_cols[1]:
+            st.markdown("##### 🛡️ แต้มต่อ (Spread)")
+            sp = stats['spread']
+            st.write(f"- ชนะ/แพ้: **{sp['wins']}W - {sp['losses']}L - {sp['pushes']}P**")
+            st.write(f"- Win Rate: **{sp['win_rate']:.1f}%**")
+            st.write(f"- กำไร/ขาดทุน: **{sp['net_units']:+.2f} Units** (`{sp['roi_pct']:+.1f}% ROI`)")
+        with b_cols[2]:
+            st.markdown("##### 📈 น่าสนใจ (Lean Picks)")
+            ln = stats['lean']
+            st.write(f"- ชนะ/แพ้: **{ln['wins']}W - {ln['losses']}L - {ln['pushes']}P**")
+            st.write(f"- Win Rate: **{ln['win_rate']:.1f}%**")
+            st.write(f"- กำไร/ขาดทุน: **{ln['net_units']:+.2f} Units** (`{ln['roi_pct']:+.1f}% ROI`)")
+        with b_cols[3]:
+            st.markdown("##### 🌊 ฟันธงกระแสเงิน (Verdict)")
+            vd = stats['verdict']
+            st.write(f"- ชนะ/แพ้: **{vd['wins']}W - {vd['losses']}L - {vd['pushes']}P**")
+            st.write(f"- Win Rate: **{vd['win_rate']:.1f}%**")
+            st.write(f"- กำไร/ขาดทุน: **{vd['net_units']:+.2f} Units** (`{vd['roi_pct']:+.1f}% ROI`)")
+
+    st.markdown("### 📋 ตารางประวัติคำทำนายย้อนหลัง")
+
+    # Filter controls
+    f_c1, f_c2 = st.columns([2, 2])
+    with f_c1:
+        filter_status = st.selectbox("สถานะการแข่งขัน", ["ทั้งหมด", "ตรวจผลแล้ว (GRADED)", "รอผล (PENDING)"])
+    with f_c2:
+        filter_tier = st.selectbox("ระดับความมั่นใจ", ["ทั้งหมด", "เฉพาะไม้เน้น (🔥 STRONG)", "เฉพาะน่าสนใจ (LEAN)"])
+
+    filtered_df = ledger_df.copy()
+    if filter_status == "ตรวจผลแล้ว (GRADED)":
+        filtered_df = filtered_df[filtered_df['status'] == 'GRADED']
+    elif filter_status == "รอผล (PENDING)":
+        filtered_df = filtered_df[filtered_df['status'] == 'PENDING']
+
+    if filter_tier == "เฉพาะไม้เน้น (🔥 STRONG)":
+        filtered_df = filtered_df[
+            filtered_df['ou_recommendation'].astype(str).str.contains('STRONG', na=False) |
+            filtered_df['sp_recommendation'].astype(str).str.contains('STRONG', na=False)
+        ]
+    elif filter_tier == "เฉพาะน่าสนใจ (LEAN)":
+        filtered_df = filtered_df[
+            filtered_df['ou_recommendation'].astype(str).str.contains('LEAN', na=False) |
+            filtered_df['sp_recommendation'].astype(str).str.contains('LEAN', na=False)
+        ]
+
+    # Helper badge formatter
+    def format_badge(res):
+        if pd.isna(res) or res is None or str(res).strip() == '':
+            return "⏳ รอผล"
+        r = str(res).upper().strip()
+        if r == 'WIN': return "🟢 WIN"
+        if r == 'LOSS': return "🔴 LOSS"
+        if r == 'PUSH': return "🟡 PUSH"
+        if r == 'SKIPPED': return "⚪ ข้าม"
+        return str(res)
+
+    def format_score(row):
+        if pd.notna(row.get('home_score')) and pd.notna(row.get('away_score')):
+            try:
+                return f"{int(row['away_score'])} - {int(row['home_score'])}"
+            except Exception:
+                return f"{row['away_score']} - {row['home_score']}"
+        return "⏳ รอแข่ง/ยังไม่จบ"
+
+    display_rows = []
+    for _, row in filtered_df.iterrows():
+        ou_rec = str(row.get('ou_recommendation', ''))
+        sp_rec = str(row.get('sp_recommendation', ''))
+        ou_line = f"O/U {row.get('total_line')}" if pd.notna(row.get('total_line')) else "-"
+        sp_line = f"{row.get('spread_line'):+g}" if pd.notna(row.get('spread_line')) else "-"
+
+        display_rows.append({
+            "วันที่": row.get('date', '-'),
+            "คู่แข่งขัน": f"{row.get('away_team', '')} @ {row.get('home_team', '')}",
+            "สกอร์จริง (เยือน-เหย้า)": format_score(row),
+            "เรตราคาปิด": f"{ou_line} | ต่อ {sp_line}",
+            "คำทำนาย สูง/ต่ำ": f"{t_rec(ou_rec)} [{format_badge(row.get('ou_result'))}]",
+            "คำทำนาย แต้มต่อ": f"{t_rec(sp_rec)} [{format_badge(row.get('sp_result'))}]",
+            "ฟันธงกระแสเงิน": f"{row.get('ou_verdict', '-')} [{format_badge(row.get('verdict_result'))}]",
+            "สถานะ": "✅ จบแล้ว" if row.get('status') == 'GRADED' else "⏳ รอผล"
+        })
+
+    if display_rows:
+        table_df = pd.DataFrame(display_rows)
+        st.dataframe(table_df, use_container_width=True, hide_index=True)
+    else:
+        st.info("ไม่พบรายการที่ตรงกับเงื่อนไขการค้นหา")
+
+    # CSV Download
+    csv_bytes = ledger_df.to_csv(index=False).encode('utf-8')
+    st.download_button(
+        label="📥 ดาวน์โหลดไฟล์ประวัติคำทำนาย (CSV)",
+        data=csv_bytes,
+        file_name="nba_predictions_ledger.csv",
+        mime="text/csv"
+    )
+
+
+tab_live, tab_track = st.tabs(["🏀 โปรแกรม & วิเคราะห์สด", "🏆 สถิติความแม่นยำย้อนหลัง (Track Record)"])
+
+with tab_live:
+    render_game_slate(selected_date, auto_refresh and is_today)
+
+with tab_track:
+    render_track_record_tab()

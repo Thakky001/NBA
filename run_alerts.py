@@ -40,6 +40,7 @@ from collectors.odds_collector import OddsCollector
 from processing.data_merger import DataMerger
 from processing.feature_engineering import FeatureEngineer
 from analysis.trend_analyzer import TrendAnalyzer
+from analysis.prediction_tracker import grade_finished_games, record_slate_predictions, load_ledger
 from notifications.telegram_bot import TelegramNotifier
 
 # Configure logging
@@ -197,6 +198,20 @@ def run_alert_cycle(
     notifier = TelegramNotifier()
 
     scoreboard = espn.get_scoreboard_by_thai_date(today_thai_date)
+
+    # 1. Auto-grade finished games in the predictions ledger
+    try:
+        g_count = grade_finished_games(scoreboard)
+        ledger_df = load_ledger()
+        if not ledger_df.empty and (ledger_df['status'] == 'PENDING').any():
+            yesterday_sb = espn.get_scoreboard_by_thai_date(today_thai_date - timedelta(days=1))
+            if not yesterday_sb.empty:
+                g_count += grade_finished_games(yesterday_sb)
+        if g_count > 0:
+            logger.info(f"Auto-graded {g_count} finished prediction(s) in ledger.")
+    except Exception as exc:
+        logger.warning(f"Error auto-grading predictions: {exc}")
+
     if scoreboard.empty:
         logger.info("No games scheduled on scoreboard today.")
         return 0
@@ -247,6 +262,14 @@ def run_alert_cycle(
     team_adv = pd.read_csv(adv_path) if os.path.exists(adv_path) else None
     fe = FeatureEngineer(game_history, team_advanced=team_adv)
     analyzer = TrendAnalyzer(fe)
+
+    # 2. Record pre-game predictions in ledger (locks lines & picks before tip-off)
+    try:
+        n_rec = record_slate_predictions(date_str, scoreboard, analyzer, espn=espn, odds_coll=odds_coll)
+        if n_rec > 0:
+            logger.info(f"Locked and recorded {n_rec} pre-game prediction(s) into ledger.")
+    except Exception as exc:
+        logger.warning(f"Error recording slate predictions: {exc}")
 
     cards = []
     alerted_gids = []
