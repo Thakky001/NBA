@@ -502,12 +502,12 @@ class ESPNCollector:
           - provider: str
         """
         if not game_id:
-            return {'open_total': None, 'current_total': None, 'open_spread': None, 'current_spread': None, 'provider': 'N/A'}
+            return {'open_total': None, 'current_total': None, 'live_total': None, 'open_spread': None, 'current_spread': None, 'live_spread': None, 'provider': 'N/A'}
 
         summary = self.get_game_summary(str(game_id))
         odds_list = summary.get('odds', [])
         if not odds_list:
-            return {'open_total': None, 'current_total': None, 'open_spread': None, 'current_spread': None, 'provider': 'N/A'}
+            return {'open_total': None, 'current_total': None, 'live_total': None, 'open_spread': None, 'current_spread': None, 'live_spread': None, 'provider': 'N/A'}
 
         item = odds_list[0]
         total_dict = item.get('total', {})
@@ -526,17 +526,21 @@ class ESPNCollector:
 
         open_t = _clean_num(total_dict.get('over', {}).get('open', {}).get('line'))
         curr_t = _clean_num(total_dict.get('over', {}).get('close', {}).get('line')) or _clean_num(item.get('overUnder'))
+        live_t = _clean_num(total_dict.get('over', {}).get('live', {}).get('line'))
 
         open_s = _clean_num(spread_dict.get('home', {}).get('open', {}).get('line'))
         curr_s = _clean_num(spread_dict.get('home', {}).get('close', {}).get('line')) or _clean_num(item.get('spread'))
+        live_s = _clean_num(spread_dict.get('home', {}).get('live', {}).get('line'))
 
         provider = item.get('provider', {}).get('name', 'Consensus')
 
         return {
             'open_total': open_t,
             'current_total': curr_t,
+            'live_total': live_t,
             'open_spread': open_s,
             'current_spread': curr_s,
+            'live_spread': live_s,
             'provider': provider
         }
 

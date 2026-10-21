@@ -276,6 +276,18 @@ def run_alert_cycle(
         open_total = lm_data.get('open_total')
         open_spread = lm_data.get('open_spread')
 
+        # Fallback to ESPN pickcenter if still None
+        if sp_val is None:
+            if lm_data.get('current_spread') is not None:
+                sp_val = lm_data.get('current_spread')
+            elif lm_data.get('open_spread') is not None:
+                sp_val = lm_data.get('open_spread')
+        if ou_val is None:
+            if lm_data.get('current_total') is not None:
+                ou_val = lm_data.get('current_total')
+            elif lm_data.get('open_total') is not None:
+                ou_val = lm_data.get('open_total')
+
         analysis = analyzer.full_matchup_analysis(
             home_team=home,
             away_team=away,

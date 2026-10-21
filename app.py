@@ -212,6 +212,19 @@ with st.spinner("กำลังประมวลผลการวิเคร
             open_total = lm_data.get('open_total')
             open_spread = lm_data.get('open_spread')
 
+            # Fallback to ESPN pickcenter (close or open) if scoreboard/Odds API missing odds
+            if sp_val is None:
+                if lm_data.get('current_spread') is not None:
+                    sp_val = lm_data.get('current_spread')
+                elif lm_data.get('open_spread') is not None:
+                    sp_val = lm_data.get('open_spread')
+
+            if ou_val is None:
+                if lm_data.get('current_total') is not None:
+                    ou_val = lm_data.get('current_total')
+                elif lm_data.get('open_total') is not None:
+                    ou_val = lm_data.get('open_total')
+
             # Analyze
             analysis = analyzer.full_matchup_analysis(
                 home_team=home, away_team=away, 
@@ -298,6 +311,12 @@ with st.spinner("กำลังประมวลผลการวิเคร
                             diff_sign = "+" if diff > 0 else ""
                             direction = "สูงกว่าราคาเปิด" if diff > 0 else "ต่ำกว่าราคาเปิด"
                             st.caption(f"🎯 **เทียบราคาเปิด ({ou_val:.1f}):** สปีดสด `{diff_sign}{diff:.1f}` แต้ม ({direction})")
+                        live_t = lm_data.get('live_total')
+                        if live_t is not None:
+                            ldiff = live_proj['proj_total'] - live_t
+                            ldiff_sign = "+" if ldiff > 0 else ""
+                            ldir = "สูงกว่าเรตสด" if ldiff > 0 else "ต่ำกว่าเรตสด"
+                            st.caption(f"🔴 **เทียบเรตสดในเกม ({live_t:.1f}):** สปีดสด `{ldiff_sign}{ldiff:.1f}` แต้ม ({ldir})")
                         st.divider()
 
                     st.markdown(f"**เรตราคาเปิดมาที่:** `{ou_val:.1f}`" if ou_val is not None else "**เรตราคาเปิดมาที่:** `ยังไม่ออกราคา`")
@@ -403,6 +422,12 @@ with st.spinner("กำลังประมวลผลการวิเคร
                             cover_diff = margin + sp_val
                             cover_team = home if cover_diff > 0 else away
                             st.caption(f"🎯 **เทียบแต้มต่อเปิด ({sp_str}):** สปีดสดชี้ `{cover_team}` ได้เปรียบ `{abs(cover_diff):.1f}` แต้ม")
+                        live_s = lm_data.get('live_spread')
+                        if live_s is not None:
+                            lsp_str = f"{home} {live_s:+.1f}" if live_s != 0.0 else f"{home} PK (0.0)"
+                            lcover_diff = margin + live_s
+                            lcover_team = home if lcover_diff > 0 else away
+                            st.caption(f"🔴 **เทียบแต้มต่อสดในเกม ({lsp_str}):** สปีดสดชี้ `{lcover_team}` ได้เปรียบ `{abs(lcover_diff):.1f}` แต้ม")
                         st.divider()
 
                     if sp_val is not None:
