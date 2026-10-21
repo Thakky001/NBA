@@ -37,14 +37,29 @@ class TestLineMovementAndAnchoring(unittest.TestCase):
         self.assertEqual(lm['status'], 'SHARP_CONFIRMATION')
         self.assertIn('Sharp Move Confirmed', lm['badge'])
         self.assertAlmostEqual(lm['diff'], -2.5, places=1)
+        self.assertEqual(lm['verdict'], 'CONFIRMED_ALIGNED')
+        self.assertAlmostEqual(lm['market_flow_prob'], 0.5625, places=3)
+        self.assertEqual(lm['market_flow_direction'], 'ต่ำ (UNDER)')
 
     def test_line_movement_totals_steam_warning(self):
         """Market line rises contrary to UNDER pick -> Market Steam Warning."""
+        # Case A: Heavy steam (diff = +3.0 >= 2.0) -> FOLLOW_MARKET
         lm = analyze_line_movement(open_line=229.5, current_line=232.5, market_type='total', recommendation='STRONG UNDER')
         self.assertTrue(lm['has_movement'])
         self.assertEqual(lm['status'], 'STEAM_WARNING')
         self.assertIn('Market Steam Warning', lm['badge'])
         self.assertAlmostEqual(lm['diff'], 3.0, places=1)
+        self.assertEqual(lm['verdict'], 'FOLLOW_MARKET')
+        self.assertIn('สวนโมเดลตามเงินตลาด', lm['verdict_title'])
+        self.assertAlmostEqual(lm['market_flow_prob'], 0.575, places=3)
+        self.assertEqual(lm['market_flow_direction'], 'สูง (OVER)')
+
+        # Case B: Mild steam (diff = +1.0 <= 1.5) -> FOLLOW_MODEL
+        lm_mild = analyze_line_movement(open_line=228.5, current_line=229.5, market_type='total', recommendation='STRONG UNDER')
+        self.assertEqual(lm_mild['status'], 'STEAM_WARNING')
+        self.assertEqual(lm_mild['verdict'], 'FOLLOW_MODEL')
+        self.assertIn('ตามสถิติ', lm_mild['verdict_title'])
+        self.assertAlmostEqual(lm_mild['market_flow_prob'], 0.525, places=3)
 
     def test_line_movement_totals_stable(self):
         """Line difference < 0.5 -> Stable Line."""
@@ -52,6 +67,9 @@ class TestLineMovementAndAnchoring(unittest.TestCase):
         self.assertTrue(lm['has_movement'])
         self.assertEqual(lm['status'], 'STABLE')
         self.assertIn('Stable Line', lm['badge'])
+        self.assertEqual(lm['verdict'], 'STABLE_MODEL')
+        self.assertIn('ตามสถิติ', lm['verdict_title'])
+        self.assertEqual(lm['market_flow_prob'], 0.50)
 
     def test_line_movement_spread_sharp_and_steam(self):
         """Spread movement toward home/away properly matches model pick."""

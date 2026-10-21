@@ -336,7 +336,12 @@ def analyze_line_movement(open_line: Optional[float],
             'diff': 0.0,
             'status': 'NO_DATA',
             'badge': '',
-            'detail': 'ไม่มีข้อมูลราคาเปิดเปรียบเทียบ'
+            'detail': 'ไม่มีข้อมูลราคาเปิดเปรียบเทียบ',
+            'market_flow_prob': None,
+            'market_flow_direction': '',
+            'verdict': 'NO_DATA',
+            'verdict_title': '',
+            'verdict_detail': ''
         }
 
     try:
@@ -348,139 +353,152 @@ def analyze_line_movement(open_line: Optional[float],
             'diff': 0.0,
             'status': 'NO_DATA',
             'badge': '',
-            'detail': 'ข้อมูลราคาเปิดไม่ถูกต้อง'
+            'detail': 'ข้อมูลราคาเปิดไม่ถูกต้อง',
+            'market_flow_prob': None,
+            'market_flow_direction': '',
+            'verdict': 'NO_DATA',
+            'verdict_title': '',
+            'verdict_detail': ''
         }
 
     diff = round(c_val - o_val, 2)
+    abs_diff = abs(diff)
     m_type = str(market_type).strip().lower()
     rec_upper = str(recommendation).strip().upper()
 
+    # Determine model direction label
+    if 'OVER' in rec_upper:
+        model_dir = 'สูง (OVER)'
+    elif 'UNDER' in rec_upper:
+        model_dir = 'ต่ำ (UNDER)'
+    elif 'HOME' in rec_upper:
+        model_dir = 'เจ้าบ้าน (HOME)'
+    elif 'AWAY' in rec_upper:
+        model_dir = 'ทีมเยือน (AWAY)'
+    else:
+        model_dir = 'สูสี'
+
+    # Determine market flow direction & implied probability
+    if m_type == 'total':
+        if diff > 0:
+            flow_dir = 'สูง (OVER)'
+            flow_prob = min(0.75, round(0.50 + abs_diff * 0.025, 4))
+        elif diff < 0:
+            flow_dir = 'ต่ำ (UNDER)'
+            flow_prob = min(0.75, round(0.50 + abs_diff * 0.025, 4))
+        else:
+            flow_dir = 'สมดุล (NEUTRAL)'
+            flow_prob = 0.50
+    else: # spread
+        if diff < 0:
+            flow_dir = 'เจ้าบ้าน (HOME)'
+            flow_prob = min(0.75, round(0.50 + abs_diff * 0.033, 4))
+        elif diff > 0:
+            flow_dir = 'ทีมเยือน (AWAY)'
+            flow_prob = min(0.75, round(0.50 + abs_diff * 0.033, 4))
+        else:
+            flow_dir = 'สมดุล (NEUTRAL)'
+            flow_prob = 0.50
+
     # Stable line check (< 0.5 pt shift)
-    if abs(diff) < 0.5:
+    if abs_diff < 0.5:
         return {
             'has_movement': True,
             'diff': diff,
             'status': 'STABLE',
             'badge': '➖ Stable Line',
-            'detail': f'ราคานิ่งที่ {c_val:.1f} (ไม่มีการเคลื่อนไหวของเงินก้อนใหญ่)'
+            'detail': f'ราคานิ่งที่ {c_val:.1f} (ไม่มีการเคลื่อนไหวของเงินก้อนใหญ่)',
+            'market_flow_prob': 0.50,
+            'market_flow_direction': flow_dir,
+            'verdict': 'STABLE_MODEL',
+            'verdict_title': f'ตามสถิติ ({model_dir})',
+            'verdict_detail': 'ราคาตลาดนิ่ง ไม่มีการเคลื่อนไหวของเงินก้อนใหญ่สวนทาง'
         }
 
+    status = 'LINE_MOVE'
+    badge = '📊 Line Moved'
+    detail = f'ราคาเปิด {o_val} ➔ ปัจจุบัน {c_val} (ขยับ {diff:+.1f})'
+
     if m_type == 'total':
-        # Line went UP (e.g. 229.5 -> 232.5, diff = +3.0)
         if diff > 0:
             if 'OVER' in rec_upper:
-                return {
-                    'has_movement': True,
-                    'diff': diff,
-                    'status': 'SHARP_CONFIRMATION',
-                    'badge': '🔥 Sharp Move Confirmed',
-                    'detail': f'ตลาดไหลขึ้น +{diff:.1f} แต้ม (เปิด {o_val:.1f} ➔ ปัจจุบัน {c_val:.1f}) สอดคล้องกับโมเดลสูง (เงินเซียนเทสูง)'
-                }
+                status = 'SHARP_CONFIRMATION'
+                badge = '🔥 Sharp Move Confirmed'
+                detail = f'ตลาดไหลขึ้น +{diff:.1f} แต้ม (เปิด {o_val:.1f} ➔ ปัจจุบัน {c_val:.1f}) สอดคล้องกับโมเดลสูง (เงินเซียนเทสูง)'
             elif 'UNDER' in rec_upper:
-                return {
-                    'has_movement': True,
-                    'diff': diff,
-                    'status': 'STEAM_WARNING',
-                    'badge': '⚠️ Market Steam Warning',
-                    'detail': f'ตลาดไหลขึ้น +{diff:.1f} แต้ม (เปิด {o_val:.1f} ➔ ปัจจุบัน {c_val:.1f}) สวนทางกับโมเดลต่ำ (มีแรงซื้อแต้มสูงดันขึ้น)'
-                }
+                status = 'STEAM_WARNING'
+                badge = '⚠️ Market Steam Warning'
+                detail = f'ตลาดไหลขึ้น +{diff:.1f} แต้ม (เปิด {o_val:.1f} ➔ ปัจจุบัน {c_val:.1f}) สวนทางกับโมเดลต่ำ (มีแรงซื้อแต้มสูงดันขึ้น)'
             else:
-                return {
-                    'has_movement': True,
-                    'diff': diff,
-                    'status': 'LINE_MOVE',
-                    'badge': '📈 Total Rose',
-                    'detail': f'ราคาเปิดขยับขึ้น +{diff:.1f} แต้ม (เปิด {o_val:.1f} ➔ ปัจจุบัน {c_val:.1f})'
-                }
+                badge = '📈 Total Rose'
+                detail = f'ราคาเปิดขยับขึ้น +{diff:.1f} แต้ม (เปิด {o_val:.1f} ➔ ปัจจุบัน {c_val:.1f})'
         else:
-            # Line went DOWN (e.g. 235.0 -> 232.5, diff = -2.5)
             if 'UNDER' in rec_upper:
-                return {
-                    'has_movement': True,
-                    'diff': diff,
-                    'status': 'SHARP_CONFIRMATION',
-                    'badge': '🔥 Sharp Move Confirmed',
-                    'detail': f'ตลาดไหลลง {diff:.1f} แต้ม (เปิด {o_val:.1f} ➔ ปัจจุบัน {c_val:.1f}) สอดคล้องกับโมเดลต่ำ (เงินเซียนเทต่ำ)'
-                }
+                status = 'SHARP_CONFIRMATION'
+                badge = '🔥 Sharp Move Confirmed'
+                detail = f'ตลาดไหลลง {diff:.1f} แต้ม (เปิด {o_val:.1f} ➔ ปัจจุบัน {c_val:.1f}) สอดคล้องกับโมเดลต่ำ (เงินเซียนเทต่ำ)'
             elif 'OVER' in rec_upper:
-                return {
-                    'has_movement': True,
-                    'diff': diff,
-                    'status': 'STEAM_WARNING',
-                    'badge': '⚠️ Market Steam Warning',
-                    'detail': f'ตลาดไหลลง {diff:.1f} แต้ม (เปิด {o_val:.1f} ➔ ปัจจุบัน {c_val:.1f}) สวนทางกับโมเดลสูง (มีแรงซื้อแต้มต่ำกดลง)'
-                }
+                status = 'STEAM_WARNING'
+                badge = '⚠️ Market Steam Warning'
+                detail = f'ตลาดไหลลง {diff:.1f} แต้ม (เปิด {o_val:.1f} ➔ ปัจจุบัน {c_val:.1f}) สวนทางกับโมเดลสูง (มีแรงซื้อแต้มต่ำกดลง)'
             else:
-                return {
-                    'has_movement': True,
-                    'diff': diff,
-                    'status': 'LINE_MOVE',
-                    'badge': '📉 Total Dropped',
-                    'detail': f'ราคาเปิดขยับลง {diff:.1f} แต้ม (เปิด {o_val:.1f} ➔ ปัจจุบัน {c_val:.1f})'
-                }
-
-    elif m_type == 'spread':
-        # Home spread shift: spread is from home team's perspective.
-        # If open was -3.5 and current is -4.5 (diff = -1.0), home is favored MORE (moved toward home).
-        # If open was +1.5 and current is +3.5 (diff = +2.0), home gets MORE points (moved toward away).
+                badge = '📉 Total Dropped'
+                detail = f'ราคาเปิดขยับลง {diff:.1f} แต้ม (เปิด {o_val:.1f} ➔ ปัจจุบัน {c_val:.1f})'
+    else: # spread
         moved_toward_home = diff < 0
-        abs_diff = abs(diff)
-
         if moved_toward_home:
             if 'HOME' in rec_upper:
-                return {
-                    'has_movement': True,
-                    'diff': diff,
-                    'status': 'SHARP_CONFIRMATION',
-                    'badge': '🔥 Sharp Move Confirmed',
-                    'detail': f'แต้มต่อไหลเข้าข้างเจ้าบ้าน {abs_diff:.1f} แต้ม (เปิด {o_val:+.1f} ➔ ปัจจุบัน {c_val:+.1f}) สอดคล้องกับโมเดล'
-                }
+                status = 'SHARP_CONFIRMATION'
+                badge = '🔥 Sharp Move Confirmed'
+                detail = f'แต้มต่อไหลเข้าข้างเจ้าบ้าน {abs_diff:.1f} แต้ม (เปิด {o_val:+.1f} ➔ ปัจจุบัน {c_val:+.1f}) สอดคล้องกับโมเดล'
             elif 'AWAY' in rec_upper:
-                return {
-                    'has_movement': True,
-                    'diff': diff,
-                    'status': 'STEAM_WARNING',
-                    'badge': '⚠️ Market Steam Warning',
-                    'detail': f'แต้มต่อไหลเข้าข้างเจ้าบ้าน {abs_diff:.1f} แต้ม (เปิด {o_val:+.1f} ➔ ปัจจุบัน {c_val:+.1f}) สวนทางกับโมเดลทีมเยือน'
-                }
+                status = 'STEAM_WARNING'
+                badge = '⚠️ Market Steam Warning'
+                detail = f'แต้มต่อไหลเข้าข้างเจ้าบ้าน {abs_diff:.1f} แต้ม (เปิด {o_val:+.1f} ➔ ปัจจุบัน {c_val:+.1f}) สวนทางกับโมเดลทีมเยือน'
             else:
-                return {
-                    'has_movement': True,
-                    'diff': diff,
-                    'status': 'LINE_MOVE',
-                    'badge': '🏠 Home Money Move',
-                    'detail': f'แต้มต่อขยับเข้าเจ้าบ้าน {abs_diff:.1f} แต้ม (เปิด {o_val:+.1f} ➔ ปัจจุบัน {c_val:+.1f})'
-                }
+                badge = '🏠 Home Money Move'
+                detail = f'แต้มต่อขยับเข้าเจ้าบ้าน {abs_diff:.1f} แต้ม (เปิด {o_val:+.1f} ➔ ปัจจุบัน {c_val:+.1f})'
         else:
             if 'AWAY' in rec_upper:
-                return {
-                    'has_movement': True,
-                    'diff': diff,
-                    'status': 'SHARP_CONFIRMATION',
-                    'badge': '🔥 Sharp Move Confirmed',
-                    'detail': f'แต้มต่อไหลเข้าข้างทีมเยือน {abs_diff:.1f} แต้ม (เปิด {o_val:+.1f} ➔ ปัจจุบัน {c_val:+.1f}) สอดคล้องกับโมเดล'
-                }
+                status = 'SHARP_CONFIRMATION'
+                badge = '🔥 Sharp Move Confirmed'
+                detail = f'แต้มต่อไหลเข้าข้างทีมเยือน {abs_diff:.1f} แต้ม (เปิด {o_val:+.1f} ➔ ปัจจุบัน {c_val:+.1f}) สอดคล้องกับโมเดล'
             elif 'HOME' in rec_upper:
-                return {
-                    'has_movement': True,
-                    'diff': diff,
-                    'status': 'STEAM_WARNING',
-                    'badge': '⚠️ Market Steam Warning',
-                    'detail': f'แต้มต่อไหลเข้าข้างทีมเยือน {abs_diff:.1f} แต้ม (เปิด {o_val:+.1f} ➔ ปัจจุบัน {c_val:+.1f}) สวนทางกับโมเดลเจ้าบ้าน'
-                }
+                status = 'STEAM_WARNING'
+                badge = '⚠️ Market Steam Warning'
+                detail = f'แต้มต่อไหลเข้าข้างทีมเยือน {abs_diff:.1f} แต้ม (เปิด {o_val:+.1f} ➔ ปัจจุบัน {c_val:+.1f}) สวนทางกับโมเดลเจ้าบ้าน'
             else:
-                return {
-                    'has_movement': True,
-                    'diff': diff,
-                    'status': 'LINE_MOVE',
-                    'badge': '✈️ Away Money Move',
-                    'detail': f'แต้มต่อขยับเข้าทีมเยือน {abs_diff:.1f} แต้ม (เปิด {o_val:+.1f} ➔ ปัจจุบัน {c_val:+.1f})'
-                }
+                badge = '✈️ Away Money Move'
+                detail = f'แต้มต่อขยับเข้าทีมเยือน {abs_diff:.1f} แต้ม (เปิด {o_val:+.1f} ➔ ปัจจุบัน {c_val:+.1f})'
+
+    # Determine Verdict based on approved criteria
+    if status == 'STEAM_WARNING':
+        if abs_diff >= 2.0:
+            verdict = 'FOLLOW_MARKET'
+            verdict_title = f'สวนโมเดลตามเงินตลาด ({flow_dir})'
+            verdict_detail = f'ราคาไหลแรงถึง {abs_diff:.1f} แต้ม มีเงินก้อนใหญ่ระดับเซียนดันสวนชัดเจน แนะนำตามกระแสเงิน'
+        else:
+            verdict = 'FOLLOW_MODEL'
+            verdict_title = f'ตามสถิติ ({model_dir})'
+            verdict_detail = f'ราคาไหลเพียง {abs_diff:.1f} แต้ม เป็นแรงซื้อทั่วไป สถิติโมเดลยังคงได้เปรียบกว่า'
+    elif status == 'SHARP_CONFIRMATION':
+        verdict = 'CONFIRMED_ALIGNED'
+        verdict_title = f'ตามสถิติและเงินตลาด ({model_dir})'
+        verdict_detail = f'ทั้งโมเดลสถิติและกระแสเงินเซียนชี้ไปทางเดียวกัน (ไหล {diff:+.1f} แต้ม — มั่นใจสูงสุด)'
+    else:
+        verdict = 'FOLLOW_MARKET'
+        verdict_title = f'ตามเงินตลาด ({flow_dir})'
+        verdict_detail = f'โมเดลสถิติสูสี แต่มีแรงซื้อผลักดันไปทาง {flow_dir} ({diff:+.1f} แต้ม)'
 
     return {
         'has_movement': True,
         'diff': diff,
-        'status': 'LINE_MOVE',
-        'badge': '📊 Line Moved',
-        'detail': f'ราคาเปิด {o_val} ➔ ปัจจุบัน {c_val} (ขยับ {diff:+.1f})'
+        'status': status,
+        'badge': badge,
+        'detail': detail,
+        'market_flow_prob': flow_prob,
+        'market_flow_direction': flow_dir,
+        'verdict': verdict,
+        'verdict_title': verdict_title,
+        'verdict_detail': verdict_detail
     }

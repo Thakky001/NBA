@@ -321,7 +321,7 @@ with st.spinner("กำลังประมวลผลการวิเคร
                             st.markdown(f"**คำแนะนำ:** **{rec_text}** (Edge: `{t_edge:+.1f}` แต้ม)")
                             st.progress(win_p, text=f"ความน่าจะเป็นทางสถิติ (Win Prob): {win_p:.1%}")
                             
-                            # --- LINE MOVEMENT BADGE ---
+                            # --- LINE MOVEMENT BADGE & TWO-SIDED VERDICT ---
                             lm_ou = ou_res.get('line_movement')
                             if lm_ou and lm_ou.get('badge'):
                                 if lm_ou.get('status') == 'SHARP_CONFIRMATION':
@@ -330,6 +330,28 @@ with st.spinner("กำลังประมวลผลการวิเคร
                                     st.warning(f"**{lm_ou['badge']}:** {lm_ou['detail']}")
                                 else:
                                     st.caption(f"**{lm_ou['badge']}:** {lm_ou['detail']}")
+
+                                # Two-sided comparison & Directional Verdict
+                                if lm_ou.get('market_flow_prob') is not None and lm_ou.get('status') != 'NO_DATA':
+                                    m_prob = lm_ou['market_flow_prob']
+                                    m_dir = lm_ou.get('market_flow_direction', '')
+                                    diff_val = lm_ou.get('diff', 0.0)
+                                    diff_str = f" *(แรงไหล {diff_val:+.1f} แต้ม)*" if abs(diff_val) >= 0.5 else ""
+                                    
+                                    st.markdown(f"""
+                                    ⚖️ **เปรียบเทียบ 2 ฝั่ง:**
+                                    * 📊 **ฝั่งโมเดลสถิติ:** {rec_text} (`{win_p:.1%}`)
+                                    * 🌊 **ฝั่งกระแสเงินตลาด:** ดัน{m_dir} (`{m_prob:.1%}`){diff_str}
+                                    """)
+                                    
+                                    v_title = lm_ou.get('verdict_title', '')
+                                    v_detail = lm_ou.get('verdict_detail', '')
+                                    if lm_ou.get('verdict') == 'FOLLOW_MARKET':
+                                        st.error(f"🎯 **ฟันธง:** **{v_title}** — *{v_detail}*")
+                                    elif lm_ou.get('verdict') == 'CONFIRMED_ALIGNED':
+                                        st.success(f"🎯 **ฟันธง:** **{v_title}** — *{v_detail}*")
+                                    else:
+                                        st.info(f"🎯 **ฟันธง:** **{v_title}** — *{v_detail}*")
                             
                             # --- MARKET-ANCHORED PROJECTION INFO ---
                             if ou_res.get('raw_projected_total') is not None and ou_res.get('projected_total') is not None:
@@ -418,7 +440,7 @@ with st.spinner("กำลังประมวลผลการวิเคร
                             st.markdown(f"**คำแนะนำ:** **{rec_text}** (Cover Edge: `{c_edge:+.1f}` แต้ม)")
                             st.progress(win_p, text=f"ความน่าจะเป็นทางสถิติ (Win Prob): {win_p:.1%}")
                             
-                            # --- LINE MOVEMENT BADGE ---
+                            # --- LINE MOVEMENT BADGE & TWO-SIDED VERDICT ---
                             lm_sp = sp_res.get('line_movement')
                             if lm_sp and lm_sp.get('badge'):
                                 if lm_sp.get('status') == 'SHARP_CONFIRMATION':
@@ -427,6 +449,28 @@ with st.spinner("กำลังประมวลผลการวิเคร
                                     st.warning(f"**{lm_sp['badge']}:** {lm_sp['detail']}")
                                 else:
                                     st.caption(f"**{lm_sp['badge']}:** {lm_sp['detail']}")
+
+                                # Two-sided comparison & Directional Verdict
+                                if lm_sp.get('market_flow_prob') is not None and lm_sp.get('status') != 'NO_DATA':
+                                    m_prob = lm_sp['market_flow_prob']
+                                    m_dir = lm_sp.get('market_flow_direction', '')
+                                    diff_val = lm_sp.get('diff', 0.0)
+                                    diff_str = f" *(แรงไหล {diff_val:+.1f} แต้ม)*" if abs(diff_val) >= 0.5 else ""
+                                    
+                                    st.markdown(f"""
+                                    ⚖️ **เปรียบเทียบ 2 ฝั่ง:**
+                                    * 📊 **ฝั่งโมเดลสถิติ:** {rec_text} (`{win_p:.1%}`)
+                                    * 🌊 **ฝั่งกระแสเงินตลาด:** ดัน{m_dir} (`{m_prob:.1%}`){diff_str}
+                                    """)
+                                    
+                                    v_title = lm_sp.get('verdict_title', '')
+                                    v_detail = lm_sp.get('verdict_detail', '')
+                                    if lm_sp.get('verdict') == 'FOLLOW_MARKET':
+                                        st.error(f"🎯 **ฟันธง:** **{v_title}** — *{v_detail}*")
+                                    elif lm_sp.get('verdict') == 'CONFIRMED_ALIGNED':
+                                        st.success(f"🎯 **ฟันธง:** **{v_title}** — *{v_detail}*")
+                                    else:
+                                        st.info(f"🎯 **ฟันธง:** **{v_title}** — *{v_detail}*")
                             
                             # --- MARKET-ANCHORED PROJECTION INFO ---
                             if sp_res.get('raw_projected_margin') is not None and sp_res.get('projected_margin') is not None:
