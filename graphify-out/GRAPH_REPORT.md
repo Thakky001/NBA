@@ -1,7 +1,7 @@
 # Graph Report - NBA  (2026-10-22)
 
 ## Corpus Check
-- 353 files · ~208,029 words
+- 353 files · ~208,057 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 16 file(s) not represented in the graph (top: .csv 15, (none) 1)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `2d661a2d`
+- Built from commit: `dff77e5a`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -1056,11 +1056,11 @@ _Questions this graph is uniquely positioned to answer:_
   _`ESPNCollector` has 2 INFERRED edges - model-reasoned connections that need verification._
 - **Should `lib/render-report.mjs` be split into smaller, more focused modules?**
   _Cohesion score 0.10372340425531915 - nodes in this community are weakly interconnected._
-- **Why does `ESPNCollector` connect `ESPNCollector` to `DataFrame`, `normalize_team_name`, `PlayerRatingEngine`, `app.py`, `._load_fallback_csv`, `.get_game_summary`, `run_alerts.py`, `pandas`, `OddsCollector`, `AdvancedStatsCollector`, `NBA Data`, `main.py`?**
+- **Why does `Playbook selection matrix` connect `scoring.md` to `prepare-investigation-brief.mjs`?**
   _High betweenness centrality (0.013) - this node is a cross-community bridge._
 - **Are the 4 inferred relationships involving `FeatureEngineer` (e.g. with `get_analyzer()` and `PlayerRatingEngine`) actually correct?**
   _`FeatureEngineer` has 4 INFERRED edges - model-reasoned connections that need verification._
 - **Should `display-labels.mjs` be split into smaller, more focused modules?**
   _Cohesion score 0.1471861471861472 - nodes in this community are weakly interconnected._
-- **Why does `Playbook selection matrix` connect `scoring.md` to `prepare-investigation-brief.mjs`?**
-  _High betweenness centrality (0.013) - this node is a cross-community bridge._
+- **Why does `ESPNCollector` connect `ESPNCollector` to `DataFrame`, `normalize_team_name`, `PlayerRatingEngine`, `app.py`, `._load_fallback_csv`, `.get_game_summary`, `run_alerts.py`, `pandas`, `OddsCollector`, `AdvancedStatsCollector`, `NBA Data`, `main.py`?**
+  _High betweenness centrality (0.012) - this node is a cross-community bridge._

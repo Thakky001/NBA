@@ -42,7 +42,8 @@ class TrendAnalyzer:
                            over_under_line: float = None,
                            open_line: float = None,
                            market_weight: float = 0.65,
-                           is_live: bool = False) -> Dict[str, Any]:
+                           is_live: bool = False,
+                           **kwargs) -> Dict[str, Any]:
         """Full Over/Under analysis with Market-Anchored Projection and Line Movement."""
         
         # Use compute_matchup_features
@@ -353,7 +354,8 @@ class TrendAnalyzer:
                        spread_line: float = None,
                        open_spread: float = None,
                        market_weight: float = 0.65,
-                       is_live: bool = False) -> Dict[str, Any]:
+                       is_live: bool = False,
+                       **kwargs) -> Dict[str, Any]:
         """Full Spread analysis with Market-Anchored Projection and Line Movement."""
         
         # Use compute_matchup_features to ensure we get rest days as well
@@ -706,7 +708,8 @@ class TrendAnalyzer:
                                open_spread: float = None,
                                open_line: float = None,
                                market_weight: float = 0.65,
-                               is_live: bool = False) -> Dict[str, Any]:
+                               is_live: bool = False,
+                               **kwargs) -> Dict[str, Any]:
         """Complete matchup analysis combining O/U and Spread with Market Anchoring and Line Movement.
         Returns dict with:
         - home_team, away_team

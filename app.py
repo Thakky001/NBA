@@ -213,7 +213,7 @@ if st.sidebar.button("🔄 อัปเดตฐานข้อมูลสถ�
 
 # Load Data with Streamlit Caching
 @st.cache_resource
-def get_analyzer(cache_version: str = "v6_historical_dataset_restored"):
+def get_analyzer(cache_version: str = "v7_bayesian_live_pace_and_market_clash"):
     from processing.data_merger import DataMerger
     from processing.feature_engineering import FeatureEngineer
     from analysis.trend_analyzer import TrendAnalyzer
@@ -239,12 +239,20 @@ def get_cached_line_movement(game_id: str):
 @st.cache_data(ttl=300)
 def get_cached_analysis(_analyzer, home_team, away_team, spread_line, over_under_line, open_spread, open_line, is_live=False):
     """Cache computationally heavy matchup simulation for 5 minutes."""
-    return _analyzer.full_matchup_analysis(
-        home_team=home_team, away_team=away_team, 
-        spread_line=spread_line, over_under_line=over_under_line,
-        open_spread=open_spread, open_line=open_line,
-        is_live=is_live
-    )
+    try:
+        return _analyzer.full_matchup_analysis(
+            home_team=home_team, away_team=away_team, 
+            spread_line=spread_line, over_under_line=over_under_line,
+            open_spread=open_spread, open_line=open_line,
+            is_live=is_live
+        )
+    except TypeError:
+        # Fallback if _analyzer is an in-memory cached instance from prior code version
+        return _analyzer.full_matchup_analysis(
+            home_team=home_team, away_team=away_team, 
+            spread_line=spread_line, over_under_line=over_under_line,
+            open_spread=open_spread, open_line=open_line
+        )
 
 try:
     analyzer = get_analyzer()
