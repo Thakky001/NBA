@@ -293,10 +293,18 @@ class ESPNCollector:
                 home_ml = odds_dict.get('homeTeamOdds', {}).get('moneyLine')
                 away_ml = odds_dict.get('awayTeamOdds', {}).get('moneyLine')
 
+                status_obj = event.get('status', {})
+                period = status_obj.get('period')
+                clock = status_obj.get('displayClock')
+                clock_detail = status_obj.get('type', {}).get('detail')
+
                 records.append({
                     'game_id': game_id,
                     'date': date_str,
                     'status': status,
+                    'period': period,
+                    'clock': clock,
+                    'clock_detail': clock_detail,
                     'season_type': event.get('season', {}).get('type'),
                     'home_team': home_name,
                     'home_id': home_id,
