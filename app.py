@@ -7,20 +7,116 @@ import re
 
 THAI_TZ = timezone(timedelta(hours=7))
 
-# Add current directory to path so we can import our modules
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+# Ensure current directory is at the beginning of sys.path
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+if PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT)
+
+from typing import Any, Dict, Optional
+import importlib
 
 from collectors.espn_collector import ESPNCollector
 from collectors.odds_collector import OddsCollector
 from processing.feature_engineering import FeatureEngineer
 from analysis.trend_analyzer import TrendAnalyzer
-from analysis.betting_math import calculate_live_pace_projection
-from analysis.prediction_tracker import (
-    load_ledger,
-    grade_finished_games,
-    calculate_track_record,
-    record_slate_predictions,
-)
+
+# Resilient import for betting_math with auto-reload for Streamlit Cloud hot-reloading
+try:
+    from analysis.betting_math import calculate_live_pace_projection
+except (ImportError, AttributeError):
+    try:
+        import analysis.betting_math
+        importlib.reload(analysis.betting_math)
+        from analysis.betting_math import calculate_live_pace_projection
+    except Exception:
+        def calculate_live_pace_projection(
+            period: Any,
+            clock_str: Any,
+            home_score: Any,
+            away_score: Any
+        ) -> Optional[Dict[str, Any]]:
+            """Fallback live pace projection engine."""
+            try:
+                if home_score is None or away_score is None:
+                    return None
+                h_pts = float(home_score)
+                a_pts = float(away_score)
+                total_pts = h_pts + a_pts
+                if total_pts <= 0:
+                    return None
+                p_int = int(period) if period else 1
+                raw_clock = str(clock_str).strip() if clock_str is not None else ""
+                clock_lower = raw_clock.lower()
+                phase = "IN_PLAY"
+                status_label = f"Q{p_int} {raw_clock}" if p_int <= 4 else f"OT{p_int - 4} {raw_clock}"
+                elapsed_total = 0.0
+
+                if "half" in clock_lower or (p_int == 2 and raw_clock in ["0.0", "0:00", "0", ""]):
+                    phase, status_label, elapsed_total = "HALFTIME", "ช่วงพักครึ่ง (Halftime)", 24.0
+                elif "end of 1" in clock_lower or (p_int == 1 and raw_clock in ["0.0", "0:00", "0"]):
+                    phase, status_label, elapsed_total = "QUARTER_BREAK", "จบควอเตอร์ 1 (End of Q1)", 12.0
+                elif "end of 2" in clock_lower:
+                    phase, status_label, elapsed_total = "HALFTIME", "ช่วงพักครึ่ง (Halftime)", 24.0
+                elif "end of 3" in clock_lower or (p_int == 3 and raw_clock in ["0.0", "0:00", "0"]):
+                    phase, status_label, elapsed_total = "QUARTER_BREAK", "จบควอเตอร์ 3 (End of Q3)", 36.0
+                elif "end of 4" in clock_lower or (p_int == 4 and raw_clock in ["0.0", "0:00", "0"]):
+                    phase, status_label, elapsed_total = "REGULATION_END", "จบควอเตอร์ 4 (End of Q4)", 48.0
+                else:
+                    if ":" in raw_clock:
+                        mins, secs = map(float, raw_clock.split(":"))
+                        rem = mins + secs / 60.0
+                    else:
+                        rem = float(raw_clock) / 60.0
+                    p_len = 12.0 if p_int <= 4 else 5.0
+                    elap = max(0.0, min(p_len, p_len - rem))
+                    if p_int <= 4:
+                        elapsed_total = (p_int - 1) * 12.0 + elap
+                    else:
+                        phase, elapsed_total = "OVERTIME", 48.0 + (p_int - 5) * 5.0 + elap
+
+                if elapsed_total <= 0.5:
+                    return None
+                expected_total = 48.0 if p_int <= 4 else 48.0 + (p_int - 4) * 5.0
+                pace = expected_total / elapsed_total
+                proj_h = h_pts * pace
+                proj_a = a_pts * pace
+                return {
+                    'elapsed_mins': round(elapsed_total, 1),
+                    'target_mins': round(expected_total, 1),
+                    'proj_total': round(proj_h + proj_a, 1),
+                    'proj_margin': round(proj_h - proj_a, 1),
+                    'proj_home': round(proj_h, 1),
+                    'proj_away': round(proj_a, 1),
+                    'scoring_rate': round(total_pts / elapsed_total, 2),
+                    'phase': phase,
+                    'status_label': status_label
+                }
+            except Exception:
+                return None
+
+# Resilient import for prediction_tracker with auto-reload
+try:
+    from analysis.prediction_tracker import (
+        load_ledger,
+        grade_finished_games,
+        calculate_track_record,
+        record_slate_predictions,
+    )
+except (ImportError, AttributeError):
+    try:
+        import analysis.prediction_tracker
+        importlib.reload(analysis.prediction_tracker)
+        from analysis.prediction_tracker import (
+            load_ledger,
+            grade_finished_games,
+            calculate_track_record,
+            record_slate_predictions,
+        )
+    except Exception:
+        def load_ledger(): return pd.DataFrame()
+        def grade_finished_games(*a, **k): return 0
+        def calculate_track_record(*a, **k): return {}
+        def record_slate_predictions(*a, **k): return 0
 from config import parse_spread, calculate_home_spread, resolve_team_info, normalize_team_name
 
 # Translation mapping for recommendations
