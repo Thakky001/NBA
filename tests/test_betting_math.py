@@ -10,6 +10,7 @@ from analysis.betting_math import (
     calculate_ev,
     calculate_kelly,
     evaluate_market_pick,
+    calculate_live_pace_projection,
 )
 from analysis.trend_analyzer import TrendAnalyzer
 from unittest.mock import MagicMock
@@ -183,6 +184,83 @@ class TestBettingMath(unittest.TestCase):
         # When testing unanchored (market_weight=0.0): edge is +30 pts and win_prob > 0.85
         ou_unanchored = analyzer.analyze_over_under('Boston Celtics', 'Miami Heat', over_under_line=220.0, market_weight=0.0)
         self.assertGreater(ou_unanchored['win_prob'], 0.85)
+
+
+class TestLivePaceProjection(unittest.TestCase):
+    """Unit tests for live scoring pace, Halftime, quarter breaks, and Overtime projections."""
+
+    def test_pace_regular_in_play(self):
+        """Test standard regulation in-play pace projection."""
+        # Q1 with 6:00 remaining -> exactly 6.0 minutes elapsed
+        res = calculate_live_pace_projection(period=1, clock_str="06:00", home_score=15, away_score=15)
+        self.assertIsNotNone(res)
+        self.assertEqual(res['elapsed_mins'], 6.0)
+        self.assertEqual(res['target_mins'], 48.0)
+        self.assertEqual(res['proj_total'], 240.0)
+        self.assertEqual(res['proj_margin'], 0.0)
+        self.assertEqual(res['scoring_rate'], 5.0)
+        self.assertEqual(res['phase'], 'IN_PLAY')
+        self.assertIn("Q1 06:00", res['status_label'])
+
+    def test_pace_halftime_explicit(self):
+        """Test explicit 'Halftime' or 'Half' clock string sets 24.0 mins elapsed."""
+        for label in ["Halftime", "HALFTIME", "Half", "half", "End of 2nd"]:
+            res = calculate_live_pace_projection(period=2, clock_str=label, home_score=55, away_score=45)
+            self.assertIsNotNone(res)
+            self.assertEqual(res['elapsed_mins'], 24.0)
+            self.assertEqual(res['target_mins'], 48.0)
+            self.assertEqual(res['phase'], 'HALFTIME')
+            self.assertEqual(res['status_label'], 'ช่วงพักครึ่ง (Halftime)')
+            self.assertEqual(res['proj_total'], 200.0)
+            self.assertEqual(res['proj_margin'], 20.0)
+            self.assertAlmostEqual(res['scoring_rate'], 100 / 24.0, places=2)
+
+    def test_pace_halftime_zero_clock(self):
+        """Test period 2 with clock '0.0' or '0:00' is identified as Halftime."""
+        for zero_clk in ["0.0", "0:00", "0"]:
+            res = calculate_live_pace_projection(period=2, clock_str=zero_clk, home_score=50, away_score=50)
+            self.assertIsNotNone(res)
+            self.assertEqual(res['elapsed_mins'], 24.0)
+            self.assertEqual(res['phase'], 'HALFTIME')
+            self.assertEqual(res['status_label'], 'ช่วงพักครึ่ง (Halftime)')
+            self.assertEqual(res['proj_total'], 200.0)
+
+    def test_pace_quarter_breaks(self):
+        """Test End of 1st (12 mins) and End of 3rd (36 mins) quarter breaks."""
+        # End of Q1
+        q1_res = calculate_live_pace_projection(period=1, clock_str="End of 1st", home_score=30, away_score=30)
+        self.assertIsNotNone(q1_res)
+        self.assertEqual(q1_res['elapsed_mins'], 12.0)
+        self.assertEqual(q1_res['phase'], 'QUARTER_BREAK')
+        self.assertEqual(q1_res['status_label'], 'จบควอเตอร์ 1 (End of Q1)')
+        self.assertEqual(q1_res['proj_total'], 240.0)
+
+        # End of Q3
+        q3_res = calculate_live_pace_projection(period=3, clock_str="End of 3rd", home_score=90, away_score=90)
+        self.assertIsNotNone(q3_res)
+        self.assertEqual(q3_res['elapsed_mins'], 36.0)
+        self.assertEqual(q3_res['phase'], 'QUARTER_BREAK')
+        self.assertEqual(q3_res['status_label'], 'จบควอเตอร์ 3 (End of Q3)')
+        self.assertEqual(q3_res['proj_total'], 240.0)
+
+    def test_pace_overtime(self):
+        """Test Overtime (OT1, Period 5) scales expected total to 53.0 minutes."""
+        # Period 5 with 2:30 remaining in 5-minute OT1 -> 48 + 2.5 = 50.5 mins elapsed
+        ot_res = calculate_live_pace_projection(period=5, clock_str="02:30", home_score=105, away_score=100)
+        self.assertIsNotNone(ot_res)
+        self.assertEqual(ot_res['elapsed_mins'], 50.5)
+        self.assertEqual(ot_res['target_mins'], 53.0)
+        self.assertEqual(ot_res['phase'], 'OVERTIME')
+        self.assertIn("OT1", ot_res['status_label'])
+        expected_proj = round((205.0 / 50.5) * 53.0, 1)
+        self.assertEqual(ot_res['proj_total'], expected_proj)
+
+    def test_pace_invalid_inputs(self):
+        """Test safety guards return None on invalid or zero scores/times."""
+        self.assertIsNone(calculate_live_pace_projection(period=1, clock_str="12:00", home_score=None, away_score=10))
+        self.assertIsNone(calculate_live_pace_projection(period=1, clock_str="12:00", home_score=0, away_score=0))
+        self.assertIsNone(calculate_live_pace_projection(period=1, clock_str="11:50", home_score=2, away_score=0))  # <= 0.5 mins
+        self.assertIsNone(calculate_live_pace_projection(period=1, clock_str="invalid_clock", home_score=10, away_score=10))
 
 
 if __name__ == '__main__':

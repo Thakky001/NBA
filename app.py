@@ -13,6 +13,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from collectors.espn_collector import ESPNCollector
 from processing.feature_engineering import FeatureEngineer
 from analysis.trend_analyzer import TrendAnalyzer
+from analysis.betting_math import calculate_live_pace_projection
 from config import parse_spread, calculate_home_spread, resolve_team_info, normalize_team_name
 
 # Translation mapping for recommendations
@@ -39,53 +40,6 @@ def t_dir(direction, factor_type):
         return "📈" if direction == 'over' else "📉"
     else:
         return "🏠" if direction == 'home' else "✈️" if direction == 'away' else "➖"
-
-def calculate_live_pace_projection(period, clock_str, home_score, away_score):
-    """Calculate Pure Live Pace Projected Final PTS and Margin."""
-    try:
-        if home_score is None or away_score is None:
-            return None
-        h_pts = float(home_score)
-        a_pts = float(away_score)
-        total_pts = h_pts + a_pts
-        if total_pts <= 0:
-            return None
-        period = int(period) if period else 1
-
-        clock_str = str(clock_str).strip()
-        if ':' in clock_str:
-            mins, secs = map(float, clock_str.split(':'))
-            rem_in_period = mins + secs / 60.0
-        else:
-            rem_in_period = float(clock_str) / 60.0
-
-        period_length = 12.0 if period <= 4 else 5.0
-        elapsed_in_period = max(0.0, min(period_length, period_length - rem_in_period))
-
-        if period <= 4:
-            elapsed_total = (period - 1) * 12.0 + elapsed_in_period
-        else:
-            elapsed_total = 48.0 + (period - 5) * 5.0 + elapsed_in_period
-
-        if elapsed_total <= 0.5:
-            return None
-
-        pace_mult = 48.0 / elapsed_total
-        proj_home = h_pts * pace_mult
-        proj_away = a_pts * pace_mult
-        proj_total = proj_home + proj_away
-        proj_margin = proj_home - proj_away
-
-        return {
-            'elapsed_mins': elapsed_total,
-            'proj_total': round(proj_total, 1),
-            'proj_margin': round(proj_margin, 1),
-            'proj_home': round(proj_home, 1),
-            'proj_away': round(proj_away, 1),
-            'scoring_rate': round(total_pts / elapsed_total, 2)
-        }
-    except Exception:
-        return None
 
 # Page config
 st.set_page_config(page_title="NBA Statistical Trends & Edge Engine", layout="wide", page_icon="🏀")
@@ -330,7 +284,10 @@ def render_game_slate(selected_date, is_live_refresh):
                         st.markdown("### 📊 วิเคราะห์ สูง/ต่ำ (Over/Under)")
                         if is_live and live_proj:
                             st.markdown(f"**⚡ Live Projected Final PTS:** `{live_proj['proj_total']:.1f}` แต้ม")
-                            st.caption(f"⏱️ **Live Scoring Pace:** `{live_proj['scoring_rate']:.2f}` แต้ม/นาที *(เล่นไปแล้ว {live_proj['elapsed_mins']:.1f}/48 นาที)*")
+                            tgt_mins = live_proj.get('target_mins', 48.0)
+                            status_lbl = live_proj.get('status_label', '')
+                            status_info = f" ({status_lbl} | {live_proj['elapsed_mins']:.1f}/{tgt_mins:.0f} นาที)" if status_lbl else f" *({live_proj['elapsed_mins']:.1f}/{tgt_mins:.0f} นาที)*"
+                            st.caption(f"⏱️ **Live Scoring Pace:** `{live_proj['scoring_rate']:.2f}` แต้ม/นาที{status_info}")
                             if ou_val is not None:
                                 diff = live_proj['proj_total'] - ou_val
                                 diff_sign = "+" if diff > 0 else ""

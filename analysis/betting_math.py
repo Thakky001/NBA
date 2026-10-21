@@ -502,3 +502,107 @@ def analyze_line_movement(open_line: Optional[float],
         'verdict_title': verdict_title,
         'verdict_detail': verdict_detail
     }
+
+
+def calculate_live_pace_projection(
+    period: Any,
+    clock_str: Any,
+    home_score: Any,
+    away_score: Any
+) -> Optional[Dict[str, Any]]:
+    """Calculate in-game live scoring pace and projected final totals and margins.
+
+    Handles regular quarters (Q1-Q4), Halftime, Quarter breaks (End of Q1/Q3),
+    and Overtime periods (OT1+).
+
+    Args:
+        period: Current period/quarter (1-4 for regulation, 5+ for OT).
+        clock_str: Display clock string (e.g. '07:20', 'Halftime', 'End of 1st', '0.0').
+        home_score: Current home team score.
+        away_score: Current away team score.
+
+    Returns:
+        Dict with elapsed_mins, proj_total, proj_margin, proj_home, proj_away,
+        scoring_rate, phase, and status_label, or None if inputs invalid.
+    """
+    try:
+        if home_score is None or away_score is None:
+            return None
+        h_pts = float(home_score)
+        a_pts = float(away_score)
+        total_pts = h_pts + a_pts
+        if total_pts <= 0:
+            return None
+
+        p_int = int(period) if period else 1
+        raw_clock = str(clock_str).strip() if clock_str is not None else ""
+        clock_lower = raw_clock.lower()
+
+        phase = "IN_PLAY"
+        status_label = f"Q{p_int} {raw_clock}" if p_int <= 4 else f"OT{p_int - 4} {raw_clock}"
+        elapsed_total = 0.0
+
+        # Check special phases: Halftime, Quarter breaks
+        if "half" in clock_lower or (p_int == 2 and raw_clock in ["0.0", "0:00", "0", ""]):
+            phase = "HALFTIME"
+            status_label = "ช่วงพักครึ่ง (Halftime)"
+            elapsed_total = 24.0
+        elif "end of 1" in clock_lower or (p_int == 1 and raw_clock in ["0.0", "0:00", "0"]):
+            phase = "QUARTER_BREAK"
+            status_label = "จบควอเตอร์ 1 (End of Q1)"
+            elapsed_total = 12.0
+        elif "end of 2" in clock_lower:
+            phase = "HALFTIME"
+            status_label = "ช่วงพักครึ่ง (Halftime)"
+            elapsed_total = 24.0
+        elif "end of 3" in clock_lower or (p_int == 3 and raw_clock in ["0.0", "0:00", "0"]):
+            phase = "QUARTER_BREAK"
+            status_label = "จบควอเตอร์ 3 (End of Q3)"
+            elapsed_total = 36.0
+        elif "end of 4" in clock_lower or (p_int == 4 and raw_clock in ["0.0", "0:00", "0"]):
+            phase = "REGULATION_END"
+            status_label = "จบควอเตอร์ 4 (End of Q4)"
+            elapsed_total = 48.0
+        else:
+            # Parse remaining time in period
+            if ":" in raw_clock:
+                mins, secs = map(float, raw_clock.split(":"))
+                rem_in_period = mins + secs / 60.0
+            else:
+                rem_in_period = float(raw_clock) / 60.0
+
+            period_length = 12.0 if p_int <= 4 else 5.0
+            elapsed_in_period = max(0.0, min(period_length, period_length - rem_in_period))
+
+            if p_int <= 4:
+                elapsed_total = (p_int - 1) * 12.0 + elapsed_in_period
+            else:
+                phase = "OVERTIME"
+                elapsed_total = 48.0 + (p_int - 5) * 5.0 + elapsed_in_period
+
+        if elapsed_total <= 0.5:
+            return None
+
+        # Overtime target pace is based on current OT period length
+        expected_total_mins = 48.0 if p_int <= 4 else 48.0 + (p_int - 4) * 5.0
+        pace_mult = expected_total_mins / elapsed_total
+
+        proj_home = h_pts * pace_mult
+        proj_away = a_pts * pace_mult
+        proj_total = proj_home + proj_away
+        proj_margin = proj_home - proj_away
+
+        return {
+            'elapsed_mins': round(elapsed_total, 1),
+            'target_mins': round(expected_total_mins, 1),
+            'proj_total': round(proj_total, 1),
+            'proj_margin': round(proj_margin, 1),
+            'proj_home': round(proj_home, 1),
+            'proj_away': round(proj_away, 1),
+            'scoring_rate': round(total_pts / elapsed_total, 2),
+            'phase': phase,
+            'status_label': status_label
+        }
+    except Exception:
+        return None
+
