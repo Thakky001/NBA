@@ -165,15 +165,86 @@ class TrendAnalyzer:
         score += factor_score * weights['trend']
         
         # Projected total calculation (Possession & Scoring baseline)
-        avg_pace = (home_pace + away_pace) / 2 if (home_pace and away_pace) else 99.5
-        pace_ratio = avg_pace / 99.5
-        raw_projected_total = combined_avg * pace_ratio if combined_avg > 0 else (over_under_line or 220.0)
+        home_ortg = features.get('home_ortg')
+        home_drtg = features.get('home_drtg')
+        away_ortg = features.get('away_ortg')
+        away_drtg = features.get('away_drtg')
+        league_avg_pace = 99.5
+
+        if home_ortg and home_drtg and away_ortg and away_drtg and home_pace and away_pace:
+            # Dean Oliver Possession & Efficiency Model (eliminates double-counting pace)
+            expected_pace = (home_pace * away_pace) / league_avg_pace
+            home_exp_eff = (home_ortg + away_drtg) / 2.0
+            away_exp_eff = (away_ortg + home_drtg) / 2.0
+            
+            raw_home_pts = expected_pace * (home_exp_eff / 100.0)
+            raw_away_pts = expected_pace * (away_exp_eff / 100.0)
+            raw_projected_total = raw_home_pts + raw_away_pts
+        else:
+            # Fallback when advanced ratings unavailable: use combined_avg directly without double pace
+            raw_projected_total = combined_avg if combined_avg > 0 else (over_under_line or 220.0)
+
+        # Injury & Roster Replacement Impact on Total Points
+        injury_adj_total = 0.0
+        home_full = features.get('home_full_roster_rating', 0)
+        home_active = features.get('home_roster_rating', home_full)
+        away_full = features.get('away_full_roster_rating', 0)
+        away_active = features.get('away_roster_rating', away_full)
+
+        if home_full > 0 and home_active < home_full:
+            home_loss = max(0.0, home_full - home_active)
+            injury_adj_total -= home_loss * 0.22
+
+        if away_full > 0 and away_active < away_full:
+            away_loss = max(0.0, away_full - away_active)
+            injury_adj_total -= away_loss * 0.22
+
+        injury_adj_total = max(-8.0, min(0.0, injury_adj_total))
+        raw_projected_total += injury_adj_total
+
+        if injury_adj_total <= -0.5:
+            factors.append({
+                'name': 'Injury Impact on Total',
+                'value': f'{injury_adj_total:+.1f} pts (Key players/starters OUT)',
+                'direction': 'under',
+                'weight': 0.10,
+                'score': min(max(injury_adj_total / 5.0, -1.0), 0.0)
+            })
+
+        # Schedule & Rest Fatigue Modifier (Back-to-Back fatigue)
+        home_rest = features.get('home_rest_days', 2)
+        away_rest = features.get('away_rest_days', 2)
+        if home_rest is None or home_rest < 0: home_rest = 2
+        if away_rest is None or away_rest < 0: away_rest = 2
+
+        rest_adj_total = 0.0
+        if home_rest == 0:
+            rest_adj_total -= 1.2
+        if away_rest == 0:
+            rest_adj_total -= 1.8  # Road B2B has higher fatigue impact
+        if home_rest >= 3 and away_rest >= 3:
+            rest_adj_total += 1.0  # Fresh legs and well-rested offenses
+
+        raw_projected_total += rest_adj_total
+
+        if abs(rest_adj_total) >= 0.5:
+            direction_rest = 'under' if rest_adj_total < 0 else 'over'
+            factors.append({
+                'name': 'Schedule & Rest Fatigue',
+                'value': f'Home: {home_rest}d rest | Away: {away_rest}d rest ({rest_adj_total:+.1f} pts)',
+                'direction': direction_rest,
+                'weight': 0.05,
+                'score': -0.4 if rest_adj_total < 0 else 0.3
+            })
         
-        # Quantitative Market-Anchored Projection (Bayesian Blending)
+        # Quantitative Market-Anchored Projection (Bayesian Blending with Open Line)
         from analysis.betting_math import market_anchored_projection, analyze_line_movement
         
-        if over_under_line is not None and over_under_line > 0:
-            projected_total = market_anchored_projection(raw_projected_total, over_under_line, market_weight=market_weight)
+        # Anchor to Open Line (unmanipulated bookmaker baseline) if available
+        anchor_line = open_line if (open_line is not None and open_line > 0) else over_under_line
+
+        if anchor_line is not None and anchor_line > 0:
+            projected_total = market_anchored_projection(raw_projected_total, anchor_line, market_weight=market_weight)
         else:
             projected_total = raw_projected_total
             
@@ -486,10 +557,10 @@ class TrendAnalyzer:
             
             raw_cover_edge = raw_projected_margin + s_line
             
-            # Quantitative Market-Anchored Margin (Bayesian Blend)
-            # Market expected home margin is -spread_line (e.g. if home is -4.5, market expects +4.5 home margin)
+            # Quantitative Market-Anchored Margin (Bayesian Blend with Open Line)
             from analysis.betting_math import market_anchored_projection, analyze_line_movement
-            market_expected_margin = -s_line
+            anchor_spread = open_spread if (open_spread is not None) else s_line
+            market_expected_margin = -float(anchor_spread)
             projected_margin = market_anchored_projection(raw_projected_margin, market_expected_margin, market_weight=market_weight)
             cover_edge = projected_margin + s_line
 
