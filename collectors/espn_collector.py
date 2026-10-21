@@ -457,7 +457,7 @@ class ESPNCollector:
         now = time.time()
         if hasattr(self, '_summary_cache') and gid_str in self._summary_cache:
             cached_data, cached_time = self._summary_cache[gid_str]
-            if now - cached_time < 600:
+            if now - cached_time < 10:
                 return cached_data
 
         url = f"{self.BASE_URL}/summary"
