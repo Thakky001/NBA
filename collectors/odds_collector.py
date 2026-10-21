@@ -30,7 +30,14 @@ class OddsCollector:
         self.backoff_factor = backoff_factor
         self._cached_games = None
         self._cache_time = 0
+        self._logged_no_key = False
         self.time = time
+
+    def clear_cache(self) -> None:
+        """Clear memory cache for odds."""
+        self._cached_games = None
+        self._cache_time = 0
+        self._logged_no_key = False
 
     def _resolve_raw_dir(self) -> str:
         """Resolve path to data/raw directory."""
@@ -124,7 +131,25 @@ class OddsCollector:
             return self._cached_games
 
         if not self.api_key:
-            logger.info("ODDS_API_KEY not set; skipping live bookmakers fetch.")
+            try:
+                from config import ODDS_API_KEY
+                self.api_key = ODDS_API_KEY
+            except Exception:
+                pass
+            if not self.api_key:
+                try:
+                    import streamlit as st
+                    self.api_key = st.secrets.get("ODDS_API_KEY", "")
+                except Exception:
+                    pass
+
+        if not self.api_key:
+            if not self._logged_no_key:
+                logger.info("ODDS_API_KEY not set; skipping live bookmakers fetch.")
+                self._logged_no_key = True
+            # Cache empty result for 1 hour so it does not spam logs on every game & 10s refresh
+            self._cached_games = []
+            self._cache_time = self.time.time()
             return []
 
         params = {

@@ -142,6 +142,23 @@ class TestPonytailAuditFixes(unittest.TestCase):
         res_la = collector.get_game_odds('LA', 'Miami Heat')
         self.assertEqual(res_la, {'spreads': {}, 'totals': {}}, "'LA' must not match Atlanta Hawks")
 
+    def test_odds_collector_no_key_caches_empty(self):
+        """OddsCollector when api_key is empty logs once and caches empty result to prevent log spam."""
+        from unittest.mock import patch
+        collector = OddsCollector()
+        collector.api_key = ""
+        collector._cached_games = None
+        collector._logged_no_key = False
+
+        with patch('config.ODDS_API_KEY', ''):
+            res1 = collector._fetch_all_odds()
+            self.assertEqual(res1, [])
+            self.assertTrue(collector._logged_no_key)
+            self.assertEqual(collector._cached_games, [])
+
+            res2 = collector._fetch_all_odds()
+            self.assertEqual(res2, [])
+
     def test_phase2_espn_collector_uses_https(self):
         """Phase 2: ESPN endpoints must use secure HTTPS protocol."""
         from collectors.espn_collector import ESPNCollector

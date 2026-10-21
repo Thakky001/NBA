@@ -622,7 +622,12 @@ def render_track_record_tab():
     # Sync button row
     c_btn1, c_btn2 = st.columns([3, 1])
     with c_btn2:
-        if st.button("🔄 ตรวจผลและอัปเดตสถิติทันที", use_container_width=True, key="btn_sync_ledger"):
+        btn_clicked = False
+        try:
+            btn_clicked = st.button("🔄 ตรวจผลและอัปเดตสถิติทันที", width="stretch", key="btn_sync_ledger")
+        except TypeError:
+            btn_clicked = st.button("🔄 ตรวจผลและอัปเดตสถิติทันที", use_container_width=True, key="btn_sync_ledger")
+        if btn_clicked:
             with st.spinner("กำลังดึงผลการแข่งขันล่าสุดและอัปเดตสถานะ..."):
                 g1 = grade_finished_games(espn.get_scoreboard_by_thai_date(today_thai))
                 g2 = grade_finished_games(espn.get_scoreboard_by_thai_date(today_thai - timedelta(days=1)))
@@ -778,7 +783,10 @@ def render_track_record_tab():
 
     if display_rows:
         table_df = pd.DataFrame(display_rows)
-        st.dataframe(table_df, use_container_width=True, hide_index=True)
+        try:
+            st.dataframe(table_df, width="stretch", hide_index=True)
+        except TypeError:
+            st.dataframe(table_df, use_container_width=True, hide_index=True)
     else:
         st.info("ไม่พบรายการที่ตรงกับเงื่อนไขการค้นหา")
 
