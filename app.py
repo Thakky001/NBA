@@ -21,18 +21,27 @@ if PROJECT_ROOT not in sys.path:
 from typing import Any, Dict, Optional
 import importlib
 
-from collectors.espn_collector import ESPNCollector
-from collectors.odds_collector import OddsCollector
-from processing.feature_engineering import FeatureEngineer
-from analysis.trend_analyzer import TrendAnalyzer
+# Resilient imports with auto-recovery for Streamlit Cloud hot-reloading race conditions
+try:
+    from collectors.espn_collector import ESPNCollector
+    from collectors.odds_collector import OddsCollector
+    from processing.feature_engineering import FeatureEngineer
+    from analysis.trend_analyzer import TrendAnalyzer
+except (ImportError, KeyError, AttributeError):
+    for mod in ['collectors', 'collectors.espn_collector', 'collectors.odds_collector',
+                'processing', 'processing.feature_engineering',
+                'analysis', 'analysis.trend_analyzer']:
+        sys.modules.pop(mod, None)
+    from collectors.espn_collector import ESPNCollector
+    from collectors.odds_collector import OddsCollector
+    from processing.feature_engineering import FeatureEngineer
+    from analysis.trend_analyzer import TrendAnalyzer
 
-# Resilient import for betting_math with auto-reload for Streamlit Cloud hot-reloading
 try:
     from analysis.betting_math import calculate_live_pace_projection
-except (ImportError, AttributeError):
+except (ImportError, KeyError, AttributeError):
     try:
-        import analysis.betting_math
-        importlib.reload(analysis.betting_math)
+        sys.modules.pop('analysis.betting_math', None)
         from analysis.betting_math import calculate_live_pace_projection
     except Exception:
         def calculate_live_pace_projection(
