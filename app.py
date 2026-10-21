@@ -741,6 +741,18 @@ def render_track_record_tab():
         if r == 'SKIPPED': return "⚪ ข้าม"
         return str(res)
 
+    def t_verdict(v):
+        mapping = {
+            'FOLLOW_MARKET': '🌊 ตามกระแสเงินตลาด',
+            'FOLLOW_MODEL': '🛡️ ยึดโมเดลสถิติ',
+            'CONFIRMED_ALIGNED': '🔥 สถิติ & ตลาดตรงกัน',
+            'NEUTRAL_WATCH': '⚖️ รอดูสถานการณ์',
+        }
+        val = str(v).strip()
+        if not val or val == 'None' or val == 'nan':
+            return '-'
+        return mapping.get(val, val)
+
     def format_score(row):
         if pd.notna(row.get('home_score')) and pd.notna(row.get('away_score')):
             try:
@@ -763,7 +775,7 @@ def render_track_record_tab():
             "เรตราคาปิด": f"{ou_line} | ต่อ {sp_line}",
             "คำทำนาย สูง/ต่ำ": f"{t_rec(ou_rec)} [{format_badge(row.get('ou_result'))}]",
             "คำทำนาย แต้มต่อ": f"{t_rec(sp_rec)} [{format_badge(row.get('sp_result'))}]",
-            "ฟันธงกระแสเงิน": f"{row.get('ou_verdict', '-')} [{format_badge(row.get('verdict_result'))}]",
+            "ฟันธงกระแสเงิน": f"{t_verdict(row.get('ou_verdict'))} [{format_badge(row.get('verdict_result'))}]",
             "สถานะ": "✅ จบแล้ว" if row.get('status') == 'GRADED' else "⏳ รอผล"
         })
 
