@@ -192,6 +192,24 @@ with st.spinner("กำลังประมวลผลการวิเคร
                 with info_col2:
                     if venue_str:
                         st.markdown(f"📍 **สนาม:** {venue_str}")
+
+                # --- LIVE / FINAL SCORE BANNER ---
+                h_score = game.get('home_score')
+                a_score = game.get('away_score')
+                if pd.notna(h_score) and pd.notna(a_score) and str(h_score).strip() != '' and str(a_score).strip() != '':
+                    try:
+                        h_pts = int(float(h_score))
+                        a_pts = int(float(a_score))
+                        total_pts = h_pts + a_pts
+                        lead = h_pts - a_pts
+                        lead_str = f"{home} นำ +{lead}" if lead > 0 else (f"{away} นำ +{-lead}" if lead < 0 else "เสมอกัน")
+                        
+                        if 'PROGRESS' in st_raw.upper() or 'LIVE' in st_raw.upper():
+                            st.info(f"🔴 **สกอร์สด (Live Score):** **{away} {a_pts} - {h_pts} {home}** ({lead_str} | ผลรวมแต้มปัจจุบัน: **{total_pts}** PTS)")
+                        elif 'FINAL' in st_raw.upper():
+                            st.success(f"🏁 **ผลการแข่งขัน (Final):** **{away} {a_pts} - {h_pts} {home}** (ผลรวมจริง: **{total_pts}** PTS)")
+                    except Exception:
+                        pass
                 
                 # --- TEAM PROFILES (Always visible even if no odds) ---
                 if 'home_profile' in analysis and 'away_profile' in analysis:
