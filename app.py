@@ -297,107 +297,97 @@ with st.spinner("กำลังประมวลผลการวิเคร
                             diff = live_proj['proj_total'] - ou_val
                             diff_sign = "+" if diff > 0 else ""
                             direction = "สูงกว่าราคาเปิด" if diff > 0 else "ต่ำกว่าราคาเปิด"
-                            st.markdown(f"🎯 **เรตราคาเปิด:** `{ou_val:.1f}` ➔ ต่างจากสปีดสด `{diff_sign}{diff:.1f}` แต้ม ({direction})")
-                        
-                        ou_res = analysis.get('over_under')
-                        if ou_res:
-                            with st.expander("อ่านการวิเคราะห์ก่อนแข่ง"):
-                                rec_text = t_rec(ou_res['recommendation'])
-                                t_edge = ou_res.get('total_edge', 0.0)
-                                win_p = ou_res.get('win_prob', 0.5)
-                                st.markdown(f"**คำแนะนำก่อนแข่ง:** **{rec_text}** (Edge: `{t_edge:+.1f}` แต้ม)")
-                                for f in ou_res.get('factors', []):
-                                    icon = t_dir(f['direction'], 'ou')
-                                    st.write(f"- {icon} **{f['name']}**: {f['value']}")
-                    else:
-                        st.markdown(f"**เรตราคาเปิดมาที่:** `{ou_val:.1f}`" if ou_val is not None else "**เรตราคาเปิดมาที่:** `ยังไม่ออกราคา`")
-                        
-                        ou_res = analysis.get('over_under')
-                        if ou_res:
-                            rec_text = t_rec(ou_res['recommendation'])
-                            t_edge = ou_res.get('total_edge', 0.0)
-                            win_p = ou_res.get('win_prob', 0.5)
-                            
-                            st.markdown(f"**คำแนะนำ:** **{rec_text}** (Edge: `{t_edge:+.1f}` แต้ม)")
-                            st.progress(win_p, text=f"ความน่าจะเป็นทางสถิติ (Win Prob): {win_p:.1%}")
-                            
-                            # --- LINE MOVEMENT BADGE & TWO-SIDED VERDICT ---
-                            lm_ou = ou_res.get('line_movement')
-                            if lm_ou and lm_ou.get('badge'):
-                                if lm_ou.get('status') == 'SHARP_CONFIRMATION':
-                                    st.success(f"**{lm_ou['badge']}:** {lm_ou['detail']}")
-                                elif lm_ou.get('status') == 'STEAM_WARNING':
-                                    st.warning(f"**{lm_ou['badge']}:** {lm_ou['detail']}")
-                                else:
-                                    st.caption(f"**{lm_ou['badge']}:** {lm_ou['detail']}")
+                            st.caption(f"🎯 **เทียบราคาเปิด ({ou_val:.1f}):** สปีดสด `{diff_sign}{diff:.1f}` แต้ม ({direction})")
+                        st.divider()
 
-                                # Two-sided comparison & Directional Verdict
-                                if lm_ou.get('market_flow_prob') is not None and lm_ou.get('status') != 'NO_DATA':
-                                    m_prob = lm_ou['market_flow_prob']
-                                    m_dir = lm_ou.get('market_flow_direction', '')
-                                    diff_val = lm_ou.get('diff', 0.0)
-                                    diff_str = f" *(แรงไหล {diff_val:+.1f} แต้ม)*" if abs(diff_val) >= 0.5 else ""
-                                    
-                                    st.markdown(f"""
-                                    ⚖️ **เปรียบเทียบ 2 ฝั่ง:**
-                                    * 📊 **ฝั่งโมเดลสถิติ:** {rec_text} (`{win_p:.1%}`)
-                                    * 🌊 **ฝั่งกระแสเงินตลาด:** ดัน{m_dir} (`{m_prob:.1%}`){diff_str}
-                                    """)
-                                    
-                                    v_title = lm_ou.get('verdict_title', '')
-                                    v_detail = lm_ou.get('verdict_detail', '')
-                                    if lm_ou.get('verdict') == 'FOLLOW_MARKET':
-                                        st.error(f"🎯 **ฟันธง:** **{v_title}** — *{v_detail}*")
-                                    elif lm_ou.get('verdict') == 'CONFIRMED_ALIGNED':
-                                        st.success(f"🎯 **ฟันธง:** **{v_title}** — *{v_detail}*")
-                                    else:
-                                        st.info(f"🎯 **ฟันธง:** **{v_title}** — *{v_detail}*")
-                            
-                            # --- MARKET-ANCHORED PROJECTION INFO ---
-                            if ou_res.get('raw_projected_total') is not None and ou_res.get('projected_total') is not None:
-                                st.caption(f"🎯 **Market-Anchored Projection:** `{ou_res['projected_total']:.1f}` PTS *(ตลาด 65% + สถิติ 35% | โมเดลดิบ: {ou_res['raw_projected_total']:.1f})*")
-                            
-                            # --- QUANTITATIVE VALUE & KELLY METRICS ---
-                            if ou_res.get('recommendation') != 'NEUTRAL' and ou_res.get('ev') is not None:
-                                ev_val = ou_res.get('ev', 0.0)
-                                q_kelly = ou_res.get('kelly_quarter', 0.0)
-                                fair_p = ou_res.get('fair_prob', 0.5)
-                                m_col1, m_col2 = st.columns(2)
-                                with m_col1:
-                                    ev_delta_color = "normal" if ev_val >= 0 else "inverse"
-                                    st.metric("Expected Value (+EV)", f"{ev_val:+.1%}", delta=f"{ou_res.get('edge_pct', 0.0):+.1f}% Edge", delta_color=ev_delta_color)
-                                with m_col2:
-                                    st.metric("Market Fair Prob", f"{fair_p:.1%}", help="คำนวณผ่าน De-vigging ถอดค่าน้ำของตลาดออก (ราคาที่ตลาดมองว่ายุติธรรม)")
-                                if q_kelly > 0:
-                                    st.info(f"💡 **คำแนะนำบริหารหน้าตัก (Kelly):** ลงทุน **{q_kelly*100:.1f}%** ของพอร์ต (1/4 Kelly)")
-                            
-                            if ou_res.get('is_anomaly'):
-                                st.warning("⚠️ **ระวังข้อมูลผันผวน:** ส่วนต่างแต้มห่างจากราคาเปิดเกิน 8 แต้ม (ข้อมูลต้นฤดูกาลผันผวน)")
-                            
-                            # --- LINE SHOPPING O/U ---
-                            if odds_data and ('STRONG' in ou_res['recommendation'] or 'LEAN' in ou_res['recommendation']):
-                                is_over = 'OVER' in ou_res['recommendation'].upper()
-                                b_book = "N/A"
-                                b_val = -999 if is_over else 999
-                                b_price = ""
-                                for bookie, totals in odds_data.get('totals', {}).items():
-                                    if is_over and 'over' in totals:
-                                        o_val = totals['over']
-                                        if o_val is not None and (b_val == -999 or o_val < b_val):
-                                            b_val, b_book, b_price = o_val, bookie, totals.get('over_price', '')
-                                    elif not is_over and 'under' in totals:
-                                        u_val = totals['under']
-                                        if u_val is not None and (b_val == 999 or u_val > b_val):
-                                            b_val, b_book, b_price = u_val, bookie, totals.get('under_price', '')
-                                if b_book != "N/A":
-                                    st.success(f"🛒 **Line Shopping:** ควรแทง {'สูง' if is_over else 'ต่ำ'} {b_val} ที่ **{b_book.upper()}** (ค่าน้ำ {b_price})")
-                            
-                            with st.expander("อ่านเหตุผลประกอบ"):
-                                for f in ou_res['factors']:
-                                    icon = t_dir(f['direction'], 'ou')
-                                    st.write(f"- {icon} **{f['name']}**: {f['value']}")
-                        else:
-                            st.write("ไม่สามารถวิเคราะห์ได้เนื่องจากไม่มีราคา")
+                    st.markdown(f"**เรตราคาเปิดมาที่:** `{ou_val:.1f}`" if ou_val is not None else "**เรตราคาเปิดมาที่:** `ยังไม่ออกราคา`")
+                    
+                    ou_res = analysis.get('over_under')
+                    if ou_res:
+                        rec_text = t_rec(ou_res['recommendation'])
+                        t_edge = ou_res.get('total_edge', 0.0)
+                        win_p = ou_res.get('win_prob', 0.5)
+                        
+                        st.markdown(f"**คำแนะนำ:** **{rec_text}** (Edge: `{t_edge:+.1f}` แต้ม)")
+                        st.progress(win_p, text=f"ความน่าจะเป็นทางสถิติ (Win Prob): {win_p:.1%}")
+                        
+                        # --- LINE MOVEMENT BADGE & TWO-SIDED VERDICT ---
+                        lm_ou = ou_res.get('line_movement')
+                        if lm_ou and lm_ou.get('badge'):
+                            if lm_ou.get('status') == 'SHARP_CONFIRMATION':
+                                st.success(f"**{lm_ou['badge']}:** {lm_ou['detail']}")
+                            elif lm_ou.get('status') == 'STEAM_WARNING':
+                                st.warning(f"**{lm_ou['badge']}:** {lm_ou['detail']}")
+                            else:
+                                st.caption(f"**{lm_ou['badge']}:** {lm_ou['detail']}")
+
+                            # Two-sided comparison & Directional Verdict
+                            if lm_ou.get('market_flow_prob') is not None and lm_ou.get('status') != 'NO_DATA':
+                                m_prob = lm_ou['market_flow_prob']
+                                m_dir = lm_ou.get('market_flow_direction', '')
+                                diff_val = lm_ou.get('diff', 0.0)
+                                diff_str = f" *(แรงไหล {diff_val:+.1f} แต้ม)*" if abs(diff_val) >= 0.5 else ""
+                                
+                                st.markdown(f"""
+                                ⚖️ **เปรียบเทียบ 2 ฝั่ง:**
+                                * 📊 **ฝั่งโมเดลสถิติ:** {rec_text} (`{win_p:.1%}`)
+                                * 🌊 **ฝั่งกระแสเงินตลาด:** ดัน{m_dir} (`{m_prob:.1%}`){diff_str}
+                                """)
+                                
+                                v_title = lm_ou.get('verdict_title', '')
+                                v_detail = lm_ou.get('verdict_detail', '')
+                                if lm_ou.get('verdict') == 'FOLLOW_MARKET':
+                                    st.error(f"🎯 **ฟันธง:** **{v_title}** — *{v_detail}*")
+                                elif lm_ou.get('verdict') == 'CONFIRMED_ALIGNED':
+                                    st.success(f"🎯 **ฟันธง:** **{v_title}** — *{v_detail}*")
+                                else:
+                                    st.info(f"🎯 **ฟันธง:** **{v_title}** — *{v_detail}*")
+                        
+                        # --- MARKET-ANCHORED PROJECTION INFO ---
+                        if ou_res.get('raw_projected_total') is not None and ou_res.get('projected_total') is not None:
+                            st.caption(f"🎯 **Market-Anchored Projection:** `{ou_res['projected_total']:.1f}` PTS *(ตลาด 65% + สถิติ 35% | โมเดลดิบ: {ou_res['raw_projected_total']:.1f})*")
+                        
+                        # --- QUANTITATIVE VALUE & KELLY METRICS ---
+                        if ou_res.get('recommendation') != 'NEUTRAL' and ou_res.get('ev') is not None:
+                            ev_val = ou_res.get('ev', 0.0)
+                            q_kelly = ou_res.get('kelly_quarter', 0.0)
+                            fair_p = ou_res.get('fair_prob', 0.5)
+                            m_col1, m_col2 = st.columns(2)
+                            with m_col1:
+                                ev_delta_color = "normal" if ev_val >= 0 else "inverse"
+                                st.metric("Expected Value (+EV)", f"{ev_val:+.1%}", delta=f"{ou_res.get('edge_pct', 0.0):+.1f}% Edge", delta_color=ev_delta_color)
+                            with m_col2:
+                                st.metric("Market Fair Prob", f"{fair_p:.1%}", help="คำนวณผ่าน De-vigging ถอดค่าน้ำของตลาดออก (ราคาที่ตลาดมองว่ายุติธรรม)")
+                            if q_kelly > 0:
+                                st.info(f"💡 **คำแนะนำบริหารหน้าตัก (Kelly):** ลงทุน **{q_kelly*100:.1f}%** ของพอร์ต (1/4 Kelly)")
+                        
+                        if ou_res.get('is_anomaly'):
+                            st.warning("⚠️ **ระวังข้อมูลผันผวน:** ส่วนต่างแต้มห่างจากราคาเปิดเกิน 8 แต้ม (ข้อมูลต้นฤดูกาลผันผวน)")
+                        
+                        # --- LINE SHOPPING O/U ---
+                        if odds_data and ('STRONG' in ou_res['recommendation'] or 'LEAN' in ou_res['recommendation']):
+                            is_over = 'OVER' in ou_res['recommendation'].upper()
+                            b_book = "N/A"
+                            b_val = -999 if is_over else 999
+                            b_price = ""
+                            for bookie, totals in odds_data.get('totals', {}).items():
+                                if is_over and 'over' in totals:
+                                    o_val = totals['over']
+                                    if o_val is not None and (b_val == -999 or o_val < b_val):
+                                        b_val, b_book, b_price = o_val, bookie, totals.get('over_price', '')
+                                elif not is_over and 'under' in totals:
+                                    u_val = totals['under']
+                                    if u_val is not None and (b_val == 999 or u_val > b_val):
+                                        b_val, b_book, b_price = u_val, bookie, totals.get('under_price', '')
+                            if b_book != "N/A":
+                                st.success(f"🛒 **Line Shopping:** ควรแทง {'สูง' if is_over else 'ต่ำ'} {b_val} ที่ **{b_book.upper()}** (ค่าน้ำ {b_price})")
+                        
+                        with st.expander("อ่านเหตุผลประกอบ"):
+                            for f in ou_res['factors']:
+                                icon = t_dir(f['direction'], 'ou')
+                                st.write(f"- {icon} **{f['name']}**: {f['value']}")
+                    else:
+                        st.write("ไม่สามารถวิเคราะห์ได้เนื่องจากไม่มีราคา")
                         
                 # Spread Column
                 with col2:
@@ -412,112 +402,102 @@ with st.spinner("กำลังประมวลผลการวิเคร
                             sp_str = f"{home} {sp_val:+.1f}" if sp_val != 0.0 else f"{home} PK (0.0)"
                             cover_diff = margin + sp_val
                             cover_team = home if cover_diff > 0 else away
-                            st.markdown(f"🎯 **เรตแต้มต่อเปิด:** `{sp_str}` ➔ สปีดสดชี้ `{cover_team}` ได้เปรียบ `{abs(cover_diff):.1f}` แต้ม")
-                        
-                        sp_res = analysis.get('spread')
-                        if sp_res:
-                            with st.expander("อ่านการวิเคราะห์ก่อนแข่ง"):
-                                rec_text = t_rec(sp_res['recommendation'])
-                                c_edge = sp_res.get('cover_edge', 0.0)
-                                win_p = sp_res.get('win_prob', 0.5)
-                                st.markdown(f"**คำแนะนำก่อนแข่ง:** **{rec_text}** (Cover Edge: `{c_edge:+.1f}` แต้ม)")
-                                for f in sp_res.get('factors', []):
-                                    icon = t_dir(f['direction'], 'sp')
-                                    st.write(f"- {icon} **{f['name']}**: {f['value']}")
-                    else:
-                        if sp_val is not None:
-                            sp_str = f"{home} {sp_val:+.1f}" if sp_val != 0.0 else f"{home} PK (0.0)"
-                            st.markdown(f"**เรตราคาเปิดมาที่:** `{sp_str}`")
-                        else:
-                            st.markdown("**เรตราคาเปิดมาที่:** `ยังไม่ออกราคา`")
-                        
-                        sp_res = analysis.get('spread')
-                        if sp_res:
-                            rec_text = t_rec(sp_res['recommendation'])
-                            c_edge = sp_res.get('cover_edge', 0.0)
-                            win_p = sp_res.get('win_prob', 0.5)
-                            
-                            st.markdown(f"**คำแนะนำ:** **{rec_text}** (Cover Edge: `{c_edge:+.1f}` แต้ม)")
-                            st.progress(win_p, text=f"ความน่าจะเป็นทางสถิติ (Win Prob): {win_p:.1%}")
-                            
-                            # --- LINE MOVEMENT BADGE & TWO-SIDED VERDICT ---
-                            lm_sp = sp_res.get('line_movement')
-                            if lm_sp and lm_sp.get('badge'):
-                                if lm_sp.get('status') == 'SHARP_CONFIRMATION':
-                                    st.success(f"**{lm_sp['badge']}:** {lm_sp['detail']}")
-                                elif lm_sp.get('status') == 'STEAM_WARNING':
-                                    st.warning(f"**{lm_sp['badge']}:** {lm_sp['detail']}")
-                                else:
-                                    st.caption(f"**{lm_sp['badge']}:** {lm_sp['detail']}")
+                            st.caption(f"🎯 **เทียบแต้มต่อเปิด ({sp_str}):** สปีดสดชี้ `{cover_team}` ได้เปรียบ `{abs(cover_diff):.1f}` แต้ม")
+                        st.divider()
 
-                                # Two-sided comparison & Directional Verdict
-                                if lm_sp.get('market_flow_prob') is not None and lm_sp.get('status') != 'NO_DATA':
-                                    m_prob = lm_sp['market_flow_prob']
-                                    m_dir = lm_sp.get('market_flow_direction', '')
-                                    diff_val = lm_sp.get('diff', 0.0)
-                                    diff_str = f" *(แรงไหล {diff_val:+.1f} แต้ม)*" if abs(diff_val) >= 0.5 else ""
-                                    
-                                    st.markdown(f"""
-                                    ⚖️ **เปรียบเทียบ 2 ฝั่ง:**
-                                    * 📊 **ฝั่งโมเดลสถิติ:** {rec_text} (`{win_p:.1%}`)
-                                    * 🌊 **ฝั่งกระแสเงินตลาด:** ดัน{m_dir} (`{m_prob:.1%}`){diff_str}
-                                    """)
-                                    
-                                    v_title = lm_sp.get('verdict_title', '')
-                                    v_detail = lm_sp.get('verdict_detail', '')
-                                    if lm_sp.get('verdict') == 'FOLLOW_MARKET':
-                                        st.error(f"🎯 **ฟันธง:** **{v_title}** — *{v_detail}*")
-                                    elif lm_sp.get('verdict') == 'CONFIRMED_ALIGNED':
-                                        st.success(f"🎯 **ฟันธง:** **{v_title}** — *{v_detail}*")
-                                    else:
-                                        st.info(f"🎯 **ฟันธง:** **{v_title}** — *{v_detail}*")
-                            
-                            # --- MARKET-ANCHORED PROJECTION INFO ---
-                            if sp_res.get('raw_projected_margin') is not None and sp_res.get('projected_margin') is not None:
-                                st.caption(f"🎯 **Market-Anchored Margin:** `{sp_res['projected_margin']:+.1f}` PTS *(ตลาด 65% + สถิติ 35% | โมเดลดิบ: {sp_res['raw_projected_margin']:+.1f})*")
-                            
-                            # --- QUANTITATIVE VALUE & KELLY METRICS ---
-                            if sp_res.get('recommendation') != 'NEUTRAL' and sp_res.get('ev') is not None:
-                                ev_val = sp_res.get('ev', 0.0)
-                                q_kelly = sp_res.get('kelly_quarter', 0.0)
-                                fair_p = sp_res.get('fair_prob', 0.5)
-                                m_col1, m_col2 = st.columns(2)
-                                with m_col1:
-                                    ev_delta_color = "normal" if ev_val >= 0 else "inverse"
-                                    st.metric("Expected Value (+EV)", f"{ev_val:+.1%}", delta=f"{sp_res.get('edge_pct', 0.0):+.1f}% Edge", delta_color=ev_delta_color)
-                                with m_col2:
-                                    st.metric("Market Fair Prob", f"{fair_p:.1%}", help="คำนวณผ่าน De-vigging ถอดค่าน้ำของตลาดออก (ราคาที่ตลาดมองว่ายุติธรรม)")
-                                if q_kelly > 0:
-                                    st.info(f"💡 **คำแนะนำบริหารหน้าตัก (Kelly):** ลงทุน **{q_kelly*100:.1f}%** ของพอร์ต (1/4 Kelly)")
-                            
-                            if sp_res.get('is_anomaly'):
-                                st.warning("⚠️ **ระวังข้อมูลผันผวน:** แต้มต่อห่างจากโมเดลเกิน 6 แต้ม (ข้อมูลต้นฤดูกาลผันผวน)")
-                            
-                            # --- LINE SHOPPING SPREAD ---
-                            if odds_data and ('STRONG' in sp_res['recommendation'] or 'LEAN' in sp_res['recommendation']):
-                                is_home = 'HOME' in sp_res['recommendation'].upper()
-                                pick_team = home if is_home else away
+                    if sp_val is not None:
+                        sp_str = f"{home} {sp_val:+.1f}" if sp_val != 0.0 else f"{home} PK (0.0)"
+                        st.markdown(f"**เรตราคาเปิดมาที่:** `{sp_str}`")
+                    else:
+                        st.markdown("**เรตราคาเปิดมาที่:** `ยังไม่ออกราคา`")
+                    
+                    sp_res = analysis.get('spread')
+                    if sp_res:
+                        rec_text = t_rec(sp_res['recommendation'])
+                        c_edge = sp_res.get('cover_edge', 0.0)
+                        win_p = sp_res.get('win_prob', 0.5)
+                        
+                        st.markdown(f"**คำแนะนำ:** **{rec_text}** (Cover Edge: `{c_edge:+.1f}` แต้ม)")
+                        st.progress(win_p, text=f"ความน่าจะเป็นทางสถิติ (Win Prob): {win_p:.1%}")
+                        
+                        # --- LINE MOVEMENT BADGE & TWO-SIDED VERDICT ---
+                        lm_sp = sp_res.get('line_movement')
+                        if lm_sp and lm_sp.get('badge'):
+                            if lm_sp.get('status') == 'SHARP_CONFIRMATION':
+                                st.success(f"**{lm_sp['badge']}:** {lm_sp['detail']}")
+                            elif lm_sp.get('status') == 'STEAM_WARNING':
+                                st.warning(f"**{lm_sp['badge']}:** {lm_sp['detail']}")
+                            else:
+                                st.caption(f"**{lm_sp['badge']}:** {lm_sp['detail']}")
+
+                            # Two-sided comparison & Directional Verdict
+                            if lm_sp.get('market_flow_prob') is not None and lm_sp.get('status') != 'NO_DATA':
+                                m_prob = lm_sp['market_flow_prob']
+                                m_dir = lm_sp.get('market_flow_direction', '')
+                                diff_val = lm_sp.get('diff', 0.0)
+                                diff_str = f" *(แรงไหล {diff_val:+.1f} แต้ม)*" if abs(diff_val) >= 0.5 else ""
                                 
-                                b_book = "N/A"
-                                b_val = -999  # Always want highest spread
-                                b_price = ""
+                                st.markdown(f"""
+                                ⚖️ **เปรียบเทียบ 2 ฝั่ง:**
+                                * 📊 **ฝั่งโมเดลสถิติ:** {rec_text} (`{win_p:.1%}`)
+                                * 🌊 **ฝั่งกระแสเงินตลาด:** ดัน{m_dir} (`{m_prob:.1%}`){diff_str}
+                                """)
                                 
-                                for bookie, spreads in odds_data.get('spreads', {}).items():
-                                    if is_home and 'home' in spreads:
-                                        h_val = spreads['home']
-                                        if h_val is not None and h_val > b_val:
-                                            b_val, b_book, b_price = h_val, bookie, spreads.get('home_price', '')
-                                    elif not is_home and 'away' in spreads:
-                                        a_val = spreads['away']
-                                        if a_val is not None and a_val > b_val:
-                                            b_val, b_book, b_price = a_val, bookie, spreads.get('away_price', '')
-                                            
-                                if b_book != "N/A":
-                                    st.success(f"🛒 **Line Shopping:** ควรแทง {pick_team} {b_val} ที่ **{b_book.upper()}** (ค่าน้ำ {b_price})")
+                                v_title = lm_sp.get('verdict_title', '')
+                                v_detail = lm_sp.get('verdict_detail', '')
+                                if lm_sp.get('verdict') == 'FOLLOW_MARKET':
+                                    st.error(f"🎯 **ฟันธง:** **{v_title}** — *{v_detail}*")
+                                elif lm_sp.get('verdict') == 'CONFIRMED_ALIGNED':
+                                    st.success(f"🎯 **ฟันธง:** **{v_title}** — *{v_detail}*")
+                                else:
+                                    st.info(f"🎯 **ฟันธง:** **{v_title}** — *{v_detail}*")
+                        
+                        # --- MARKET-ANCHORED PROJECTION INFO ---
+                        if sp_res.get('raw_projected_margin') is not None and sp_res.get('projected_margin') is not None:
+                            st.caption(f"🎯 **Market-Anchored Margin:** `{sp_res['projected_margin']:+.1f}` PTS *(ตลาด 65% + สถิติ 35% | โมเดลดิบ: {sp_res['raw_projected_margin']:+.1f})*")
+                        
+                        # --- QUANTITATIVE VALUE & KELLY METRICS ---
+                        if sp_res.get('recommendation') != 'NEUTRAL' and sp_res.get('ev') is not None:
+                            ev_val = sp_res.get('ev', 0.0)
+                            q_kelly = sp_res.get('kelly_quarter', 0.0)
+                            fair_p = sp_res.get('fair_prob', 0.5)
+                            m_col1, m_col2 = st.columns(2)
+                            with m_col1:
+                                ev_delta_color = "normal" if ev_val >= 0 else "inverse"
+                                st.metric("Expected Value (+EV)", f"{ev_val:+.1%}", delta=f"{sp_res.get('edge_pct', 0.0):+.1f}% Edge", delta_color=ev_delta_color)
+                            with m_col2:
+                                st.metric("Market Fair Prob", f"{fair_p:.1%}", help="คำนวณผ่าน De-vigging ถอดค่าน้ำของตลาดออก (ราคาที่ตลาดมองว่ายุติธรรม)")
+                            if q_kelly > 0:
+                                st.info(f"💡 **คำแนะนำบริหารหน้าตัก (Kelly):** ลงทุน **{q_kelly*100:.1f}%** ของพอร์ต (1/4 Kelly)")
+                        
+                        if sp_res.get('is_anomaly'):
+                            st.warning("⚠️ **ระวังข้อมูลผันผวน:** แต้มต่อห่างจากโมเดลเกิน 6 แต้ม (ข้อมูลต้นฤดูกาลผันผวน)")
+                        
+                        # --- LINE SHOPPING SPREAD ---
+                        if odds_data and ('STRONG' in sp_res['recommendation'] or 'LEAN' in sp_res['recommendation']):
+                            is_home = 'HOME' in sp_res['recommendation'].upper()
+                            pick_team = home if is_home else away
                             
-                            with st.expander("อ่านเหตุผลประกอบ"):
-                                for f in sp_res['factors']:
-                                    icon = t_dir(f['direction'], 'sp')
-                                    st.write(f"- {icon} **{f['name']}**: {f['value']}")
-                        else:
-                            st.write("ไม่สามารถวิเคราะห์ได้เนื่องจากไม่มีราคา")
+                            b_book = "N/A"
+                            b_val = -999  # Always want highest spread
+                            b_price = ""
+                            
+                            for bookie, spreads in odds_data.get('spreads', {}).items():
+                                if is_home and 'home' in spreads:
+                                    h_val = spreads['home']
+                                    if h_val is not None and h_val > b_val:
+                                        b_val, b_book, b_price = h_val, bookie, spreads.get('home_price', '')
+                                elif not is_home and 'away' in spreads:
+                                    a_val = spreads['away']
+                                    if a_val is not None and a_val > b_val:
+                                        b_val, b_book, b_price = a_val, bookie, spreads.get('away_price', '')
+                                        
+                            if b_book != "N/A":
+                                st.success(f"🛒 **Line Shopping:** ควรแทง {pick_team} {b_val} ที่ **{b_book.upper()}** (ค่าน้ำ {b_price})")
+                        
+                        with st.expander("อ่านเหตุผลประกอบ"):
+                            for f in sp_res['factors']:
+                                icon = t_dir(f['direction'], 'sp')
+                                st.write(f"- {icon} **{f['name']}**: {f['value']}")
+                    else:
+                        st.write("ไม่สามารถวิเคราะห์ได้เนื่องจากไม่มีราคา")
