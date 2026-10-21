@@ -9,6 +9,7 @@ from config import (
     resolve_team_info,
     parse_spread,
     calculate_home_spread,
+    t_rec,
 )
 from processing.feature_engineering import FeatureEngineer
 from collectors.odds_collector import OddsCollector
@@ -156,6 +157,36 @@ class TestPonytailAuditFixes(unittest.TestCase):
         # Calling get_game_summary should return cached item directly
         summary = collector.get_game_summary('99999')
         self.assertEqual(summary.get('boxscore'), {'test': 1})
+
+    def test_recommendation_translation_dynamic_spread(self):
+        """Verify t_rec dynamically assigns 'ต่อ' vs 'รอง' according to spread_line."""
+        # 1. Home is favorite (spread_line = -4.5) e.g. Washington -4.5 vs Milwaukee
+        # Away is UNDERDOG -> must say 'รองทีมเยือน', NOT 'ต่อทีมเยือน'
+        self.assertEqual(t_rec('STRONG AWAY', spread_line=-4.5), '🔥 รองทีมเยือน (มั่นใจมาก)')
+        self.assertEqual(t_rec('LEAN AWAY', spread_line=-4.5), '✈️ รองทีมเยือน (น่าสนใจ)')
+        # Home is FAVORITE -> must say 'ต่อเจ้าบ้าน'
+        self.assertEqual(t_rec('STRONG HOME', spread_line=-4.5), '🔥 ต่อเจ้าบ้าน (มั่นใจมาก)')
+        self.assertEqual(t_rec('LEAN HOME', spread_line=-4.5), '🏠 ต่อเจ้าบ้าน (น่าสนใจ)')
+
+        # 2. Away is favorite (spread_line = +4.5) e.g. Washington +4.5 vs Milwaukee
+        # Away is FAVORITE -> must say 'ต่อทีมเยือน'
+        self.assertEqual(t_rec('STRONG AWAY', spread_line=4.5), '🔥 ต่อทีมเยือน (มั่นใจมาก)')
+        self.assertEqual(t_rec('LEAN AWAY', spread_line=4.5), '✈️ ต่อทีมเยือน (น่าสนใจ)')
+        # Home is UNDERDOG -> must say 'รองเจ้าบ้าน'
+        self.assertEqual(t_rec('STRONG HOME', spread_line=4.5), '🔥 รองเจ้าบ้าน (มั่นใจมาก)')
+        self.assertEqual(t_rec('LEAN HOME', spread_line=4.5), '🏠 รองเจ้าบ้าน (น่าสนใจ)')
+
+        # 3. Pick'em (spread_line = 0)
+        self.assertEqual(t_rec('STRONG AWAY', spread_line=0), '🔥 เลือกทีมเยือน (มั่นใจมาก)')
+        self.assertEqual(t_rec('STRONG HOME', spread_line=0), '🔥 เลือกเจ้าบ้าน (มั่นใจมาก)')
+
+        # 4. Unknown spread line -> neutral fallback without assuming ต่อ
+        self.assertEqual(t_rec('STRONG AWAY'), '🔥 ทีมเยือน (มั่นใจมาก)')
+        self.assertEqual(t_rec('STRONG HOME'), '🔥 เจ้าบ้าน (มั่นใจมาก)')
+
+        # 5. Over/Under untouched
+        self.assertEqual(t_rec('STRONG OVER'), '🔥 สูง (มั่นใจมาก)')
+        self.assertEqual(t_rec('STRONG UNDER'), '🔥 ต่ำ (มั่นใจมาก)')
 
 
 if __name__ == '__main__':

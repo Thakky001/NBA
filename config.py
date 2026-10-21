@@ -300,3 +300,80 @@ def calculate_home_spread(spread_text: Any, home_team: str, away_team: str) -> O
 
     return -spread_val if is_away else spread_val
 
+
+def translate_recommendation(rec: Any, spread_line: Optional[float] = None) -> str:
+    """Translate model recommendation to human-readable Thai text.
+    
+    Dynamically accounts for whether the picked team is the favorite (ต่อ)
+    or underdog (รอง) based on spread_line (from home team perspective).
+    
+    If spread_line < 0: Home is favorite (-), Away is underdog (+)
+    If spread_line > 0: Home is underdog (+), Away is favorite (-)
+    If spread_line == 0: Even line / Pick'em (เลือก)
+    """
+    if not rec:
+        return ""
+    rec_str = str(rec).strip().upper()
+
+    # Totals (Over / Under)
+    if 'OVER' in rec_str:
+        if 'STRONG' in rec_str:
+            return '🔥 สูง (มั่นใจมาก)'
+        elif 'LEAN' in rec_str:
+            return '📈 สูง (น่าสนใจ)'
+        return 'สูง (OVER)'
+    if 'UNDER' in rec_str:
+        if 'STRONG' in rec_str:
+            return '🔥 ต่ำ (มั่นใจมาก)'
+        elif 'LEAN' in rec_str:
+            return '📉 ต่ำ (น่าสนใจ)'
+        return 'ต่ำ (UNDER)'
+
+    # Spread recommendations (HOME / AWAY)
+    is_home = 'HOME' in rec_str
+    is_away = 'AWAY' in rec_str
+    is_strong = 'STRONG' in rec_str
+    is_lean = 'LEAN' in rec_str
+
+    if is_home or is_away:
+        role = ""
+        if spread_line is not None:
+            try:
+                s_val = float(spread_line)
+                if s_val < 0:
+                    # Home is favorite (-), Away is underdog (+)
+                    role = "ต่อ" if is_home else "รอง"
+                elif s_val > 0:
+                    # Home is underdog (+), Away is favorite (-)
+                    role = "รอง" if is_home else "ต่อ"
+                else:
+                    role = "เลือก"
+            except (ValueError, TypeError):
+                role = ""
+
+        label = f"{role}เจ้าบ้าน" if is_home else f"{role}ทีมเยือน"
+
+        if is_strong:
+            return f"🔥 {label} (มั่นใจมาก)"
+        elif is_lean:
+            icon = "🏠" if is_home else "✈️"
+            return f"{icon} {label} (น่าสนใจ)"
+        return label
+
+    # Neutral variants
+    if 'NEUTRAL' in rec_str:
+        if 'HOME' in rec_str:
+            return '⚖️ ข้าม (แต่แอบเอียงไปทางเจ้าบ้าน)'
+        if 'AWAY' in rec_str:
+            return '⚖️ ข้าม (แต่แอบเอียงไปทางทีมเยือน)'
+        if 'UNDER' in rec_str:
+            return '⚖️ ข้าม (แต่แอบเอียงไปทางต่ำ)'
+        if 'OVER' in rec_str:
+            return '⚖️ ข้าม (แต่แอบเอียงไปทางสูง)'
+        return '⚖️ ข้าม (สูสีมาก)'
+
+    return str(rec)
+
+
+t_rec = translate_recommendation
+

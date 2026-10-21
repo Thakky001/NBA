@@ -117,26 +117,7 @@ except (ImportError, AttributeError):
         def grade_finished_games(*a, **k): return 0
         def calculate_track_record(*a, **k): return {}
         def record_slate_predictions(*a, **k): return 0
-from config import parse_spread, calculate_home_spread, resolve_team_info, normalize_team_name
-
-# Translation mapping for recommendations
-def t_rec(rec):
-    mapping = {
-        'STRONG OVER': '🔥 สูง (มั่นใจมาก)', 
-        'LEAN OVER': '📈 สูง (น่าสนใจ)',
-        'STRONG UNDER': '🔥 ต่ำ (มั่นใจมาก)', 
-        'LEAN UNDER': '📉 ต่ำ (น่าสนใจ)',
-        'STRONG HOME': '🔥 ต่อเจ้าบ้าน (มั่นใจมาก)', 
-        'LEAN HOME': '🏠 เจ้าบ้าน (น่าสนใจ)',
-        'STRONG AWAY': '🔥 ต่อทีมเยือน (มั่นใจมาก)', 
-        'LEAN AWAY': '✈️ ทีมเยือน (น่าสนใจ)',
-        'NEUTRAL': '⚖️ ข้าม (สูสีมาก)',
-        'NEUTRAL (slight home)': '⚖️ ข้าม (แต่แอบเอียงไปทางเจ้าบ้าน)',
-        'NEUTRAL (slight away)': '⚖️ ข้าม (แต่แอบเอียงไปทางทีมเยือน)',
-        'NEUTRAL (slight under)': '⚖️ ข้าม (แต่แอบเอียงไปทางต่ำ)',
-        'NEUTRAL (slight over)': '⚖️ ข้าม (แต่แอบเอียงไปทางสูง)'
-    }
-    return mapping.get(rec, rec)
+from config import parse_spread, calculate_home_spread, resolve_team_info, normalize_team_name, t_rec
 
 def t_dir(direction, factor_type):
     if factor_type == 'ou':
@@ -543,7 +524,7 @@ def render_game_slate(selected_date, is_live_refresh):
                     
                         sp_res = analysis.get('spread')
                         if sp_res:
-                            rec_text = t_rec(sp_res['recommendation'])
+                            rec_text = t_rec(sp_res['recommendation'], spread_line=sp_val)
                             c_edge = sp_res.get('cover_edge', 0.0)
                             win_p = sp_res.get('win_prob', 0.5)
                         
@@ -790,7 +771,7 @@ def render_track_record_tab():
             "สกอร์จริง (เยือน-เหย้า)": format_score(row),
             "เรตราคาปิด": f"{ou_line} | ต่อ {sp_line}",
             "คำทำนาย สูง/ต่ำ": f"{t_rec(ou_rec)} [{format_badge(row.get('ou_result'))}]",
-            "คำทำนาย แต้มต่อ": f"{t_rec(sp_rec)} [{format_badge(row.get('sp_result'))}]",
+            "คำทำนาย แต้มต่อ": f"{t_rec(sp_rec, spread_line=row.get('spread_line'))} [{format_badge(row.get('sp_result'))}]",
             "ฟันธงกระแสเงิน": f"{t_verdict(row.get('ou_verdict'))} [{format_badge(row.get('verdict_result'))}]",
             "สถานะ": "✅ จบแล้ว" if row.get('status') == 'GRADED' else "⏳ รอผล"
         })
