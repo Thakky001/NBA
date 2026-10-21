@@ -4,6 +4,12 @@ from datetime import datetime, timezone, timedelta
 import sys
 import os
 import re
+import logging
+import warnings
+
+# Suppress framework deprecation warnings to keep logs clean
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+logging.getLogger("streamlit.deprecation_util").setLevel(logging.ERROR)
 
 THAI_TZ = timezone(timedelta(hours=7))
 
@@ -635,8 +641,8 @@ def render_track_record_tab():
         btn_clicked = False
         try:
             btn_clicked = st.button("🔄 ตรวจผลและอัปเดตสถิติทันที", width="stretch", key="btn_sync_ledger")
-        except TypeError:
-            btn_clicked = st.button("🔄 ตรวจผลและอัปเดตสถิติทันที", use_container_width=True, key="btn_sync_ledger")
+        except Exception:
+            btn_clicked = st.button("🔄 ตรวจผลและอัปเดตสถิติทันที", key="btn_sync_ledger")
         if btn_clicked:
             with st.spinner("กำลังดึงผลการแข่งขันล่าสุดและอัปเดตสถานะ..."):
                 g1 = grade_finished_games(espn.get_scoreboard_by_thai_date(today_thai))
@@ -793,10 +799,7 @@ def render_track_record_tab():
 
     if display_rows:
         table_df = pd.DataFrame(display_rows)
-        try:
-            st.dataframe(table_df, width="stretch", hide_index=True)
-        except TypeError:
-            st.dataframe(table_df, use_container_width=True, hide_index=True)
+        st.dataframe(table_df, hide_index=True)
     else:
         st.info("ไม่พบรายการที่ตรงกับเงื่อนไขการค้นหา")
 
