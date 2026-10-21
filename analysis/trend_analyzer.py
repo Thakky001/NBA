@@ -598,7 +598,7 @@ class TrendAnalyzer:
         
         # Line Movement & Sharp Action Detection
         from analysis.betting_math import analyze_line_movement
-        line_mv = analyze_line_movement(open_spread, spread_line, market_type='spread', recommendation=recommendation)
+        line_mv = analyze_line_movement(open_spread, spread_line, market_type='spread', recommendation=recommendation, home_team=home_team, away_team=away_team)
         
         # Anomaly Detection (flagging extreme discrepancies without clamping)
         is_anomaly = abs(cover_edge) > 6.0 if spread_line is not None else False

@@ -205,6 +205,24 @@ class TestPonytailAuditFixes(unittest.TestCase):
         self.assertEqual(t_rec('STRONG OVER'), '🔥 สูง (มั่นใจมาก)')
         self.assertEqual(t_rec('STRONG UNDER'), '🔥 ต่ำ (มั่นใจมาก)')
 
+        # 6. Team-specific spread recommendation translations
+        self.assertEqual(
+            t_rec('LEAN AWAY', spread_line=-4.5, home_team='Washington Wizards', away_team='Milwaukee Bucks'),
+            '✈️ รอง Milwaukee Bucks (+4.5) (น่าสนใจ)'
+        )
+        self.assertEqual(
+            t_rec('STRONG HOME', spread_line=-4.5, home_team='Washington Wizards', away_team='Milwaukee Bucks'),
+            '🔥 ต่อ Washington Wizards (-4.5) (มั่นใจมาก)'
+        )
+        self.assertEqual(
+            t_rec('STRONG AWAY', spread_line=3.0, home_team='Washington Wizards', away_team='Milwaukee Bucks'),
+            '🔥 ต่อ Milwaukee Bucks (-3.0) (มั่นใจมาก)'
+        )
+        self.assertEqual(
+            t_rec('LEAN HOME', spread_line=3.0, home_team='Washington Wizards', away_team='Milwaukee Bucks'),
+            '🏠 รอง Washington Wizards (+3.0) (น่าสนใจ)'
+        )
+
 
 if __name__ == '__main__':
     unittest.main()

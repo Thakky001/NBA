@@ -311,7 +311,9 @@ def market_anchored_projection(raw_model_val: float,
 def analyze_line_movement(open_line: Optional[float],
                           current_line: Optional[float],
                           market_type: str,
-                          recommendation: str) -> Dict[str, Any]:
+                          recommendation: str,
+                          home_team: Optional[str] = None,
+                          away_team: Optional[str] = None) -> Dict[str, Any]:
     """Detect sharp line movement vs market steam against the model pick.
 
     Analyzes shift between opening line and current/closing line (24h before game).
@@ -391,10 +393,10 @@ def analyze_line_movement(open_line: Optional[float],
             flow_prob = 0.50
     else: # spread
         if diff < 0:
-            flow_dir = 'เจ้าบ้าน (HOME)'
+            flow_dir = f'{home_team} (เจ้าบ้าน)' if home_team else 'เจ้าบ้าน (HOME)'
             flow_prob = min(0.75, round(0.50 + abs_diff * 0.033, 4))
         elif diff > 0:
-            flow_dir = 'ทีมเยือน (AWAY)'
+            flow_dir = f'{away_team} (ทีมเยือน)' if away_team else 'ทีมเยือน (AWAY)'
             flow_prob = min(0.75, round(0.50 + abs_diff * 0.033, 4))
         else:
             flow_dir = 'สมดุล (NEUTRAL)'
@@ -445,31 +447,33 @@ def analyze_line_movement(open_line: Optional[float],
                 badge = '📉 Total Dropped'
                 detail = f'ราคาเปิดขยับลง {diff:.1f} แต้ม (เปิด {o_val:.1f} ➔ ปัจจุบัน {c_val:.1f})'
     else: # spread
+        h_name = f'{home_team} (เจ้าบ้าน)' if home_team else 'เจ้าบ้าน'
+        a_name = f'{away_team} (ทีมเยือน)' if away_team else 'ทีมเยือน'
         moved_toward_home = diff < 0
         if moved_toward_home:
             if 'HOME' in rec_upper:
                 status = 'SHARP_CONFIRMATION'
                 badge = '🔥 Sharp Move Confirmed'
-                detail = f'แต้มต่อไหลเข้าข้างเจ้าบ้าน {abs_diff:.1f} แต้ม (เปิด {o_val:+.1f} ➔ ปัจจุบัน {c_val:+.1f}) สอดคล้องกับโมเดล'
+                detail = f'แต้มต่อไหลเข้าข้าง {h_name} {abs_diff:.1f} แต้ม (เปิด {o_val:+.1f} ➔ ปัจจุบัน {c_val:+.1f}) สอดคล้องกับโมเดล'
             elif 'AWAY' in rec_upper:
                 status = 'STEAM_WARNING'
                 badge = '⚠️ Market Steam Warning'
-                detail = f'แต้มต่อไหลเข้าข้างเจ้าบ้าน {abs_diff:.1f} แต้ม (เปิด {o_val:+.1f} ➔ ปัจจุบัน {c_val:+.1f}) สวนทางกับโมเดลทีมเยือน'
+                detail = f'แต้มต่อไหลเข้าข้าง {h_name} {abs_diff:.1f} แต้ม (เปิด {o_val:+.1f} ➔ ปัจจุบัน {c_val:+.1f}) สวนทางกับโมเดล {a_name}'
             else:
                 badge = '🏠 Home Money Move'
-                detail = f'แต้มต่อขยับเข้าเจ้าบ้าน {abs_diff:.1f} แต้ม (เปิด {o_val:+.1f} ➔ ปัจจุบัน {c_val:+.1f})'
+                detail = f'แต้มต่อขยับเข้า {h_name} {abs_diff:.1f} แต้ม (เปิด {o_val:+.1f} ➔ ปัจจุบัน {c_val:+.1f})'
         else:
             if 'AWAY' in rec_upper:
                 status = 'SHARP_CONFIRMATION'
                 badge = '🔥 Sharp Move Confirmed'
-                detail = f'แต้มต่อไหลเข้าข้างทีมเยือน {abs_diff:.1f} แต้ม (เปิด {o_val:+.1f} ➔ ปัจจุบัน {c_val:+.1f}) สอดคล้องกับโมเดล'
+                detail = f'แต้มต่อไหลเข้าข้าง {a_name} {abs_diff:.1f} แต้ม (เปิด {o_val:+.1f} ➔ ปัจจุบัน {c_val:+.1f}) สอดคล้องกับโมเดล'
             elif 'HOME' in rec_upper:
                 status = 'STEAM_WARNING'
                 badge = '⚠️ Market Steam Warning'
-                detail = f'แต้มต่อไหลเข้าข้างทีมเยือน {abs_diff:.1f} แต้ม (เปิด {o_val:+.1f} ➔ ปัจจุบัน {c_val:+.1f}) สวนทางกับโมเดลเจ้าบ้าน'
+                detail = f'แต้มต่อไหลเข้าข้าง {a_name} {abs_diff:.1f} แต้ม (เปิด {o_val:+.1f} ➔ ปัจจุบัน {c_val:+.1f}) สวนทางกับโมเดล {h_name}'
             else:
                 badge = '✈️ Away Money Move'
-                detail = f'แต้มต่อขยับเข้าทีมเยือน {abs_diff:.1f} แต้ม (เปิด {o_val:+.1f} ➔ ปัจจุบัน {c_val:+.1f})'
+                detail = f'แต้มต่อขยับเข้า {a_name} {abs_diff:.1f} แต้ม (เปิด {o_val:+.1f} ➔ ปัจจุบัน {c_val:+.1f})'
 
     # Determine Verdict based on approved criteria
     if status == 'STEAM_WARNING':

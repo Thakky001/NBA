@@ -517,18 +517,28 @@ def render_game_slate(selected_date, is_live_refresh):
                             st.divider()
 
                         if sp_val is not None:
-                            sp_str = f"{home} {sp_val:+.1f}" if sp_val != 0.0 else f"{home} PK (0.0)"
-                            st.markdown(f"**เรตราคาเปิดมาที่:** `{sp_str}`")
+                            try:
+                                s_val = float(sp_val)
+                                if s_val < 0:
+                                    role_display = f"🔴 **{home}** (ทีมต่อ `{s_val:+.1f}`) | 🟢 **{away}** (ทีมรอง `+{abs(s_val):.1f}`)"
+                                elif s_val > 0:
+                                    role_display = f"🔴 **{away}** (ทีมต่อ `{-s_val:+.1f}`) | 🟢 **{home}** (ทีมรอง `+{s_val:.1f}`)"
+                                else:
+                                    role_display = f"⚖️ **ราคาเสมอ (Pick'em):** `{home}` vs `{away}` ไม่มีใครต่อใครรอง (0.0)"
+                            except Exception:
+                                sp_str = f"{home} {sp_val:+.1f}" if sp_val != 0.0 else f"{home} PK (0.0)"
+                                role_display = f"`{sp_str}`"
+                            st.markdown(f"**บทบาทแต้มต่อ:** {role_display}")
                         else:
-                            st.markdown("**เรตราคาเปิดมาที่:** `ยังไม่ออกราคา`")
+                            st.markdown("**บทบาทแต้มต่อ:** `ยังไม่ออกราคา`")
                     
                         sp_res = analysis.get('spread')
                         if sp_res:
-                            rec_text = t_rec(sp_res['recommendation'], spread_line=sp_val)
+                            rec_text = t_rec(sp_res['recommendation'], spread_line=sp_val, home_team=home, away_team=away)
                             c_edge = sp_res.get('cover_edge', 0.0)
                             win_p = sp_res.get('win_prob', 0.5)
                         
-                            st.markdown(f"**คำแนะนำ:** **{rec_text}** (Cover Edge: `{c_edge:+.1f}` แต้ม)")
+                            st.markdown(f"🎯 **คำแนะนำ:** **{rec_text}** (Cover Edge: `{c_edge:+.1f}` แต้ม)")
                             st.progress(win_p, text=f"ความน่าจะเป็นทางสถิติ (Win Prob): {win_p:.1%}")
                         
                             # --- LINE MOVEMENT BADGE & TWO-SIDED VERDICT ---

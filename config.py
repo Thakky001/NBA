@@ -301,11 +301,17 @@ def calculate_home_spread(spread_text: Any, home_team: str, away_team: str) -> O
     return -spread_val if is_away else spread_val
 
 
-def translate_recommendation(rec: Any, spread_line: Optional[float] = None) -> str:
+def translate_recommendation(
+    rec: Any,
+    spread_line: Optional[float] = None,
+    home_team: Optional[str] = None,
+    away_team: Optional[str] = None
+) -> str:
     """Translate model recommendation to human-readable Thai text.
     
     Dynamically accounts for whether the picked team is the favorite (ต่อ)
     or underdog (รอง) based on spread_line (from home team perspective).
+    If home_team and away_team are provided, embeds the target team name and line.
     
     If spread_line < 0: Home is favorite (-), Away is underdog (+)
     If spread_line > 0: Home is underdog (+), Away is favorite (-)
@@ -337,21 +343,46 @@ def translate_recommendation(rec: Any, spread_line: Optional[float] = None) -> s
 
     if is_home or is_away:
         role = ""
+        pts = ""
         if spread_line is not None:
             try:
                 s_val = float(spread_line)
                 if s_val < 0:
                     # Home is favorite (-), Away is underdog (+)
-                    role = "ต่อ" if is_home else "รอง"
+                    if is_home:
+                        role = "ต่อ"
+                        pts = f"{s_val:+.1f}"
+                    else:
+                        role = "รอง"
+                        pts = f"+{abs(s_val):.1f}"
                 elif s_val > 0:
                     # Home is underdog (+), Away is favorite (-)
-                    role = "รอง" if is_home else "ต่อ"
+                    if is_home:
+                        role = "รอง"
+                        pts = f"+{s_val:.1f}"
+                    else:
+                        role = "ต่อ"
+                        pts = f"{-s_val:+.1f}"
                 else:
                     role = "เลือก"
+                    pts = "0.0"
             except (ValueError, TypeError):
                 role = ""
+                pts = ""
 
-        label = f"{role}เจ้าบ้าน" if is_home else f"{role}ทีมเยือน"
+        # Determine target team display
+        target_name = None
+        if is_home and home_team:
+            target_name = home_team
+        elif is_away and away_team:
+            target_name = away_team
+
+        if target_name:
+            pts_str = f" ({pts})" if pts else ""
+            label = f"{role} {target_name}{pts_str}" if role else target_name
+        else:
+            base_target = "เจ้าบ้าน" if is_home else "ทีมเยือน"
+            label = f"{role}{base_target}" if role else base_target
 
         if is_strong:
             return f"🔥 {label} (มั่นใจมาก)"
