@@ -181,15 +181,18 @@ if st.sidebar.button("🔄 อัปเดตฐานข้อมูลสถ�
         from collectors.espn_collector import ESPNCollector
         from collectors.odds_collector import OddsCollector
         
-        progress.progress(25, text="1/3 กำลังดึงผลการแข่งขันและตารางจาก ESPN...")
+        progress.progress(20, text="1/4 กำลังดึงผลการแข่งขันและตารางจาก ESPN...")
         collector_espn = ESPNCollector()
         _load_game_history(collector_espn)
+
+        progress.progress(45, text="2/4 กำลังอัปเดตรายชื่อตัวเจ็บ (Injuries) ล่าสุดจาก ESPN...")
+        collector_espn.get_injuries()
         
-        progress.progress(60, text="2/3 กำลังอัปเดตราคาต่อรองล่าสุด...")
+        progress.progress(70, text="3/4 กำลังอัปเดตราคาต่อรองล่าสุด...")
         collector_odds = OddsCollector()
         collector_odds.get_odds_dataframe()
         
-        progress.progress(90, text="3/3 กำลังล้างแคชและประมวลผลโมเดลใหม่...")
+        progress.progress(90, text="4/4 กำลังล้างแคชและประมวลผลโมเดลใหม่...")
         st.cache_data.clear()
         st.cache_resource.clear()
         

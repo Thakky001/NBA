@@ -600,9 +600,9 @@
     "semantic_hash": ""
   },
   "app.py": {
-    "mtime": 1792577386.8200407,
-    "seen": 1792577403.7095184,
-    "ast_hash": "5d452a3d0938791df39151cc6393b543",
+    "mtime": 1792591169.8403177,
+    "seen": 1792591220.363755,
+    "ast_hash": "684a4e9ed49833656c386ccda8f713bd",
     "semantic_hash": ""
   },
   "collectors/__init__.py": {

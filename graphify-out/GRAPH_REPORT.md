@@ -1,7 +1,7 @@
 # Graph Report - NBA  (2026-10-21)
 
 ## Corpus Check
-- 353 files · ~204,711 words
+- 353 files · ~204,718 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 16 file(s) not represented in the graph (top: .csv 15, (none) 1)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `a6637151`
+- Built from commit: `059addca`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -1075,5 +1075,5 @@ _Questions this graph is uniquely positioned to answer:_
   _`FeatureEngineer` has 4 INFERRED edges - model-reasoned connections that need verification._
 - **Should `app.py` be split into smaller, more focused modules?**
   _Cohesion score 0.1422924901185771 - nodes in this community are weakly interconnected._
-- **Why does `Vercel Optimize` connect `Vercel Optimize` to `vercel-optimize/SKILL.md`, `Pipeline`?**
+- **Why does `ESPNCollector` connect `ESPNCollector` to `app.py`, `._get`, `odds_collector.py`, `DataFrame`, `main.py`, `PlayerRatingEngine`, `normalize_team_name`, `.get_game_summary`, `run_alerts.py`, `.get_scoreboard_by_thai_date`, `pandas`, `OddsCollector`?**
   _High betweenness centrality (0.010) - this node is a cross-community bridge._
