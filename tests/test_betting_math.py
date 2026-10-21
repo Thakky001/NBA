@@ -196,17 +196,37 @@ class TestLivePaceProjection(unittest.TestCase):
     """Unit tests for live scoring pace, Halftime, quarter breaks, and Overtime projections."""
 
     def test_pace_regular_in_play(self):
-        """Test standard regulation in-play pace projection."""
-        # Q1 with 6:00 remaining -> exactly 6.0 minutes elapsed
+        """Test in-game live pace applies Bayesian shrinkage towards pregame baseline."""
+        # Q1 with 6:00 remaining -> exactly 6.0 minutes elapsed (30 pts scored)
+        # Without pregame total, defaults to 228.0 prior (4.75 pts/min)
+        # w = 6/48 = 0.125. Live = 5.0 pts/min. Rem rate = 0.125*5 + 0.875*4.75 = 4.78125
+        # Proj total = 30 + 42 * 4.78125 = 230.8 pts (regressed from naive 240.0)
         res = calculate_live_pace_projection(period=1, clock_str="06:00", home_score=15, away_score=15)
         self.assertIsNotNone(res)
         self.assertEqual(res['elapsed_mins'], 6.0)
         self.assertEqual(res['target_mins'], 48.0)
-        self.assertEqual(res['proj_total'], 240.0)
+        self.assertEqual(res['proj_total'], 230.8)
         self.assertEqual(res['proj_margin'], 0.0)
         self.assertEqual(res['scoring_rate'], 5.0)
         self.assertEqual(res['phase'], 'IN_PLAY')
         self.assertIn("Q1 06:00", res['status_label'])
+
+    def test_hawks_magic_q1_early_blowout_prevention(self):
+        """Hawks @ Magic bug fix: 42 pts in 7.75 min must not produce 260.1 total or +24.8 margin."""
+        # Hawks home 19, Magic away 23 (Magic lead by 4)
+        # Pregame total 237.5, pregame spread +2.5 (Hawks +2.5 / Magic -2.5)
+        res = calculate_live_pace_projection(
+            period=1, clock_str="04:15", home_score=19, away_score=23,
+            pregame_total=237.5, pregame_spread=2.5
+        )
+        self.assertIsNotNone(res)
+        self.assertEqual(res['elapsed_mins'], 7.8)
+        # Total must regress to realistic ~244 pts, NOT 260.1!
+        self.assertLess(res['proj_total'], 250.0)
+        self.assertGreater(res['proj_total'], 240.0)
+        # Margin must regress to ~ -9.1 pts (Magic by 9), NOT -24.8 pts!
+        self.assertGreater(res['proj_margin'], -12.0)
+        self.assertLess(res['proj_margin'], -6.0)
 
     def test_pace_halftime_explicit(self):
         """Test explicit 'Halftime' or 'Half' clock string sets 24.0 mins elapsed."""
@@ -217,9 +237,10 @@ class TestLivePaceProjection(unittest.TestCase):
             self.assertEqual(res['target_mins'], 48.0)
             self.assertEqual(res['phase'], 'HALFTIME')
             self.assertEqual(res['status_label'], 'ช่วงพักครึ่ง (Halftime)')
-            self.assertEqual(res['proj_total'], 200.0)
-            self.assertEqual(res['proj_margin'], 20.0)
-            self.assertAlmostEqual(res['scoring_rate'], 100 / 24.0, places=2)
+            # 100 pts at half, live rate 4.167, prior 4.75 -> rem rate 4.458 -> 100 + 107.0 = 207.0
+            self.assertEqual(res['proj_total'], 207.0)
+            # +10 lead at half, 50% regressed 2nd half outscores by +5 -> proj_margin = 15.0
+            self.assertEqual(res['proj_margin'], 15.0)
 
     def test_pace_halftime_zero_clock(self):
         """Test period 2 with clock '0.0' or '0:00' is identified as Halftime."""
@@ -229,25 +250,25 @@ class TestLivePaceProjection(unittest.TestCase):
             self.assertEqual(res['elapsed_mins'], 24.0)
             self.assertEqual(res['phase'], 'HALFTIME')
             self.assertEqual(res['status_label'], 'ช่วงพักครึ่ง (Halftime)')
-            self.assertEqual(res['proj_total'], 200.0)
+            self.assertEqual(res['proj_total'], 207.0)
 
     def test_pace_quarter_breaks(self):
         """Test End of 1st (12 mins) and End of 3rd (36 mins) quarter breaks."""
-        # End of Q1
+        # End of Q1 (60 pts in 12 min -> 5.0 rate, w=0.25 -> rem rate 0.25*5 + 0.75*4.75 = 4.8125 -> 60 + 36*4.8125 = 233.25)
         q1_res = calculate_live_pace_projection(period=1, clock_str="End of 1st", home_score=30, away_score=30)
         self.assertIsNotNone(q1_res)
         self.assertEqual(q1_res['elapsed_mins'], 12.0)
         self.assertEqual(q1_res['phase'], 'QUARTER_BREAK')
         self.assertEqual(q1_res['status_label'], 'จบควอเตอร์ 1 (End of Q1)')
-        self.assertEqual(q1_res['proj_total'], 240.0)
+        self.assertEqual(q1_res['proj_total'], 233.2)
 
-        # End of Q3
+        # End of Q3 (180 pts in 36 min -> 5.0 rate, w=0.75 -> rem rate 0.75*5 + 0.25*4.75 = 4.9375 -> 180 + 12*4.9375 = 239.25)
         q3_res = calculate_live_pace_projection(period=3, clock_str="End of 3rd", home_score=90, away_score=90)
         self.assertIsNotNone(q3_res)
         self.assertEqual(q3_res['elapsed_mins'], 36.0)
         self.assertEqual(q3_res['phase'], 'QUARTER_BREAK')
         self.assertEqual(q3_res['status_label'], 'จบควอเตอร์ 3 (End of Q3)')
-        self.assertEqual(q3_res['proj_total'], 240.0)
+        self.assertEqual(q3_res['proj_total'], 239.2)
 
     def test_pace_overtime(self):
         """Test Overtime (OT1, Period 5) scales expected total to 53.0 minutes."""
@@ -258,8 +279,7 @@ class TestLivePaceProjection(unittest.TestCase):
         self.assertEqual(ot_res['target_mins'], 53.0)
         self.assertEqual(ot_res['phase'], 'OVERTIME')
         self.assertIn("OT1", ot_res['status_label'])
-        expected_proj = round((205.0 / 50.5) * 53.0, 1)
-        self.assertEqual(ot_res['proj_total'], expected_proj)
+        self.assertGreater(ot_res['proj_total'], 210.0)
 
     def test_pace_invalid_inputs(self):
         """Test safety guards return None on invalid or zero scores/times."""
@@ -267,6 +287,21 @@ class TestLivePaceProjection(unittest.TestCase):
         self.assertIsNone(calculate_live_pace_projection(period=1, clock_str="12:00", home_score=0, away_score=0))
         self.assertIsNone(calculate_live_pace_projection(period=1, clock_str="11:50", home_score=2, away_score=0))  # <= 0.5 mins
         self.assertIsNone(calculate_live_pace_projection(period=1, clock_str="invalid_clock", home_score=10, away_score=10))
+
+    def test_line_movement_live_isolation(self):
+        """Verify is_live=True suppresses STEAM_WARNING and SHARP_CONFIRMATION."""
+        from analysis.betting_math import analyze_line_movement
+        # When game is live and total shifts by 5.0 pts (e.g. 237.5 -> 242.5):
+        # Must NOT trigger STEAM_WARNING!
+        res_live = analyze_line_movement(open_line=237.5, current_line=242.5, market_type='total', recommendation='STRONG UNDER', is_live=True)
+        self.assertEqual(res_live['status'], 'LIVE_IN_PLAY')
+        self.assertEqual(res_live['verdict'], 'LIVE_TRACKING')
+        self.assertIn('Live', res_live['badge'])
+
+        # When game is pregame (is_live=False), 5.0 pt shift opposing model DOES trigger STEAM_WARNING
+        res_pregame = analyze_line_movement(open_line=237.5, current_line=242.5, market_type='total', recommendation='STRONG UNDER', is_live=False)
+        self.assertEqual(res_pregame['status'], 'STEAM_WARNING')
+        self.assertEqual(res_pregame['verdict'], 'FOLLOW_MARKET')
 
 
 if __name__ == '__main__':

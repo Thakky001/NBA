@@ -237,12 +237,13 @@ def get_cached_line_movement(game_id: str):
     return espn.get_game_line_movement(str(game_id))
 
 @st.cache_data(ttl=300)
-def get_cached_analysis(_analyzer, home_team, away_team, spread_line, over_under_line, open_spread, open_line):
+def get_cached_analysis(_analyzer, home_team, away_team, spread_line, over_under_line, open_spread, open_line, is_live=False):
     """Cache computationally heavy matchup simulation for 5 minutes."""
     return _analyzer.full_matchup_analysis(
         home_team=home_team, away_team=away_team, 
         spread_line=spread_line, over_under_line=over_under_line,
-        open_spread=open_spread, open_line=open_line
+        open_spread=open_spread, open_line=open_line,
+        is_live=is_live
     )
 
 try:
@@ -322,21 +323,24 @@ def render_game_slate(selected_date, is_live_refresh):
                     elif lm_data.get('open_total') is not None:
                         ou_val = lm_data.get('open_total')
 
+                st_raw = str(game.get('status', ''))
+                is_live = 'PROGRESS' in st_raw.upper() or 'LIVE' in st_raw.upper()
+
                 # Analyze (with 5-minute cache to make 10s refreshes instant)
                 analysis = get_cached_analysis(
                     analyzer,
                     home_team=home, away_team=away, 
                     spread_line=sp_val, over_under_line=ou_val,
-                    open_spread=open_spread, open_line=open_total
+                    open_spread=open_spread, open_line=open_total,
+                    is_live=is_live
                 )
             
                 thai_time_str = game.get('thai_time')
                 time_badge = f" ⏰ {thai_time_str} น." if thai_time_str else ""
                 status_thai = ""
-                st_raw = str(game.get('status', ''))
                 if 'FINAL' in st_raw.upper():
                     status_thai = " [จบการแข่งขัน]"
-                elif 'PROGRESS' in st_raw.upper() or 'LIVE' in st_raw.upper():
+                elif is_live:
                     status_thai = " [🔴 กำลังแข่งขัน]"
             
                 with st.expander(f"🏀 {away} (เยือน) @ {home} (เหย้า){time_badge}{status_thai}", expanded=True):
@@ -393,8 +397,10 @@ def render_game_slate(selected_date, is_live_refresh):
                 
                     st.divider()
 
-                    is_live = 'PROGRESS' in st_raw.upper() or 'LIVE' in st_raw.upper()
-                    live_proj = calculate_live_pace_projection(game.get('period'), game.get('clock'), h_score, a_score) if is_live else None
+                    live_proj = calculate_live_pace_projection(
+                        game.get('period'), game.get('clock'), h_score, a_score,
+                        pregame_total=ou_val, pregame_spread=sp_val
+                    ) if is_live else None
                 
                     col1, col2 = st.columns(2)
                 
@@ -410,8 +416,8 @@ def render_game_slate(selected_date, is_live_refresh):
                             if ou_val is not None:
                                 diff = live_proj['proj_total'] - ou_val
                                 diff_sign = "+" if diff > 0 else ""
-                                direction = "สูงกว่าราคาเปิด" if diff > 0 else "ต่ำกว่าราคาเปิด"
-                                st.caption(f"🎯 **เทียบราคาเปิด ({ou_val:.1f}):** สปีดสด `{diff_sign}{diff:.1f}` แต้ม ({direction})")
+                                direction = "สูงกว่าเรตก่อนแข่ง" if diff > 0 else "ต่ำกว่าเรตก่อนแข่ง"
+                                st.caption(f"🎯 **เทียบเรตก่อนแข่ง ({ou_val:.1f}):** สปีดสด `{diff_sign}{diff:.1f}` แต้ม ({direction})")
                             live_t = lm_data.get('live_total')
                             if live_t is not None:
                                 ldiff = live_proj['proj_total'] - live_t
@@ -420,21 +426,30 @@ def render_game_slate(selected_date, is_live_refresh):
                                 st.caption(f"🔴 **เทียบเรตสดในเกม ({live_t:.1f}):** สปีดสด `{ldiff_sign}{ldiff:.1f}` แต้ม ({ldir})")
                             st.divider()
 
-                        st.markdown(f"**เรตราคาเปิดมาที่:** `{ou_val:.1f}`" if ou_val is not None else "**เรตราคาเปิดมาที่:** `ยังไม่ออกราคา`")
+                        if open_total is not None and ou_val is not None and abs(open_total - ou_val) >= 0.5:
+                            st.markdown(f"**เรตราคาตลาด:** เปิด `{open_total:.1f}` ➔ ปัจจุบัน `{ou_val:.1f}` (ขยับ `{ou_val - open_total:+.1f}` แต้ม)")
+                        elif ou_val is not None:
+                            st.markdown(f"**เรตราคาตลาด (Consensus):** `{ou_val:.1f}`")
+                        else:
+                            st.markdown("**เรตราคาตลาด:** `ยังไม่ออกราคา`")
                     
                         ou_res = analysis.get('over_under')
                         if ou_res:
                             rec_text = t_rec(ou_res['recommendation'])
                             t_edge = ou_res.get('total_edge', 0.0)
                             win_p = ou_res.get('win_prob', 0.5)
+                            is_clash_ou = ou_res.get('is_market_clash', False)
                         
-                            st.markdown(f"**คำแนะนำ:** **{rec_text}** (Edge: `{t_edge:+.1f}` แต้ม)")
+                            clash_tag = " *(⚠️ สัญญาณเงินตลาดสวนทาง)*" if is_clash_ou else ""
+                            st.markdown(f"**คำแนะนำ:** **{rec_text}** (Edge: `{t_edge:+.1f}` แต้ม){clash_tag}")
                             st.progress(win_p, text=f"ความน่าจะเป็นทางสถิติ (Win Prob): {win_p:.1%}")
                         
                             # --- LINE MOVEMENT BADGE & TWO-SIDED VERDICT ---
                             lm_ou = ou_res.get('line_movement')
                             if lm_ou and lm_ou.get('badge'):
-                                if lm_ou.get('status') == 'SHARP_CONFIRMATION':
+                                if is_clash_ou:
+                                    st.warning(f"**{lm_ou['badge']}:** {lm_ou['detail']}")
+                                elif lm_ou.get('status') == 'SHARP_CONFIRMATION':
                                     st.success(f"**{lm_ou['badge']}:** {lm_ou['detail']}")
                                 elif lm_ou.get('status') == 'STEAM_WARNING':
                                     st.warning(f"**{lm_ou['badge']}:** {lm_ou['detail']}")
@@ -456,7 +471,9 @@ def render_game_slate(selected_date, is_live_refresh):
                                 
                                     v_title = lm_ou.get('verdict_title', '')
                                     v_detail = lm_ou.get('verdict_detail', '')
-                                    if lm_ou.get('verdict') == 'FOLLOW_MARKET':
+                                    if is_clash_ou:
+                                        st.warning(f"🎯 **ฟันธง (Unified Verdict):** **ข้าม (PASS) / งดวางเงิน** — สถิติชอบ{rec_text} แต่เงินเซียนดัน{m_dir} ({diff_val:+.1f} แต้ม) สัญญาณขัดแย้งกันอย่างมีนัยสำคัญ แนะนำรักษาเงินทุน")
+                                    elif lm_ou.get('verdict') == 'FOLLOW_MARKET':
                                         st.error(f"🎯 **ฟันธง:** **{v_title}** — *{v_detail}*")
                                     elif lm_ou.get('verdict') == 'CONFIRMED_ALIGNED':
                                         st.success(f"🎯 **ฟันธง:** **{v_title}** — *{v_detail}*")
@@ -465,7 +482,8 @@ def render_game_slate(selected_date, is_live_refresh):
                         
                             # --- MARKET-ANCHORED PROJECTION INFO ---
                             if ou_res.get('raw_projected_total') is not None and ou_res.get('projected_total') is not None:
-                                st.caption(f"🎯 **Market-Anchored Projection:** `{ou_res['projected_total']:.1f}` PTS *(ตลาด 65% + สถิติ 35% | โมเดลดิบ: {ou_res['raw_projected_total']:.1f})*")
+                                anchor_used = ou_res.get('anchor_line') or ou_val or 0.0
+                                st.caption(f"🎯 **Market-Anchored Projection:** `{ou_res['projected_total']:.1f}` PTS *(คำนวณจาก: ราคาเปิด {anchor_used:.1f} × 65% + โมเดลดิบ {ou_res['raw_projected_total']:.1f} × 35%)*")
                         
                             # --- QUANTITATIVE VALUE & KELLY METRICS ---
                             if ou_res.get('recommendation') != 'NEUTRAL' and ou_res.get('ev') is not None:
@@ -478,7 +496,9 @@ def render_game_slate(selected_date, is_live_refresh):
                                     st.metric("Expected Value (+EV)", f"{ev_val:+.1%}", delta=f"{ou_res.get('edge_pct', 0.0):+.1f}% Edge", delta_color=ev_delta_color)
                                 with m_col2:
                                     st.metric("Market Fair Prob", f"{fair_p:.1%}", help="คำนวณผ่าน De-vigging ถอดค่าน้ำของตลาดออก (ราคาที่ตลาดมองว่ายุติธรรม)")
-                                if q_kelly > 0:
+                                if is_clash_ou:
+                                    st.info("💡 **คำแนะนำบริหารหน้าตัก (Kelly):** ลงทุน **0.0%** (ข้ามคู่ที่มีสัญญาณขัดแย้งกับตลาด)")
+                                elif q_kelly > 0:
                                     st.info(f"💡 **คำแนะนำบริหารหน้าตัก (Kelly):** ลงทุน **{q_kelly*100:.1f}%** ของพอร์ต (1/4 Kelly)")
                         
                             if ou_res.get('is_anomaly'):
@@ -500,7 +520,10 @@ def render_game_slate(selected_date, is_live_refresh):
                                         if u_val is not None and (b_val == 999 or u_val > b_val):
                                             b_val, b_book, b_price = u_val, bookie, totals.get('under_price', '')
                                 if b_book != "N/A":
-                                    st.success(f"🛒 **Line Shopping:** ควรแทง {'สูง' if is_over else 'ต่ำ'} {b_val} ที่ **{b_book.upper()}** (ค่าน้ำ {b_price})")
+                                    if is_clash_ou:
+                                        st.caption(f"🛒 **Line Watch:** ราคาตลาดดีที่สุดขณะนี้คือ {b_book.upper()} ({b_val}) — เฝ้าระวัง")
+                                    else:
+                                        st.success(f"🛒 **Line Shopping:** ควรแทง {'สูง' if is_over else 'ต่ำ'} {b_val} ที่ **{b_book.upper()}** (ค่าน้ำ {b_price})")
                         
                             with st.expander("อ่านเหตุผลประกอบ"):
                                 for f in ou_res['factors']:
@@ -552,14 +575,18 @@ def render_game_slate(selected_date, is_live_refresh):
                             rec_text = t_rec(sp_res['recommendation'], spread_line=sp_val, home_team=home, away_team=away)
                             c_edge = sp_res.get('cover_edge', 0.0)
                             win_p = sp_res.get('win_prob', 0.5)
+                            is_clash_sp = sp_res.get('is_market_clash', False)
                         
-                            st.markdown(f"🎯 **คำแนะนำ:** **{rec_text}** (Cover Edge: `{c_edge:+.1f}` แต้ม)")
+                            clash_tag = " *(⚠️ สัญญาณเงินตลาดสวนทาง)*" if is_clash_sp else ""
+                            st.markdown(f"🎯 **คำแนะนำ:** **{rec_text}** (Cover Edge: `{c_edge:+.1f}` แต้ม){clash_tag}")
                             st.progress(win_p, text=f"ความน่าจะเป็นทางสถิติ (Win Prob): {win_p:.1%}")
                         
                             # --- LINE MOVEMENT BADGE & TWO-SIDED VERDICT ---
                             lm_sp = sp_res.get('line_movement')
                             if lm_sp and lm_sp.get('badge'):
-                                if lm_sp.get('status') == 'SHARP_CONFIRMATION':
+                                if is_clash_sp:
+                                    st.warning(f"**{lm_sp['badge']}:** {lm_sp['detail']}")
+                                elif lm_sp.get('status') == 'SHARP_CONFIRMATION':
                                     st.success(f"**{lm_sp['badge']}:** {lm_sp['detail']}")
                                 elif lm_sp.get('status') == 'STEAM_WARNING':
                                     st.warning(f"**{lm_sp['badge']}:** {lm_sp['detail']}")
@@ -581,7 +608,9 @@ def render_game_slate(selected_date, is_live_refresh):
                                 
                                     v_title = lm_sp.get('verdict_title', '')
                                     v_detail = lm_sp.get('verdict_detail', '')
-                                    if lm_sp.get('verdict') == 'FOLLOW_MARKET':
+                                    if is_clash_sp:
+                                        st.warning(f"🎯 **ฟันธง (Unified Verdict):** **ข้าม (PASS) / งดวางเงิน** — สถิติชอบ{rec_text} แต่เงินเซียนดัน{m_dir} ({diff_val:+.1f} แต้ม) สัญญาณขัดแย้งกันอย่างมีนัยสำคัญ แนะนำรักษาเงินทุน")
+                                    elif lm_sp.get('verdict') == 'FOLLOW_MARKET':
                                         st.error(f"🎯 **ฟันธง:** **{v_title}** — *{v_detail}*")
                                     elif lm_sp.get('verdict') == 'CONFIRMED_ALIGNED':
                                         st.success(f"🎯 **ฟันธง:** **{v_title}** — *{v_detail}*")
@@ -590,7 +619,8 @@ def render_game_slate(selected_date, is_live_refresh):
                         
                             # --- MARKET-ANCHORED PROJECTION INFO ---
                             if sp_res.get('raw_projected_margin') is not None and sp_res.get('projected_margin') is not None:
-                                st.caption(f"🎯 **Market-Anchored Margin:** `{sp_res['projected_margin']:+.1f}` PTS *(ตลาด 65% + สถิติ 35% | โมเดลดิบ: {sp_res['raw_projected_margin']:+.1f})*")
+                                anchor_sp = sp_res.get('anchor_spread', sp_val) or 0.0
+                                st.caption(f"🎯 **Market-Anchored Margin:** `{sp_res['projected_margin']:+.1f}` PTS *(คำนวณจาก: แต้มต่อเปิด {anchor_sp:+.1f} × 65% + โมเดลดิบ {sp_res['raw_projected_margin']:+.1f} × 35%)*")
                         
                             # --- QUANTITATIVE VALUE & KELLY METRICS ---
                             if sp_res.get('recommendation') != 'NEUTRAL' and sp_res.get('ev') is not None:
@@ -603,7 +633,9 @@ def render_game_slate(selected_date, is_live_refresh):
                                     st.metric("Expected Value (+EV)", f"{ev_val:+.1%}", delta=f"{sp_res.get('edge_pct', 0.0):+.1f}% Edge", delta_color=ev_delta_color)
                                 with m_col2:
                                     st.metric("Market Fair Prob", f"{fair_p:.1%}", help="คำนวณผ่าน De-vigging ถอดค่าน้ำของตลาดออก (ราคาที่ตลาดมองว่ายุติธรรม)")
-                                if q_kelly > 0:
+                                if is_clash_sp:
+                                    st.info("💡 **คำแนะนำบริหารหน้าตัก (Kelly):** ลงทุน **0.0%** (ข้ามคู่ที่มีสัญญาณขัดแย้งกับตลาด)")
+                                elif q_kelly > 0:
                                     st.info(f"💡 **คำแนะนำบริหารหน้าตัก (Kelly):** ลงทุน **{q_kelly*100:.1f}%** ของพอร์ต (1/4 Kelly)")
                         
                             if sp_res.get('is_anomaly'):
@@ -629,7 +661,10 @@ def render_game_slate(selected_date, is_live_refresh):
                                             b_val, b_book, b_price = a_val, bookie, spreads.get('away_price', '')
                                         
                                 if b_book != "N/A":
-                                    st.success(f"🛒 **Line Shopping:** ควรแทง {pick_team} {b_val} ที่ **{b_book.upper()}** (ค่าน้ำ {b_price})")
+                                    if is_clash_sp:
+                                        st.caption(f"🛒 **Line Watch:** ราคาตลาดดีที่สุดขณะนี้คือ {pick_team} {b_val} ที่ {b_book.upper()} — เฝ้าระวัง")
+                                    else:
+                                        st.success(f"🛒 **Line Shopping:** ควรแทง {pick_team} {b_val} ที่ **{b_book.upper()}** (ค่าน้ำ {b_price})")
                         
                             with st.expander("อ่านเหตุผลประกอบ"):
                                 for f in sp_res['factors']:

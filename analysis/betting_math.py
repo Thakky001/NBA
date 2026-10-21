@@ -313,7 +313,8 @@ def analyze_line_movement(open_line: Optional[float],
                           market_type: str,
                           recommendation: str,
                           home_team: Optional[str] = None,
-                          away_team: Optional[str] = None) -> Dict[str, Any]:
+                          away_team: Optional[str] = None,
+                          is_live: bool = False) -> Dict[str, Any]:
     """Detect sharp line movement vs market steam against the model pick.
 
     Analyzes shift between opening line and current/closing line (24h before game).
@@ -401,6 +402,21 @@ def analyze_line_movement(open_line: Optional[float],
         else:
             flow_dir = 'สมดุล (NEUTRAL)'
             flow_prob = 0.50
+
+    # Live in-game isolation: in-game line adjustments are algorithmic bookmaker moves, not pregame sharp steam
+    if is_live:
+        return {
+            'has_movement': True,
+            'diff': diff,
+            'status': 'LIVE_IN_PLAY',
+            'badge': '🔴 Live Line Shift',
+            'detail': f'เรตสดในเกมขยับตามสถานการณ์จริงในสนาม ({o_val:.1f} ➔ {c_val:.1f})',
+            'market_flow_prob': flow_prob,
+            'market_flow_direction': flow_dir,
+            'verdict': 'LIVE_TRACKING',
+            'verdict_title': 'ติดตามแต้มสด (Live Tracking)',
+            'verdict_detail': 'เรตสดขยับตามแต้มจริงในสนาม ไม่นำมาตีความเป็นเงินเซียนทุ่มก่อนแข่ง'
+        }
 
     # Stable line check (< 0.5 pt shift)
     if abs_diff < 0.5:
@@ -512,18 +528,23 @@ def calculate_live_pace_projection(
     period: Any,
     clock_str: Any,
     home_score: Any,
-    away_score: Any
+    away_score: Any,
+    pregame_total: Optional[float] = None,
+    pregame_spread: Optional[float] = None
 ) -> Optional[Dict[str, Any]]:
-    """Calculate in-game live scoring pace and projected final totals and margins.
+    """Calculate in-game live scoring pace and projected final totals and margins using Bayesian shrinkage.
 
     Handles regular quarters (Q1-Q4), Halftime, Quarter breaks (End of Q1/Q3),
-    and Overtime periods (OT1+).
+    and Overtime periods (OT1+). Forecasts remaining minutes by regressing live tempo
+    towards pre-game baseline priors, preventing early Q1 blowout artifacts.
 
     Args:
         period: Current period/quarter (1-4 for regulation, 5+ for OT).
         clock_str: Display clock string (e.g. '07:20', 'Halftime', 'End of 1st', '0.0').
         home_score: Current home team score.
         away_score: Current away team score.
+        pregame_total: Optional pre-game consensus total line (e.g. 237.5).
+        pregame_spread: Optional pre-game consensus home spread line (e.g. -2.5).
 
     Returns:
         Dict with elapsed_mins, proj_total, proj_margin, proj_home, proj_away,
@@ -587,14 +608,32 @@ def calculate_live_pace_projection(
         if elapsed_total <= 0.5:
             return None
 
-        # Overtime target pace is based on current OT period length
+        # Target regulation/OT minutes
         expected_total_mins = 48.0 if p_int <= 4 else 48.0 + (p_int - 4) * 5.0
-        pace_mult = expected_total_mins / elapsed_total
+        rem_mins = max(0.0, expected_total_mins - elapsed_total)
 
-        proj_home = h_pts * pace_mult
-        proj_away = a_pts * pace_mult
-        proj_total = proj_home + proj_away
-        proj_margin = proj_home - proj_away
+        # Dynamic Bayesian weight: linear fraction of game elapsed (regresses remaining time to pregame baseline)
+        w = min(1.0, elapsed_total / expected_total_mins)
+
+        # Baseline prior rates (points / minute)
+        prior_total_rate = (float(pregame_total) / 48.0) if (pregame_total is not None and float(pregame_total) > 150.0) else (228.0 / 48.0)
+        # In NBA betting, spread_line is home margin relative to away. (e.g. -4.5 means home favored by 4.5 pts)
+        prior_margin_rate = (-float(pregame_spread) / 48.0) if (pregame_spread is not None) else 0.0
+
+        # Current observed live rates (points / minute)
+        live_total_rate = total_pts / elapsed_total
+        live_margin_rate = (h_pts - a_pts) / elapsed_total
+
+        # Blended expected rates for the remaining minutes
+        rem_total_rate = w * live_total_rate + (1.0 - w) * prior_total_rate
+        rem_margin_rate = w * live_margin_rate + (1.0 - w) * prior_margin_rate
+
+        # Final projections: current banked score + remaining projection
+        proj_total = total_pts + (rem_mins * rem_total_rate)
+        proj_margin = (h_pts - a_pts) + (rem_mins * rem_margin_rate)
+
+        proj_home = (proj_total + proj_margin) / 2.0
+        proj_away = (proj_total - proj_margin) / 2.0
 
         return {
             'elapsed_mins': round(elapsed_total, 1),
@@ -603,7 +642,7 @@ def calculate_live_pace_projection(
             'proj_margin': round(proj_margin, 1),
             'proj_home': round(proj_home, 1),
             'proj_away': round(proj_away, 1),
-            'scoring_rate': round(total_pts / elapsed_total, 2),
+            'scoring_rate': round(live_total_rate, 2),
             'phase': phase,
             'status_label': status_label
         }

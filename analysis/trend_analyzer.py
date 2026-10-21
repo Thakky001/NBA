@@ -41,7 +41,8 @@ class TrendAnalyzer:
     def analyze_over_under(self, home_team: str, away_team: str,
                            over_under_line: float = None,
                            open_line: float = None,
-                           market_weight: float = 0.65) -> Dict[str, Any]:
+                           market_weight: float = 0.65,
+                           is_live: bool = False) -> Dict[str, Any]:
         """Full Over/Under analysis with Market-Anchored Projection and Line Movement."""
         
         # Use compute_matchup_features
@@ -272,7 +273,7 @@ class TrendAnalyzer:
         pick_win_prob = win_prob if 'OVER' in recommendation else (1.0 - win_prob if 'UNDER' in recommendation else 0.50)
         
         # Line Movement & Sharp Action Detection
-        line_mv = analyze_line_movement(open_line, over_under_line, market_type='total', recommendation=recommendation)
+        line_mv = analyze_line_movement(open_line, over_under_line, market_type='total', recommendation=recommendation, is_live=is_live)
         
         # Anomaly Detection (flagging extreme discrepancies without clamping)
         is_anomaly = abs(total_edge) > 8.0 if over_under_line else False
@@ -290,16 +291,26 @@ class TrendAnalyzer:
         pick_idx = 0 if 'OVER' in recommendation else 1
         eval_metrics = evaluate_market_pick(pick_win_prob, book_odds=market_odds_str, pick_idx=pick_idx, kelly_fraction=0.25)
         
-        is_bet = recommendation != 'NEUTRAL'
+        # Market Clash Detection: Severe steam opposing model (>= 2.0 pts) mandates capital preservation
+        is_market_clash = (line_mv.get('status') == 'STEAM_WARNING' and abs(line_mv.get('diff', 0)) >= 2.0 and not is_live)
+
+        is_bet = recommendation != 'NEUTRAL' and not is_market_clash
         ev_val = eval_metrics['ev'] if is_bet else 0.0
         edge_pct_val = eval_metrics['edge_pct'] if is_bet else 0.0
         full_kelly = eval_metrics['full_kelly'] if is_bet else 0.0
-        quarter_kelly = eval_metrics['recommended_stake_pct'] / 100.0 if is_bet else 0.0
-        kelly_rec = f"{quarter_kelly * 100:.1f}% of bankroll (1/4 Kelly)" if quarter_kelly > 0 else "0% (No Bet)"
+        quarter_kelly = (eval_metrics['recommended_stake_pct'] / 100.0) if is_bet else 0.0
+        if is_market_clash:
+            kelly_rec = "0.0% (ข้าม - สัญญาณขัดแย้งกับกระแสเงินตลาด)"
+        elif quarter_kelly > 0:
+            kelly_rec = f"{quarter_kelly * 100:.1f}% of bankroll (1/4 Kelly)"
+        else:
+            kelly_rec = "0% (No Bet)"
 
         # Build summary
         summary = f"O/U {over_under_line}: {recommendation} (Edge: {total_edge:+.1f} pts | Win Prob: {pick_win_prob:.1%})\n"
-        if is_bet:
+        if is_market_clash:
+            summary += f"  ⚠️ Market Clash: ตลาดไหลสวนทางโมเดล {line_mv.get('diff', 0):+.1f} แต้ม — แนะนำ ข้าม (PASS) เพื่อรักษาทุน\n"
+        elif is_bet:
             summary += f"  ⚡ Value & Sizing: +EV: {ev_val:+.1%} | Kelly: {quarter_kelly:.1%} (1/4 Kelly)\n"
         if line_mv.get('badge'):
             summary += f"  {line_mv['badge']}: {line_mv['detail']}\n"
@@ -316,10 +327,12 @@ class TrendAnalyzer:
             'raw_win_prob': raw_win_prob,
             'is_anomaly': is_anomaly,
             'anomaly_warning': anomaly_warning,
+            'is_market_clash': is_market_clash,
             'total_edge': total_edge,
             'raw_edge': raw_edge,
             'projected_total': projected_total,
             'raw_projected_total': raw_projected_total,
+            'anchor_line': anchor_line,
             'market_weight': market_weight,
             'open_line': open_line,
             'line_movement': line_mv,
@@ -339,7 +352,8 @@ class TrendAnalyzer:
     def analyze_spread(self, home_team: str, away_team: str,
                        spread_line: float = None,
                        open_spread: float = None,
-                       market_weight: float = 0.65) -> Dict[str, Any]:
+                       market_weight: float = 0.65,
+                       is_live: bool = False) -> Dict[str, Any]:
         """Full Spread analysis with Market-Anchored Projection and Line Movement."""
         
         # Use compute_matchup_features to ensure we get rest days as well
@@ -611,7 +625,7 @@ class TrendAnalyzer:
         
         # Line Movement & Sharp Action Detection
         from analysis.betting_math import analyze_line_movement
-        line_mv = analyze_line_movement(open_spread, spread_line, market_type='spread', recommendation=recommendation, home_team=home_team, away_team=away_team)
+        line_mv = analyze_line_movement(open_spread, spread_line, market_type='spread', recommendation=recommendation, home_team=home_team, away_team=away_team, is_live=is_live)
         
         # Anomaly Detection (flagging extreme discrepancies without clamping)
         is_anomaly = abs(cover_edge) > 6.0 if spread_line is not None else False
@@ -629,15 +643,25 @@ class TrendAnalyzer:
         pick_idx = 0 if 'HOME' in recommendation else 1
         eval_metrics = evaluate_market_pick(pick_win_prob, book_odds=market_odds_str, pick_idx=pick_idx, kelly_fraction=0.25)
         
-        is_bet = recommendation != 'NEUTRAL'
+        # Market Clash Detection: Severe steam opposing model (>= 2.0 pts) mandates capital preservation
+        is_market_clash = (line_mv.get('status') == 'STEAM_WARNING' and abs(line_mv.get('diff', 0)) >= 2.0 and not is_live)
+
+        is_bet = recommendation != 'NEUTRAL' and not is_market_clash
         ev_val = eval_metrics['ev'] if is_bet else 0.0
         edge_pct_val = eval_metrics['edge_pct'] if is_bet else 0.0
         full_kelly = eval_metrics['full_kelly'] if is_bet else 0.0
-        quarter_kelly = eval_metrics['recommended_stake_pct'] / 100.0 if is_bet else 0.0
-        kelly_rec = f"{quarter_kelly * 100:.1f}% of bankroll (1/4 Kelly)" if quarter_kelly > 0 else "0% (No Bet)"
+        quarter_kelly = (eval_metrics['recommended_stake_pct'] / 100.0) if is_bet else 0.0
+        if is_market_clash:
+            kelly_rec = "0.0% (ข้าม - สัญญาณขัดแย้งกับกระแสเงินตลาด)"
+        elif quarter_kelly > 0:
+            kelly_rec = f"{quarter_kelly * 100:.1f}% of bankroll (1/4 Kelly)"
+        else:
+            kelly_rec = "0% (No Bet)"
 
         summary = f"Spread {spread_line}: {recommendation} (Edge: {cover_edge:+.1f} pts | Win Prob: {pick_win_prob:.1%})\n"
-        if is_bet:
+        if is_market_clash:
+            summary += f"  ⚠️ Market Clash: แต้มต่อไหลสวนทางโมเดล {line_mv.get('diff', 0):+.1f} แต้ม — แนะนำ ข้าม (PASS) เพื่อรักษาทุน\n"
+        elif is_bet:
             summary += f"  ⚡ Value & Sizing: +EV: {ev_val:+.1%} | Kelly: {quarter_kelly:.1%} (1/4 Kelly)\n"
         if line_mv.get('badge'):
             summary += f"  {line_mv['badge']}: {line_mv['detail']}\n"
@@ -654,10 +678,12 @@ class TrendAnalyzer:
             'raw_win_prob': raw_win_prob,
             'is_anomaly': is_anomaly,
             'anomaly_warning': anomaly_warning,
+            'is_market_clash': is_market_clash,
             'cover_edge': cover_edge,
             'raw_cover_edge': raw_cover_edge,
             'projected_margin': projected_margin,
             'raw_projected_margin': raw_projected_margin,
+            'anchor_spread': anchor_spread,
             'market_weight': market_weight,
             'open_spread': open_spread,
             'line_movement': line_mv,
@@ -679,7 +705,8 @@ class TrendAnalyzer:
                                over_under_line: float = None,
                                open_spread: float = None,
                                open_line: float = None,
-                               market_weight: float = 0.65) -> Dict[str, Any]:
+                               market_weight: float = 0.65,
+                               is_live: bool = False) -> Dict[str, Any]:
         """Complete matchup analysis combining O/U and Spread with Market Anchoring and Line Movement.
         Returns dict with:
         - home_team, away_team
@@ -722,7 +749,8 @@ class TrendAnalyzer:
                 home_team, away_team,
                 over_under_line=over_under_line,
                 open_line=open_line,
-                market_weight=market_weight
+                market_weight=market_weight,
+                is_live=is_live
             )
         else:
             result['over_under'] = None
@@ -733,7 +761,8 @@ class TrendAnalyzer:
                 home_team, away_team,
                 spread_line=spread_line,
                 open_spread=open_spread,
-                market_weight=market_weight
+                market_weight=market_weight,
+                is_live=is_live
             )
         else:
             result['spread'] = None

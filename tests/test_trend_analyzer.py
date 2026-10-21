@@ -182,6 +182,38 @@ class TestTrendAnalyzer(unittest.TestCase):
         # Mid-season prior weight is 1.0, so projected margin is larger than early season
         self.assertGreater(res_mid['projected_margin'], res_early['projected_margin'])
 
+    def test_market_clash_zero_kelly_capital_preservation(self):
+        """When sharp steam opposes model by >= 2.0 pts, enforce Market Clash and zero Kelly stake."""
+        self.mock_fe.compute_matchup_features.return_value = {
+            'combined_avg_10': 236.0,
+            'home_rest_days': 2,
+            'away_rest_days': 2,
+        }
+        # Model projected total ~233.8, current line 237.5 -> Edge -3.7 -> STRONG UNDER
+        # But market steamed up by +5.0 pts (open 232.5 -> current 237.5)
+        res = self.analyzer.analyze_over_under('Atlanta Hawks', 'Orlando Magic', over_under_line=237.5, open_line=232.5)
+        self.assertTrue(res['is_market_clash'])
+        self.assertEqual(res['anchor_line'], 232.5)
+        self.assertEqual(res['kelly_quarter'], 0.0)
+        self.assertIn("ข้าม", res['kelly_recommendation'])
+        self.assertIn("Market Clash", res['summary'])
+
+    def test_is_live_flag_prevents_market_clash(self):
+        """During live play (is_live=True), in-game line changes do not trigger Market Clash."""
+        self.mock_fe.compute_matchup_features.return_value = {
+            'combined_avg_10': 236.0,
+            'home_rest_days': 2,
+            'away_rest_days': 2,
+        }
+        res_live = self.analyzer.analyze_over_under(
+            'Atlanta Hawks', 'Orlando Magic',
+            over_under_line=237.5, open_line=232.5,
+            is_live=True
+        )
+        self.assertFalse(res_live['is_market_clash'])
+        self.assertEqual(res_live['line_movement']['status'], 'LIVE_IN_PLAY')
+        self.assertEqual(res_live['line_movement']['verdict'], 'LIVE_TRACKING')
+
 
 if __name__ == '__main__':
     unittest.main()
