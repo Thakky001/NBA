@@ -162,7 +162,7 @@ def calculate_kelly(model_prob: float,
                     market_odds: Optional[float] = None,
                     market_prob: Optional[float] = None,
                     fraction: float = 0.25,
-                    max_cap: Optional[float] = None) -> Dict[str, float]:
+                    max_cap: Optional[float] = 0.025) -> Dict[str, float]:
     """Compute optimal Kelly Criterion stake fraction (Pure raw or with optional safety cap).
 
     Full Kelly formula:
@@ -177,7 +177,7 @@ def calculate_kelly(model_prob: float,
         market_odds: American or decimal market odds (optional if market_prob provided).
         market_prob: Implied probability if market odds not given.
         fraction: Kelly multiplier (0.25 for Quarter Kelly, 0.50 for Half Kelly).
-        max_cap: Optional maximum bankroll allocation safety cap (e.g. 0.05 = 5.0%). Default None (unconstrained).
+        max_cap: Optional maximum bankroll allocation safety cap (default 0.025 = 2.5% max bankroll).
 
     Returns:
         Dict with full_kelly, fractional_kelly, capped_kelly, and recommended_stake_pct.
@@ -228,7 +228,7 @@ def evaluate_market_pick(model_prob: float,
                          book_odds: Union[str, List[float]] = "-110,-110",
                          pick_idx: int = 0,
                          kelly_fraction: float = 0.25,
-                         max_stake_cap: Optional[float] = None) -> Dict[str, Any]:
+                         max_stake_cap: Optional[float] = 0.025) -> Dict[str, Any]:
     """All-in-one evaluation: de-vig market, compute edge, EV, and Kelly stake.
 
     Args:
@@ -236,7 +236,7 @@ def evaluate_market_pick(model_prob: float,
         book_odds: Bookmaker odds for all outcomes (e.g., "-110,-110").
         pick_idx: Index of the outcome being evaluated (0 for first outcome, 1 for second).
         kelly_fraction: Fractional Kelly divisor (default 0.25 for quarter-Kelly).
-        max_stake_cap: Optional safety cap on bankroll stake (default None = unconstrained).
+        max_stake_cap: Optional safety cap on bankroll stake (default 0.025 = 2.5%).
 
     Returns:
         Dict with fair_prob, market_prob, edge, ev, kelly_fraction, and summary text.

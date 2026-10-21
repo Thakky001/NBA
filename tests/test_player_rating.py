@@ -54,6 +54,74 @@ class TestPlayerRating(unittest.TestCase):
                 self.assertFalse(engine.player_stats.empty)
                 self.assertIn('PLAYER_NAME', engine.player_stats.columns)
 
+    def test_rookie_tiers_and_small_sample_blending(self):
+        """Verify elevated rookie base tiers and small-sample (GP < 5) blending."""
+        engine = PlayerRatingEngine()
+        # Mock active roster with 4 mock players
+        engine._roster_cache[999] = pd.DataFrame([
+            {'name': 'Rookie TopPick'},
+            {'name': 'Rookie Lottery'},
+            {'name': 'Rookie RoundOne'},
+            {'name': 'Undrafted Guy'},
+            {'name': 'Hot Starter'},
+        ])
+        # Mock draft history
+        engine.draft_history = pd.DataFrame([
+            {'PLAYER_NAME': 'Rookie TopPick', 'OVERALL_PICK': 2},
+            {'PLAYER_NAME': 'Rookie Lottery', 'OVERALL_PICK': 10},
+            {'PLAYER_NAME': 'Rookie RoundOne', 'OVERALL_PICK': 22},
+            {'PLAYER_NAME': 'Hot Starter', 'OVERALL_PICK': 8},
+        ])
+        # Mock player stats: Hot Starter has played 2 games with EFF 20.0
+        engine.player_stats = pd.DataFrame([
+            {'PLAYER_NAME': 'Hot Starter', 'GP': 2, 'EFF_PG': 20.0},
+        ])
+        engine.injuries_df = pd.DataFrame()
+
+        # Resolve team ID to 999
+        with patch('config.resolve_team_info', return_value={'espn_id': 999}):
+            res = engine.calculate_team_roster_rating("Mock Team")
+            top_players_str = " | ".join(res['top_players'])
+
+            # Hot Starter: pick 8 (base 9.0), 2 GP @ 20.0 EFF -> (20*2 + 9*3)/5 = 13.4 EFF
+            self.assertIn('Hot Starter (13.4)', top_players_str)
+
+            # Rookie TopPick: pick 2 -> 14.0 base
+            self.assertIn('Rookie TopPick (Base) (14.0)', top_players_str)
+
+            # Rookie Lottery: pick 10 -> 9.0 base
+            self.assertIn('Rookie Lottery (Base) (9.0)', top_players_str)
+
+            # Rookie RoundOne: pick 22 -> 6.0 base
+            self.assertIn('Rookie RoundOne (Base) (6.0)', top_players_str)
+
+            # Undrafted Guy: unmapped -> 4.5 base
+            self.assertIn('Undrafted Guy (Base) (4.5)', top_players_str)
+
+    def test_injury_matching_with_base_tag(self):
+        """Verify cold-start players marked (Base) correctly match injuries and drop active_eff to 0.0."""
+        engine = PlayerRatingEngine()
+        engine._roster_cache[888] = pd.DataFrame([
+            {'name': 'Kon Knueppel'},
+            {'name': 'Healthy Player'},
+        ])
+        engine.draft_history = pd.DataFrame([
+            {'PLAYER_NAME': 'Kon Knueppel', 'OVERALL_PICK': 4},
+        ])
+        engine.player_stats = pd.DataFrame() # No stats yet (cold start)
+        engine.injuries_df = pd.DataFrame([
+            {'player_name': 'Kon Knueppel', 'status': 'Out', 'detail': 'Hamstring'}
+        ])
+
+        with patch('config.resolve_team_info', return_value={'espn_id': 888}):
+            res = engine.calculate_team_roster_rating("Mock Hornets")
+            self.assertEqual(res['status'], 'success')
+            # Injury must be recognized in injuries list
+            self.assertTrue(any('Kon Knueppel' in inj and 'OUT' in inj for inj in res['injuries']))
+            # Active roster rating must be penalized (Kon Knueppel gets 0.0 active EFF)
+            top_players_str = " | ".join(res['top_players'])
+            self.assertIn('Kon Knueppel (Base) (0.0 - OUT - Hamstring)', top_players_str)
+
 
 if __name__ == '__main__':
     unittest.main()

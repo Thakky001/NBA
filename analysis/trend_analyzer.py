@@ -361,12 +361,14 @@ class TrendAnalyzer:
         
         home_games = features.get('home_games_played', 10)
         away_games = features.get('away_games_played', 10)
+        min_games = min(home_games, away_games)
+        is_early_season = min_games < 10
         
         home_roster = features.get('home_roster_rating', 0)
         away_roster = features.get('away_roster_rating', 0)
         
         # 1. Early Season Override
-        if home_games < 5 or away_games < 5:
+        if is_early_season:
             weights['nr'] = 0.0
             weights['pd'] = 0.0
             weights['str'] = 0.0
@@ -532,16 +534,24 @@ class TrendAnalyzer:
         avg_pace = (home_pace + away_pace) / 2 if (home_pace and away_pace) else 99.5
         pace_factor = avg_pace / 100.0
 
+        # 1. Stale Net Rating Bayesian Prior Ramp (Prior Weight Floor 35%)
+        # Avoids unadjusted stale 82-game stats dominating early season games while preventing parrot behavior
+        prior_weight = 0.35 + 0.65 * min(1.0, min_games / 10.0)
+        if is_crisis:
+            prior_weight *= 0.50
+
         if (home_net_rtg != 0.0 or away_net_rtg != 0.0):
-            base_margin = net_rtg_diff * pace_factor
+            base_margin = (net_rtg_diff * pace_factor) * prior_weight
         else:
-            base_margin = pt_diff_gap
+            base_margin = pt_diff_gap * prior_weight
 
         hca = 2.0  # NBA baseline home court advantage (+2.0 points)
         rest_adj = (home_rest - away_rest) * 0.75
 
+        # 2. Elevated Roster Multiplier (35% when early season or injury crisis)
+        roster_multiplier = 0.35 if (is_early_season or is_crisis) else 0.20
         roster_diff = (home_roster - away_roster) if (home_roster and away_roster) else 0.0
-        roster_adj = roster_diff * 0.15
+        roster_adj = roster_diff * roster_multiplier
 
         raw_projected_margin = base_margin + hca + rest_adj + roster_adj
 
@@ -561,11 +571,14 @@ class TrendAnalyzer:
             from analysis.betting_math import market_anchored_projection, analyze_line_movement
             anchor_spread = open_spread if (open_spread is not None) else s_line
             market_expected_margin = -float(anchor_spread)
-            projected_margin = market_anchored_projection(raw_projected_margin, market_expected_margin, market_weight=market_weight)
+            # 3. Market Anchoring Weight: 0.70 in early season to balance sharp consensus lines without double shrinkage
+            market_weight_spread = 0.70 if is_early_season else market_weight
+            projected_margin = market_anchored_projection(raw_projected_margin, market_expected_margin, market_weight=market_weight_spread)
             cover_edge = projected_margin + s_line
 
-            # Real-world Win Probability using Normal CDF with standard deviation sigma = 12.5 points
-            win_prob = 0.5 * (1.0 + math.erf(cover_edge / (12.5 * math.sqrt(2.0))))
+            # 4. Dynamic Sigma: Expands variance from 12.5 up to 16.5 points early season to avoid overconfident win probabilities
+            sigma = 12.5 + max(0, 10 - min_games) * 0.4
+            win_prob = 0.5 * (1.0 + math.erf(cover_edge / (sigma * math.sqrt(2.0))))
             factor_score_cover = min(max(cover_edge / 5.0, -1.0), 1.0)
             direction_cover = 'home' if factor_score_cover > 0 else ('away' if factor_score_cover < 0 else 'neutral')
             factors.append({

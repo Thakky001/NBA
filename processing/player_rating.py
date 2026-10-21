@@ -9,7 +9,25 @@ from collectors.espn_collector import ESPNCollector
 from collectors.advanced_stats_collector import AdvancedStatsCollector
 from config import DATA_DIR
 
+from functools import lru_cache
+
 logger = logging.getLogger(__name__)
+
+
+@lru_cache(maxsize=1)
+def _load_cached_draft_history() -> pd.DataFrame:
+    """Load draft history from cache once with in-memory caching."""
+    for fname in ['draft_history.csv', 'nba_api_draft_history.csv']:
+        cache_path = os.path.join(DATA_DIR, 'raw', fname)
+        if os.path.exists(cache_path):
+            try:
+                df = pd.read_csv(cache_path)
+                if not df.empty:
+                    return df
+            except Exception:
+                pass
+    return pd.DataFrame()
+
 
 class PlayerRatingEngine:
     """Evaluates team strength based on individual player ratings (EFF/PIE)."""
@@ -32,17 +50,8 @@ class PlayerRatingEngine:
             return pd.DataFrame()
 
     def _load_draft_history(self) -> pd.DataFrame:
-        """Load draft history for evaluating rookies."""
-        for fname in ['draft_history.csv', 'nba_api_draft_history.csv']:
-            cache_path = os.path.join(DATA_DIR, 'raw', fname)
-            if os.path.exists(cache_path):
-                try:
-                    df = pd.read_csv(cache_path)
-                    if not df.empty:
-                        return df
-                except Exception:
-                    pass
-        return pd.DataFrame()
+        """Load draft history for evaluating rookies (in-memory cached)."""
+        return _load_cached_draft_history()
 
     def _load_player_stats(self) -> pd.DataFrame:
         """Load player stats from cache or fetch from nba_api.
@@ -130,8 +139,7 @@ class PlayerRatingEngine:
             'status': 'fallback'
         }
         
-        if self.player_stats is None or self.player_stats.empty:
-            return result
+        stats_df = self.player_stats if self.player_stats is not None else pd.DataFrame()
             
         # 1. Fetch team ID from ESPN
         team_id = None
@@ -175,9 +183,12 @@ class PlayerRatingEngine:
         # 3. Match players and get their EFF_PG
         # Normalize names: strip diacritics (e.g. Dončić -> Doncic) for cross-source matching
         def normalize_name(name):
-            """Strip unicode diacritics and lowercase for matching."""
+            """Strip unicode diacritics, optional tags, and lowercase for matching."""
             nfkd = unicodedata.normalize('NFKD', str(name))
-            return nfkd.encode('ascii', 'ignore').decode('ascii').lower().strip()
+            clean = nfkd.encode('ascii', 'ignore').decode('ascii').lower().strip()
+            if clean.endswith('(base)'):
+                clean = clean[:-6].strip()
+            return clean
         
         active_player_map = {normalize_name(n): n for n in roster_df['name'].tolist()}
         
@@ -194,21 +205,50 @@ class PlayerRatingEngine:
         
         # 1. Add players who have stats in the current season
         found_players = set()
-        for _, row in self.player_stats.iterrows():
-            p_name_raw = str(row.get('PLAYER_NAME', ''))
-            p_name_norm = normalize_name(p_name_raw)
-            if p_name_norm in active_player_map:
-                eff = row.get('EFF_PG', 0)
-                gp = row.get('GP', 0)
-                
-                # If they have enough games, use their actual EFF
-                if gp >= 5:
-                    matched_ratings.append({
-                        'name': active_player_map[p_name_norm],
-                        'eff_pg': eff,
-                        'gp': gp
-                    })
-                    found_players.add(p_name_norm)
+        if not stats_df.empty:
+            for _, row in stats_df.iterrows():
+                p_name_raw = str(row.get('PLAYER_NAME', ''))
+                p_name_norm = normalize_name(p_name_raw)
+                if p_name_norm in active_player_map:
+                    try:
+                        eff = float(row.get('EFF_PG', 0) or 0)
+                    except (ValueError, TypeError):
+                        eff = 0.0
+                    try:
+                        gp = int(row.get('GP', 0) or 0)
+                    except (ValueError, TypeError):
+                        gp = 0
+
+                    # Base tier lookup for small-sample blend or baseline
+                    pick = draft_map.get(p_name_norm, 999)
+                    if pick <= 5:
+                        base_eff = 14.0 # Top 5 pick (Solid starter)
+                    elif pick <= 14:
+                        base_eff = 9.0  # Lottery (Key rotation)
+                    elif pick <= 30:
+                        base_eff = 6.0  # First round (Rotation contributor)
+                    else:
+                        base_eff = 4.5  # General rotation / undrafted baseline
+                    
+                    # If they have enough games, use their actual EFF
+                    if gp >= 5:
+                        matched_ratings.append({
+                            'name': active_player_map[p_name_norm],
+                            'clean_name': active_player_map[p_name_norm],
+                            'eff_pg': eff,
+                            'gp': gp
+                        })
+                        found_players.add(p_name_norm)
+                    elif gp > 0 and eff > 0:
+                        # Small-sample blending: blend actual EFF with base rating
+                        blended_eff = (eff * gp + base_eff * (5 - gp)) / 5.0
+                        matched_ratings.append({
+                            'name': active_player_map[p_name_norm],
+                            'clean_name': active_player_map[p_name_norm],
+                            'eff_pg': round(blended_eff, 1),
+                            'gp': gp
+                        })
+                        found_players.add(p_name_norm)
                     
         # 2. Add Rookies & Cold Start players (GP < 5 or not in stats yet)
         for p_name_norm, original_name in active_player_map.items():
@@ -216,18 +256,19 @@ class PlayerRatingEngine:
                 # Check if they are a recent draft pick
                 pick = draft_map.get(p_name_norm, 999)
                 
-                # Assign Replacement Level / Rookie Base Rating
+                # Assign Replacement Level / Rookie Base Rating (elevated floor)
                 if pick <= 5:
-                    eff = 12.0 # Top 5 pick (Solid starter)
+                    eff = 14.0 # Top 5 pick (Solid starter)
                 elif pick <= 14:
-                    eff = 8.0  # Lottery (Rotation)
+                    eff = 9.0  # Lottery (Key rotation)
                 elif pick <= 30:
-                    eff = 5.0  # First round (End of bench)
+                    eff = 6.0  # First round (Rotation contributor)
                 else:
-                    eff = 3.0  # Second round / Undrafted / General bench warmer
+                    eff = 4.5  # General rotation / undrafted baseline (elevated from 3.0)
                     
                 matched_ratings.append({
                     'name': f"{original_name} (Base)",
+                    'clean_name': original_name,
                     'eff_pg': eff,
                     'gp': 0
                 })
@@ -245,8 +286,9 @@ class PlayerRatingEngine:
 
         # Apply injury status to player ratings
         for p in matched_ratings:
-            p_norm = normalize_name(p['name'])
-            inj_info = injury_map.get(p_norm)
+            p_clean = p.get('clean_name', p['name'])
+            p_norm = normalize_name(p_clean)
+            inj_info = injury_map.get(p_norm) or injury_map.get(normalize_name(p['name']))
             if inj_info:
                 st_lower = inj_info['status'].lower()
                 detail_str = f" - {inj_info['detail']}" if inj_info['detail'] else ""

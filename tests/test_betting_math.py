@@ -150,15 +150,21 @@ class TestBettingMath(unittest.TestCase):
         self.assertIn('Value & Sizing', sp_res['summary'])
 
     def test_kelly_safety_cap(self):
-        """Verify Kelly criterion supports optional cap and unconstrained raw mode."""
-        # Extreme win prob (e.g. 0.90) with explicit safety cap 5.0%
+        """Verify Kelly criterion supports default cap (2.5%), custom cap, and unconstrained raw mode."""
+        # Extreme win prob (e.g. 0.90) with default safety cap 2.5%
+        k_default = calculate_kelly(model_prob=0.90, market_odds=-110, fraction=0.25)
+        self.assertEqual(k_default["recommended_stake_pct"], 2.5)
+        self.assertEqual(k_default["capped_kelly"], 0.025)
+        self.assertGreater(k_default["fractional_kelly"], 0.025)
+
+        # Extreme win prob with explicit custom safety cap 5.0%
         k_capped = calculate_kelly(model_prob=0.90, market_odds=-110, fraction=0.25, max_cap=0.05)
         self.assertEqual(k_capped["recommended_stake_pct"], 5.0)
         self.assertEqual(k_capped["capped_kelly"], 0.05)
         self.assertGreater(k_capped["fractional_kelly"], 0.05)
 
-        # Pure raw mode (default max_cap=None): unconstrained fractional Kelly
-        k_raw = calculate_kelly(model_prob=0.90, market_odds=-110, fraction=0.25)
+        # Pure raw mode (explicit max_cap=None): unconstrained fractional Kelly
+        k_raw = calculate_kelly(model_prob=0.90, market_odds=-110, fraction=0.25, max_cap=None)
         self.assertAlmostEqual(k_raw["recommended_stake_pct"], k_raw["fractional_kelly"] * 100.0, places=2)
         self.assertGreater(k_raw["recommended_stake_pct"], 15.0)
 

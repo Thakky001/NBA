@@ -134,6 +134,54 @@ class TestTrendAnalyzer(unittest.TestCase):
         self.assertAlmostEqual(res['total_edge'], 4.0, places=1)
         self.assertEqual(res['recommendation'], 'STRONG OVER')
 
+    def test_early_season_prior_ramp_and_dynamic_sigma(self):
+        """Verify early season (<10 GP) ramps prior weight, anchors market at 0.70, and widens sigma."""
+        # Opening game (1 GP)
+        self.mock_fe.compute_matchup_features.return_value = {
+            'home_games_played': 1,
+            'away_games_played': 1,
+            'home_net_rating': 8.0,
+            'away_net_rating': -6.0, # 14 pt net rating gap
+            'home_pace': 100.0,
+            'away_pace': 100.0,
+            'avg_pace': 100.0,
+            'home_rest_days': 2,
+            'away_rest_days': 2,
+            'home_roster_power': 80.0,
+            'away_roster_power': 80.0,
+        }
+        res_early = self.analyzer.analyze_spread('Charlotte Hornets', 'Brooklyn Nets', spread_line=-1.5)
+        # Prior weight at min_games=1 is 0.35 + 0.65*(1/10) = 0.415
+        # Base margin: 14.0 * 0.415 = 5.81 pt gap (instead of 14.0)
+        # Plus HCA 2.0 = 7.81 raw margin
+        # Market anchor at 0.70 with s_line=-1.5 (market expected +1.5):
+        # projected_margin = 0.70 * 1.5 + 0.30 * 7.81 = 1.05 + 2.34 = 3.39
+        # Edge vs -1.5 is 3.39 - 1.5 = ~1.89 pt (modest, not huge 8+ pts)
+        self.assertLess(res_early['projected_margin'], 6.0)
+        # Sigma at min_games=1 is 12.5 + (10 - 1)*0.4 = 16.1 -> Win prob is modest (~54-58%), not >65%
+        self.assertLess(res_early['win_prob'], 0.60)
+        self.assertGreater(res_early['win_prob'], 0.50)
+        # Quarter Kelly must be safely bounded below 2.5% default cap
+        self.assertLessEqual(res_early['kelly_quarter'], 0.025)
+
+        # Mid-season (20 GP)
+        self.mock_fe.compute_matchup_features.return_value = {
+            'home_games_played': 20,
+            'away_games_played': 20,
+            'home_net_rating': 8.0,
+            'away_net_rating': -6.0,
+            'home_pace': 100.0,
+            'away_pace': 100.0,
+            'avg_pace': 100.0,
+            'home_rest_days': 2,
+            'away_rest_days': 2,
+            'home_roster_power': 80.0,
+            'away_roster_power': 80.0,
+        }
+        res_mid = self.analyzer.analyze_spread('Charlotte Hornets', 'Brooklyn Nets', spread_line=-1.5)
+        # Mid-season prior weight is 1.0, so projected margin is larger than early season
+        self.assertGreater(res_mid['projected_margin'], res_early['projected_margin'])
+
 
 if __name__ == '__main__':
     unittest.main()
