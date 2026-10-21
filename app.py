@@ -180,19 +180,32 @@ if st.sidebar.button("🔄 อัปเดตฐานข้อมูลสถ�
         from main import _load_game_history
         from collectors.espn_collector import ESPNCollector
         from collectors.odds_collector import OddsCollector
+        from config import resolve_team_info
         
-        progress.progress(20, text="1/4 กำลังดึงผลการแข่งขันและตารางจาก ESPN...")
+        progress.progress(15, text="1/5 กำลังดึงผลการแข่งขันและตารางจาก ESPN...")
         collector_espn = ESPNCollector()
         _load_game_history(collector_espn)
 
-        progress.progress(45, text="2/4 กำลังอัปเดตรายชื่อตัวเจ็บ (Injuries) ล่าสุดจาก ESPN...")
+        progress.progress(35, text="2/5 กำลังอัปเดตรายชื่อตัวเจ็บ (Injuries) ล่าสุดจาก ESPN...")
         collector_espn.get_injuries()
+
+        progress.progress(55, text="3/5 กำลังดึงรายชื่อผู้เล่นสด (Active Rosters) ของทีมที่มีแข่งวันนี้...")
+        sb_today = collector_espn.get_scoreboard_by_thai_date(selected_date)
+        if not sb_today.empty:
+            for _, g in sb_today.iterrows():
+                for t_name in [g.get('home_team'), g.get('away_team')]:
+                    t_info = resolve_team_info(t_name)
+                    if t_info and 'espn_id' in t_info:
+                        try:
+                            collector_espn.get_team_roster(int(t_info['espn_id']))
+                        except Exception:
+                            pass
         
-        progress.progress(70, text="3/4 กำลังอัปเดตราคาต่อรองล่าสุด...")
+        progress.progress(75, text="4/5 กำลังอัปเดตราคาต่อรองล่าสุด...")
         collector_odds = OddsCollector()
         collector_odds.get_odds_dataframe()
         
-        progress.progress(90, text="4/4 กำลังล้างแคชและประมวลผลโมเดลใหม่...")
+        progress.progress(90, text="5/5 กำลังล้างแคชและประมวลผลโมเดลใหม่...")
         st.cache_data.clear()
         st.cache_resource.clear()
         
