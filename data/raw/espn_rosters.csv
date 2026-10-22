@@ -1,520 +1,520 @@
 player_id,name,jersey,position,height,weight,age,experience,college,team_id,team_name
-4278039,Nickeil Alexander-Walker,7,Guard,"6' 5""",205 lbs,28,8.0,Virginia Tech,1,Atlanta Hawks
-4869342,Dyson Daniels,5,Guard,"6' 7""",199 lbs,23,5.0,,1,Atlanta Hawks
-4431941,RayJ Dennis,10,Guard,"6' 2""",180 lbs,25,3.0,Baylor,1,Atlanta Hawks
-4397020,Luguentz Dort,0,Guard,"6' 4""",220 lbs,27,8.0,Arizona State,1,Atlanta Hawks
-5106262,Zuby Ejiofor,20,Forward,"6' 8""",245 lbs,22,0.0,St. John's,1,Atlanta Hawks
-2578185,Dorian Finney-Smith,8,Forward,"6' 7""",220 lbs,33,11.0,Florida,1,Atlanta Hawks
-5149077,Kingston Flemings,4,Guard,"6' 3""",183 lbs,19,0.0,Houston,1,Atlanta Hawks
-4585618,Keshon Gilbert,00,Guard,"6' 4""",200 lbs,23,2.0,Iowa State,1,Atlanta Hawks
-4712863,Mouhamed Gueye,18,Forward,"6' 11""",210 lbs,23,4.0,Washington State,1,Atlanta Hawks
-4701230,Jalen Johnson,1,Forward,"6' 8""",219 lbs,24,6.0,Duke,1,Atlanta Hawks
-4280151,Corey Kispert,24,Forward,"6' 6""",224 lbs,27,6.0,Gonzaga,1,Atlanta Hawks
-3146557,Jock Landale,31,Center,"6' 11""",255 lbs,30,6.0,Saint Mary's,1,Atlanta Hawks
-2490149,CJ McCollum,3,Guard,"6' 3""",190 lbs,35,14.0,Lehigh,1,Atlanta Hawks
-4873201,Asa Newell,14,Forward,"6' 11""",224 lbs,21,2.0,Georgia,1,Atlanta Hawks
-4431680,Onyeka Okongwu,17,Forward,"6' 10""",240 lbs,25,7.0,USC,1,Atlanta Hawks
-5105571,Henri Veesaar,13,Center,"7' 0""",227 lbs,22,0.0,North Carolina,1,Atlanta Hawks
-4397183,Aaron Wiggins,2,Guard,"6' 5""",190 lbs,27,6.0,Maryland,1,Atlanta Hawks
-4431714,Jalen Wilson,22,Forward,"6' 6""",220 lbs,25,4.0,Kansas,1,Atlanta Hawks
-4433188,Devin Carter,99,Guard,"6' 2""",188 lbs,24,3.0,Providence,2,Boston Celtics
-5142621,Chris Cenac Jr.,12,Forward,"6' 11""",240 lbs,19,0.0,Houston,2,Boston Celtics
-3195,Mike Conley,45,Guard,"6' 1""",175 lbs,39,20.0,Ohio State,2,Boston Celtics
-4277951,Luka Garza,52,Center,"6' 10""",243 lbs,27,6.0,Iowa,2,Boston Celtics
-4251,Paul George,13,Forward,"6' 8""",221 lbs,36,17.0,Fresno State,2,Boston Celtics
-5175647,Hugo Gonzalez,28,Guard,"6' 6""",205 lbs,20,2.0,,2,Boston Celtics
-4397251,Ron Harper Jr.,8,Guard,"6' 5""",233 lbs,26,5.0,Rutgers,2,Boston Celtics
-4065804,Sam Hauser,30,Forward,"6' 8""",221 lbs,28,6.0,Virginia,2,Boston Celtics
-5106283,Dillon Mitchell,20,Forward,"6' 8""",210 lbs,23,0.0,St. John's,2,Boston Celtics
-4066354,Payton Pritchard,11,Guard,"6' 2""",211 lbs,28,7.0,Oregon,2,Boston Celtics
-4397424,Neemias Queta,88,Center,"7' 0""",260 lbs,27,6.0,Utah State,2,Boston Celtics
-4351852,Mitchell Robinson,4,Center,"7' 0""",240 lbs,28,9.0,,2,Boston Celtics
-4593841,Baylor Scheierman,55,Guard,"6' 6""",213 lbs,26,3.0,Creighton,2,Boston Celtics
-4065648,Jayson Tatum,0,Forward,"6' 8""",224 lbs,28,10.0,Duke,2,Boston Celtics
-4683689,Jordan Walsh,27,Guard,"6' 7""",208 lbs,22,4.0,Arkansas,2,Boston Celtics
-3078576,Derrick White,9,Guard,"6' 4""",200 lbs,32,10.0,Colorado,2,Boston Celtics
-4702745,Amari Williams,77,Forward,"7' 0""",262 lbs,24,2.0,Kentucky,2,Boston Celtics
-5105626,Tyler Bilodeau,34,Forward,"6' 8""",228 lbs,22,0.0,UCLA,17,Brooklyn Nets
-5101761,Mikel Brown Jr.,0,Guard,"6' 5""",180 lbs,20,0.0,Louisville,17,Brooklyn Nets
-4712896,Noah Clowney,21,Forward,"6' 10""",210 lbs,22,4.0,Alabama,17,Brooklyn Nets
-5175643,Egor Demin,8,Guard,"6' 8""",200 lbs,20,2.0,BYU,17,Brooklyn Nets
-4702177,Keon Ellis,1,Guard,"6' 4""",175 lbs,26,5.0,Alabama,17,Brooklyn Nets
-4870564,Joshua Jefferson,9,Forward,"6' 8""",246 lbs,22,0.0,Iowa State,17,Brooklyn Nets
-5174655,Chaney Johnson,31,Forward,"6' 8""",225 lbs,24,2.0,Auburn,17,Brooklyn Nets
-3907823,Terance Mann,14,Guard,"6' 6""",215 lbs,30,8.0,Florida State,17,Brooklyn Nets
-4687718,Josh Minott,00,Forward,"6' 8""",205 lbs,23,5.0,Memphis,17,Brooklyn Nets
-4702670,Grant Nelson,16,Forward,"6' 11""",230 lbs,24,2.0,Alabama,17,Brooklyn Nets
-4278104,Michael Porter Jr.,17,Forward,"6' 10""",218 lbs,28,8.0,Missouri,17,Brooklyn Nets
-5037873,Drake Powell,4,Guard,"6' 5""",195 lbs,21,2.0,North Carolina,17,Brooklyn Nets
-3064514,Julius Randle,30,Forward,"6' 9""",250 lbs,31,13.0,Kentucky,17,Brooklyn Nets
-5242502,Ben Saraf,77,Guard,"6' 6""",200 lbs,20,2.0,,17,Brooklyn Nets
-4432194,Day'Ron Sharpe,20,Center,"6' 10""",265 lbs,24,6.0,North Carolina,17,Brooklyn Nets
-5279130,Nolan Traore,10,Guard,"6' 3""",185 lbs,20,2.0,,17,Brooklyn Nets
-3150844,Moritz Wagner,13,Center,"6' 11""",245 lbs,29,9.0,Michigan,17,Brooklyn Nets
-5107173,Danny Wolf,2,Forward,"6' 11""",250 lbs,22,2.0,Michigan,17,Brooklyn Nets
-3135045,Grayson Allen,8,Guard,"6' 3""",198 lbs,31,9.0,Duke,30,Charlotte Hornets
-5060701,Christian Anderson,5,Guard,"6' 1""",180 lbs,20,0.0,Texas Tech,30,Charlotte Hornets
-4684269,Kylan Boswell,18,Guard,"6' 1""",226 lbs,21,0.0,Illinois,30,Charlotte Hornets
-4433249,Moussa Diabate,14,Forward,"6' 10""",210 lbs,24,5.0,Michigan,30,Charlotte Hornets
-4701225,PJ Hall,16,Center,"6' 8""",245 lbs,24,3.0,Clemson,30,Charlotte Hornets
-4602025,Sion James,4,Guard,"6' 5""",220 lbs,23,2.0,Duke,30,Charlotte Hornets
-4576060,Ryan Kalkbrenner,11,Center,"7' 1""",256 lbs,24,2.0,Creighton,30,Charlotte Hornets
-5061575,Kon Knueppel,7,Guard,"6' 6""",215 lbs,21,2.0,Duke,30,Charlotte Hornets
-5239590,Liam McNeeley,33,Guard,"6' 7""",210 lbs,21,2.0,UConn,30,Charlotte Hornets
-4433287,Brandon Miller,24,Forward,"6' 7""",200 lbs,23,4.0,Alabama,30,Charlotte Hornets
-2583632,Royce O'Neale,00,Forward,"6' 6""",226 lbs,33,10.0,Baylor,30,Charlotte Hornets
-4396971,Naz Reid,0,Center,"6' 9""",264 lbs,27,8.0,LSU,30,Charlotte Hornets
-5211176,Tidjane Salaun,31,Forward,"6' 10""",207 lbs,21,3.0,,30,Charlotte Hornets
-3032979,Dennis Schroder,17,Guard,"6' 1""",175 lbs,33,14.0,,30,Charlotte Hornets
-5281370,Hannes Steinbach,22,Forward,"6' 10""",248 lbs,20,0.0,Washington,30,Charlotte Hornets
-4395651,Coby White,3,Guard,"6' 4""",195 lbs,26,8.0,North Carolina,30,Charlotte Hornets
-4066218,Grant Williams,2,Forward,"6' 7""",236 lbs,27,8.0,Tennessee,30,Charlotte Hornets
-5105555,Tobe Awaka,19,Forward,"6' 8""",255 lbs,22,0.0,Arizona,4,Chicago Bulls
-4711294,Matas Buzelis,14,Forward,"6' 8""",209 lbs,22,3.0,,4,Chicago Bulls
-4278067,Nic Claxton,9,Center,"6' 11""",215 lbs,27,8.0,Georgia,4,Chicago Bulls
-4066650,Zach Collins,12,Forward,"6' 9""",250 lbs,28,10.0,Gonzaga,4,Chicago Bulls
-5242496,Noa Essengue,2,Forward,"6' 11""",206 lbs,19,2.0,,4,Chicago Bulls
-4871145,Josh Giddey,3,Guard,"6' 7""",216 lbs,24,6.0,,4,Chicago Bulls
-4683750,Jordan Hawkins,15,Guard,"6' 5""",190 lbs,24,4.0,UConn,4,Chicago Bulls
-2990984,Buddy Hield,7,Guard,"6' 4""",220 lbs,33,11.0,Oklahoma,4,Chicago Bulls
-4395626,Tre Jones,30,Guard,"6' 1""",185 lbs,26,7.0,Duke,4,Chicago Bulls
-5044385,Leonard Miller,11,Forward,"6' 10""",220 lbs,22,4.0,,4,Chicago Bulls
-4432822,Isaac Okoro,35,Forward,"6' 4""",225 lbs,25,7.0,Auburn,4,Chicago Bulls
-2595516,Norman Powell,24,Guard,"6' 4""",215 lbs,33,12.0,UCLA,4,Chicago Bulls
-4898010,Jaylin Sellers,22,Guard,"6' 5""",205 lbs,23,0.0,Providence,4,Chicago Bulls
-4397189,Jalen Smith,25,Forward,"6' 8""",215 lbs,26,7.0,Maryland,4,Chicago Bulls
-4848625,Dailyn Swain,5,Guard,"6' 7""",211 lbs,21,0.0,Texas,4,Chicago Bulls
-4431687,Patrick Williams,44,Forward,"6' 6""",215 lbs,25,7.0,Florida State,4,Chicago Bulls
-5095151,Caleb Wilson,8,Forward,"6' 9""",211 lbs,20,0.0,North Carolina,4,Chicago Bulls
-4066328,Jarrett Allen,31,Center,"6' 9""",243 lbs,28,10.0,Texas,5,Cleveland Cavaliers
-3934723,Thomas Bryant,3,Center,"6' 9""",248 lbs,29,10.0,Indiana,5,Cleveland Cavaliers
-4997530,Khalifa Diop,18,Center,"6' 11""",231 lbs,24,0.0,,5,Cleveland Cavaliers
-4431734,Tristan Enaruna,21,Forward,"6' 8""",220 lbs,25,2.0,Cleveland State,5,Cleveland Cavaliers
-3992,James Harden,1,Guard,"6' 5""",220 lbs,37,18.0,Arizona State,5,Cleveland Cavaliers
-2995706,Mario Hezonja,33,Forward,"6' 8""",220 lbs,31,6.0,,5,Cleveland Cavaliers
-4066757,Sam Merrill,5,Guard,"6' 4""",205 lbs,30,7.0,Utah State,5,Cleveland Cavaliers
-5177362,Riley Minix,12,Forward,"6' 7""",230 lbs,26,3.0,Morehead State,5,Cleveland Cavaliers
-3908809,Donovan Mitchell,45,Guard,"6' 2""",215 lbs,30,10.0,Louisville,5,Cleveland Cavaliers
-4432158,Evan Mobley,4,Center,"6' 11""",215 lbs,25,6.0,USC,5,Cleveland Cavaliers
-4701233,Craig Porter Jr.,9,Guard,"6' 1""",180 lbs,26,4.0,Wichita State,5,Cleveland Cavaliers
-5023693,Tyrese Proctor,24,Guard,"6' 4""",185 lbs,22,2.0,Duke,5,Cleveland Cavaliers
-5041951,Meleek Thomas,15,Guard,"6' 3""",190 lbs,20,0.0,Arkansas,5,Cleveland Cavaliers
-5106268,Nae'Qwan Tomlin,35,Forward,"6' 8""",210 lbs,25,3.0,Memphis,5,Cleveland Cavaliers
-4683747,Jaylon Tyson,20,Guard,"6' 6""",215 lbs,23,3.0,California,5,Cleveland Cavaliers
-5106261,Ernest Udeh Jr.,39,Center,"6' 11""",266 lbs,22,0.0,Miami,5,Cleveland Cavaliers
-4576087,Peyton Watson,8,Guard,"6' 8""",200 lbs,24,5.0,UCLA,5,Cleveland Cavaliers
-4593125,Santi Aldama,34,Forward,"7' 0""",215 lbs,25,6.0,Loyola Maryland,6,Dallas Mavericks
-5148538,Tarik Biberovic,13,Forward,"6' 7""",218 lbs,25,0.0,,6,Dallas Mavericks
-4432582,Max Christie,0,Guard,"6' 5""",190 lbs,23,5.0,Michigan State,6,Dallas Mavericks
-4701208,Moussa Cisse,30,Center,"6' 11""",220 lbs,24,2.0,Memphis,6,Dallas Mavericks
-4896372,Walter Clayton Jr.,4,Guard,"6' 4""",195 lbs,23,,Florida,6,Dallas Mavericks
-5279129,Sergio de Larrea,55,Forward,"6' 7""",202 lbs,20,0.0,,6,Dallas Mavericks
-5041939,Cooper Flagg,32,Forward,"6' 9""",205 lbs,19,2.0,Duke,6,Dallas Mavericks
-4278049,Daniel Gafford,21,Forward,"6' 10""",265 lbs,28,8.0,Arkansas,6,Dallas Mavericks
-5105806,Jett Howard,9,Guard,"6' 8""",215 lbs,23,4.0,Michigan,6,Dallas Mavericks
-6442,Kyrie Irving,11,Guard,"6' 2""",195 lbs,34,15.0,Duke,6,Dallas Mavericks
-4873153,Morez Johnson Jr.,14,Forward,"6' 9""",250 lbs,20,0.0,Michigan,6,Dallas Mavericks
-5106040,Tobi Lawal,33,Forward,"6' 8""",215 lbs,23,0.0,Virginia Tech,6,Dallas Mavericks
-4683688,Dereck Lively II,2,Center,"7' 1""",230 lbs,22,4.0,Duke,6,Dallas Mavericks
-4278594,Naji Marshall,3,Forward,"6' 6""",220 lbs,28,7.0,Xavier,6,Dallas Mavericks
-3138160,Caleb Martin,16,Forward,"6' 5""",205 lbs,31,8.0,Nevada,6,Dallas Mavericks
-5211175,Zaccharie Risacher,10,Forward,"6' 8""",200 lbs,21,3.0,,6,Dallas Mavericks
-4432107,Marcus Sasser,8,Guard,"6' 1""",195 lbs,26,4.0,Houston,6,Dallas Mavericks
-4278078,P.J. Washington,25,Forward,"6' 7""",230 lbs,28,8.0,Kentucky,6,Dallas Mavericks
-4277848,Marvin Bagley III,3,Forward,"6' 10""",235 lbs,27,9.0,Duke,7,Denver Nuggets
-4431767,Christian Braun,0,Guard,"6' 6""",220 lbs,25,5.0,Kansas,7,Denver Nuggets
-4698719,Trevon Brazile,7,Forward,"6' 10""",220 lbs,23,0.0,Arkansas,7,Denver Nuggets
-3978,DeMar DeRozan,10,Guard,"6' 6""",220 lbs,37,18.0,USC,7,Denver Nuggets
-4065813,Alpha Diallo,11,Forward,"6' 7""",210 lbs,29,0.0,Providence,7,Denver Nuggets
-3064290,Aaron Gordon,32,Forward,"6' 8""",235 lbs,31,13.0,Arizona,7,Denver Nuggets
-4433607,DaRon Holmes II,14,Forward,"6' 9""",225 lbs,24,2.0,Dayton,7,Denver Nuggets
-4565698,Bryce Hopkins,13,Forward,"6' 7""",220 lbs,24,0.0,St. John's,7,Denver Nuggets
-3138196,Cameron Johnson,23,Forward,"6' 8""",210 lbs,30,8.0,North Carolina,7,Denver Nuggets
-3112335,Nikola Jokic,15,Center,"6' 11""",284 lbs,31,12.0,,7,Denver Nuggets
-4592427,Spencer Jones,21,Forward,"6' 7""",225 lbs,25,3.0,Stanford,7,Denver Nuggets
-3135046,Tyus Jones,5,Guard,"6' 0""",196 lbs,30,12.0,Duke,7,Denver Nuggets
-3936299,Jamal Murray,27,Guard,"6' 4""",215 lbs,29,10.0,Kentucky,7,Denver Nuggets
-4433629,Ryan Nembhard,9,Guard,"5' 11""",180 lbs,23,2.0,Gonzaga,7,Denver Nuggets
-4431690,Zeke Nnaji,22,Forward,"6' 10""",240 lbs,25,7.0,Arizona,7,Denver Nuggets
-4432181,Julian Strawther,1,Guard,"6' 6""",205 lbs,24,4.0,Gonzaga,7,Denver Nuggets
-5105592,Cam Whitmore,00,Forward,"6' 6""",230 lbs,22,4.0,Villanova,7,Denver Nuggets
-3908845,John Collins,20,Forward,"6' 9""",226 lbs,29,10.0,Wake Forest,8,Detroit Pistons
-4432166,Cade Cunningham,2,Guard,"6' 6""",220 lbs,25,6.0,Oklahoma State,8,Detroit Pistons
-4433621,Jalen Duren,0,Center,"6' 10""",250 lbs,22,5.0,Memphis,8,Detroit Pistons
-2596112,Javonte Green,31,Guard,"6' 5""",205 lbs,33,8.0,Radford,8,Detroit Pistons
-4397449,Elijah Harkless,94,Guard,"6' 3""",195 lbs,26,3.0,UNLV,8,Detroit Pistons
-4683771,Ronald Holland II,5,Forward,"6' 8""",206 lbs,21,3.0,,8,Detroit Pistons
-4066372,Kevin Huerter,27,Guard,"6' 6""",198 lbs,28,9.0,Maryland,8,Detroit Pistons
-5107199,Daniss Jenkins,24,Guard,"6' 4""",165 lbs,25,3.0,St. John's,8,Detroit Pistons
-4395702,Isaiah Joe,17,Guard,"6' 4""",165 lbs,27,7.0,Arkansas,8,Detroit Pistons
-5107818,Isaac Jones,13,Center,"6' 8""",245 lbs,26,3.0,Washington State,8,Detroit Pistons
-4700852,Chaz Lanier,8,Guard,"6' 3""",206 lbs,24,2.0,Tennessee,8,Detroit Pistons
-5258459,Ebuka Okorie,23,Guard,"6' 2""",186 lbs,19,0.0,Stanford,8,Detroit Pistons
-5037878,Ugonna Onyenso,34,Center,"7' 0""",236 lbs,22,0.0,Virginia,8,Detroit Pistons
-2990962,Taurean Prince,12,Forward,"6' 6""",218 lbs,32,11.0,Baylor,8,Detroit Pistons
-4278562,Paul Reed,7,Forward,"6' 9""",210 lbs,27,7.0,DePaul,8,Detroit Pistons
-3157465,Duncan Robinson,55,Forward,"6' 7""",215 lbs,32,9.0,Michigan,8,Detroit Pistons
-4397882,Tolu Smith,35,Forward,"6' 11""",250 lbs,26,3.0,Mississippi State,8,Detroit Pistons
-4684742,Ausar Thompson,9,Guard,"6' 7""",205 lbs,23,4.0,,8,Detroit Pistons
-4397886,Charles Bassey,28,Center,"6' 10""",230 lbs,25,6.0,Western Kentucky,9,Golden State Warriors
-6430,Jimmy Butler III,10,Forward,"6' 6""",230 lbs,37,16.0,Marquette,9,Golden State Warriors
-4433149,LJ Cryer,18,Guard,"6' 0""",200 lbs,25,2.0,Houston,9,Golden State Warriors
-3975,Stephen Curry,30,Guard,"6' 2""",185 lbs,38,18.0,Davidson,9,Golden State Warriors
-6589,Draymond Green,23,Forward,"6' 6""",230 lbs,36,15.0,Michigan State,9,Golden State Warriors
-3213,Al Horford,20,Center,"6' 8""",240 lbs,40,20.0,Florida,9,Golden State Warriors
-4703396,Graham Ike,,Forward,"6' 9""",250 lbs,24,0.0,Gonzaga,9,Golden State Warriors
-5175737,Yaxel Lendeborg,1,Forward,"6' 9""",241 lbs,24,0.0,Michigan,9,Golden State Warriors
-4897449,Malevy Leons,33,Forward,"6' 9""",203 lbs,27,3.0,Bradley,9,Golden State Warriors
-4066436,De'Anthony Melton,8,Guard,"6' 2""",200 lbs,28,9.0,USC,9,Golden State Warriors
-4432171,Moses Moody,4,Guard,"6' 5""",211 lbs,24,6.0,Arkansas,9,Golden State Warriors
-2990969,Georges Niang,32,Forward,"6' 6""",230 lbs,33,11.0,Iowa State,9,Golden State Warriors
-3134903,Gary Payton II,0,Guard,"6' 2""",195 lbs,33,11.0,Oregon State,9,Golden State Warriors
-4709138,Brandin Podziemski,2,Guard,"6' 4""",205 lbs,23,4.0,Santa Clara,9,Golden State Warriors
-3102531,Kristaps Porzingis,7,Center,"7' 2""",240 lbs,31,12.0,,9,Golden State Warriors
-4897262,Will Richard,3,Guard,"6' 3""",206 lbs,23,2.0,Florida,9,Golden State Warriors
-4997536,Gui Santos,15,Forward,"6' 7""",185 lbs,24,4.0,,9,Golden State Warriors
-4397040,Brandon Williams,12,Guard,"6' 1""",190 lbs,26,5.0,Arizona,9,Golden State Warriors
-2991235,Steven Adams,12,Center,"6' 11""",265 lbs,33,14.0,Pittsburgh,10,Houston Rockets
-3037789,Bogdan Bogdanovic,31,Guard,"6' 5""",225 lbs,34,10.0,,10,Houston Rockets
-3102529,Clint Capela,30,Center,"6' 10""",256 lbs,32,13.0,,10,Houston Rockets
-4683860,Quadir Copeland,25,Guard,"6' 6""",220 lbs,23,0.0,NC State,10,Houston Rockets
-4592857,Isaiah Crawford,27,Forward,"6' 6""",220 lbs,24,3.0,Louisiana Tech,10,Houston Rockets
-3202,Kevin Durant,7,Forward,"6' 11""",240 lbs,38,20.0,Texas,10,Houston Rockets
-4433192,Tari Eason,17,Forward,"6' 8""",215 lbs,25,5.0,LSU,10,Houston Rockets
-5105553,Julian Phillips,3,Forward,"6' 6""",198 lbs,22,4.0,Tennessee,10,Houston Rockets
-4871144,Alperen Sengun,28,Center,"6' 11""",243 lbs,24,6.0,,10,Houston Rockets
-4711272,Reed Sheppard,15,Guard,"6' 2""",185 lbs,22,3.0,Kentucky,10,Houston Rockets
-2990992,Marcus Smart,36,Guard,"6' 3""",220 lbs,32,13.0,Oklahoma State,10,Houston Rockets
-4432639,Jabari Smith Jr.,10,Forward,"6' 11""",220 lbs,23,5.0,Auburn,10,Houston Rockets
-3136777,Jae'Sean Tate,8,Forward,"6' 4""",230 lbs,30,7.0,Ohio State,10,Houston Rockets
-4684740,Amen Thompson,1,Guard,"6' 7""",200 lbs,23,4.0,,10,Houston Rockets
-5105837,Bruce Thornton,2,Guard,"6' 0""",223 lbs,23,0.0,Ohio State,10,Houston Rockets
-4432827,Oscar Tshiebwe,9,Center,"6' 8""",255 lbs,26,4.0,Kentucky,10,Houston Rockets
-2991230,Fred VanVleet,5,Guard,"6' 0""",197 lbs,32,11.0,Wichita State,10,Houston Rockets
-4431752,Kobe Brown,24,Guard,"6' 7""",250 lbs,26,4.0,Missouri,11,Indiana Pacers
-5157066,Johnny Furphy,12,Guard,"6' 8""",200 lbs,21,3.0,Kansas,11,Indiana Pacers
-4396993,Tyrese Haliburton,0,Guard,"6' 5""",185 lbs,26,7.0,Iowa State,11,Indiana Pacers
-4065731,Jay Huff,32,Center,"7' 1""",240 lbs,29,6.0,Virginia,11,Indiana Pacers
-4592829,Quenton Jackson,29,Guard,"6' 4""",173 lbs,28,5.0,Texas A&M,11,Indiana Pacers
-2530530,T.J. McConnell,9,Guard,"6' 1""",190 lbs,34,12.0,Arizona,11,Indiana Pacers
-2580365,Larry Nance Jr.,22,Forward,"6' 6""",245 lbs,33,12.0,Wyoming,11,Indiana Pacers
-4395712,Andrew Nembhard,2,Guard,"6' 4""",191 lbs,26,5.0,Gonzaga,11,Indiana Pacers
-4396909,Aaron Nesmith,23,Guard,"6' 5""",215 lbs,27,7.0,Vanderbilt,11,Indiana Pacers
-3133603,Kelly Oubre Jr.,10,Guard,"6' 8""",203 lbs,30,12.0,Kansas,11,Indiana Pacers
-4433076,Ben Sheppard,26,Guard,"6' 6""",190 lbs,25,4.0,Belmont,11,Indiana Pacers
-3149673,Pascal Siakam,43,Forward,"6' 8""",245 lbs,32,11.0,New Mexico State,11,Indiana Pacers
-4398207,Jalen Slawson,18,Forward,"6' 7""",215 lbs,26,3.0,Furman,11,Indiana Pacers
-5105854,Braden Smith,3,Guard,"5' 10""",167 lbs,23,0.0,Purdue,11,Indiana Pacers
-4278355,Obi Toppin,1,Forward,"6' 9""",220 lbs,28,7.0,Dayton,11,Indiana Pacers
-5106060,Jarace Walker,5,Forward,"6' 7""",235 lbs,23,4.0,Houston,11,Indiana Pacers
-4017837,Ivica Zubac,40,Center,"7' 0""",240 lbs,29,11.0,,11,Indiana Pacers
-6580,Bradley Beal,3,Guard,"6' 4""",207 lbs,33,15.0,Florida,12,LA Clippers
-4845363,Cam Christie,24,Guard,"6' 5""",190 lbs,21,3.0,Minnesota,12,LA Clippers
-5106258,Gradey Dick,9,Guard,"6' 7""",200 lbs,22,4.0,Kansas,12,LA Clippers
-2991139,Kris Dunn,8,Guard,"6' 3""",205 lbs,32,11.0,Providence,12,LA Clippers
-4396907,Darius Garland,10,Guard,"6' 1""",192 lbs,26,8.0,Vanderbilt,12,LA Clippers
-4066648,Rui Hachimura,28,Forward,"6' 8""",230 lbs,28,8.0,Gonzaga,12,LA Clippers
-3913176,Brandon Ingram,7,Forward,"6' 8""",190 lbs,29,11.0,Duke,12,LA Clippers
-4432170,Isaiah Jackson,23,Forward,"6' 8""",205 lbs,24,6.0,Kentucky,12,LA Clippers
-3936099,Derrick Jones Jr.,5,Forward,"6' 6""",210 lbs,29,11.0,UNLV,12,LA Clippers
-3448,Brook Lopez,11,Center,"7' 1""",282 lbs,38,19.0,Stanford,12,LA Clippers
-5105832,Nick Martinelli,12,Forward,"6' 7""",224 lbs,22,0.0,Northwestern,12,LA Clippers
-5075626,Baba Miller,18,Forward,"6' 11""",208 lbs,22,0.0,Cincinnati,12,LA Clippers
-4396818,Jordan Miller,22,Guard,"6' 5""",194 lbs,26,4.0,Miami,12,LA Clippers
-5108024,Yanic Konan Niederhauser,14,Center,"6' 11""",242 lbs,23,2.0,Penn State,12,LA Clippers
-4398390,Jalen Pickett,21,Guard,"6' 2""",202 lbs,26,4.0,Penn State,12,LA Clippers
-4702352,Kobe Sanders,4,Guard,"6' 8""",207 lbs,24,2.0,Nevada,12,LA Clippers
-4065778,Max Strus,31,Guard,"6' 5""",215 lbs,30,8.0,DePaul,12,LA Clippers
-5254165,Keaton Wagler,1,Guard,"6' 5""",188 lbs,19,0.0,Illinois,12,LA Clippers
-5113969,Cameron Carr,43,Guard,"6' 5""",184 lbs,21,0.0,Baylor,13,Los Angeles Lakers
-3945274,Luka Doncic,77,Guard,"6' 8""",230 lbs,27,9.0,,13,Los Angeles Lakers
-4397014,Quentin Grimes,5,Guard,"6' 4""",210 lbs,26,6.0,Houston,13,Los Angeles Lakers
-4868423,Jaden Hardy,7,Guard,"6' 3""",198 lbs,24,5.0,,13,Los Angeles Lakers
-4683774,Bronny James,9,Guard,"6' 2""",210 lbs,22,3.0,USC,13,Los Angeles Lakers
-4433599,Arthur Kaluma,47,Forward,"6' 6""",223 lbs,24,2.0,Texas,13,Los Angeles Lakers
-4433136,Walker Kessler,14,Center,"7' 2""",245 lbs,25,5.0,Auburn,13,Los Angeles Lakers
-4592691,Jake LaRavia,12,Forward,"6' 7""",235 lbs,24,5.0,Wake Forest,13,Los Angeles Lakers
-3155535,Kevon Looney,55,Forward,"6' 9""",222 lbs,30,12.0,UCLA,13,Los Angeles Lakers
-4278580,Sandro Mamukelashvili,54,Forward,"6' 9""",240 lbs,27,6.0,Seton Hall,13,Los Angeles Lakers
-4702972,Chris Manon,30,Guard,"6' 4""",209 lbs,24,2.0,Vanderbilt,13,Los Angeles Lakers
-5114350,AK Okereke,31,Forward,"6' 7""",244 lbs,23,0.0,Vanderbilt,13,Los Angeles Lakers
-4066457,Austin Reaves,15,Guard,"6' 5""",197 lbs,28,6.0,Oklahoma,13,Los Angeles Lakers
-4277811,Collin Sexton,10,Guard,"6' 3""",190 lbs,27,9.0,Alabama,13,Los Angeles Lakers
-5060631,Adou Thiero,1,Forward,"6' 8""",220 lbs,22,2.0,Arkansas,13,Los Angeles Lakers
-3907498,Matisse Thybulle,4,Guard,"6' 5""",202 lbs,29,8.0,Washington,13,Los Angeles Lakers
-4278077,Jarred Vanderbilt,2,Forward,"6' 8""",214 lbs,27,9.0,Kentucky,13,Los Angeles Lakers
-4433137,Ziaire Williams,11,Forward,"6' 9""",185 lbs,25,6.0,Stanford,13,Los Angeles Lakers
-5041935,Cameron Boozer,27,Forward,"6' 8""",253 lbs,19,0.0,Duke,29,Memphis Grizzlies
-5105817,Carson Cooper,20,Center,"6' 11""",245 lbs,22,0.0,Michigan State,29,Memphis Grizzlies
-4903027,Cedric Coward,23,Forward,"6' 5""",206 lbs,23,2.0,Washington State,29,Memphis Grizzlies
-4600663,Zach Edey,14,Center,"7' 3""",305 lbs,24,3.0,Purdue,29,Memphis Grizzlies
-2991070,Jerami Grant,3,Forward,"6' 7""",213 lbs,32,13.0,Syracuse,29,Memphis Grizzlies
-4684806,Taylor Hendricks,22,Forward,"6' 9""",215 lbs,22,4.0,UCF,29,Memphis Grizzlies
-5105550,GG Jackson,45,Forward,"6' 9""",210 lbs,21,4.0,South Carolina,29,Memphis Grizzlies
-4065733,Ty Jerome,2,Guard,"6' 5""",195 lbs,29,8.0,Virginia,29,Memphis Grizzlies
-5231919,Karim Lopez,35,Forward,"6' 8""",222 lbs,19,0.0,,29,Memphis Grizzlies
-4683934,Jahmai Mashack,21,Guard,"6' 3""",197 lbs,23,2.0,Tennessee,29,Memphis Grizzlies
-4594326,Kris Murray,17,Forward,"6' 8""",218 lbs,26,4.0,Iowa,29,Memphis Grizzlies
-4431785,Scotty Pippen Jr.,1,Guard,"6' 2""",170 lbs,25,5.0,Vanderbilt,29,Memphis Grizzlies
-4593016,Quinten Post,41,Center,"7' 0""",238 lbs,26,3.0,Boston College,29,Memphis Grizzlies
-4595400,Olivier-Maxence Prosper,18,Forward,"6' 7""",230 lbs,24,4.0,Marquette,29,Memphis Grizzlies
-4781746,Javon Small,10,Guard,"6' 1""",190 lbs,23,2.0,West Virginia,29,Memphis Grizzlies
-4433083,Cam Spencer,24,Guard,"6' 3""",205 lbs,26,3.0,UConn,29,Memphis Grizzlies
-4432810,Isaiah Stewart,28,Center,"6' 8""",250 lbs,25,7.0,Washington,29,Memphis Grizzlies
-5112087,Jaylen Wells,0,Forward,"6' 7""",206 lbs,23,3.0,Washington State,29,Memphis Grizzlies
-4066261,Bam Adebayo,13,Center,"6' 9""",260 lbs,29,10.0,Kentucky,14,Miami Heat
-3032977,Giannis Antetokounmpo,7,Forward,"6' 11""",243 lbs,31,14.0,,14,Miami Heat
-5107157,Ryan Conwell,4,Guard,"6' 3""",220 lbs,22,0.0,Louisville,14,Miami Heat
-4837356,Tre Donaldson,24,Guard,"6' 2""",210 lbs,22,0.0,Miami,14,Miami Heat
-3899664,Simone Fontecchio,0,Forward,"6' 7""",220 lbs,30,5.0,,14,Miami Heat
-4431772,Myron Gardner,15,Forward,"6' 5""",225 lbs,25,2.0,Little Rock,14,Miami Heat
-4700818,Vladislav Goldin,50,Center,"7' 0""",255 lbs,25,2.0,Michigan,14,Miami Heat
-2528210,Tim Hardaway Jr.,10,Guard,"6' 5""",205 lbs,34,14.0,Michigan,14,Miami Heat
-4431786,Keshad Johnson,16,Forward,"6' 6""",230 lbs,25,3.0,Arizona,14,Miami Heat
-4997528,Nikola Jovic,5,Forward,"6' 10""",240 lbs,23,5.0,,14,Miami Heat
-4601025,Pelle Larsson,9,Guard,"6' 5""",215 lbs,25,3.0,Arizona,14,Miami Heat
-4278053,Davion Mitchell,2,Guard,"6' 0""",210 lbs,28,6.0,Baylor,14,Miami Heat
-3064482,Bobby Portis,95,Forward,"6' 9""",250 lbs,31,12.0,Arkansas,14,Miami Heat
-4278076,Nick Richards,8,Center,"6' 11""",245 lbs,28,7.0,Kentucky,14,Miami Heat
-4066993,Dru Smith,12,Guard,"6' 2""",200 lbs,28,5.0,Missouri,14,Miami Heat
-6475,Klay Thompson,11,Guard,"6' 5""",220 lbs,36,16.0,Washington State,14,Miami Heat
-3059319,Andrew Wiggins,22,Forward,"6' 7""",210 lbs,31,13.0,Kansas,14,Miami Heat
-5164559,Nate Ament,15,Forward,"6' 10""",211 lbs,19,0.0,Tennessee,15,Milwaukee Bucks
-5082206,Brayden Burries,0,Guard,"6' 4""",215 lbs,21,0.0,Arizona,15,Milwaukee Bucks
-4997526,Ousmane Dieng,21,Forward,"6' 9""",185 lbs,23,5.0,,15,Milwaukee Bucks
-4397475,AJ Green,20,Guard,"6' 4""",190 lbs,27,5.0,Northern Iowa,15,Milwaukee Bucks
-4395725,Tyler Herro,11,Guard,"6' 5""",205 lbs,26,8.0,Kentucky,15,Milwaukee Bucks
-5214640,Kasparas Jakucionis,25,Guard,"6' 5""",205 lbs,20,2.0,Illinois,15,Milwaukee Bucks
-4432848,Jaime Jaquez Jr.,24,Forward,"6' 6""",230 lbs,25,4.0,UCLA,15,Milwaukee Bucks
-4697268,Kam Jones,19,Guard,"6' 4""",200 lbs,24,2.0,Marquette,15,Milwaukee Bucks
-3134907,Kyle Kuzma,18,Forward,"6' 8""",221 lbs,31,10.0,Utah,15,Milwaukee Bucks
-2991043,Caris LeVert,12,Guard,"6' 7""",205 lbs,32,11.0,Michigan,15,Milwaukee Bucks
-5214989,Bogoljub Markovic,23,Forward,"6' 11""",210 lbs,21,0.0,,15,Milwaukee Bucks
-4397233,Pete Nance,35,Forward,"6' 9""",225 lbs,26,4.0,North Carolina,15,Milwaukee Bucks
-4591725,Ryan Rollins,13,Guard,"6' 3""",180 lbs,24,5.0,Toledo,15,Milwaukee Bucks
-4397114,Cormac Ryan,30,Guard,"6' 5""",195 lbs,27,2.0,North Carolina,15,Milwaukee Bucks
-4277922,Jericho Sims,00,Center,"6' 10""",250 lbs,28,6.0,Texas,15,Milwaukee Bucks
-4277843,Gary Trent Jr.,5,Guard,"6' 5""",204 lbs,27,9.0,Duke,15,Milwaukee Bucks
-3133628,Myles Turner,3,Center,"6' 11""",250 lbs,30,12.0,Texas,15,Milwaukee Bucks
-5105623,Kel'el Ware,9,Center,"7' 0""",250 lbs,22,3.0,Indiana,15,Milwaukee Bucks
-4432816,LaMelo Ball,1,Guard,"6' 7""",180 lbs,25,7.0,,16,Minnesota Timberwolves
-5279133,Joan Beringer,19,Forward,"6' 11""",230 lbs,19,2.0,,16,Minnesota Timberwolves
-4432247,Jaylen Clark,7,Guard,"6' 5""",205 lbs,25,3.0,UCLA,16,Minnesota Timberwolves
-3934673,Donte DiVincenzo,0,Guard,"6' 4""",203 lbs,29,9.0,Villanova,16,Minnesota Timberwolves
-4397002,Ayo Dosunmu,13,Guard,"6' 4""",200 lbs,26,6.0,Illinois,16,Minnesota Timberwolves
-4594268,Anthony Edwards,5,Guard,"6' 4""",225 lbs,25,7.0,Georgia,16,Minnesota Timberwolves
-5061585,Isaiah Evans,33,Forward,"6' 6""",186 lbs,20,0.0,Duke,16,Minnesota Timberwolves
-3032976,Rudy Gobert,27,Center,"7' 1""",258 lbs,34,14.0,,16,Minnesota Timberwolves
-4592492,Bones Hyland,8,Guard,"6' 2""",169 lbs,26,6.0,VCU,16,Minnesota Timberwolves
-4433247,Jonathan Kuminga,24,Forward,"6' 7""",225 lbs,24,6.0,,16,Minnesota Timberwolves
-3136196,Trey Lyles,41,Forward,"6' 9""",234 lbs,30,11.0,Kentucky,16,Minnesota Timberwolves
-4431671,Jaden McDaniels,3,Forward,"6' 9""",185 lbs,26,7.0,Washington,16,Minnesota Timberwolves
-4592979,Zyon Pullin,15,Guard,"6' 4""",206 lbs,25,3.0,Florida,16,Minnesota Timberwolves
-4432847,Terrence Shannon Jr.,4,Guard,"6' 6""",215 lbs,26,3.0,Illinois,16,Minnesota Timberwolves
-4895758,Cody Williams,9,Forward,"6' 8""",190 lbs,21,3.0,Colorado,16,Minnesota Timberwolves
-5157587,Rocco Zikarsky,44,Center,"7' 3""",254 lbs,20,2.0,,16,Minnesota Timberwolves
-4397136,Saddiq Bey,41,Guard,"6' 8""",215 lbs,27,6.0,Villanova,3,New Orleans Pelicans
-4712862,Malik Dia,8,Forward,"6' 9""",250 lbs,22,0.0,Ole Miss,3,New Orleans Pelicans
-5144091,Jeremiah Fears,0,Guard,"6' 3""",190 lbs,20,2.0,Oklahoma,3,New Orleans Pelicans
-5170947,AJ Johnson,14,Guard,"6' 5""",160 lbs,21,3.0,,3,New Orleans Pelicans
-4277813,Herbert Jones,2,Forward,"6' 7""",206 lbs,28,6.0,Alabama,3,New Orleans Pelicans
-3442,DeAndre Jordan,6,Center,"6' 11""",265 lbs,38,19.0,Texas A&M,3,New Orleans Pelicans
-4683634,Bennedict Mathurin,24,Guard,"6' 5""",210 lbs,24,5.0,Arizona,3,New Orleans Pelicans
-4997538,Karlo Matkovic,17,Forward,"6' 10""",231 lbs,25,3.0,,3,New Orleans Pelicans
-4576086,Bryce McGowens,11,Guard,"6' 6""",190 lbs,23,5.0,Nebraska,3,New Orleans Pelicans
-5061589,Yves Missi,21,Center,"6' 11""",235 lbs,22,3.0,Baylor,3,New Orleans Pelicans
-4397688,Trey Murphy III,25,Forward,"6' 8""",206 lbs,26,6.0,Virginia,3,New Orleans Pelicans
-3907497,Dejounte Murray,5,Guard,"6' 4""",180 lbs,30,10.0,Washington,3,New Orleans Pelicans
-4703115,Jaron Pierre Jr.,10,Guard,"6' 6""",210 lbs,24,0.0,SMU,3,New Orleans Pelicans
-4277956,Jordan Poole,3,Guard,"6' 4""",194 lbs,27,8.0,Michigan,3,New Orleans Pelicans
-4869780,Derik Queen,22,Center,"6' 9""",250 lbs,21,2.0,Maryland,3,New Orleans Pelicans
-4683742,Julian Reese,13,Forward,"6' 9""",252 lbs,23,2.0,Maryland,3,New Orleans Pelicans
-4431675,Trendon Watford,9,Forward,"6' 8""",237 lbs,25,6.0,LSU,3,New Orleans Pelicans
-4395628,Zion Williamson,1,Forward,"6' 6""",284 lbs,26,7.0,Duke,3,New Orleans Pelicans
-4683730,Jaden Akins,14,Guard,"6' 4""",195 lbs,23,0.0,Michigan State,18,New York Knicks
-4277869,Jose Alvarado,5,Guard,"6' 0""",179 lbs,28,6.0,Georgia Tech,18,New York Knicks
-3934719,OG Anunoby,8,Forward,"6' 7""",240 lbs,29,10.0,Indiana,18,New York Knicks
-3147657,Mikal Bridges,25,Guard,"6' 6""",209 lbs,30,9.0,Villanova,18,New York Knicks
-3934672,Jalen Brunson,11,Guard,"6' 2""",190 lbs,30,9.0,Villanova,18,New York Knicks
-2528426,Jordan Clarkson,00,Guard,"6' 5""",194 lbs,34,13.0,Missouri,18,New York Knicks
-5211983,Pacome Dadiet,4,Forward,"6' 9""",210 lbs,21,3.0,,18,New York Knicks
-5289900,Mohamed Diawara,51,Forward,"6' 9""",225 lbs,21,2.0,,18,New York Knicks
-6585,Andre Drummond,0,Center,"6' 11""",279 lbs,33,15.0,UConn,18,New York Knicks
-3062679,Josh Hart,3,Guard,"6' 5""",215 lbs,31,10.0,Villanova,18,New York Knicks
-4433225,Tyler Kolek,13,Guard,"6' 2""",195 lbs,25,3.0,Marquette,18,New York Knicks
-4431823,Miles McBride,2,Guard,"6' 2""",195 lbs,26,6.0,West Virginia,18,New York Knicks
-4411057,Kevin McCullar Jr.,9,Guard,"6' 6""",210 lbs,25,3.0,Kansas,18,New York Knicks
-4838721,Tyler Nickel,55,Forward,"6' 8""",217 lbs,23,0.0,Vanderbilt,18,New York Knicks
-3914044,Landry Shamet,44,Guard,"6' 5""",190 lbs,29,9.0,Wichita State,18,New York Knicks
-3136195,Karl-Anthony Towns,32,Center,"7' 0""",248 lbs,30,12.0,Kentucky,18,New York Knicks
-4432808,James Wiseman,35,Center,"6' 11""",240 lbs,25,7.0,Memphis,18,New York Knicks
-4684208,Brooks Barnhizer,23,Forward,"6' 6""",226 lbs,24,2.0,Northwestern,25,Oklahoma City Thunder
-2991350,Alex Caruso,9,Guard,"6' 5""",186 lbs,32,10.0,Texas A&M,25,Oklahoma City Thunder
-5105800,Josh Dix,21,Guard,"6' 5""",206 lbs,22,0.0,Creighton,25,Oklahoma City Thunder
-4278073,Shai Gilgeous-Alexander,2,Guard,"6' 6""",195 lbs,28,9.0,Kentucky,25,Oklahoma City Thunder
-4222252,Isaiah Hartenstein,55,Center,"7' 0""",250 lbs,28,9.0,,25,Oklahoma City Thunder
-4433255,Chet Holmgren,7,Center,"7' 1""",208 lbs,24,4.0,Gonzaga,25,Oklahoma City Thunder
-5174983,Aday Mara,15,Center,"7' 3""",262 lbs,21,0.0,Michigan,25,Oklahoma City Thunder
-4683778,Jared McCain,3,Guard,"6' 3""",195 lbs,22,3.0,Duke,25,Oklahoma City Thunder
-4900671,Ajay Mitchell,25,Guard,"6' 4""",190 lbs,24,3.0,UC Santa Barbara,25,Oklahoma City Thunder
-5106270,Otega Oweh,13,Guard,"6' 4""",217 lbs,23,0.0,Kentucky,25,Oklahoma City Thunder
-5061603,Thomas Sorber,12,Center,"6' 9""",250 lbs,20,0.0,Georgetown,25,Oklahoma City Thunder
-5241364,Bennett Stirtz,14,Guard,"6' 4""",190 lbs,23,0.0,Iowa,25,Oklahoma City Thunder
-5159925,Nikola Topic,44,Guard,"6' 6""",200 lbs,21,2.0,,25,Oklahoma City Thunder
-4683692,Cason Wallace,22,Guard,"6' 3""",195 lbs,22,4.0,Kentucky,25,Oklahoma City Thunder
-4593803,Jalen Williams,8,Guard,"6' 5""",211 lbs,25,5.0,Santa Clara,25,Oklahoma City Thunder
-4432823,Jaylin Williams,6,Forward,"6' 9""",240 lbs,24,5.0,Arkansas,25,Oklahoma City Thunder
-3133626,Kenrich Williams,34,Guard,"6' 7""",210 lbs,31,9.0,TCU,25,Oklahoma City Thunder
-4432573,Paolo Banchero,5,Forward,"6' 10""",250 lbs,23,5.0,Duke,19,Orlando Magic
-4066320,Desmond Bane,3,Guard,"6' 6""",215 lbs,28,7.0,TCU,19,Orlando Magic
-4348700,Goga Bitadze,35,Center,"6' 11""",250 lbs,27,8.0,,19,Orlando Magic
-4712849,Anthony Black,0,Guard,"6' 7""",200 lbs,22,4.0,Arkansas,19,Orlando Magic
-4278572,Jamal Cain,8,Forward,"6' 7""",191 lbs,27,5.0,Oakland,19,Orlando Magic
-3133635,Jevon Carter,2,Guard,"6' 0""",200 lbs,31,9.0,West Virginia,19,Orlando Magic
-4277847,Wendell Carter Jr.,34,Center,"6' 10""",270 lbs,27,9.0,Duke,19,Orlando Magic
-4397204,Colin Castleton,14,Center,"6' 10""",250 lbs,26,4.0,Florida,19,Orlando Magic
-4702382,Tristan da Silva,23,Forward,"6' 8""",217 lbs,25,3.0,Colorado,19,Orlando Magic
-4065654,Jonathan Isaac,1,Forward,"6' 10""",230 lbs,29,10.0,Florida State,19,Orlando Magic
-4593034,Alex Morales,30,Guard,"6' 6""",180 lbs,28,2.0,Wagner,19,Orlando Magic
-5107251,Izaiyah Nelson,25,Forward,"6' 8""",219 lbs,23,0.0,South Florida,19,Orlando Magic
-5214637,Noah Penda,93,Forward,"6' 7""",215 lbs,21,2.0,,19,Orlando Magic
-5239561,Jase Richardson,11,Guard,"6' 1""",180 lbs,21,2.0,Michigan State,19,Orlando Magic
-4432165,Jalen Suggs,4,Guard,"6' 5""",205 lbs,25,6.0,Gonzaga,19,Orlando Magic
-6478,Nikola Vucevic,9,Center,"6' 9""",260 lbs,35,16.0,USC,19,Orlando Magic
-4566434,Franz Wagner,22,Forward,"6' 10""",220 lbs,25,6.0,Michigan,19,Orlando Magic
-4870562,Dominick Barlow,25,Forward,"6' 9""",238 lbs,23,5.0,,20,Philadelphia 76ers
-5105637,Adem Bona,30,Center,"6' 10""",239 lbs,23,3.0,UCLA,20,Philadelphia 76ers
-3917376,Jaylen Brown,7,Guard,"6' 6""",223 lbs,29,11.0,California,20,Philadelphia 76ers
-2581018,Kentavious Caldwell-Pope,1,Guard,"6' 5""",213 lbs,33,14.0,Georgia,20,Philadelphia 76ers
-5124612,VJ Edgecombe,77,Guard,"6' 5""",180 lbs,21,2.0,Baylor,20,Philadelphia 76ers
-4711297,Justin Edwards,11,Forward,"6' 7""",222 lbs,22,3.0,Kentucky,20,Philadelphia 76ers
-3059318,Joel Embiid,21,Center,"7' 0""",270 lbs,32,11.0,Kansas,20,Philadelphia 76ers
-3904625,Tacko Fall,99,Center,"7' 6""",299 lbs,30,4.0,UCF,20,Philadelphia 76ers
-4871141,Ariel Hukporti,55,Center,"7' 0""",258 lbs,24,3.0,,20,Philadelphia 76ers
-1966,LeBron James,23,Forward,"6' 9""",250 lbs,41,24.0,,20,Philadelphia 76ers
-4433144,Caleb Love,8,Guard,"6' 3""",214 lbs,25,2.0,Arizona,20,Philadelphia 76ers
-4431678,Tyrese Maxey,0,Guard,"6' 2""",204 lbs,25,7.0,Kentucky,20,Philadelphia 76ers
-4873090,Labaron Philon Jr.,00,Guard,"6' 3""",179 lbs,20,0.0,Alabama,20,Philadelphia 76ers
-5099752,Rayan Rupert,12,Guard,"6' 7""",207 lbs,22,4.0,,20,Philadelphia 76ers
-4351851,Anfernee Simons,5,Guard,"6' 4""",206 lbs,27,9.0,,20,Philadelphia 76ers
-3912848,Dean Wade,45,Forward,"6' 9""",223 lbs,29,8.0,Kansas State,20,Philadelphia 76ers
-4432446,Jabari Walker,33,Forward,"6' 7""",240 lbs,24,5.0,Colorado,20,Philadelphia 76ers
-3136193,Devin Booker,15,Guard,"6' 5""",206 lbs,29,12.0,Kentucky,21,Phoenix Suns
-4280245,Jamaree Bouyea,17,Guard,"6' 2""",180 lbs,27,5.0,San Francisco,21,Phoenix Suns
-4066383,Miles Bridges,22,Forward,"6' 7""",225 lbs,28,8.0,Michigan State,21,Phoenix Suns
-3155526,Dillon Brooks,3,Forward,"6' 7""",225 lbs,30,10.0,Oregon,21,Phoenix Suns
-4888725,Ryan Dunn,0,Forward,"6' 7""",216 lbs,23,3.0,Virginia,21,Phoenix Suns
-5105977,Rasheer Fleming,20,Forward,"6' 9""",240 lbs,22,2.0,Saint Joseph's,21,Phoenix Suns
-4278585,Collin Gillespie,12,Guard,"6' 1""",195 lbs,27,4.0,Villanova,21,Phoenix Suns
-4278402,Jordan Goodwin,23,Guard,"6' 3""",215 lbs,27,6.0,Saint Louis,21,Phoenix Suns
-4437244,Jalen Green,4,Guard,"6' 4""",186 lbs,24,6.0,,21,Phoenix Suns
-4601023,Oso Ighodaro,11,Forward,"6' 11""",235 lbs,24,3.0,Marquette,21,Phoenix Suns
-3913174,Luke Kennard,8,Guard,"6' 5""",206 lbs,30,10.0,Duke,21,Phoenix Suns
-5203685,Khaman Maluach,10,Center,"7' 2""",250 lbs,20,2.0,Duke,21,Phoenix Suns
-5041953,Koa Peat,18,Forward,"6' 8""",245 lbs,19,0.0,Arizona,21,Phoenix Suns
-4066268,Duop Reath,26,Center,"6' 9""",245 lbs,30,4.0,LSU,21,Phoenix Suns
-4592714,Pat Spencer,61,Guard,"6' 2""",205 lbs,30,4.0,Northwestern,21,Phoenix Suns
-4431695,Drew Timme,,Forward,"6' 10""",235 lbs,26,2.0,Gonzaga,21,Phoenix Suns
-4701232,Mark Williams,25,Center,"7' 1""",240 lbs,24,5.0,Duke,21,Phoenix Suns
-4683021,Deni Avdija,8,Forward,"6' 8""",228 lbs,25,7.0,,22,Portland Trail Blazers
-4431736,Toumani Camara,33,Forward,"6' 7""",230 lbs,26,4.0,Dayton,22,Portland Trail Blazers
-4592435,Branden Carlson,10,Center,"7' 0""",220 lbs,27,3.0,Utah,22,Portland Trail Blazers
-5081727,Sidy Cissoko,91,Guard,"6' 6""",220 lbs,22,4.0,,22,Portland Trail Blazers
-5105565,Donovan Clingan,23,Center,"7' 2""",280 lbs,22,3.0,UConn,22,Portland Trail Blazers
-5217746,Yang Hansen,16,Center,"7' 1""",270 lbs,21,2.0,,22,Portland Trail Blazers
-4683678,Scoot Henderson,00,Guard,"6' 3""",207 lbs,22,4.0,,22,Portland Trail Blazers
-3995,Jrue Holiday,5,Guard,"6' 4""",220 lbs,36,18.0,UCLA,22,Portland Trail Blazers
-4703889,Jayson Kent,29,Guard,"6' 8""",215 lbs,24,2.0,Texas,22,Portland Trail Blazers
-4578893,Vit Krejci,27,Guard,"6' 8""",195 lbs,26,6.0,,22,Portland Trail Blazers
-6606,Damian Lillard,0,Guard,"6' 2""",200 lbs,36,15.0,Weber State,22,Portland Trail Blazers
-4279888,Ja Morant,1,Guard,"6' 2""",174 lbs,27,8.0,Murray State,22,Portland Trail Blazers
-4066399,Micah Potter,9,Center,"6' 9""",248 lbs,28,6.0,Wisconsin,22,Portland Trail Blazers
-4914336,Shaedon Sharpe,17,Guard,"6' 5""",210 lbs,23,5.0,Kentucky,22,Portland Trail Blazers
-4593043,John Tonje,2,Forward,"6' 5""",225 lbs,25,2.0,Wisconsin,22,Portland Trail Blazers
-4066211,Robert Williams III,35,Center,"6' 9""",249 lbs,29,9.0,Texas A&M,22,Portland Trail Blazers
-4706557,Chris Youngblood,11,Guard,"6' 4""",221 lbs,24,2.0,Alabama,22,Portland Trail Blazers
-4431679,Precious Achiuwa,9,Forward,"6' 8""",243 lbs,27,7.0,Memphis,23,Sacramento Kings
-5142620,Darius Acuff Jr.,5,Guard,"6' 2""",186 lbs,19,0.0,Arkansas,23,Sacramento Kings
-4395650,Leaky Black,19,Forward,"6' 6""",209 lbs,27,3.0,North Carolina,23,Sacramento Kings
-4433174,Dylan Cardwell,32,Center,"6' 10""",255 lbs,24,2.0,Auburn,23,Sacramento Kings
-4702384,Nique Clifford,10,Guard,"6' 5""",175 lbs,24,2.0,Colorado State,23,Sacramento Kings
-4065732,De'Andre Hunter,15,Forward,"6' 7""",221 lbs,28,8.0,Virginia,23,Sacramento Kings
-4917149,Alex Karaban,33,Forward,"6' 7""",225 lbs,23,0.0,UConn,23,Sacramento Kings
-3064440,Zach LaVine,8,Guard,"6' 5""",200 lbs,31,13.0,UCLA,23,Sacramento Kings
-5107897,Jonathan Mogbo,22,Forward,"6' 9""",225 lbs,24,3.0,San Francisco,23,Sacramento Kings
-4066262,Malik Monk,0,Guard,"6' 3""",200 lbs,28,10.0,Kentucky,23,Sacramento Kings
-4594327,Keegan Murray,13,Forward,"6' 8""",225 lbs,26,5.0,Iowa,23,Sacramento Kings
-4279318,Daeqwon Plowden,29,Guard,"6' 6""",216 lbs,28,3.0,Bowling Green,23,Sacramento Kings
-4898371,Maxime Raynaud,42,Center,"7' 1""",250 lbs,23,2.0,Stanford,23,Sacramento Kings
-3155942,Domantas Sabonis,11,Forward,"6' 10""",240 lbs,30,11.0,Gonzaga,23,Sacramento Kings
-5106058,Emanuel Sharp,34,Guard,"6' 3""",208 lbs,22,0.0,Houston,23,Sacramento Kings
-3907387,Ben Simmons,25,Guard,"6' 10""",240 lbs,30,10.0,LSU,23,Sacramento Kings
-6578,Harrison Barnes,40,Forward,"6' 8""",225 lbs,34,15.0,North Carolina,24,San Antonio Spurs
-5105337,Maliq Brown,15,Forward,"6' 9""",235 lbs,22,0.0,Duke,24,San Antonio Spurs
-5061568,Carter Bryant,11,Forward,"6' 7""",230 lbs,20,2.0,Arizona,24,San Antonio Spurs
-4845367,Stephon Castle,5,Guard,"6' 6""",220 lbs,21,3.0,UConn,24,San Antonio Spurs
-4592479,Julian Champagnie,30,Forward,"6' 7""",215 lbs,25,5.0,St. John's,24,San Antonio Spurs
-4066259,De'Aaron Fox,4,Guard,"6' 3""",190 lbs,28,10.0,Kentucky,24,San Antonio Spurs
-5107968,Ja'Kobi Gillespie,17,Guard,"6' 1""",180 lbs,22,0.0,Tennessee,24,San Antonio Spurs
-5037871,Dylan Harper,2,Guard,"6' 5""",220 lbs,20,2.0,Rutgers,24,San Antonio Spurs
-6440,Tobias Harris,23,Forward,"6' 8""",230 lbs,34,16.0,Tennessee,24,San Antonio Spurs
-4395723,Keldon Johnson,3,Forward,"6' 6""",215 lbs,27,8.0,Kentucky,24,San Antonio Spurs
-4713010,David Jones Garcia,25,Forward,"6' 4""",215 lbs,24,2.0,Memphis,24,San Antonio Spurs
-3064560,Luke Kornet,7,Center,"7' 1""",270 lbs,31,10.0,Vanderbilt,24,San Antonio Spurs
-3134916,Jordan McLaughlin,0,Guard,"6' 0""",180 lbs,30,8.0,USC,24,San Antonio Spurs
-5101845,Jayden Quaintance,22,Forward,"6' 10""",255 lbs,19,0.0,Kentucky,24,San Antonio Spurs
-5105809,Tarris Reed Jr.,10,Center,"6' 10""",270 lbs,23,0.0,UConn,24,San Antonio Spurs
-4395630,Devin Vassell,24,Guard,"6' 5""",205 lbs,26,7.0,Florida State,24,San Antonio Spurs
-5104157,Victor Wembanyama,1,Forward,"7' 4""",240 lbs,22,4.0,,24,San Antonio Spurs
-2993874,Kyle Anderson,12,Forward,"6' 8""",230 lbs,33,13.0,UCLA,28,Toronto Raptors
-4433134,Scottie Barnes,4,Forward,"6' 8""",237 lbs,25,6.0,Florida State,28,Toronto Raptors
-4395625,RJ Barrett,9,Forward,"6' 6""",214 lbs,26,8.0,Duke,28,Toronto Raptors
-4431893,Jamison Battle,77,Forward,"6' 7""",220 lbs,25,3.0,Ohio State,28,Toronto Raptors
-4432586,Nate Bittle,,Center,"7' 0""",250 lbs,23,0.0,Oregon,28,Toronto Raptors
-4432737,Jaden Bradley,8,Guard,"6' 3""",205 lbs,23,0.0,Arizona,28,Toronto Raptors
-5149115,Allen Graves,22,Forward,"6' 8""",225 lbs,20,0.0,Santa Clara,28,Toronto Raptors
-4431684,Trayce Jackson-Davis,32,Forward,"6' 9""",245 lbs,26,4.0,Indiana,28,Toronto Raptors
-6450,Kawhi Leonard,2,Forward,"6' 6""",225 lbs,35,16.0,San Diego State,28,Toronto Raptors
-4702656,Alijah Martin,55,Guard,"6' 2""",212 lbs,24,2.0,Florida,28,Toronto Raptors
-5093267,Collin Murray-Boyles,30,Forward,"6' 7""",245 lbs,21,2.0,South Carolina,28,Toronto Raptors
-3134908,Jakob Poeltl,19,Center,"7' 0""",253 lbs,31,11.0,Utah,28,Toronto Raptors
-4395724,Immanuel Quickley,5,Guard,"6' 2""",190 lbs,27,7.0,Kentucky,28,Toronto Raptors
-4432241,Jamal Shead,23,Guard,"6' 1""",200 lbs,24,3.0,Houston,28,Toronto Raptors
-4397784,Malachi Smith,18,Guard,"6' 4""",205 lbs,26,2.0,Gonzaga,28,Toronto Raptors
-4684272,Ja'Kobe Walter,14,Guard,"6' 4""",180 lbs,22,3.0,Baylor,28,Toronto Raptors
-4433268,Trey Alexander,15,Guard,"6' 5""",185 lbs,23,3.0,Creighton,26,Utah Jazz
-4873138,Ace Bailey,19,Guard,"6' 9""",200 lbs,20,2.0,Rutgers,26,Utah Jazz
-4277919,Mo Bamba,44,Center,"7' 0""",231 lbs,28,9.0,Texas,26,Utah Jazz
-4065673,Tony Bradley,13,Center,"6' 10""",248 lbs,28,9.0,North Carolina,26,Utah Jazz
-4683766,Isaiah Collier,8,Guard,"6' 4""",210 lbs,22,3.0,USC,26,Utah Jazz
-4684793,Kyle Filipowski,2,Forward,"6' 11""",250 lbs,22,3.0,Duke,26,Utah Jazz
-4433627,Keyonte George,3,Guard,"6' 4""",185 lbs,22,4.0,Baylor,26,Utah Jazz
-4432811,Josh Green,5,Guard,"6' 6""",200 lbs,25,7.0,Arizona,26,Utah Jazz
-4397077,Jaxson Hayes,11,Center,"7' 0""",220 lbs,26,8.0,Texas,26,Utah Jazz
-4396963,Blake Hinson,25,Forward,"6' 8""",230 lbs,26,2.0,Pittsburgh,26,Utah Jazz
-4433618,Harrison Ingram,00,Forward,"6' 5""",230 lbs,23,3.0,North Carolina,26,Utah Jazz
-4277961,Jaren Jackson Jr.,20,Forward,"6' 10""",242 lbs,27,9.0,Michigan State,26,Utah Jazz
-4066336,Lauri Markkanen,23,Forward,"7' 1""",240 lbs,29,10.0,Arizona,26,Utah Jazz
-3133602,Svi Mykhailiuk,10,Guard,"6' 7""",205 lbs,29,9.0,Kansas,26,Utah Jazz
-3102530,Jusuf Nurkic,30,Center,"6' 11""",290 lbs,32,13.0,,26,Utah Jazz
-4065663,Josh Okogie,21,Guard,"6' 4""",213 lbs,28,9.0,Georgia Tech,26,Utah Jazz
-5041955,Darryn Peterson,22,Guard,"6' 5""",199 lbs,19,0.0,Kansas,26,Utah Jazz
-5105839,Brice Sensabaugh,28,Forward,"6' 6""",235 lbs,22,4.0,Ohio State,26,Utah Jazz
-4278129,Deandre Ayton,8,Center,"7' 0""",252 lbs,28,9.0,Arizona,27,Washington Wizards
-4432187,Reece Beekman,26,Guard,"6' 3""",190 lbs,25,2.0,Virginia,27,Washington Wizards
-4845374,Bub Carrington,7,Guard,"6' 4""",190 lbs,21,3.0,Pittsburgh,27,Washington Wizards
-4432907,Justin Champagnie,9,Forward,"6' 6""",206 lbs,25,6.0,Pittsburgh,27,Washington Wizards
-5104155,Bilal Coulibaly,0,Guard,"6' 7""",195 lbs,22,4.0,,27,Washington Wizards
-6583,Anthony Davis,23,Forward,"6' 10""",253 lbs,33,15.0,Kentucky,27,Washington Wizards
-5142718,AJ Dybantsa,4,Forward,"6' 9""",217 lbs,19,0.0,BYU,27,Washington Wizards
-5174563,Kyshawn George,18,Forward,"6' 8""",200 lbs,22,3.0,Miami,27,Washington Wizards
-2581184,Anthony Gill,16,Forward,"6' 7""",230 lbs,34,7.0,Virginia,27,Washington Wizards
-5238230,Tre Johnson,12,Guard,"6' 5""",190 lbs,20,2.0,Texas,27,Washington Wizards
-4432819,Tre Mann,1,Guard,"6' 4""",178 lbs,25,6.0,Florida,27,Washington Wizards
-6609,Khris Middleton,22,Forward,"6' 7""",222 lbs,35,15.0,Texas A&M,27,Washington Wizards
-5105841,Felix Okpara,34,Forward,"6' 10""",237 lbs,22,0.0,Tennessee,27,Washington Wizards
-5144126,Will Riley,27,Guard,"6' 9""",180 lbs,20,2.0,Illinois,27,Washington Wizards
-5160992,Alex Sarr,20,Center,"7' 0""",205 lbs,21,3.0,,27,Washington Wizards
-4997537,Tristan Vukcevic,00,Forward,"7' 0""",220 lbs,23,4.0,,27,Washington Wizards
-4606840,Jamir Watkins,5,Guard,"6' 6""",210 lbs,25,2.0,Florida State,27,Washington Wizards
-4277905,Trae Young,3,Guard,"6' 2""",164 lbs,28,9.0,Oklahoma,27,Washington Wizards
+4278039,Nickeil Alexander-Walker,7,Guard,"6' 5""",205 lbs,28,8,Virginia Tech,1,Atlanta Hawks
+4869342,Dyson Daniels,5,Guard,"6' 7""",199 lbs,23,5,,1,Atlanta Hawks
+4431941,RayJ Dennis,10,Guard,"6' 2""",180 lbs,25,3,Baylor,1,Atlanta Hawks
+4397020,Luguentz Dort,0,Guard,"6' 4""",220 lbs,27,8,Arizona State,1,Atlanta Hawks
+5106262,Zuby Ejiofor,20,Forward,"6' 8""",245 lbs,22,0,St. John's,1,Atlanta Hawks
+2578185,Dorian Finney-Smith,8,Forward,"6' 7""",220 lbs,33,11,Florida,1,Atlanta Hawks
+5149077,Kingston Flemings,4,Guard,"6' 3""",183 lbs,19,0,Houston,1,Atlanta Hawks
+4585618,Keshon Gilbert,00,Guard,"6' 4""",200 lbs,23,2,Iowa State,1,Atlanta Hawks
+4712863,Mouhamed Gueye,18,Forward,"6' 11""",210 lbs,23,4,Washington State,1,Atlanta Hawks
+4701230,Jalen Johnson,1,Forward,"6' 8""",219 lbs,24,6,Duke,1,Atlanta Hawks
+4280151,Corey Kispert,24,Forward,"6' 6""",224 lbs,27,6,Gonzaga,1,Atlanta Hawks
+3146557,Jock Landale,31,Center,"6' 11""",255 lbs,30,6,Saint Mary's,1,Atlanta Hawks
+2490149,CJ McCollum,3,Guard,"6' 3""",190 lbs,35,14,Lehigh,1,Atlanta Hawks
+4873201,Asa Newell,14,Forward,"6' 11""",224 lbs,21,2,Georgia,1,Atlanta Hawks
+4431680,Onyeka Okongwu,17,Forward,"6' 10""",240 lbs,25,7,USC,1,Atlanta Hawks
+5105571,Henri Veesaar,13,Center,"7' 0""",227 lbs,22,0,North Carolina,1,Atlanta Hawks
+4397183,Aaron Wiggins,2,Guard,"6' 5""",190 lbs,27,6,Maryland,1,Atlanta Hawks
+4431714,Jalen Wilson,22,Forward,"6' 6""",220 lbs,25,4,Kansas,1,Atlanta Hawks
+4433188,Devin Carter,99,Guard,"6' 2""",188 lbs,24,3,Providence,2,Boston Celtics
+5142621,Chris Cenac Jr.,12,Forward,"6' 11""",240 lbs,19,0,Houston,2,Boston Celtics
+3195,Mike Conley,45,Guard,"6' 1""",175 lbs,39,20,Ohio State,2,Boston Celtics
+4277951,Luka Garza,52,Center,"6' 10""",243 lbs,27,6,Iowa,2,Boston Celtics
+4251,Paul George,13,Forward,"6' 8""",221 lbs,36,17,Fresno State,2,Boston Celtics
+5175647,Hugo Gonzalez,28,Guard,"6' 6""",205 lbs,20,2,,2,Boston Celtics
+4397251,Ron Harper Jr.,8,Guard,"6' 5""",233 lbs,26,5,Rutgers,2,Boston Celtics
+4065804,Sam Hauser,30,Forward,"6' 8""",221 lbs,28,6,Virginia,2,Boston Celtics
+5106283,Dillon Mitchell,20,Forward,"6' 8""",210 lbs,23,0,St. John's,2,Boston Celtics
+4066354,Payton Pritchard,11,Guard,"6' 2""",211 lbs,28,7,Oregon,2,Boston Celtics
+4397424,Neemias Queta,88,Center,"7' 0""",260 lbs,27,6,Utah State,2,Boston Celtics
+4351852,Mitchell Robinson,4,Center,"7' 0""",240 lbs,28,9,,2,Boston Celtics
+4593841,Baylor Scheierman,55,Guard,"6' 6""",213 lbs,26,3,Creighton,2,Boston Celtics
+4065648,Jayson Tatum,0,Forward,"6' 8""",224 lbs,28,10,Duke,2,Boston Celtics
+4683689,Jordan Walsh,27,Guard,"6' 7""",208 lbs,22,4,Arkansas,2,Boston Celtics
+3078576,Derrick White,9,Guard,"6' 4""",200 lbs,32,10,Colorado,2,Boston Celtics
+4702745,Amari Williams,77,Forward,"7' 0""",262 lbs,24,2,Kentucky,2,Boston Celtics
+5105626,Tyler Bilodeau,34,Forward,"6' 8""",228 lbs,22,0,UCLA,17,Brooklyn Nets
+5101761,Mikel Brown Jr.,0,Guard,"6' 5""",180 lbs,20,0,Louisville,17,Brooklyn Nets
+4712896,Noah Clowney,21,Forward,"6' 10""",210 lbs,22,4,Alabama,17,Brooklyn Nets
+5175643,Egor Demin,8,Guard,"6' 8""",200 lbs,20,2,BYU,17,Brooklyn Nets
+4702177,Keon Ellis,1,Guard,"6' 4""",175 lbs,26,5,Alabama,17,Brooklyn Nets
+4870564,Joshua Jefferson,9,Forward,"6' 8""",246 lbs,22,0,Iowa State,17,Brooklyn Nets
+5174655,Chaney Johnson,31,Forward,"6' 8""",225 lbs,24,2,Auburn,17,Brooklyn Nets
+3907823,Terance Mann,14,Guard,"6' 6""",215 lbs,30,8,Florida State,17,Brooklyn Nets
+4687718,Josh Minott,00,Forward,"6' 8""",205 lbs,23,5,Memphis,17,Brooklyn Nets
+4702670,Grant Nelson,16,Forward,"6' 11""",230 lbs,24,2,Alabama,17,Brooklyn Nets
+4278104,Michael Porter Jr.,17,Forward,"6' 10""",218 lbs,28,8,Missouri,17,Brooklyn Nets
+5037873,Drake Powell,4,Guard,"6' 5""",195 lbs,21,2,North Carolina,17,Brooklyn Nets
+3064514,Julius Randle,30,Forward,"6' 9""",250 lbs,31,13,Kentucky,17,Brooklyn Nets
+5242502,Ben Saraf,77,Guard,"6' 6""",200 lbs,20,2,,17,Brooklyn Nets
+4432194,Day'Ron Sharpe,20,Center,"6' 10""",265 lbs,24,6,North Carolina,17,Brooklyn Nets
+5279130,Nolan Traore,10,Guard,"6' 3""",185 lbs,20,2,,17,Brooklyn Nets
+3150844,Moritz Wagner,13,Center,"6' 11""",245 lbs,29,9,Michigan,17,Brooklyn Nets
+5107173,Danny Wolf,2,Forward,"6' 11""",250 lbs,22,2,Michigan,17,Brooklyn Nets
+3135045,Grayson Allen,8,Guard,"6' 3""",198 lbs,31,9,Duke,30,Charlotte Hornets
+5060701,Christian Anderson,5,Guard,"6' 1""",180 lbs,20,0,Texas Tech,30,Charlotte Hornets
+4684269,Kylan Boswell,18,Guard,"6' 1""",226 lbs,21,0,Illinois,30,Charlotte Hornets
+4433249,Moussa Diabate,14,Forward,"6' 10""",210 lbs,24,5,Michigan,30,Charlotte Hornets
+4701225,PJ Hall,16,Center,"6' 8""",245 lbs,24,3,Clemson,30,Charlotte Hornets
+4602025,Sion James,4,Guard,"6' 5""",220 lbs,23,2,Duke,30,Charlotte Hornets
+4576060,Ryan Kalkbrenner,11,Center,"7' 1""",256 lbs,24,2,Creighton,30,Charlotte Hornets
+5061575,Kon Knueppel,7,Guard,"6' 6""",215 lbs,21,2,Duke,30,Charlotte Hornets
+5239590,Liam McNeeley,33,Guard,"6' 7""",210 lbs,21,2,UConn,30,Charlotte Hornets
+4433287,Brandon Miller,24,Forward,"6' 7""",200 lbs,23,4,Alabama,30,Charlotte Hornets
+2583632,Royce O'Neale,00,Forward,"6' 6""",226 lbs,33,10,Baylor,30,Charlotte Hornets
+4396971,Naz Reid,0,Center,"6' 9""",264 lbs,27,8,LSU,30,Charlotte Hornets
+5211176,Tidjane Salaun,31,Forward,"6' 10""",207 lbs,21,3,,30,Charlotte Hornets
+3032979,Dennis Schroder,17,Guard,"6' 1""",175 lbs,33,14,,30,Charlotte Hornets
+5281370,Hannes Steinbach,22,Forward,"6' 10""",248 lbs,20,0,Washington,30,Charlotte Hornets
+4395651,Coby White,3,Guard,"6' 4""",195 lbs,26,8,North Carolina,30,Charlotte Hornets
+4066218,Grant Williams,2,Forward,"6' 7""",236 lbs,27,8,Tennessee,30,Charlotte Hornets
+5105555,Tobe Awaka,19,Forward,"6' 8""",255 lbs,22,0,Arizona,4,Chicago Bulls
+4711294,Matas Buzelis,14,Forward,"6' 8""",209 lbs,22,3,,4,Chicago Bulls
+4278067,Nic Claxton,9,Center,"6' 11""",215 lbs,27,8,Georgia,4,Chicago Bulls
+4066650,Zach Collins,12,Forward,"6' 9""",250 lbs,28,10,Gonzaga,4,Chicago Bulls
+5242496,Noa Essengue,2,Forward,"6' 11""",206 lbs,19,2,,4,Chicago Bulls
+4871145,Josh Giddey,3,Guard,"6' 7""",216 lbs,24,6,,4,Chicago Bulls
+4683750,Jordan Hawkins,15,Guard,"6' 5""",190 lbs,24,4,UConn,4,Chicago Bulls
+2990984,Buddy Hield,7,Guard,"6' 4""",220 lbs,33,11,Oklahoma,4,Chicago Bulls
+4395626,Tre Jones,30,Guard,"6' 1""",185 lbs,26,7,Duke,4,Chicago Bulls
+5044385,Leonard Miller,11,Forward,"6' 10""",220 lbs,22,4,,4,Chicago Bulls
+4432822,Isaac Okoro,35,Forward,"6' 4""",225 lbs,25,7,Auburn,4,Chicago Bulls
+2595516,Norman Powell,24,Guard,"6' 4""",215 lbs,33,12,UCLA,4,Chicago Bulls
+4898010,Jaylin Sellers,22,Guard,"6' 5""",205 lbs,23,0,Providence,4,Chicago Bulls
+4397189,Jalen Smith,25,Forward,"6' 8""",215 lbs,26,7,Maryland,4,Chicago Bulls
+4848625,Dailyn Swain,5,Guard,"6' 7""",211 lbs,21,0,Texas,4,Chicago Bulls
+4431687,Patrick Williams,44,Forward,"6' 6""",215 lbs,25,7,Florida State,4,Chicago Bulls
+5095151,Caleb Wilson,8,Forward,"6' 9""",211 lbs,20,0,North Carolina,4,Chicago Bulls
+4066328,Jarrett Allen,31,Center,"6' 9""",243 lbs,28,10,Texas,5,Cleveland Cavaliers
+3934723,Thomas Bryant,3,Center,"6' 9""",248 lbs,29,10,Indiana,5,Cleveland Cavaliers
+4997530,Khalifa Diop,18,Center,"6' 11""",231 lbs,24,0,,5,Cleveland Cavaliers
+4431734,Tristan Enaruna,21,Forward,"6' 8""",220 lbs,25,2,Cleveland State,5,Cleveland Cavaliers
+3992,James Harden,1,Guard,"6' 5""",220 lbs,37,18,Arizona State,5,Cleveland Cavaliers
+2995706,Mario Hezonja,33,Forward,"6' 8""",220 lbs,31,6,,5,Cleveland Cavaliers
+4066757,Sam Merrill,5,Guard,"6' 4""",205 lbs,30,7,Utah State,5,Cleveland Cavaliers
+5177362,Riley Minix,12,Forward,"6' 7""",230 lbs,26,3,Morehead State,5,Cleveland Cavaliers
+3908809,Donovan Mitchell,45,Guard,"6' 2""",215 lbs,30,10,Louisville,5,Cleveland Cavaliers
+4432158,Evan Mobley,4,Center,"6' 11""",215 lbs,25,6,USC,5,Cleveland Cavaliers
+4701233,Craig Porter Jr.,9,Guard,"6' 1""",180 lbs,26,4,Wichita State,5,Cleveland Cavaliers
+5023693,Tyrese Proctor,24,Guard,"6' 4""",185 lbs,22,2,Duke,5,Cleveland Cavaliers
+5041951,Meleek Thomas,15,Guard,"6' 3""",190 lbs,20,0,Arkansas,5,Cleveland Cavaliers
+5106268,Nae'Qwan Tomlin,35,Forward,"6' 8""",210 lbs,25,3,Memphis,5,Cleveland Cavaliers
+4683747,Jaylon Tyson,20,Guard,"6' 6""",215 lbs,23,3,California,5,Cleveland Cavaliers
+5106261,Ernest Udeh Jr.,39,Center,"6' 11""",266 lbs,22,0,Miami,5,Cleveland Cavaliers
+4576087,Peyton Watson,8,Guard,"6' 8""",200 lbs,24,5,UCLA,5,Cleveland Cavaliers
+4593125,Santi Aldama,34,Forward,"7' 0""",215 lbs,25,6,Loyola Maryland,6,Dallas Mavericks
+5148538,Tarik Biberovic,13,Forward,"6' 7""",218 lbs,25,0,,6,Dallas Mavericks
+4432582,Max Christie,0,Guard,"6' 5""",190 lbs,23,5,Michigan State,6,Dallas Mavericks
+4701208,Moussa Cisse,30,Center,"6' 11""",220 lbs,24,2,Memphis,6,Dallas Mavericks
+4896372,Walter Clayton Jr.,1,Guard,"6' 4""",195 lbs,23,2,Florida,6,Dallas Mavericks
+5279129,Sergio de Larrea,55,Forward,"6' 7""",202 lbs,20,0,,6,Dallas Mavericks
+5041939,Cooper Flagg,32,Forward,"6' 9""",205 lbs,19,2,Duke,6,Dallas Mavericks
+4278049,Daniel Gafford,21,Forward,"6' 10""",265 lbs,28,8,Arkansas,6,Dallas Mavericks
+5105806,Jett Howard,9,Guard,"6' 8""",215 lbs,23,4,Michigan,6,Dallas Mavericks
+6442,Kyrie Irving,11,Guard,"6' 2""",195 lbs,34,15,Duke,6,Dallas Mavericks
+4873153,Morez Johnson Jr.,14,Forward,"6' 9""",250 lbs,20,0,Michigan,6,Dallas Mavericks
+5106040,Tobi Lawal,33,Forward,"6' 8""",215 lbs,23,0,Virginia Tech,6,Dallas Mavericks
+4683688,Dereck Lively II,2,Center,"7' 1""",230 lbs,22,4,Duke,6,Dallas Mavericks
+4278594,Naji Marshall,3,Forward,"6' 6""",220 lbs,28,7,Xavier,6,Dallas Mavericks
+3138160,Caleb Martin,16,Forward,"6' 5""",205 lbs,31,8,Nevada,6,Dallas Mavericks
+5211175,Zaccharie Risacher,10,Forward,"6' 8""",200 lbs,21,3,,6,Dallas Mavericks
+4432107,Marcus Sasser,8,Guard,"6' 1""",195 lbs,26,4,Houston,6,Dallas Mavericks
+4278078,P.J. Washington,25,Forward,"6' 7""",230 lbs,28,8,Kentucky,6,Dallas Mavericks
+4277848,Marvin Bagley III,3,Forward,"6' 10""",235 lbs,27,9,Duke,7,Denver Nuggets
+4431767,Christian Braun,0,Guard,"6' 6""",220 lbs,25,5,Kansas,7,Denver Nuggets
+4698719,Trevon Brazile,7,Forward,"6' 10""",220 lbs,23,0,Arkansas,7,Denver Nuggets
+3978,DeMar DeRozan,10,Guard,"6' 6""",220 lbs,37,18,USC,7,Denver Nuggets
+4065813,Alpha Diallo,11,Forward,"6' 7""",210 lbs,29,0,Providence,7,Denver Nuggets
+3064290,Aaron Gordon,32,Forward,"6' 8""",235 lbs,31,13,Arizona,7,Denver Nuggets
+4433607,DaRon Holmes II,14,Forward,"6' 9""",225 lbs,24,2,Dayton,7,Denver Nuggets
+4565698,Bryce Hopkins,13,Forward,"6' 7""",220 lbs,24,0,St. John's,7,Denver Nuggets
+3138196,Cameron Johnson,23,Forward,"6' 8""",210 lbs,30,8,North Carolina,7,Denver Nuggets
+3112335,Nikola Jokic,15,Center,"6' 11""",284 lbs,31,12,,7,Denver Nuggets
+4592427,Spencer Jones,21,Forward,"6' 7""",225 lbs,25,3,Stanford,7,Denver Nuggets
+3135046,Tyus Jones,5,Guard,"6' 0""",196 lbs,30,12,Duke,7,Denver Nuggets
+3936299,Jamal Murray,27,Guard,"6' 4""",215 lbs,29,10,Kentucky,7,Denver Nuggets
+4433629,Ryan Nembhard,9,Guard,"5' 11""",180 lbs,23,2,Gonzaga,7,Denver Nuggets
+4431690,Zeke Nnaji,22,Forward,"6' 10""",240 lbs,25,7,Arizona,7,Denver Nuggets
+4432181,Julian Strawther,1,Guard,"6' 6""",205 lbs,24,4,Gonzaga,7,Denver Nuggets
+5105592,Cam Whitmore,00,Forward,"6' 6""",230 lbs,22,4,Villanova,7,Denver Nuggets
+3908845,John Collins,20,Forward,"6' 9""",226 lbs,29,10,Wake Forest,8,Detroit Pistons
+4432166,Cade Cunningham,2,Guard,"6' 6""",220 lbs,25,6,Oklahoma State,8,Detroit Pistons
+4433621,Jalen Duren,0,Center,"6' 10""",250 lbs,22,5,Memphis,8,Detroit Pistons
+2596112,Javonte Green,31,Guard,"6' 5""",205 lbs,33,8,Radford,8,Detroit Pistons
+4397449,Elijah Harkless,94,Guard,"6' 3""",195 lbs,26,3,UNLV,8,Detroit Pistons
+4683771,Ronald Holland II,5,Forward,"6' 8""",206 lbs,21,3,,8,Detroit Pistons
+4066372,Kevin Huerter,27,Guard,"6' 6""",198 lbs,28,9,Maryland,8,Detroit Pistons
+5107199,Daniss Jenkins,24,Guard,"6' 4""",165 lbs,25,3,St. John's,8,Detroit Pistons
+4395702,Isaiah Joe,17,Guard,"6' 4""",165 lbs,27,7,Arkansas,8,Detroit Pistons
+5107818,Isaac Jones,13,Center,"6' 8""",245 lbs,26,3,Washington State,8,Detroit Pistons
+4700852,Chaz Lanier,8,Guard,"6' 3""",206 lbs,24,2,Tennessee,8,Detroit Pistons
+5258459,Ebuka Okorie,23,Guard,"6' 2""",186 lbs,19,0,Stanford,8,Detroit Pistons
+5037878,Ugonna Onyenso,34,Center,"7' 0""",236 lbs,22,0,Virginia,8,Detroit Pistons
+2990962,Taurean Prince,12,Forward,"6' 6""",218 lbs,32,11,Baylor,8,Detroit Pistons
+4278562,Paul Reed,7,Forward,"6' 9""",210 lbs,27,7,DePaul,8,Detroit Pistons
+3157465,Duncan Robinson,55,Forward,"6' 7""",215 lbs,32,9,Michigan,8,Detroit Pistons
+4397882,Tolu Smith,35,Forward,"6' 11""",250 lbs,26,3,Mississippi State,8,Detroit Pistons
+4684742,Ausar Thompson,9,Guard,"6' 7""",205 lbs,23,4,,8,Detroit Pistons
+4397886,Charles Bassey,28,Center,"6' 10""",230 lbs,25,6,Western Kentucky,9,Golden State Warriors
+6430,Jimmy Butler III,10,Forward,"6' 6""",230 lbs,37,16,Marquette,9,Golden State Warriors
+4433149,LJ Cryer,18,Guard,"6' 0""",200 lbs,25,2,Houston,9,Golden State Warriors
+3975,Stephen Curry,30,Guard,"6' 2""",185 lbs,38,18,Davidson,9,Golden State Warriors
+6589,Draymond Green,23,Forward,"6' 6""",230 lbs,36,15,Michigan State,9,Golden State Warriors
+3213,Al Horford,20,Center,"6' 8""",240 lbs,40,20,Florida,9,Golden State Warriors
+4703396,Graham Ike,,Forward,"6' 9""",250 lbs,24,0,Gonzaga,9,Golden State Warriors
+5175737,Yaxel Lendeborg,1,Forward,"6' 9""",241 lbs,24,0,Michigan,9,Golden State Warriors
+4897449,Malevy Leons,33,Forward,"6' 9""",203 lbs,27,3,Bradley,9,Golden State Warriors
+4066436,De'Anthony Melton,8,Guard,"6' 2""",200 lbs,28,9,USC,9,Golden State Warriors
+4432171,Moses Moody,4,Guard,"6' 5""",211 lbs,24,6,Arkansas,9,Golden State Warriors
+2990969,Georges Niang,32,Forward,"6' 6""",230 lbs,33,11,Iowa State,9,Golden State Warriors
+3134903,Gary Payton II,0,Guard,"6' 2""",195 lbs,33,11,Oregon State,9,Golden State Warriors
+4709138,Brandin Podziemski,2,Guard,"6' 4""",205 lbs,23,4,Santa Clara,9,Golden State Warriors
+3102531,Kristaps Porzingis,7,Center,"7' 2""",240 lbs,31,12,,9,Golden State Warriors
+4897262,Will Richard,3,Guard,"6' 3""",206 lbs,23,2,Florida,9,Golden State Warriors
+4997536,Gui Santos,15,Forward,"6' 7""",185 lbs,24,4,,9,Golden State Warriors
+4397040,Brandon Williams,12,Guard,"6' 1""",190 lbs,26,5,Arizona,9,Golden State Warriors
+2991235,Steven Adams,12,Center,"6' 11""",265 lbs,33,14,Pittsburgh,10,Houston Rockets
+3037789,Bogdan Bogdanovic,31,Guard,"6' 5""",225 lbs,34,10,,10,Houston Rockets
+3102529,Clint Capela,30,Center,"6' 10""",256 lbs,32,13,,10,Houston Rockets
+4683860,Quadir Copeland,25,Guard,"6' 6""",220 lbs,23,0,NC State,10,Houston Rockets
+4592857,Isaiah Crawford,27,Forward,"6' 6""",220 lbs,24,3,Louisiana Tech,10,Houston Rockets
+3202,Kevin Durant,7,Forward,"6' 11""",240 lbs,38,20,Texas,10,Houston Rockets
+4433192,Tari Eason,17,Forward,"6' 8""",215 lbs,25,5,LSU,10,Houston Rockets
+5105553,Julian Phillips,3,Forward,"6' 6""",198 lbs,22,4,Tennessee,10,Houston Rockets
+4871144,Alperen Sengun,28,Center,"6' 11""",243 lbs,24,6,,10,Houston Rockets
+4711272,Reed Sheppard,15,Guard,"6' 2""",185 lbs,22,3,Kentucky,10,Houston Rockets
+2990992,Marcus Smart,36,Guard,"6' 3""",220 lbs,32,13,Oklahoma State,10,Houston Rockets
+4432639,Jabari Smith Jr.,10,Forward,"6' 11""",220 lbs,23,5,Auburn,10,Houston Rockets
+3136777,Jae'Sean Tate,8,Forward,"6' 4""",230 lbs,30,7,Ohio State,10,Houston Rockets
+4684740,Amen Thompson,1,Guard,"6' 7""",200 lbs,23,4,,10,Houston Rockets
+5105837,Bruce Thornton,2,Guard,"6' 0""",223 lbs,23,0,Ohio State,10,Houston Rockets
+4432827,Oscar Tshiebwe,9,Center,"6' 8""",255 lbs,26,4,Kentucky,10,Houston Rockets
+2991230,Fred VanVleet,5,Guard,"6' 0""",197 lbs,32,11,Wichita State,10,Houston Rockets
+4431752,Kobe Brown,24,Guard,"6' 7""",250 lbs,26,4,Missouri,11,Indiana Pacers
+5157066,Johnny Furphy,12,Guard,"6' 8""",200 lbs,21,3,Kansas,11,Indiana Pacers
+4396993,Tyrese Haliburton,0,Guard,"6' 5""",185 lbs,26,7,Iowa State,11,Indiana Pacers
+4065731,Jay Huff,32,Center,"7' 1""",240 lbs,29,6,Virginia,11,Indiana Pacers
+4592829,Quenton Jackson,29,Guard,"6' 4""",173 lbs,28,5,Texas A&M,11,Indiana Pacers
+2530530,T.J. McConnell,9,Guard,"6' 1""",190 lbs,34,12,Arizona,11,Indiana Pacers
+2580365,Larry Nance Jr.,22,Forward,"6' 6""",245 lbs,33,12,Wyoming,11,Indiana Pacers
+4395712,Andrew Nembhard,2,Guard,"6' 4""",191 lbs,26,5,Gonzaga,11,Indiana Pacers
+4396909,Aaron Nesmith,23,Guard,"6' 5""",215 lbs,27,7,Vanderbilt,11,Indiana Pacers
+3133603,Kelly Oubre Jr.,10,Guard,"6' 8""",203 lbs,30,12,Kansas,11,Indiana Pacers
+4433076,Ben Sheppard,26,Guard,"6' 6""",190 lbs,25,4,Belmont,11,Indiana Pacers
+3149673,Pascal Siakam,43,Forward,"6' 8""",245 lbs,32,11,New Mexico State,11,Indiana Pacers
+4398207,Jalen Slawson,18,Forward,"6' 7""",215 lbs,27,3,Furman,11,Indiana Pacers
+5105854,Braden Smith,3,Guard,"5' 10""",167 lbs,23,0,Purdue,11,Indiana Pacers
+4278355,Obi Toppin,1,Forward,"6' 9""",220 lbs,28,7,Dayton,11,Indiana Pacers
+5106060,Jarace Walker,5,Forward,"6' 7""",235 lbs,23,4,Houston,11,Indiana Pacers
+4017837,Ivica Zubac,40,Center,"7' 0""",240 lbs,29,11,,11,Indiana Pacers
+6580,Bradley Beal,3,Guard,"6' 4""",207 lbs,33,15,Florida,12,LA Clippers
+4845363,Cam Christie,24,Guard,"6' 5""",190 lbs,21,3,Minnesota,12,LA Clippers
+5106258,Gradey Dick,9,Guard,"6' 7""",200 lbs,22,4,Kansas,12,LA Clippers
+2991139,Kris Dunn,8,Guard,"6' 3""",205 lbs,32,11,Providence,12,LA Clippers
+4396907,Darius Garland,10,Guard,"6' 1""",192 lbs,26,8,Vanderbilt,12,LA Clippers
+4066648,Rui Hachimura,28,Forward,"6' 8""",230 lbs,28,8,Gonzaga,12,LA Clippers
+3913176,Brandon Ingram,7,Forward,"6' 8""",190 lbs,29,11,Duke,12,LA Clippers
+4432170,Isaiah Jackson,23,Forward,"6' 8""",205 lbs,24,6,Kentucky,12,LA Clippers
+3936099,Derrick Jones Jr.,5,Forward,"6' 6""",210 lbs,29,11,UNLV,12,LA Clippers
+3448,Brook Lopez,11,Center,"7' 1""",282 lbs,38,19,Stanford,12,LA Clippers
+5105832,Nick Martinelli,12,Forward,"6' 7""",224 lbs,22,0,Northwestern,12,LA Clippers
+5075626,Baba Miller,18,Forward,"6' 11""",208 lbs,22,0,Cincinnati,12,LA Clippers
+4396818,Jordan Miller,22,Guard,"6' 5""",194 lbs,26,4,Miami,12,LA Clippers
+5108024,Yanic Konan Niederhauser,14,Center,"6' 11""",242 lbs,23,2,Penn State,12,LA Clippers
+4398390,Jalen Pickett,21,Guard,"6' 2""",202 lbs,27,4,Penn State,12,LA Clippers
+4702352,Kobe Sanders,4,Guard,"6' 8""",207 lbs,24,2,Nevada,12,LA Clippers
+4065778,Max Strus,31,Guard,"6' 5""",215 lbs,30,8,DePaul,12,LA Clippers
+5254165,Keaton Wagler,1,Guard,"6' 5""",188 lbs,19,0,Illinois,12,LA Clippers
+5113969,Cameron Carr,43,Guard,"6' 5""",184 lbs,21,0,Baylor,13,Los Angeles Lakers
+3945274,Luka Doncic,77,Guard,"6' 8""",230 lbs,27,9,,13,Los Angeles Lakers
+4397014,Quentin Grimes,5,Guard,"6' 4""",210 lbs,26,6,Houston,13,Los Angeles Lakers
+4868423,Jaden Hardy,7,Guard,"6' 3""",198 lbs,24,5,,13,Los Angeles Lakers
+4683774,Bronny James,9,Guard,"6' 2""",210 lbs,22,3,USC,13,Los Angeles Lakers
+4433599,Arthur Kaluma,47,Forward,"6' 6""",223 lbs,24,2,Texas,13,Los Angeles Lakers
+4433136,Walker Kessler,14,Center,"7' 2""",245 lbs,25,5,Auburn,13,Los Angeles Lakers
+4592691,Jake LaRavia,12,Forward,"6' 7""",235 lbs,24,5,Wake Forest,13,Los Angeles Lakers
+3155535,Kevon Looney,55,Forward,"6' 9""",222 lbs,30,12,UCLA,13,Los Angeles Lakers
+4278580,Sandro Mamukelashvili,54,Forward,"6' 9""",240 lbs,27,6,Seton Hall,13,Los Angeles Lakers
+4702972,Chris Manon,30,Guard,"6' 4""",209 lbs,24,2,Vanderbilt,13,Los Angeles Lakers
+5114350,AK Okereke,31,Forward,"6' 7""",244 lbs,23,0,Vanderbilt,13,Los Angeles Lakers
+4066457,Austin Reaves,15,Guard,"6' 5""",197 lbs,28,6,Oklahoma,13,Los Angeles Lakers
+4277811,Collin Sexton,10,Guard,"6' 3""",190 lbs,27,9,Alabama,13,Los Angeles Lakers
+5060631,Adou Thiero,1,Forward,"6' 8""",220 lbs,22,2,Arkansas,13,Los Angeles Lakers
+3907498,Matisse Thybulle,4,Guard,"6' 5""",202 lbs,29,8,Washington,13,Los Angeles Lakers
+4278077,Jarred Vanderbilt,2,Forward,"6' 8""",214 lbs,27,9,Kentucky,13,Los Angeles Lakers
+4433137,Ziaire Williams,11,Forward,"6' 9""",185 lbs,25,6,Stanford,13,Los Angeles Lakers
+5041935,Cameron Boozer,27,Forward,"6' 8""",253 lbs,19,0,Duke,29,Memphis Grizzlies
+5105817,Carson Cooper,20,Center,"6' 11""",245 lbs,22,0,Michigan State,29,Memphis Grizzlies
+4903027,Cedric Coward,23,Forward,"6' 5""",206 lbs,23,2,Washington State,29,Memphis Grizzlies
+4600663,Zach Edey,14,Center,"7' 3""",305 lbs,24,3,Purdue,29,Memphis Grizzlies
+2991070,Jerami Grant,3,Forward,"6' 7""",213 lbs,32,13,Syracuse,29,Memphis Grizzlies
+4684806,Taylor Hendricks,22,Forward,"6' 9""",215 lbs,22,4,UCF,29,Memphis Grizzlies
+5105550,GG Jackson,45,Forward,"6' 9""",210 lbs,21,4,South Carolina,29,Memphis Grizzlies
+4065733,Ty Jerome,2,Guard,"6' 5""",195 lbs,29,8,Virginia,29,Memphis Grizzlies
+5231919,Karim Lopez,35,Forward,"6' 8""",222 lbs,19,0,,29,Memphis Grizzlies
+4683934,Jahmai Mashack,21,Guard,"6' 3""",197 lbs,23,2,Tennessee,29,Memphis Grizzlies
+4594326,Kris Murray,17,Forward,"6' 8""",218 lbs,26,4,Iowa,29,Memphis Grizzlies
+4431785,Scotty Pippen Jr.,1,Guard,"6' 2""",170 lbs,25,5,Vanderbilt,29,Memphis Grizzlies
+4593016,Quinten Post,41,Center,"7' 0""",238 lbs,26,3,Boston College,29,Memphis Grizzlies
+4595400,Olivier-Maxence Prosper,18,Forward,"6' 7""",230 lbs,24,4,Marquette,29,Memphis Grizzlies
+4781746,Javon Small,10,Guard,"6' 1""",190 lbs,23,2,West Virginia,29,Memphis Grizzlies
+4433083,Cam Spencer,24,Guard,"6' 3""",205 lbs,26,3,UConn,29,Memphis Grizzlies
+4432810,Isaiah Stewart,28,Center,"6' 8""",250 lbs,25,7,Washington,29,Memphis Grizzlies
+5112087,Jaylen Wells,0,Forward,"6' 7""",206 lbs,23,3,Washington State,29,Memphis Grizzlies
+4066261,Bam Adebayo,13,Center,"6' 9""",260 lbs,29,10,Kentucky,14,Miami Heat
+3032977,Giannis Antetokounmpo,7,Forward,"6' 11""",243 lbs,31,14,,14,Miami Heat
+5107157,Ryan Conwell,4,Guard,"6' 3""",220 lbs,22,0,Louisville,14,Miami Heat
+4837356,Tre Donaldson,24,Guard,"6' 2""",210 lbs,22,0,Miami,14,Miami Heat
+3899664,Simone Fontecchio,0,Forward,"6' 7""",220 lbs,30,5,,14,Miami Heat
+4431772,Myron Gardner,15,Forward,"6' 5""",225 lbs,25,2,Little Rock,14,Miami Heat
+4700818,Vladislav Goldin,50,Center,"7' 0""",255 lbs,25,2,Michigan,14,Miami Heat
+2528210,Tim Hardaway Jr.,10,Guard,"6' 5""",205 lbs,34,14,Michigan,14,Miami Heat
+4431786,Keshad Johnson,16,Forward,"6' 6""",230 lbs,25,3,Arizona,14,Miami Heat
+4997528,Nikola Jovic,5,Forward,"6' 10""",240 lbs,23,5,,14,Miami Heat
+4601025,Pelle Larsson,9,Guard,"6' 5""",215 lbs,25,3,Arizona,14,Miami Heat
+4278053,Davion Mitchell,2,Guard,"6' 0""",210 lbs,28,6,Baylor,14,Miami Heat
+3064482,Bobby Portis,95,Forward,"6' 9""",250 lbs,31,12,Arkansas,14,Miami Heat
+4278076,Nick Richards,8,Center,"6' 11""",245 lbs,28,7,Kentucky,14,Miami Heat
+4066993,Dru Smith,12,Guard,"6' 2""",200 lbs,28,5,Missouri,14,Miami Heat
+6475,Klay Thompson,11,Guard,"6' 5""",220 lbs,36,16,Washington State,14,Miami Heat
+3059319,Andrew Wiggins,22,Forward,"6' 7""",210 lbs,31,13,Kansas,14,Miami Heat
+5164559,Nate Ament,15,Forward,"6' 10""",211 lbs,19,0,Tennessee,15,Milwaukee Bucks
+5082206,Brayden Burries,0,Guard,"6' 4""",215 lbs,21,0,Arizona,15,Milwaukee Bucks
+4997526,Ousmane Dieng,21,Forward,"6' 9""",185 lbs,23,5,,15,Milwaukee Bucks
+4397475,AJ Green,20,Guard,"6' 4""",190 lbs,27,5,Northern Iowa,15,Milwaukee Bucks
+4395725,Tyler Herro,11,Guard,"6' 5""",205 lbs,26,8,Kentucky,15,Milwaukee Bucks
+5214640,Kasparas Jakucionis,25,Guard,"6' 5""",205 lbs,20,2,Illinois,15,Milwaukee Bucks
+4432848,Jaime Jaquez Jr.,24,Forward,"6' 6""",230 lbs,25,4,UCLA,15,Milwaukee Bucks
+4697268,Kam Jones,19,Guard,"6' 4""",200 lbs,24,2,Marquette,15,Milwaukee Bucks
+3134907,Kyle Kuzma,18,Forward,"6' 8""",221 lbs,31,10,Utah,15,Milwaukee Bucks
+2991043,Caris LeVert,12,Guard,"6' 7""",205 lbs,32,11,Michigan,15,Milwaukee Bucks
+5214989,Bogoljub Markovic,23,Forward,"6' 11""",210 lbs,21,0,,15,Milwaukee Bucks
+4397233,Pete Nance,35,Forward,"6' 9""",225 lbs,26,4,North Carolina,15,Milwaukee Bucks
+4591725,Ryan Rollins,13,Guard,"6' 3""",180 lbs,24,5,Toledo,15,Milwaukee Bucks
+4397114,Cormac Ryan,30,Guard,"6' 5""",195 lbs,27,2,North Carolina,15,Milwaukee Bucks
+4277922,Jericho Sims,00,Center,"6' 10""",250 lbs,28,6,Texas,15,Milwaukee Bucks
+4277843,Gary Trent Jr.,5,Guard,"6' 5""",204 lbs,27,9,Duke,15,Milwaukee Bucks
+3133628,Myles Turner,3,Center,"6' 11""",250 lbs,30,12,Texas,15,Milwaukee Bucks
+5105623,Kel'el Ware,9,Center,"7' 0""",250 lbs,22,3,Indiana,15,Milwaukee Bucks
+4432816,LaMelo Ball,1,Guard,"6' 7""",180 lbs,25,7,,16,Minnesota Timberwolves
+5279133,Joan Beringer,19,Forward,"6' 11""",230 lbs,19,2,,16,Minnesota Timberwolves
+4432247,Jaylen Clark,7,Guard,"6' 5""",205 lbs,25,3,UCLA,16,Minnesota Timberwolves
+3934673,Donte DiVincenzo,0,Guard,"6' 4""",203 lbs,29,9,Villanova,16,Minnesota Timberwolves
+4397002,Ayo Dosunmu,13,Guard,"6' 4""",200 lbs,26,6,Illinois,16,Minnesota Timberwolves
+4594268,Anthony Edwards,5,Guard,"6' 4""",225 lbs,25,7,Georgia,16,Minnesota Timberwolves
+5061585,Isaiah Evans,33,Forward,"6' 6""",186 lbs,20,0,Duke,16,Minnesota Timberwolves
+3032976,Rudy Gobert,27,Center,"7' 1""",258 lbs,34,14,,16,Minnesota Timberwolves
+4592492,Bones Hyland,8,Guard,"6' 2""",169 lbs,26,6,VCU,16,Minnesota Timberwolves
+4433247,Jonathan Kuminga,24,Forward,"6' 7""",225 lbs,24,6,,16,Minnesota Timberwolves
+3136196,Trey Lyles,41,Forward,"6' 9""",234 lbs,30,11,Kentucky,16,Minnesota Timberwolves
+4431671,Jaden McDaniels,3,Forward,"6' 9""",185 lbs,26,7,Washington,16,Minnesota Timberwolves
+4592979,Zyon Pullin,15,Guard,"6' 4""",206 lbs,25,3,Florida,16,Minnesota Timberwolves
+4432847,Terrence Shannon Jr.,4,Guard,"6' 6""",215 lbs,26,3,Illinois,16,Minnesota Timberwolves
+4895758,Cody Williams,9,Forward,"6' 8""",190 lbs,21,3,Colorado,16,Minnesota Timberwolves
+5157587,Rocco Zikarsky,44,Center,"7' 3""",254 lbs,20,2,,16,Minnesota Timberwolves
+4397136,Saddiq Bey,41,Guard,"6' 8""",215 lbs,27,6,Villanova,3,New Orleans Pelicans
+4712862,Malik Dia,8,Forward,"6' 9""",250 lbs,22,0,Ole Miss,3,New Orleans Pelicans
+5144091,Jeremiah Fears,0,Guard,"6' 3""",190 lbs,20,2,Oklahoma,3,New Orleans Pelicans
+5170947,AJ Johnson,14,Guard,"6' 5""",160 lbs,21,3,,3,New Orleans Pelicans
+4277813,Herbert Jones,2,Forward,"6' 7""",206 lbs,28,6,Alabama,3,New Orleans Pelicans
+3442,DeAndre Jordan,6,Center,"6' 11""",265 lbs,38,19,Texas A&M,3,New Orleans Pelicans
+4683634,Bennedict Mathurin,24,Guard,"6' 5""",210 lbs,24,5,Arizona,3,New Orleans Pelicans
+4997538,Karlo Matkovic,17,Forward,"6' 10""",231 lbs,25,3,,3,New Orleans Pelicans
+4576086,Bryce McGowens,11,Guard,"6' 6""",190 lbs,23,5,Nebraska,3,New Orleans Pelicans
+5061589,Yves Missi,21,Center,"6' 11""",235 lbs,22,3,Baylor,3,New Orleans Pelicans
+4397688,Trey Murphy III,25,Forward,"6' 8""",206 lbs,26,6,Virginia,3,New Orleans Pelicans
+3907497,Dejounte Murray,5,Guard,"6' 4""",180 lbs,30,10,Washington,3,New Orleans Pelicans
+4703115,Jaron Pierre Jr.,10,Guard,"6' 6""",210 lbs,24,0,SMU,3,New Orleans Pelicans
+4277956,Jordan Poole,3,Guard,"6' 4""",194 lbs,27,8,Michigan,3,New Orleans Pelicans
+4869780,Derik Queen,22,Center,"6' 9""",250 lbs,21,2,Maryland,3,New Orleans Pelicans
+4683742,Julian Reese,13,Forward,"6' 9""",252 lbs,23,2,Maryland,3,New Orleans Pelicans
+4431675,Trendon Watford,9,Forward,"6' 8""",237 lbs,25,6,LSU,3,New Orleans Pelicans
+4395628,Zion Williamson,1,Forward,"6' 6""",284 lbs,26,7,Duke,3,New Orleans Pelicans
+4683730,Jaden Akins,14,Guard,"6' 4""",195 lbs,23,0,Michigan State,18,New York Knicks
+4277869,Jose Alvarado,5,Guard,"6' 0""",179 lbs,28,6,Georgia Tech,18,New York Knicks
+3934719,OG Anunoby,8,Forward,"6' 7""",240 lbs,29,10,Indiana,18,New York Knicks
+3147657,Mikal Bridges,25,Guard,"6' 6""",209 lbs,30,9,Villanova,18,New York Knicks
+3934672,Jalen Brunson,11,Guard,"6' 2""",190 lbs,30,9,Villanova,18,New York Knicks
+2528426,Jordan Clarkson,00,Guard,"6' 5""",194 lbs,34,13,Missouri,18,New York Knicks
+5211983,Pacome Dadiet,4,Forward,"6' 9""",210 lbs,21,3,,18,New York Knicks
+5289900,Mohamed Diawara,51,Forward,"6' 9""",225 lbs,21,2,,18,New York Knicks
+6585,Andre Drummond,0,Center,"6' 11""",279 lbs,33,15,UConn,18,New York Knicks
+3062679,Josh Hart,3,Guard,"6' 5""",215 lbs,31,10,Villanova,18,New York Knicks
+4433225,Tyler Kolek,13,Guard,"6' 2""",195 lbs,25,3,Marquette,18,New York Knicks
+4431823,Miles McBride,2,Guard,"6' 2""",195 lbs,26,6,West Virginia,18,New York Knicks
+4411057,Kevin McCullar Jr.,9,Guard,"6' 6""",210 lbs,25,3,Kansas,18,New York Knicks
+4838721,Tyler Nickel,55,Forward,"6' 8""",217 lbs,23,0,Vanderbilt,18,New York Knicks
+3914044,Landry Shamet,44,Guard,"6' 5""",190 lbs,29,9,Wichita State,18,New York Knicks
+3136195,Karl-Anthony Towns,32,Center,"7' 0""",248 lbs,30,12,Kentucky,18,New York Knicks
+4432808,James Wiseman,35,Center,"6' 11""",240 lbs,25,7,Memphis,18,New York Knicks
+4684208,Brooks Barnhizer,23,Forward,"6' 6""",226 lbs,24,2,Northwestern,25,Oklahoma City Thunder
+2991350,Alex Caruso,9,Guard,"6' 5""",186 lbs,32,10,Texas A&M,25,Oklahoma City Thunder
+5105800,Josh Dix,21,Guard,"6' 5""",206 lbs,22,0,Creighton,25,Oklahoma City Thunder
+4278073,Shai Gilgeous-Alexander,2,Guard,"6' 6""",195 lbs,28,9,Kentucky,25,Oklahoma City Thunder
+4222252,Isaiah Hartenstein,55,Center,"7' 0""",250 lbs,28,9,,25,Oklahoma City Thunder
+4433255,Chet Holmgren,7,Center,"7' 1""",208 lbs,24,4,Gonzaga,25,Oklahoma City Thunder
+5174983,Aday Mara,15,Center,"7' 3""",262 lbs,21,0,Michigan,25,Oklahoma City Thunder
+4683778,Jared McCain,3,Guard,"6' 3""",195 lbs,22,3,Duke,25,Oklahoma City Thunder
+4900671,Ajay Mitchell,25,Guard,"6' 4""",190 lbs,24,3,UC Santa Barbara,25,Oklahoma City Thunder
+5106270,Otega Oweh,13,Guard,"6' 4""",217 lbs,23,0,Kentucky,25,Oklahoma City Thunder
+5061603,Thomas Sorber,12,Center,"6' 9""",250 lbs,20,0,Georgetown,25,Oklahoma City Thunder
+5241364,Bennett Stirtz,14,Guard,"6' 4""",190 lbs,23,0,Iowa,25,Oklahoma City Thunder
+5159925,Nikola Topic,44,Guard,"6' 6""",200 lbs,21,2,,25,Oklahoma City Thunder
+4683692,Cason Wallace,22,Guard,"6' 3""",195 lbs,22,4,Kentucky,25,Oklahoma City Thunder
+4593803,Jalen Williams,8,Guard,"6' 5""",211 lbs,25,5,Santa Clara,25,Oklahoma City Thunder
+4432823,Jaylin Williams,6,Forward,"6' 9""",240 lbs,24,5,Arkansas,25,Oklahoma City Thunder
+3133626,Kenrich Williams,34,Guard,"6' 7""",210 lbs,31,9,TCU,25,Oklahoma City Thunder
+4432573,Paolo Banchero,5,Forward,"6' 10""",250 lbs,23,5,Duke,19,Orlando Magic
+4066320,Desmond Bane,3,Guard,"6' 6""",215 lbs,28,7,TCU,19,Orlando Magic
+4348700,Goga Bitadze,35,Center,"6' 11""",250 lbs,27,8,,19,Orlando Magic
+4712849,Anthony Black,0,Guard,"6' 7""",200 lbs,22,4,Arkansas,19,Orlando Magic
+4278572,Jamal Cain,8,Forward,"6' 7""",191 lbs,27,5,Oakland,19,Orlando Magic
+3133635,Jevon Carter,2,Guard,"6' 0""",200 lbs,31,9,West Virginia,19,Orlando Magic
+4277847,Wendell Carter Jr.,34,Center,"6' 10""",270 lbs,27,9,Duke,19,Orlando Magic
+4397204,Colin Castleton,14,Center,"6' 10""",250 lbs,26,4,Florida,19,Orlando Magic
+4702382,Tristan da Silva,23,Forward,"6' 8""",217 lbs,25,3,Colorado,19,Orlando Magic
+4065654,Jonathan Isaac,1,Forward,"6' 10""",230 lbs,29,10,Florida State,19,Orlando Magic
+4593034,Alex Morales,30,Guard,"6' 6""",180 lbs,28,2,Wagner,19,Orlando Magic
+5107251,Izaiyah Nelson,25,Forward,"6' 8""",219 lbs,23,0,South Florida,19,Orlando Magic
+5214637,Noah Penda,93,Forward,"6' 7""",215 lbs,21,2,,19,Orlando Magic
+5239561,Jase Richardson,11,Guard,"6' 1""",180 lbs,21,2,Michigan State,19,Orlando Magic
+4432165,Jalen Suggs,4,Guard,"6' 5""",205 lbs,25,6,Gonzaga,19,Orlando Magic
+6478,Nikola Vucevic,9,Center,"6' 9""",260 lbs,35,16,USC,19,Orlando Magic
+4566434,Franz Wagner,22,Forward,"6' 10""",220 lbs,25,6,Michigan,19,Orlando Magic
+4870562,Dominick Barlow,25,Forward,"6' 9""",238 lbs,23,5,,20,Philadelphia 76ers
+5105637,Adem Bona,30,Center,"6' 10""",239 lbs,23,3,UCLA,20,Philadelphia 76ers
+3917376,Jaylen Brown,7,Guard,"6' 6""",223 lbs,29,11,California,20,Philadelphia 76ers
+2581018,Kentavious Caldwell-Pope,1,Guard,"6' 5""",213 lbs,33,14,Georgia,20,Philadelphia 76ers
+5124612,VJ Edgecombe,77,Guard,"6' 5""",180 lbs,21,2,Baylor,20,Philadelphia 76ers
+4711297,Justin Edwards,11,Forward,"6' 7""",222 lbs,22,3,Kentucky,20,Philadelphia 76ers
+3059318,Joel Embiid,21,Center,"7' 0""",270 lbs,32,11,Kansas,20,Philadelphia 76ers
+3904625,Tacko Fall,99,Center,"7' 6""",299 lbs,30,4,UCF,20,Philadelphia 76ers
+4871141,Ariel Hukporti,55,Center,"7' 0""",258 lbs,24,3,,20,Philadelphia 76ers
+1966,LeBron James,23,Forward,"6' 9""",250 lbs,41,24,,20,Philadelphia 76ers
+4433144,Caleb Love,8,Guard,"6' 3""",214 lbs,25,2,Arizona,20,Philadelphia 76ers
+4431678,Tyrese Maxey,0,Guard,"6' 2""",204 lbs,25,7,Kentucky,20,Philadelphia 76ers
+4873090,Labaron Philon Jr.,00,Guard,"6' 3""",179 lbs,20,0,Alabama,20,Philadelphia 76ers
+5099752,Rayan Rupert,12,Guard,"6' 7""",207 lbs,22,4,,20,Philadelphia 76ers
+4351851,Anfernee Simons,5,Guard,"6' 4""",206 lbs,27,9,,20,Philadelphia 76ers
+3912848,Dean Wade,45,Forward,"6' 9""",223 lbs,29,8,Kansas State,20,Philadelphia 76ers
+4432446,Jabari Walker,33,Forward,"6' 7""",240 lbs,24,5,Colorado,20,Philadelphia 76ers
+3136193,Devin Booker,15,Guard,"6' 5""",206 lbs,29,12,Kentucky,21,Phoenix Suns
+4280245,Jamaree Bouyea,17,Guard,"6' 2""",180 lbs,27,5,San Francisco,21,Phoenix Suns
+4066383,Miles Bridges,22,Forward,"6' 7""",225 lbs,28,8,Michigan State,21,Phoenix Suns
+3155526,Dillon Brooks,3,Forward,"6' 7""",225 lbs,30,10,Oregon,21,Phoenix Suns
+4888725,Ryan Dunn,0,Forward,"6' 7""",216 lbs,23,3,Virginia,21,Phoenix Suns
+5105977,Rasheer Fleming,20,Forward,"6' 9""",240 lbs,22,2,Saint Joseph's,21,Phoenix Suns
+4278585,Collin Gillespie,12,Guard,"6' 1""",195 lbs,27,4,Villanova,21,Phoenix Suns
+4278402,Jordan Goodwin,23,Guard,"6' 3""",215 lbs,27,6,Saint Louis,21,Phoenix Suns
+4437244,Jalen Green,4,Guard,"6' 4""",186 lbs,24,6,,21,Phoenix Suns
+4601023,Oso Ighodaro,11,Forward,"6' 11""",235 lbs,24,3,Marquette,21,Phoenix Suns
+3913174,Luke Kennard,8,Guard,"6' 5""",206 lbs,30,10,Duke,21,Phoenix Suns
+5203685,Khaman Maluach,10,Center,"7' 2""",250 lbs,20,2,Duke,21,Phoenix Suns
+5041953,Koa Peat,18,Forward,"6' 8""",245 lbs,19,0,Arizona,21,Phoenix Suns
+4066268,Duop Reath,26,Center,"6' 9""",245 lbs,30,4,LSU,21,Phoenix Suns
+4592714,Pat Spencer,61,Guard,"6' 2""",205 lbs,30,4,Northwestern,21,Phoenix Suns
+4431695,Drew Timme,,Forward,"6' 10""",235 lbs,26,2,Gonzaga,21,Phoenix Suns
+4701232,Mark Williams,25,Center,"7' 1""",240 lbs,24,5,Duke,21,Phoenix Suns
+4683021,Deni Avdija,8,Forward,"6' 8""",228 lbs,25,7,,22,Portland Trail Blazers
+4431736,Toumani Camara,33,Forward,"6' 7""",230 lbs,26,4,Dayton,22,Portland Trail Blazers
+4592435,Branden Carlson,10,Center,"7' 0""",220 lbs,27,3,Utah,22,Portland Trail Blazers
+5081727,Sidy Cissoko,91,Guard,"6' 6""",220 lbs,22,4,,22,Portland Trail Blazers
+5105565,Donovan Clingan,23,Center,"7' 2""",280 lbs,22,3,UConn,22,Portland Trail Blazers
+5217746,Yang Hansen,16,Center,"7' 1""",270 lbs,21,2,,22,Portland Trail Blazers
+4683678,Scoot Henderson,00,Guard,"6' 3""",207 lbs,22,4,,22,Portland Trail Blazers
+3995,Jrue Holiday,5,Guard,"6' 4""",220 lbs,36,18,UCLA,22,Portland Trail Blazers
+4703889,Jayson Kent,29,Guard,"6' 8""",215 lbs,24,2,Texas,22,Portland Trail Blazers
+4578893,Vit Krejci,27,Guard,"6' 8""",195 lbs,26,6,,22,Portland Trail Blazers
+6606,Damian Lillard,0,Guard,"6' 2""",200 lbs,36,15,Weber State,22,Portland Trail Blazers
+4279888,Ja Morant,1,Guard,"6' 2""",174 lbs,27,8,Murray State,22,Portland Trail Blazers
+4066399,Micah Potter,9,Center,"6' 9""",248 lbs,28,6,Wisconsin,22,Portland Trail Blazers
+4914336,Shaedon Sharpe,17,Guard,"6' 5""",210 lbs,23,5,Kentucky,22,Portland Trail Blazers
+4593043,John Tonje,2,Forward,"6' 5""",225 lbs,25,2,Wisconsin,22,Portland Trail Blazers
+4066211,Robert Williams III,35,Center,"6' 9""",249 lbs,29,9,Texas A&M,22,Portland Trail Blazers
+4706557,Chris Youngblood,11,Guard,"6' 4""",221 lbs,24,2,Alabama,22,Portland Trail Blazers
+4431679,Precious Achiuwa,9,Forward,"6' 8""",243 lbs,27,7,Memphis,23,Sacramento Kings
+5142620,Darius Acuff Jr.,5,Guard,"6' 2""",186 lbs,19,0,Arkansas,23,Sacramento Kings
+4395650,Leaky Black,19,Forward,"6' 6""",209 lbs,27,3,North Carolina,23,Sacramento Kings
+4433174,Dylan Cardwell,32,Center,"6' 10""",255 lbs,24,2,Auburn,23,Sacramento Kings
+4702384,Nique Clifford,10,Guard,"6' 5""",175 lbs,24,2,Colorado State,23,Sacramento Kings
+4065732,De'Andre Hunter,15,Forward,"6' 7""",221 lbs,28,8,Virginia,23,Sacramento Kings
+4917149,Alex Karaban,33,Forward,"6' 7""",225 lbs,23,0,UConn,23,Sacramento Kings
+3064440,Zach LaVine,8,Guard,"6' 5""",200 lbs,31,13,UCLA,23,Sacramento Kings
+5107897,Jonathan Mogbo,22,Forward,"6' 9""",225 lbs,24,3,San Francisco,23,Sacramento Kings
+4066262,Malik Monk,0,Guard,"6' 3""",200 lbs,28,10,Kentucky,23,Sacramento Kings
+4594327,Keegan Murray,13,Forward,"6' 8""",225 lbs,26,5,Iowa,23,Sacramento Kings
+4279318,Daeqwon Plowden,29,Guard,"6' 6""",216 lbs,28,3,Bowling Green,23,Sacramento Kings
+4898371,Maxime Raynaud,42,Center,"7' 1""",250 lbs,23,2,Stanford,23,Sacramento Kings
+3155942,Domantas Sabonis,11,Forward,"6' 10""",240 lbs,30,11,Gonzaga,23,Sacramento Kings
+5106058,Emanuel Sharp,34,Guard,"6' 3""",208 lbs,22,0,Houston,23,Sacramento Kings
+3907387,Ben Simmons,25,Guard,"6' 10""",240 lbs,30,10,LSU,23,Sacramento Kings
+6578,Harrison Barnes,40,Forward,"6' 8""",225 lbs,34,15,North Carolina,24,San Antonio Spurs
+5105337,Maliq Brown,15,Forward,"6' 9""",235 lbs,22,0,Duke,24,San Antonio Spurs
+5061568,Carter Bryant,11,Forward,"6' 7""",230 lbs,20,2,Arizona,24,San Antonio Spurs
+4845367,Stephon Castle,5,Guard,"6' 6""",220 lbs,21,3,UConn,24,San Antonio Spurs
+4592479,Julian Champagnie,30,Forward,"6' 7""",215 lbs,25,5,St. John's,24,San Antonio Spurs
+4066259,De'Aaron Fox,4,Guard,"6' 3""",190 lbs,28,10,Kentucky,24,San Antonio Spurs
+5107968,Ja'Kobi Gillespie,17,Guard,"6' 1""",180 lbs,22,0,Tennessee,24,San Antonio Spurs
+5037871,Dylan Harper,2,Guard,"6' 5""",220 lbs,20,2,Rutgers,24,San Antonio Spurs
+6440,Tobias Harris,23,Forward,"6' 8""",230 lbs,34,16,Tennessee,24,San Antonio Spurs
+4395723,Keldon Johnson,3,Forward,"6' 6""",215 lbs,27,8,Kentucky,24,San Antonio Spurs
+4713010,David Jones Garcia,25,Forward,"6' 4""",215 lbs,24,2,Memphis,24,San Antonio Spurs
+3064560,Luke Kornet,7,Center,"7' 1""",270 lbs,31,10,Vanderbilt,24,San Antonio Spurs
+3134916,Jordan McLaughlin,0,Guard,"6' 0""",180 lbs,30,8,USC,24,San Antonio Spurs
+5101845,Jayden Quaintance,22,Forward,"6' 10""",255 lbs,19,0,Kentucky,24,San Antonio Spurs
+5105809,Tarris Reed Jr.,10,Center,"6' 10""",270 lbs,23,0,UConn,24,San Antonio Spurs
+4395630,Devin Vassell,24,Guard,"6' 5""",205 lbs,26,7,Florida State,24,San Antonio Spurs
+5104157,Victor Wembanyama,1,Forward,"7' 4""",240 lbs,22,4,,24,San Antonio Spurs
+2993874,Kyle Anderson,12,Forward,"6' 8""",230 lbs,33,13,UCLA,28,Toronto Raptors
+4433134,Scottie Barnes,4,Forward,"6' 8""",237 lbs,25,6,Florida State,28,Toronto Raptors
+4395625,RJ Barrett,9,Forward,"6' 6""",214 lbs,26,8,Duke,28,Toronto Raptors
+4431893,Jamison Battle,77,Forward,"6' 7""",220 lbs,25,3,Ohio State,28,Toronto Raptors
+4432586,Nate Bittle,,Center,"7' 0""",250 lbs,23,0,Oregon,28,Toronto Raptors
+4432737,Jaden Bradley,8,Guard,"6' 3""",205 lbs,23,0,Arizona,28,Toronto Raptors
+5149115,Allen Graves,22,Forward,"6' 8""",225 lbs,20,0,Santa Clara,28,Toronto Raptors
+4431684,Trayce Jackson-Davis,32,Forward,"6' 9""",245 lbs,26,4,Indiana,28,Toronto Raptors
+6450,Kawhi Leonard,2,Forward,"6' 6""",225 lbs,35,16,San Diego State,28,Toronto Raptors
+4702656,Alijah Martin,55,Guard,"6' 2""",212 lbs,24,2,Florida,28,Toronto Raptors
+5093267,Collin Murray-Boyles,30,Forward,"6' 7""",245 lbs,21,2,South Carolina,28,Toronto Raptors
+3134908,Jakob Poeltl,19,Center,"7' 0""",253 lbs,31,11,Utah,28,Toronto Raptors
+4395724,Immanuel Quickley,5,Guard,"6' 2""",190 lbs,27,7,Kentucky,28,Toronto Raptors
+4432241,Jamal Shead,23,Guard,"6' 1""",200 lbs,24,3,Houston,28,Toronto Raptors
+4397784,Malachi Smith,18,Guard,"6' 4""",205 lbs,26,2,Gonzaga,28,Toronto Raptors
+4684272,Ja'Kobe Walter,14,Guard,"6' 4""",180 lbs,22,3,Baylor,28,Toronto Raptors
+4433268,Trey Alexander,15,Guard,"6' 5""",185 lbs,23,3,Creighton,26,Utah Jazz
+4873138,Ace Bailey,19,Guard,"6' 9""",200 lbs,20,2,Rutgers,26,Utah Jazz
+4277919,Mo Bamba,44,Center,"7' 0""",231 lbs,28,9,Texas,26,Utah Jazz
+4065673,Tony Bradley,13,Center,"6' 10""",248 lbs,28,9,North Carolina,26,Utah Jazz
+4683766,Isaiah Collier,8,Guard,"6' 4""",210 lbs,22,3,USC,26,Utah Jazz
+4684793,Kyle Filipowski,2,Forward,"6' 11""",250 lbs,22,3,Duke,26,Utah Jazz
+4433627,Keyonte George,3,Guard,"6' 4""",185 lbs,22,4,Baylor,26,Utah Jazz
+4432811,Josh Green,5,Guard,"6' 6""",200 lbs,25,7,Arizona,26,Utah Jazz
+4397077,Jaxson Hayes,11,Center,"7' 0""",220 lbs,26,8,Texas,26,Utah Jazz
+4396963,Blake Hinson,25,Forward,"6' 8""",230 lbs,26,2,Pittsburgh,26,Utah Jazz
+4433618,Harrison Ingram,00,Forward,"6' 5""",230 lbs,23,3,North Carolina,26,Utah Jazz
+4277961,Jaren Jackson Jr.,20,Forward,"6' 10""",242 lbs,27,9,Michigan State,26,Utah Jazz
+4066336,Lauri Markkanen,23,Forward,"7' 1""",240 lbs,29,10,Arizona,26,Utah Jazz
+3133602,Svi Mykhailiuk,10,Guard,"6' 7""",205 lbs,29,9,Kansas,26,Utah Jazz
+3102530,Jusuf Nurkic,30,Center,"6' 11""",290 lbs,32,13,,26,Utah Jazz
+4065663,Josh Okogie,21,Guard,"6' 4""",213 lbs,28,9,Georgia Tech,26,Utah Jazz
+5041955,Darryn Peterson,22,Guard,"6' 5""",199 lbs,19,0,Kansas,26,Utah Jazz
+5105839,Brice Sensabaugh,28,Forward,"6' 6""",235 lbs,22,4,Ohio State,26,Utah Jazz
+4278129,Deandre Ayton,8,Center,"7' 0""",252 lbs,28,9,Arizona,27,Washington Wizards
+4432187,Reece Beekman,26,Guard,"6' 3""",190 lbs,25,2,Virginia,27,Washington Wizards
+4845374,Bub Carrington,7,Guard,"6' 4""",190 lbs,21,3,Pittsburgh,27,Washington Wizards
+4432907,Justin Champagnie,9,Forward,"6' 6""",206 lbs,25,6,Pittsburgh,27,Washington Wizards
+5104155,Bilal Coulibaly,0,Guard,"6' 7""",195 lbs,22,4,,27,Washington Wizards
+6583,Anthony Davis,23,Forward,"6' 10""",253 lbs,33,15,Kentucky,27,Washington Wizards
+5142718,AJ Dybantsa,4,Forward,"6' 9""",217 lbs,19,0,BYU,27,Washington Wizards
+5174563,Kyshawn George,18,Forward,"6' 8""",200 lbs,22,3,Miami,27,Washington Wizards
+2581184,Anthony Gill,16,Forward,"6' 7""",230 lbs,34,7,Virginia,27,Washington Wizards
+5238230,Tre Johnson,12,Guard,"6' 5""",190 lbs,20,2,Texas,27,Washington Wizards
+4432819,Tre Mann,1,Guard,"6' 4""",178 lbs,25,6,Florida,27,Washington Wizards
+6609,Khris Middleton,22,Forward,"6' 7""",222 lbs,35,15,Texas A&M,27,Washington Wizards
+5105841,Felix Okpara,34,Forward,"6' 10""",237 lbs,22,0,Tennessee,27,Washington Wizards
+5144126,Will Riley,27,Guard,"6' 9""",180 lbs,20,2,Illinois,27,Washington Wizards
+5160992,Alex Sarr,20,Center,"7' 0""",205 lbs,21,3,,27,Washington Wizards
+4997537,Tristan Vukcevic,00,Forward,"7' 0""",220 lbs,23,4,,27,Washington Wizards
+4606840,Jamir Watkins,5,Guard,"6' 6""",210 lbs,25,2,Florida State,27,Washington Wizards
+4277905,Trae Young,3,Guard,"6' 2""",164 lbs,28,9,Oklahoma,27,Washington Wizards
