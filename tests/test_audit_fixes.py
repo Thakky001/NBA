@@ -159,6 +159,39 @@ class TestPonytailAuditFixes(unittest.TestCase):
             res2 = collector._fetch_all_odds()
             self.assertEqual(res2, [])
 
+    def test_odds_collector_circuit_breaker_on_quota_exhausted(self):
+        """OddsCollector trips circuit breaker on 401 OUT_OF_USAGE_CREDITS without retry loop spam."""
+        from unittest.mock import patch, MagicMock
+        from collectors.odds_collector import OddsCollector
+
+        OddsCollector.reset_circuit_breaker()
+        collector = OddsCollector()
+        collector.api_key = "test_key"
+        collector.clear_cache()
+
+        mock_resp = MagicMock()
+        mock_resp.status_code = 401
+        mock_resp.text = '{"message":"Usage quota has been reached.","error_code":"OUT_OF_USAGE_CREDITS"}'
+
+        with patch('requests.get', return_value=mock_resp) as mock_get:
+            res1 = collector._fetch_all_odds()
+            self.assertEqual(res1, [])
+            # Must ONLY call requests.get ONCE (no 3 retry attempts!)
+            self.assertEqual(mock_get.call_count, 1)
+            # Circuit breaker must be active
+            self.assertGreater(OddsCollector._circuit_breaker_until, 0)
+            self.assertEqual(OddsCollector._circuit_breaker_reason, "OUT_OF_USAGE_CREDITS")
+
+            # Second call or different instance must return immediately without calling requests.get
+            mock_get.reset_mock()
+            collector2 = OddsCollector()
+            res2 = collector2._fetch_all_odds()
+            self.assertEqual(res2, [])
+            self.assertEqual(mock_get.call_count, 0, "Circuit breaker must prevent requests.get entirely")
+
+        # Clean up circuit breaker after test
+        OddsCollector.reset_circuit_breaker()
+
     def test_phase2_espn_collector_uses_https(self):
         """Phase 2: ESPN endpoints must use secure HTTPS protocol."""
         from collectors.espn_collector import ESPNCollector

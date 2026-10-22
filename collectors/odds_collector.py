@@ -12,6 +12,11 @@ logger = logging.getLogger(__name__)
 class OddsCollector:
     """Collects betting odds from The Odds API with retry logic and local cache fallback."""
 
+    # Class-level circuit breaker to protect across all instances
+    _circuit_breaker_until: float = 0.0
+    _circuit_breaker_reason: str = ""
+    _circuit_breaker_logged: bool = False
+
     def __init__(self, max_retries: int = 3, retry_delay: float = 0.1, backoff_factor: float = 2.0):
         try:
             from config import ODDS_API_KEY
@@ -39,6 +44,13 @@ class OddsCollector:
         self._cache_time = 0
         self._logged_no_key = False
 
+    @classmethod
+    def reset_circuit_breaker(cls) -> None:
+        """Reset the class-level circuit breaker."""
+        cls._circuit_breaker_until = 0.0
+        cls._circuit_breaker_reason = ""
+        cls._circuit_breaker_logged = False
+
     def _resolve_raw_dir(self) -> str:
         """Resolve path to data/raw directory."""
         try:
@@ -61,7 +73,7 @@ class OddsCollector:
         if os.path.exists(path):
             try:
                 df = pd.read_csv(path)
-                logger.warning(
+                logger.info(
                     f"Live odds request failed/unavailable; activating fallback data from {path} ({len(df)} rows)"
                 )
                 return df
@@ -127,8 +139,21 @@ class OddsCollector:
 
     def _fetch_all_odds(self) -> list:
         """Fetch all odds from API with retry backoff and fallback on failure."""
-        if self._cached_games is not None and (self.time.time() - self._cache_time) < 3600:
+        now = self.time.time()
+        if self._cached_games is not None and (now - self._cache_time) < 3600:
             return self._cached_games
+
+        # Check class-level circuit breaker (e.g. quota exhausted or API key invalid)
+        if now < OddsCollector._circuit_breaker_until:
+            if not OddsCollector._circuit_breaker_logged:
+                logger.info(
+                    f"[OddsCollector] Circuit breaker active until {int(OddsCollector._circuit_breaker_until - now)}s "
+                    f"({OddsCollector._circuit_breaker_reason}). Skipping live API requests and using fallback."
+                )
+                OddsCollector._circuit_breaker_logged = True
+            self._cached_games = []
+            self._cache_time = now
+            return []
 
         if not self.api_key:
             try:
@@ -149,7 +174,7 @@ class OddsCollector:
                 self._logged_no_key = True
             # Cache empty result for 1 hour so it does not spam logs on every game & 10s refresh
             self._cached_games = []
-            self._cache_time = self.time.time()
+            self._cache_time = now
             return []
 
         params = {
@@ -164,6 +189,22 @@ class OddsCollector:
         for attempt in range(self.max_retries):
             try:
                 res = requests.get(self.base_url, params=params, timeout=10)
+
+                # Check for quota exhaustion (401 OUT_OF_USAGE_CREDITS) or access denied (401/403)
+                if res.status_code in [401, 403] or "OUT_OF_USAGE_CREDITS" in res.text:
+                    reason = "OUT_OF_USAGE_CREDITS" if "OUT_OF_USAGE_CREDITS" in res.text else f"Status {res.status_code}"
+                    logger.warning(
+                        f"[OddsCollector] The Odds API quota reached or unauthorized ({reason}): {res.text[:200]}. "
+                        f"Activating 1-hour circuit breaker to prevent retry spam and latency. "
+                        f"Falling back to ESPN/consensus odds."
+                    )
+                    OddsCollector._circuit_breaker_until = now + 3600.0
+                    OddsCollector._circuit_breaker_reason = reason
+                    OddsCollector._circuit_breaker_logged = True
+                    self._cached_games = []
+                    self._cache_time = now
+                    return []
+
                 if res.status_code in [429, 500, 502, 503, 504]:
                     raise requests.exceptions.HTTPError(
                         f"HTTP {res.status_code}: {res.text[:200]}",
@@ -175,8 +216,11 @@ class OddsCollector:
                     )
 
                 self._cached_games = res.json()
-                self._cache_time = self.time.time()
+                self._cache_time = now
+                OddsCollector._circuit_breaker_until = 0.0
+                OddsCollector._circuit_breaker_logged = False
                 return self._cached_games
+
             except Exception as e:
                 last_error = e
                 logger.warning(
@@ -189,6 +233,9 @@ class OddsCollector:
         logger.warning(
             f"All {self.max_retries} attempts failed to fetch live odds: {last_error}"
         )
+        # Cache failure for 300s (5 minutes) so remaining games in slate don't repeat retries
+        self._cached_games = []
+        self._cache_time = now
         return []
 
     def get_game_odds(self, home_team: str, away_team: str) -> Dict:
