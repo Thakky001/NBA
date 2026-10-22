@@ -158,11 +158,11 @@ class TestTrendAnalyzer(unittest.TestCase):
         # projected_margin = 0.70 * 1.5 + 0.30 * 7.81 = 1.05 + 2.34 = 3.39
         # Edge vs -1.5 is 3.39 - 1.5 = ~1.89 pt (modest, not huge 8+ pts)
         self.assertLess(res_early['projected_margin'], 6.0)
-        # Sigma at min_games=1 is 12.5 + (10 - 1)*0.4 = 16.1 -> Win prob is modest (~54-58%), not >65%
-        self.assertLess(res_early['win_prob'], 0.60)
-        self.assertGreater(res_early['win_prob'], 0.50)
-        # Quarter Kelly must be safely bounded below 2.5% default cap
-        self.assertLessEqual(res_early['kelly_quarter'], 0.025)
+        # Early-season conviction filter: edge ~1.89 pt is below 2.0 threshold -> suppressed to NEUTRAL/PASS
+        self.assertEqual(res_early['recommendation'], 'NEUTRAL')
+        self.assertEqual(res_early['win_prob'], 0.50)
+        # Quarter Kelly must be 0.0 for NEUTRAL pick
+        self.assertEqual(res_early['kelly_quarter'], 0.0)
 
         # Mid-season (20 GP)
         self.mock_fe.compute_matchup_features.return_value = {
@@ -181,6 +181,8 @@ class TestTrendAnalyzer(unittest.TestCase):
         res_mid = self.analyzer.analyze_spread('Charlotte Hornets', 'Brooklyn Nets', spread_line=-1.5)
         # Mid-season prior weight is 1.0, so projected margin is larger than early season
         self.assertGreater(res_mid['projected_margin'], res_early['projected_margin'])
+        # Mid-season allows LEAN / STRONG picks
+        self.assertGreater(res_mid['win_prob'], 0.50)
 
     def test_market_clash_zero_kelly_capital_preservation(self):
         """When sharp steam opposes model by >= 2.0 pts, enforce Market Clash and zero Kelly stake."""
@@ -213,6 +215,44 @@ class TestTrendAnalyzer(unittest.TestCase):
         self.assertFalse(res_live['is_market_clash'])
         self.assertEqual(res_live['line_movement']['status'], 'LIVE_IN_PLAY')
         self.assertEqual(res_live['line_movement']['verdict'], 'LIVE_TRACKING')
+
+
+    def test_early_season_conviction_filter_ou_and_spread(self):
+        """Verify early season (min_games < 10) suppresses LEAN picks to NEUTRAL/PASS, while keeping STRONG picks."""
+        # 1. Early season O/U with small edge (1.5 pts) -> suppressed to NEUTRAL
+        self.mock_fe.compute_matchup_features.return_value = {
+            'home_games_played': 2,
+            'away_games_played': 2,
+            'home_pace': 100.0,
+            'away_pace': 100.0,
+            'combined_avg_season': 225.0
+        }
+        res_ou_lean = self.analyzer.analyze_over_under('BOS', 'MIA', over_under_line=220.0, open_line=220.0, market_weight=0.0)
+        self.assertEqual(res_ou_lean['recommendation'], 'NEUTRAL')
+        self.assertEqual(res_ou_lean['kelly_quarter'], 0.0)
+
+        # 2. Early season O/U with strong edge (3.0 pts) -> fires STRONG OVER
+        self.mock_fe.compute_matchup_features.return_value = {
+            'home_games_played': 2,
+            'away_games_played': 2,
+            'home_pace': 100.0,
+            'away_pace': 100.0,
+            'combined_avg_season': 230.0
+        }
+        res_ou_strong = self.analyzer.analyze_over_under('BOS', 'MIA', over_under_line=220.0, open_line=220.0, market_weight=0.0)
+        self.assertEqual(res_ou_strong['recommendation'], 'STRONG OVER')
+        self.assertGreater(res_ou_strong['kelly_quarter'], 0.0)
+
+        # 3. Mid-season O/U with small edge (1.5 pts) -> allows LEAN OVER
+        self.mock_fe.compute_matchup_features.return_value = {
+            'home_games_played': 20,
+            'away_games_played': 20,
+            'home_pace': 100.0,
+            'away_pace': 100.0,
+            'combined_avg_season': 221.5
+        }
+        res_ou_mid = self.analyzer.analyze_over_under('BOS', 'MIA', over_under_line=220.0, open_line=220.0, market_weight=0.0)
+        self.assertEqual(res_ou_mid['recommendation'], 'LEAN OVER')
 
 
 if __name__ == '__main__':

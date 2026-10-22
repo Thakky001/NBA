@@ -43,14 +43,14 @@ class TestLineMovementAndAnchoring(unittest.TestCase):
 
     def test_line_movement_totals_steam_warning(self):
         """Market line rises contrary to UNDER pick -> Market Steam Warning."""
-        # Case A: Heavy steam (diff = +3.0 >= 2.0) -> FOLLOW_MARKET
+        # Case A: Heavy steam (diff = +3.0 >= 2.0) -> CAPITAL_PRESERVATION (strict capital preservation)
         lm = analyze_line_movement(open_line=229.5, current_line=232.5, market_type='total', recommendation='STRONG UNDER')
         self.assertTrue(lm['has_movement'])
         self.assertEqual(lm['status'], 'STEAM_WARNING')
         self.assertIn('Market Steam Warning', lm['badge'])
         self.assertAlmostEqual(lm['diff'], 3.0, places=1)
-        self.assertEqual(lm['verdict'], 'FOLLOW_MARKET')
-        self.assertIn('สวนโมเดลตามเงินตลาด', lm['verdict_title'])
+        self.assertEqual(lm['verdict'], 'CAPITAL_PRESERVATION')
+        self.assertIn('ข้าม (PASS)', lm['verdict_title'])
         self.assertAlmostEqual(lm['market_flow_prob'], 0.575, places=3)
         self.assertEqual(lm['market_flow_direction'], 'สูง (OVER)')
 

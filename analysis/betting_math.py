@@ -491,12 +491,12 @@ def analyze_line_movement(open_line: Optional[float],
                 badge = '✈️ Away Money Move'
                 detail = f'แต้มต่อขยับเข้า {a_name} {abs_diff:.1f} แต้ม (เปิด {o_val:+.1f} ➔ ปัจจุบัน {c_val:+.1f})'
 
-    # Determine Verdict based on approved criteria
+    # Determine Verdict based on strict capital preservation criteria
     if status == 'STEAM_WARNING':
         if abs_diff >= 2.0:
-            verdict = 'FOLLOW_MARKET'
-            verdict_title = f'สวนโมเดลตามเงินตลาด ({flow_dir})'
-            verdict_detail = f'ราคาไหลแรงถึง {abs_diff:.1f} แต้ม มีเงินก้อนใหญ่ระดับเซียนดันสวนชัดเจน แนะนำตามกระแสเงิน'
+            verdict = 'CAPITAL_PRESERVATION'
+            verdict_title = 'ข้าม (PASS) / งดวางเงิน'
+            verdict_detail = f'สัญญาณขัดแย้งรุนแรง: โมเดลชอบ{model_dir} แต่เงินตลาดไหลสวน {abs_diff:.1f} แต้ม แนะนำงดวางเดิมพันเพื่อรักษาเงินทุน'
         else:
             verdict = 'FOLLOW_MODEL'
             verdict_title = f'ตามสถิติ ({model_dir})'
@@ -506,9 +506,10 @@ def analyze_line_movement(open_line: Optional[float],
         verdict_title = f'ตามสถิติและเงินตลาด ({model_dir})'
         verdict_detail = f'ทั้งโมเดลสถิติและกระแสเงินเซียนชี้ไปทางเดียวกัน (ไหล {diff:+.1f} แต้ม — มั่นใจสูงสุด)'
     else:
-        verdict = 'FOLLOW_MARKET'
-        verdict_title = f'ตามเงินตลาด ({flow_dir})'
-        verdict_detail = f'โมเดลสถิติสูสี แต่มีแรงซื้อผลักดันไปทาง {flow_dir} ({diff:+.1f} แต้ม)'
+        # Neutral or mild moves with no model edge: strict capital preservation (PASS)
+        verdict = 'PASS'
+        verdict_title = 'ข้าม (PASS) — สถิติสูสี'
+        verdict_detail = f'โมเดลสถิติสูสี ไม่มี Edge ที่คุ้มค่าต่อการลงทุน แนะนำรักษาเงินทุน'
 
     return {
         'has_movement': True,

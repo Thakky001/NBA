@@ -56,10 +56,9 @@ class TestPredictionTracker(unittest.TestCase):
         self.assertEqual(grade_verdict_pick("FOLLOW_MODEL", "STRONG UNDER", 220.0, 210.0), 'WIN')
         self.assertEqual(grade_verdict_pick("FOLLOW_MODEL", "STRONG UNDER", 220.0, 225.0), 'LOSS')
 
-        # FOLLOW_MARKET flips the model recommendation
-        # Model said UNDER, but market pushed OVER. Result was 225 (> 220) -> Verdict WIN
-        self.assertEqual(grade_verdict_pick("FOLLOW_MARKET", "STRONG UNDER", 220.0, 225.0), 'WIN')
-        self.assertEqual(grade_verdict_pick("FOLLOW_MARKET", "STRONG UNDER", 220.0, 215.0), 'LOSS')
+        # CAPITAL_PRESERVATION and PASS safely skip betting
+        self.assertEqual(grade_verdict_pick("CAPITAL_PRESERVATION", "STRONG UNDER", 220.0, 225.0), 'SKIPPED')
+        self.assertEqual(grade_verdict_pick("PASS", "STRONG UNDER", 220.0, 215.0), 'SKIPPED')
 
     def test_calculate_track_record_metrics(self):
         df = pd.DataFrame([

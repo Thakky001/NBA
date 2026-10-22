@@ -202,10 +202,63 @@ class DataMerger:
         from config import normalize_team_name as central_normalize
         return central_normalize(name)
 
+    def auto_sync_recent_games(self) -> None:
+        """Automatically fetch and append finished games from recent days to espn_recent_games.csv."""
+        import os
+        from datetime import datetime, timedelta
+        from config import RAW_DIR
+        
+        espn_path = os.path.join(RAW_DIR, 'espn_recent_games.csv')
+        
+        # Check staleness (if older than 2 hours or missing)
+        needs_sync = True
+        if os.path.exists(espn_path):
+            file_age_hours = (datetime.now().timestamp() - os.path.getmtime(espn_path)) / 3600.0
+            if file_age_hours < 2.0:
+                needs_sync = False
+                
+        if not needs_sync:
+            return
+
+        try:
+            from collectors.espn_collector import ESPNCollector
+            collector = ESPNCollector()
+            end_d = datetime.now()
+            start_d = end_d - timedelta(days=3)
+            new_games = collector.get_scoreboard_range(
+                start_d.strftime('%Y%m%d'),
+                end_d.strftime('%Y%m%d')
+            )
+            if not new_games.empty:
+                # Keep completed games with scores > 0
+                finished = new_games[
+                    (new_games['status'].astype(str).str.contains('FINAL', case=False, na=False)) &
+                    (pd.to_numeric(new_games['home_score'], errors='coerce') > 0)
+                ].copy()
+                if 'season_type' in finished.columns:
+                    finished = finished[finished['season_type'] != 1]
+                    
+                if not finished.empty:
+                    if os.path.exists(espn_path):
+                        existing = pd.read_csv(espn_path)
+                        combined = pd.concat([existing, finished], ignore_index=True)
+                    else:
+                        combined = finished
+                        
+                    if 'game_id' in combined.columns:
+                        combined = combined.drop_duplicates(subset=['game_id'], keep='last')
+                    combined.to_csv(espn_path, index=False)
+                    logger.info(f"Auto-synced {len(finished)} finished games to {espn_path}")
+        except Exception as e:
+            logger.warning(f"auto_sync_recent_games failed gracefully: {e}")
+
     def load_all_games(self) -> pd.DataFrame:
         """Load and merge all game records from ESPN recent games and SDV historical games."""
         import os
         from config import RAW_DIR
+        
+        # Ensure latest finished games are synced before loading
+        self.auto_sync_recent_games()
         
         espn_path = os.path.join(RAW_DIR, 'espn_recent_games.csv')
         sdv_path = os.path.join(RAW_DIR, 'sdv_team_box.csv')

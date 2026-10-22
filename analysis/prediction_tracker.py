@@ -322,15 +322,11 @@ def grade_spread_pick(recommendation: Any, spread_line: Any, actual_margin: floa
 
 def grade_verdict_pick(verdict: Any, recommendation: Any, total_line: Any, actual_total: float) -> str:
     """Evaluate Directional Verdict outcome."""
-    if pd.isna(verdict) or verdict in ['NO_DATA', None]:
+    if pd.isna(verdict) or verdict in ['NO_DATA', 'PASS', 'CAPITAL_PRESERVATION', 'LIVE_TRACKING', None]:
         return 'SKIPPED'
     v_str = str(verdict).upper()
     if v_str in ['FOLLOW_MODEL', 'CONFIRMED_ALIGNED', 'STABLE_MODEL']:
         return grade_over_under_pick(recommendation, total_line, actual_total)
-    elif v_str == 'FOLLOW_MARKET':
-        # Market moved opposite of model recommendation
-        opposite = 'OVER' if 'UNDER' in str(recommendation).upper() else 'UNDER'
-        return grade_over_under_pick(opposite, total_line, actual_total)
     return 'SKIPPED'
 
 

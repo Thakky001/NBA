@@ -173,6 +173,8 @@ class TestBettingMath(unittest.TestCase):
         """Verify extreme edge (>8.0 pts) triggers anomaly flag while preserving unconstrained win_prob."""
         mock_fe = MagicMock()
         mock_fe.compute_matchup_features.return_value = {
+            'home_games_played': 20,
+            'away_games_played': 20,
             'combined_avg_10': 250.0,
             'combined_avg_season': 248.0,
             'home_pace': 100.0,
@@ -302,7 +304,7 @@ class TestLivePaceProjection(unittest.TestCase):
         # When game is pregame (is_live=False), 5.0 pt shift opposing model DOES trigger STEAM_WARNING
         res_pregame = analyze_line_movement(open_line=237.5, current_line=242.5, market_type='total', recommendation='STRONG UNDER', is_live=False)
         self.assertEqual(res_pregame['status'], 'STEAM_WARNING')
-        self.assertEqual(res_pregame['verdict'], 'FOLLOW_MARKET')
+        self.assertEqual(res_pregame['verdict'], 'CAPITAL_PRESERVATION')
 
     def test_pure_remaining_decay_wolves_and_raptors(self):
         """Verify Wolves @ Heat and Raptors scenarios use pure remaining decay (w=0)."""

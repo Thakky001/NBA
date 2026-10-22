@@ -245,28 +245,49 @@ class TrendAnalyzer:
         # Anchor to Open Line (unmanipulated bookmaker baseline) if available
         anchor_line = open_line if (open_line is not None and open_line > 0) else over_under_line
 
+        # Check early season status to prevent wild uncalibrated swings
+        home_games = features.get('home_games_played', 0)
+        away_games = features.get('away_games_played', 0)
+        min_games = min(home_games, away_games)
+        is_early_season = min_games < 10
+
+        effective_market_weight = 0.70 if is_early_season else market_weight
+
         if anchor_line is not None and anchor_line > 0:
-            projected_total = market_anchored_projection(raw_projected_total, anchor_line, market_weight=market_weight)
+            projected_total = market_anchored_projection(raw_projected_total, anchor_line, market_weight=effective_market_weight)
         else:
             projected_total = raw_projected_total
             
         total_edge = (projected_total - over_under_line) if over_under_line else 0.0
         raw_edge = (raw_projected_total - over_under_line) if over_under_line else 0.0
         
-        # Calculate realistic win probability using Normal CDF with NBA totals sigma = 13.5
+        # Dynamic Early-Season Totals Sigma: wider variance in opening 10 games (sigma ~ 13.5 to 18.5)
+        sigma_ou = 13.5 + max(0, 10 - min_games) * 0.5
+
+        # Calculate realistic win probability using Normal CDF with dynamic totals sigma
         if over_under_line:
-            win_prob = 0.5 * (1.0 + math.erf(total_edge / (13.5 * math.sqrt(2.0))))
-            # Scaled thresholds calibrated for Market-Anchored Edges
-            if total_edge >= 2.5:
-                recommendation = 'STRONG OVER'
-            elif total_edge >= 1.0:
-                recommendation = 'LEAN OVER'
-            elif total_edge <= -2.5:
-                recommendation = 'STRONG UNDER'
-            elif total_edge <= -1.0:
-                recommendation = 'LEAN UNDER'
+            win_prob = 0.5 * (1.0 + math.erf(total_edge / (sigma_ou * math.sqrt(2.0))))
+            
+            # Conviction Filter: In early season (min_games < 10), high variance wipes out thin edges.
+            # Suppress LEAN picks (< 2.5 pts edge) to NEUTRAL / PASS to protect bankroll.
+            if is_early_season:
+                if total_edge >= 2.5:
+                    recommendation = 'STRONG OVER'
+                elif total_edge <= -2.5:
+                    recommendation = 'STRONG UNDER'
+                else:
+                    recommendation = 'NEUTRAL'
             else:
-                recommendation = 'NEUTRAL'
+                if total_edge >= 2.5:
+                    recommendation = 'STRONG OVER'
+                elif total_edge >= 1.0:
+                    recommendation = 'LEAN OVER'
+                elif total_edge <= -2.5:
+                    recommendation = 'STRONG UNDER'
+                elif total_edge <= -1.0:
+                    recommendation = 'LEAN UNDER'
+                else:
+                    recommendation = 'NEUTRAL'
         else:
             win_prob = 0.50
             recommendation = 'NEUTRAL'
@@ -293,7 +314,7 @@ class TrendAnalyzer:
         eval_metrics = evaluate_market_pick(pick_win_prob, book_odds=market_odds_str, pick_idx=pick_idx, kelly_fraction=0.25)
         
         # Market Clash Detection: Severe steam opposing model (>= 2.0 pts) mandates capital preservation
-        is_market_clash = (line_mv.get('status') == 'STEAM_WARNING' and abs(line_mv.get('diff', 0)) >= 2.0 and not is_live)
+        is_market_clash = (line_mv.get('status') == 'STEAM_WARNING' and abs(line_mv.get('diff', 0)) >= 2.0 and not is_live) or line_mv.get('verdict') in ['CAPITAL_PRESERVATION', 'PASS']
 
         is_bet = recommendation != 'NEUTRAL' and not is_market_clash
         ev_val = eval_metrics['ev'] if is_bet else 0.0
@@ -608,16 +629,26 @@ class TrendAnalyzer:
             score = (score * 0.20) + (factor_score_cover * 0.80)
 
             # Recommendations calibrated for Market-Anchored Cover Edge:
-            if cover_edge >= 2.0:
-                recommendation = 'STRONG HOME'
-            elif cover_edge >= 0.8:
-                recommendation = 'LEAN HOME'
-            elif cover_edge <= -2.0:
-                recommendation = 'STRONG AWAY'
-            elif cover_edge <= -0.8:
-                recommendation = 'LEAN AWAY'
+            # Conviction Filter: In early season (min_games < 10), high variance wipes out thin edges.
+            # Suppress LEAN picks (< 2.0 pts cover edge) to NEUTRAL / PASS to protect bankroll.
+            if is_early_season:
+                if cover_edge >= 2.0:
+                    recommendation = 'STRONG HOME'
+                elif cover_edge <= -2.0:
+                    recommendation = 'STRONG AWAY'
+                else:
+                    recommendation = 'NEUTRAL'
             else:
-                recommendation = 'NEUTRAL'
+                if cover_edge >= 2.0:
+                    recommendation = 'STRONG HOME'
+                elif cover_edge >= 0.8:
+                    recommendation = 'LEAN HOME'
+                elif cover_edge <= -2.0:
+                    recommendation = 'STRONG AWAY'
+                elif cover_edge <= -0.8:
+                    recommendation = 'LEAN AWAY'
+                else:
+                    recommendation = 'NEUTRAL'
         else:
             projected_margin = raw_projected_margin
             recommendation = 'NEUTRAL'
@@ -646,7 +677,7 @@ class TrendAnalyzer:
         eval_metrics = evaluate_market_pick(pick_win_prob, book_odds=market_odds_str, pick_idx=pick_idx, kelly_fraction=0.25)
         
         # Market Clash Detection: Severe steam opposing model (>= 2.0 pts) mandates capital preservation
-        is_market_clash = (line_mv.get('status') == 'STEAM_WARNING' and abs(line_mv.get('diff', 0)) >= 2.0 and not is_live)
+        is_market_clash = (line_mv.get('status') == 'STEAM_WARNING' and abs(line_mv.get('diff', 0)) >= 2.0 and not is_live) or line_mv.get('verdict') in ['CAPITAL_PRESERVATION', 'PASS']
 
         is_bet = recommendation != 'NEUTRAL' and not is_market_clash
         ev_val = eval_metrics['ev'] if is_bet else 0.0

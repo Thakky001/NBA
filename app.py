@@ -214,7 +214,7 @@ if st.sidebar.button("🔄 อัปเดตฐานข้อมูลสถ�
 
 # Load Data with Streamlit Caching
 @st.cache_resource
-def get_analyzer(cache_version: str = "v8_pure_decay_and_live_edge"):
+def get_analyzer(cache_version: str = "v9_early_season_conviction_and_auto_sync"):
     from processing.data_merger import DataMerger
     from processing.feature_engineering import FeatureEngineer
     from analysis.trend_analyzer import TrendAnalyzer
@@ -512,10 +512,8 @@ def render_game_slate(selected_date, is_live_refresh):
                                 
                                     v_title = lm_ou.get('verdict_title', '')
                                     v_detail = lm_ou.get('verdict_detail', '')
-                                    if is_clash_ou:
-                                        st.warning(f"🎯 **ฟันธง (Unified Verdict):** **ข้าม (PASS) / งดวางเงิน** — สถิติชอบ{rec_text} แต่เงินเซียนดัน{m_dir} ({diff_val:+.1f} แต้ม) สัญญาณขัดแย้งกันอย่างมีนัยสำคัญ แนะนำรักษาเงินทุน")
-                                    elif lm_ou.get('verdict') == 'FOLLOW_MARKET':
-                                        st.error(f"🎯 **ฟันธง:** **{v_title}** — *{v_detail}*")
+                                    if is_clash_ou or lm_ou.get('verdict') in ['CAPITAL_PRESERVATION', 'PASS']:
+                                        st.warning(f"🎯 **ฟันธง (Unified Verdict):** **ข้าม (PASS) / งดวางเงิน** — {v_detail or 'สัญญาณขัดแย้งรุนแรงหรือไม่มี Edge ที่คุ้มค่า แนะนำรักษาเงินทุน'}")
                                     elif lm_ou.get('verdict') == 'CONFIRMED_ALIGNED':
                                         st.success(f"🎯 **ฟันธง:** **{v_title}** — *{v_detail}*")
                                     else:
@@ -680,10 +678,8 @@ def render_game_slate(selected_date, is_live_refresh):
                                 
                                     v_title = lm_sp.get('verdict_title', '')
                                     v_detail = lm_sp.get('verdict_detail', '')
-                                    if is_clash_sp:
-                                        st.warning(f"🎯 **ฟันธง (Unified Verdict):** **ข้าม (PASS) / งดวางเงิน** — สถิติชอบ{rec_text} แต่เงินเซียนดัน{m_dir} ({diff_val:+.1f} แต้ม) สัญญาณขัดแย้งกันอย่างมีนัยสำคัญ แนะนำรักษาเงินทุน")
-                                    elif lm_sp.get('verdict') == 'FOLLOW_MARKET':
-                                        st.error(f"🎯 **ฟันธง:** **{v_title}** — *{v_detail}*")
+                                    if is_clash_sp or lm_sp.get('verdict') in ['CAPITAL_PRESERVATION', 'PASS']:
+                                        st.warning(f"🎯 **ฟันธง (Unified Verdict):** **ข้าม (PASS) / งดวางเงิน** — {v_detail or 'สัญญาณขัดแย้งรุนแรงหรือไม่มี Edge ที่คุ้มค่า แนะนำรักษาเงินทุน'}")
                                     elif lm_sp.get('verdict') == 'CONFIRMED_ALIGNED':
                                         st.success(f"🎯 **ฟันธง:** **{v_title}** — *{v_detail}*")
                                     else:
