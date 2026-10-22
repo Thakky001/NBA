@@ -34,6 +34,7 @@ from config import (
     normalize_team_name,
     calculate_home_spread,
     resolve_team_info,
+    t_rec,
 )
 from collectors.espn_collector import ESPNCollector
 from collectors.odds_collector import OddsCollector
@@ -152,10 +153,17 @@ def format_game_card(analysis: Dict[str, Any], game_info: Dict[str, Any], odds_d
             ev = res.get('ev', 0.0)
             q_kelly = res.get('kelly_quarter', 0.0)
 
-            badge = "🔥" if "STRONG" in rec else "📈"
-            card_lines.append(
-                f"{badge} <b>{p_type}: {rec}</b> (Edge: <code>{edge:+.1f} pts</code> | Win Prob: <code>{win_p:.1%}</code>)"
-            )
+            if p_type == 'Spread':
+                action_text = t_rec(rec, spread_line=sp_val, home_team=home, away_team=away)
+                card_lines.append(
+                    f"🛡️ <b>แต้มต่อ: {action_text}</b> (Edge: <code>{edge:+.1f} pts</code> | Win Prob: <code>{win_p:.1%}</code>)"
+                )
+            else:
+                action_text = t_rec(rec)
+                line_str = f" {ou_val:.1f}" if ou_val is not None else ""
+                card_lines.append(
+                    f"🏀 <b>สูง/ต่ำ: {action_text}{line_str}</b> (Edge: <code>{edge:+.1f} pts</code> | Win Prob: <code>{win_p:.1%}</code>)"
+                )
             if ev > 0:
                 card_lines.append(f"  └ ⚡ <b>+EV:</b> <code>+{ev*100:.1f}%</code> | <b>Kelly:</b> <code>{q_kelly*100:.1f}%</code>")
 
@@ -169,6 +177,16 @@ def format_game_card(analysis: Dict[str, Any], game_info: Dict[str, Any], odds_d
                         b_val, b_book = val, bookie
                 if b_book:
                     card_lines.append(f"  └ 🛒 <b>Line Shopping:</b> {b_book.upper()} ({b_val})")
+            elif p_type == 'Spread' and odds_data:
+                is_home = 'HOME' in rec.upper()
+                pick_team = home if is_home else away
+                b_book, b_val = None, None
+                for bookie, spreads in odds_data.get('spreads', {}).items():
+                    val = spreads.get('home' if is_home else 'away')
+                    if val is not None and (b_val is None or val > b_val):
+                        b_val, b_book = val, bookie
+                if b_book:
+                    card_lines.append(f"  └ 🛒 <b>Line Shopping:</b> {b_book.upper()} ({pick_team} {b_val:+g})")
     else:
         card_lines.append("⚖️ <b>คำแนะนำ:</b> เรตราคาเปิดมาสมดุล (NEUTRAL)")
 

@@ -116,7 +116,7 @@ class TestTelegramAlerts(unittest.TestCase):
         self.assertIn("Miami Heat", card)
         self.assertIn("TD Garden", card)
         self.assertIn("07:30", card)
-        self.assertIn("STRONG HOME", card)
+        self.assertIn("ต่อ Boston Celtics (-4.5)", card)
         self.assertIn("+EV:", card)
         self.assertIn("Kelly:", card)
 
