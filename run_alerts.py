@@ -265,7 +265,14 @@ def run_alert_cycle(
 
     # 2. Record pre-game predictions in ledger (locks lines & picks before tip-off)
     try:
-        n_rec = record_slate_predictions(date_str, scoreboard, analyzer, espn=espn, odds_coll=odds_coll)
+        n_rec = record_slate_predictions(
+            date_str,
+            scoreboard,
+            analyzer,
+            espn=espn,
+            odds_coll=odds_coll,
+            max_minutes_before=window_max
+        )
         if n_rec > 0:
             logger.info(f"Locked and recorded {n_rec} pre-game prediction(s) into ledger.")
     except Exception as exc:

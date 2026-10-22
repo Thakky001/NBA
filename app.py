@@ -285,10 +285,19 @@ def render_game_slate(selected_date, is_live_refresh):
         if scoreboard.empty:
             st.info(f"ไม่มีโปรแกรมแข่งขันในวันที่ {selected_date.strftime('%d/%m/%Y')} (เวลาไทย) ครับ")
         else:
-            # Auto-grade finished games & lock in predictions in background
+            # Auto-grade finished games (for today or past dates) & lock pre-game predictions for today only
             try:
-                grade_finished_games(scoreboard)
-                record_slate_predictions(selected_date.strftime('%Y-%m-%d'), scoreboard, analyzer, espn=espn, odds_coll=odds_coll)
+                if selected_date <= today_thai:
+                    grade_finished_games(scoreboard)
+                if selected_date == today_thai:
+                    record_slate_predictions(
+                        selected_date.strftime('%Y-%m-%d'),
+                        scoreboard,
+                        analyzer,
+                        espn=espn,
+                        odds_coll=odds_coll,
+                        max_minutes_before=60.0
+                    )
             except Exception:
                 pass
 

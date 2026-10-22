@@ -1,3 +1,4 @@
+from datetime import datetime, timezone, timedelta
 import unittest
 import pandas as pd
 from unittest.mock import MagicMock
@@ -7,6 +8,7 @@ from analysis.prediction_tracker import (
     grade_verdict_pick,
     calculate_track_record,
     record_slate_predictions,
+    load_ledger,
     grade_finished_games
 )
 
@@ -141,6 +143,86 @@ class TestPredictionTracker(unittest.TestCase):
                 self.assertEqual(saved_df.at[0, 'sp_result'], 'WIN')  # Home margin +10 covers -5.5
                 self.assertEqual(saved_df.at[0, 'verdict_result'], 'WIN')
 
+
+
+    def test_record_slate_predictions_rejects_future_dates(self):
+        """Future dates must NEVER be recorded into ledger."""
+        from unittest.mock import MagicMock, patch
+        from datetime import datetime, timezone, timedelta
+
+        mock_analyzer = MagicMock()
+        mock_scoreboard = pd.DataFrame([{
+            'game_id': 'FUTURE_01',
+            'home_team': 'Boston Celtics',
+            'away_team': 'Miami Heat',
+            'status': 'STATUS_SCHEDULED',
+            'spread': -5.5,
+            'over_under': 220.0
+        }])
+
+        # Future date: 2026-10-30
+        count = record_slate_predictions('2026-10-30', mock_scoreboard, mock_analyzer)
+        self.assertEqual(count, 0, "Must not record predictions for future dates")
+        mock_analyzer.full_matchup_analysis.assert_not_called()
+
+    def test_record_slate_predictions_pre_game_window_filter(self):
+        """Games too far in the future or already in progress must be skipped."""
+        from unittest.mock import MagicMock, patch
+        from datetime import datetime, timezone, timedelta
+
+        THAI_TZ = timezone(timedelta(hours=7))
+        now_thai = datetime.now(THAI_TZ)
+        today_str = now_thai.strftime('%Y-%m-%d')
+
+        # Game 1: 30 minutes away -> SHOULD be recorded
+        time_30m = (now_thai + timedelta(minutes=30)).isoformat()
+        # Game 2: 120 minutes away -> SHOULD be skipped (too far)
+        time_120m = (now_thai + timedelta(minutes=120)).isoformat()
+        # Game 3: In progress -> SHOULD be skipped
+        time_live = (now_thai - timedelta(minutes=15)).isoformat()
+
+        mock_scoreboard = pd.DataFrame([
+            {'game_id': 'G_30M', 'home_team': 'BOS', 'away_team': 'MIA', 'status': 'STATUS_SCHEDULED', 'thai_datetime': time_30m, 'spread': -4.5, 'over_under': 218.0},
+            {'game_id': 'G_120M', 'home_team': 'LAL', 'away_team': 'GSW', 'status': 'STATUS_SCHEDULED', 'thai_datetime': time_120m, 'spread': -2.5, 'over_under': 224.0},
+            {'game_id': 'G_LIVE', 'home_team': 'NYK', 'away_team': 'BKN', 'status': 'STATUS_IN_PROGRESS', 'thai_datetime': time_live, 'spread': -6.5, 'over_under': 212.0},
+        ])
+
+        mock_analyzer = MagicMock()
+        mock_analyzer.full_matchup_analysis.return_value = {
+            'over_under': {'recommendation': 'STRONG OVER', 'total_edge': 3.5, 'win_prob': 0.6},
+            'spread': {'recommendation': 'STRONG HOME', 'cover_edge': 2.5, 'win_prob': 0.58}
+        }
+
+        with patch('analysis.prediction_tracker.load_ledger', return_value=pd.DataFrame()):
+            with patch('analysis.prediction_tracker.save_ledger') as mock_save:
+                count = record_slate_predictions(today_str, mock_scoreboard, mock_analyzer, max_minutes_before=60.0)
+                # Only G_30M should be recorded
+                self.assertEqual(count, 1)
+                mock_save.assert_called_once()
+                saved_df = mock_save.call_args[0][0]
+                self.assertEqual(saved_df.iloc[0]['game_id'], 'G_30M')
+
+    def test_load_ledger_purges_future_pending_rows(self):
+        """load_ledger must auto-purge any premature future pending predictions."""
+        from unittest.mock import patch
+
+        now_thai_str = datetime.now(timezone(timedelta(hours=7))).strftime('%Y-%m-%d')
+        future_str = '2099-12-31'
+
+        mock_df = pd.DataFrame([
+            {'game_id': 'P1', 'date': '2026-10-21', 'status': 'GRADED'},
+            {'game_id': 'P2', 'date': future_str, 'status': 'PENDING'},  # Rogue future pending
+            {'game_id': 'P3', 'date': now_thai_str, 'status': 'PENDING'},  # Today's pending -> keep
+        ])
+
+        with patch('os.path.exists', return_value=True):
+            with patch('pandas.read_csv', return_value=mock_df):
+                with patch('analysis.prediction_tracker.save_ledger') as mock_save:
+                    loaded = load_ledger()
+                    self.assertNotIn('P2', loaded['game_id'].values, "Future pending row P2 must be purged")
+                    self.assertIn('P1', loaded['game_id'].values)
+                    self.assertIn('P3', loaded['game_id'].values)
+                    mock_save.assert_called_once()
 
 if __name__ == '__main__':
     unittest.main()

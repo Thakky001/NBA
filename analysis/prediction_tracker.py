@@ -64,6 +64,15 @@ def load_ledger() -> pd.DataFrame:
             for col in STRING_COLUMNS:
                 if col in df.columns:
                     df[col] = df[col].astype(object)
+
+            # Auto-prune any accidental future PENDING predictions from earlier bugs
+            now_thai_str = datetime.now(THAI_TZ).strftime('%Y-%m-%d')
+            future_pending = (df['date'].astype(str) > now_thai_str) & (df['status'] == 'PENDING')
+            if future_pending.any():
+                logger.info(f"Purging {future_pending.sum()} premature future pending prediction(s) from ledger.")
+                df = df[~future_pending].reset_index(drop=True)
+                save_ledger(df)
+
             return df
         except Exception as exc:
             logger.warning(f"Error reading {LEDGER_PATH}: {exc}; returning empty ledger.")
@@ -89,17 +98,40 @@ def record_slate_predictions(
     scoreboard_df: pd.DataFrame,
     analyzer: Any,
     espn: Optional[Any] = None,
-    odds_coll: Optional[Any] = None
+    odds_coll: Optional[Any] = None,
+    max_minutes_before: Optional[float] = 60.0,
+    force: bool = False
 ) -> int:
-    """Record pre-game predictions for all games in the slate.
+    """Record pre-game predictions for games in the slate within the pre-game window.
 
-    De-duplicates by game_id to lock in original predictions and lines
-    before tip-off.
+    Locks in official pre-game predictions and closing lines before tip-off.
+    Never records future dates or games already in progress/finished.
+
+    Args:
+        date_str: Date string ('YYYY-MM-DD').
+        scoreboard_df: ESPN scoreboard DataFrame.
+        analyzer: Matchup TrendAnalyzer.
+        espn: ESPN collector instance.
+        odds_coll: Odds collector instance.
+        max_minutes_before: Only record games within N minutes before tip-off (default: 60 min).
+            If None, records all scheduled games for today regardless of tip-off time.
+        force: If True, bypass timing filters (used in tests or offline grading).
 
     Returns:
         int: Number of new predictions recorded.
     """
     if scoreboard_df is None or scoreboard_df.empty:
+        return 0
+
+    now_thai = datetime.now(THAI_TZ)
+    today_thai_str = now_thai.strftime('%Y-%m-%d')
+
+    # Guard 1: Never record future dates (games on future dates are preview-only)
+    if not force and date_str > today_thai_str:
+        logger.info(
+            f"Bypassing prediction recording for future date {date_str} (today is {today_thai_str}). "
+            f"Pre-game predictions will lock on game day within the pre-game window."
+        )
         return 0
 
     ledger_df = load_ledger()
@@ -110,6 +142,40 @@ def record_slate_predictions(
         gid = str(game.get('game_id', '')).strip()
         if not gid or gid in existing_gids:
             continue
+
+        status_str = str(game.get('status', '')).upper()
+
+        # Guard 2: Skip games already in progress or completed
+        # Predictions MUST be locked in PRE-GAME, never retroactively during or after the match!
+        if not force and any(s in status_str for s in ['FINAL', 'PROGRESS', 'LIVE', 'HALFTIME']):
+            continue
+
+        # Guard 3: Check tip-off time window (only record if within max_minutes_before, e.g. 60m)
+        if not force and max_minutes_before is not None:
+            thai_dt = game.get('thai_datetime')
+            if thai_dt is not None and not pd.isna(thai_dt):
+                if isinstance(thai_dt, pd.Timestamp):
+                    game_time = thai_dt.to_pydatetime()
+                elif isinstance(thai_dt, str):
+                    try:
+                        game_time = pd.to_datetime(thai_dt).to_pydatetime()
+                    except Exception:
+                        game_time = None
+                else:
+                    game_time = thai_dt
+
+                if game_time is not None:
+                    if game_time.tzinfo is None:
+                        game_time = game_time.replace(tzinfo=THAI_TZ)
+
+                    minutes_until = (game_time - now_thai).total_seconds() / 60.0
+
+                    # Defer recording if game is too far in the future (e.g. > 60 mins away)
+                    if minutes_until > max_minutes_before:
+                        continue
+                    # Skip if game already tipped off
+                    if minutes_until < -5.0:
+                        continue
 
         raw_home = game.get('home_team', 'Unknown')
         raw_away = game.get('away_team', 'Unknown')
