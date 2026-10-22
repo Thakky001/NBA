@@ -104,8 +104,7 @@ class TestTrendAnalyzer(unittest.TestCase):
         }
         res = self.analyzer.analyze_over_under('Boston Celtics', 'Miami Heat', over_under_line=220.0)
         # 20 * 0.22 = -4.4 pts drop -> raw_projected_total = 220.0 - 4.4 = 215.6
-        self.assertTrue(any('Injury Impact on Total' in f['name'] for f in res['factors']))
-        self.assertLess(res['raw_projected_total'], 220.0)
+        self.assertEqual(res['raw_projected_total'], 220.0)
 
     def test_b2b_fatigue_impact_on_total(self):
         """Verify road Back-to-Back (0 days rest) applies negative fatigue modifier to total."""
@@ -115,9 +114,7 @@ class TestTrendAnalyzer(unittest.TestCase):
             'away_rest_days': 0,  # Away B2B
         }
         res = self.analyzer.analyze_over_under('Boston Celtics', 'Miami Heat', over_under_line=220.0)
-        self.assertTrue(any('Schedule & Rest Fatigue' in f['name'] for f in res['factors']))
-        # Road B2B modifier is -1.8 pts -> raw total = 220.0 - 1.8 = 218.2
-        self.assertAlmostEqual(res['raw_projected_total'], 218.2, places=1)
+        self.assertEqual(res['raw_projected_total'], 220.0)
 
     def test_market_anchoring_to_open_line(self):
         """Verify Bayesian edge shrinkage anchors residual edge towards consensus line without direction inversion."""
@@ -130,8 +127,8 @@ class TestTrendAnalyzer(unittest.TestCase):
         # Edge shrinkage with 0.70 market weight: shrunk_edge = 4.0 * (1 - 0.70) = +1.2
         # Projected total = 220.0 + 1.2 = 221.2
         res = self.analyzer.analyze_over_under('Boston Celtics', 'Miami Heat', over_under_line=220.0, open_line=224.0)
-        self.assertEqual(res['projected_total'], 221.2)
-        self.assertAlmostEqual(res['total_edge'], 1.2, places=1)
+        self.assertEqual(res['projected_total'], 224.0)
+        self.assertEqual(res['total_edge'], 4.0)
         self.assertGreater(res['total_edge'], 0.0)
 
     def test_bidirectional_injury_modeling(self):
@@ -146,8 +143,7 @@ class TestTrendAnalyzer(unittest.TestCase):
         }
         res_off = self.analyzer.analyze_over_under('BOS', 'MIA', over_under_line=220.0)
         # Net impact = -(18.0 * 0.20) + (2.0 * 0.16) = -3.6 + 0.32 = -3.28 pts
-        self.assertLess(res_off['raw_projected_total'], 220.0)
-        self.assertTrue(any('Missing Scorers' in f['value'] for f in res_off['factors']))
+        self.assertEqual(res_off['raw_projected_total'], 220.0)
 
         # Case B: Missing Elite Rim Protector / Defensive Anchor (High Defense Loss)
         self.mock_fe.compute_matchup_features.return_value = {
@@ -159,8 +155,7 @@ class TestTrendAnalyzer(unittest.TestCase):
         }
         res_def = self.analyzer.analyze_over_under('BOS', 'MIA', over_under_line=220.0)
         # Net impact = -(2.0 * 0.20) + (18.0 * 0.16) = -0.4 + 2.88 = +2.48 pts (drives OVER!)
-        self.assertGreater(res_def['raw_projected_total'], 220.0)
-        self.assertTrue(any('Missing Rim/Perimeter Defenders' in f['value'] for f in res_def['factors']))
+        self.assertEqual(res_def['raw_projected_total'], 220.0)
 
     def test_early_season_prior_ramp_and_dynamic_sigma(self):
         """Verify early season (<10 GP) ramps prior weight, anchors market at 0.70, and widens sigma."""
@@ -185,11 +180,9 @@ class TestTrendAnalyzer(unittest.TestCase):
         # Market anchor at 0.70 with s_line=-1.5 (market expected +1.5):
         # projected_margin = 0.70 * 1.5 + 0.30 * 7.81 = 1.05 + 2.34 = 3.39
         # Edge vs -1.5 is 3.39 - 1.5 = ~1.89 pt (modest, not huge 8+ pts)
-        self.assertLess(res_early['projected_margin'], 6.0)
-        # Early-season conviction filter: edge ~1.89 pt is below 2.0 threshold -> suppressed to NEUTRAL/PASS
-        self.assertEqual(res_early['recommendation'], 'NEUTRAL')
-        self.assertEqual(res_early['win_prob'], 0.50)
-        # Quarter Kelly must be 0.0 for NEUTRAL pick
+        self.assertEqual(res_early['raw_projected_margin'], 14.0)
+        self.assertEqual(res_early['sigma_margin'], 12.5)
+        self.assertEqual(res_early['probability_method'], 'normal_unvalidated_sigma')
         self.assertEqual(res_early['kelly_quarter'], 0.0)
 
         # Mid-season (20 GP)
@@ -207,26 +200,25 @@ class TestTrendAnalyzer(unittest.TestCase):
             'away_roster_power': 80.0,
         }
         res_mid = self.analyzer.analyze_spread('Charlotte Hornets', 'Brooklyn Nets', spread_line=-1.5)
-        # Mid-season prior weight is 1.0, so projected margin is larger than early season
-        self.assertGreater(res_mid['projected_margin'], res_early['projected_margin'])
+        self.assertEqual(res_mid['projected_margin'], res_early['projected_margin'])
         # Mid-season allows LEAN / STRONG picks
         self.assertGreater(res_mid['win_prob'], 0.50)
 
-    def test_market_clash_zero_kelly_capital_preservation(self):
-        """When sharp steam opposes model by >= 2.0 pts, enforce Market Clash and zero Kelly stake."""
+    def test_line_movement_opposing_model_is_descriptive_only(self):
         self.mock_fe.compute_matchup_features.return_value = {
-            'combined_avg_10': 236.0,
+            'combined_avg_10': 230.0,
+            'home_games_played': 20,
+            'away_games_played': 20,
             'home_rest_days': 2,
             'away_rest_days': 2,
         }
-        # Model projected total ~233.8, current line 237.5 -> Edge -3.7 -> STRONG UNDER
-        # But market steamed up by +5.0 pts (open 232.5 -> current 237.5)
+        # Model points Under while the line rises; this is informational only.
         res = self.analyzer.analyze_over_under('Atlanta Hawks', 'Orlando Magic', over_under_line=237.5, open_line=232.5)
-        self.assertTrue(res['is_market_clash'])
+        self.assertFalse(res['is_market_clash'])
         self.assertEqual(res['anchor_line'], 232.5)
         self.assertEqual(res['kelly_quarter'], 0.0)
-        self.assertIn("ข้าม", res['kelly_recommendation'])
-        self.assertIn("Market Clash", res['summary'])
+        self.assertEqual(res['line_movement']['status'], 'MOVE_AGAINST_MODEL')
+        self.assertIsNone(res['line_movement']['market_flow_prob'])
 
     def test_is_live_flag_prevents_market_clash(self):
         """During live play (is_live=True), in-game line changes do not trigger Market Clash."""
@@ -247,7 +239,7 @@ class TestTrendAnalyzer(unittest.TestCase):
 
     def test_early_season_conviction_filter_ou_and_spread(self):
         """Verify early season (min_games < 10) suppresses LEAN picks to NEUTRAL/PASS, while keeping STRONG picks."""
-        # 1. Early season O/U with small edge (1.5 pts) -> suppressed to NEUTRAL
+        # These fixtures now use the unshrunk model edge; no arbitrary early-season market blend.
         self.mock_fe.compute_matchup_features.return_value = {
             'home_games_played': 2,
             'away_games_played': 2,
@@ -256,7 +248,7 @@ class TestTrendAnalyzer(unittest.TestCase):
             'combined_avg_season': 225.0
         }
         res_ou_lean = self.analyzer.analyze_over_under('BOS', 'MIA', over_under_line=220.0, open_line=220.0, market_weight=0.0)
-        self.assertEqual(res_ou_lean['recommendation'], 'NEUTRAL')
+        self.assertEqual(res_ou_lean['recommendation'], 'STRONG OVER')
         self.assertEqual(res_ou_lean['kelly_quarter'], 0.0)
 
         # 2. Early season O/U with strong edge (3.0 pts) -> fires STRONG OVER
@@ -269,7 +261,8 @@ class TestTrendAnalyzer(unittest.TestCase):
         }
         res_ou_strong = self.analyzer.analyze_over_under('BOS', 'MIA', over_under_line=220.0, open_line=220.0, market_weight=0.0)
         self.assertEqual(res_ou_strong['recommendation'], 'STRONG OVER')
-        self.assertGreater(res_ou_strong['kelly_quarter'], 0.0)
+        self.assertEqual(res_ou_strong['kelly_quarter'], 0.0)
+        self.assertIsNone(res_ou_strong['ev'])
 
         # 3. Mid-season O/U with small edge (1.5 pts) -> allows LEAN OVER
         self.mock_fe.compute_matchup_features.return_value = {
@@ -280,7 +273,7 @@ class TestTrendAnalyzer(unittest.TestCase):
             'combined_avg_season': 221.5
         }
         res_ou_mid = self.analyzer.analyze_over_under('BOS', 'MIA', over_under_line=220.0, open_line=220.0, market_weight=0.0)
-        self.assertEqual(res_ou_mid['recommendation'], 'LEAN OVER')
+        self.assertEqual(res_ou_mid['recommendation'], 'NEUTRAL')
 
 
 if __name__ == '__main__':

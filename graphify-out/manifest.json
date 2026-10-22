@@ -594,9 +594,9 @@
     "semantic_hash": ""
   },
   "analysis/trend_analyzer.py": {
-    "mtime": 1792677402.0662675,
-    "seen": 1792677563.871509,
-    "ast_hash": "01fed56a12193c114b8b0d067f6adcd6",
+    "mtime": 1792679241.520011,
+    "seen": 1792679578.3233178,
+    "ast_hash": "76cb72a8dcf543e5cada31552e6465a3",
     "semantic_hash": ""
   },
   "app.py": {
@@ -660,15 +660,15 @@
     "semantic_hash": ""
   },
   "processing/feature_engineering.py": {
-    "mtime": 1792677887.6977253,
-    "seen": 1792678028.7003448,
-    "ast_hash": "464328237576c3d940b272bd0e50d7ce",
+    "mtime": 1792679069.9949808,
+    "seen": 1792679578.3233569,
+    "ast_hash": "da8cf426a0f5c3c8132d2e622f91a63d",
     "semantic_hash": ""
   },
   "processing/player_rating.py": {
-    "mtime": 1792677287.3103013,
-    "seen": 1792677563.8715305,
-    "ast_hash": "d35a2e08d2c10400d8d902cdd0d49c5e",
+    "mtime": 1792678234.181637,
+    "seen": 1792679578.323359,
+    "ast_hash": "7f3689253478c744008c56a4d3e17f32",
     "semantic_hash": ""
   },
   "reports/__init__.py": {
@@ -714,9 +714,9 @@
     "semantic_hash": ""
   },
   "tests/test_feature_engineering.py": {
-    "mtime": 1792472865.2457716,
-    "seen": 1792472979.8189378,
-    "ast_hash": "ffc741dc31b83107d55f03c1ce5935e4",
+    "mtime": 1792678879.0954056,
+    "seen": 1792679578.32339,
+    "ast_hash": "66de9d50057fc32910d1ec3d7841abea",
     "semantic_hash": ""
   },
   "tests/test_player_rating.py": {
@@ -738,9 +738,9 @@
     "semantic_hash": ""
   },
   "tests/test_trend_analyzer.py": {
-    "mtime": 1792677482.027551,
-    "seen": 1792677563.8715527,
-    "ast_hash": "4c72b71c07ccb0af280fead0709c9f58",
+    "mtime": 1792679242.4502583,
+    "seen": 1792679578.323407,
+    "ast_hash": "fc3f0e2a3575a7b5c672f746e5d2fa94",
     "semantic_hash": ""
   },
   ".agents/skills/deploy-to-vercel/SKILL.md": {
@@ -2028,15 +2028,15 @@
     "semantic_hash": ""
   },
   "analysis/betting_math.py": {
-    "mtime": 1792677862.6861403,
-    "seen": 1792678028.7002993,
-    "ast_hash": "31333c3868fdcacf1531b0a6009a15ac",
+    "mtime": 1792679314.3131034,
+    "seen": 1792679578.3233109,
+    "ast_hash": "c791128a2e7b88911666a7237bf7e89a",
     "semantic_hash": ""
   },
   "tests/test_betting_math.py": {
-    "mtime": 1792677929.3042457,
-    "seen": 1792678028.700364,
-    "ast_hash": "e895b116750db0f9f6fb5ff390088b25",
+    "mtime": 1792679242.0119095,
+    "seen": 1792679578.3233829,
+    "ast_hash": "04bd3aa6456a76b56ce9df68a0030887",
     "semantic_hash": ""
   },
   ".agents/skills/betting/SKILL.md": {
@@ -2070,9 +2070,9 @@
     "semantic_hash": ""
   },
   "tests/test_line_movement.py": {
-    "mtime": 1792651925.2453256,
-    "seen": 1792652425.3089588,
-    "ast_hash": "46e62122c2c08dc0ce32ee46ba7ee31a",
+    "mtime": 1792678988.7454069,
+    "seen": 1792679578.3233926,
+    "ast_hash": "99ab814d57a9d99d10c8902e91d717db",
     "semantic_hash": ""
   },
   "notifications/__init__.py": {
@@ -2124,9 +2124,9 @@
     "semantic_hash": ""
   },
   "analysis/prediction_tracker.py": {
-    "mtime": 1792655029.9468057,
-    "seen": 1792655202.45319,
-    "ast_hash": "0e2d5a7ea9ed46612fb07e1a15e09631",
+    "mtime": 1792679001.7341225,
+    "seen": 1792679578.3233147,
+    "ast_hash": "184c460fa0980af78eca78281c295c63",
     "semantic_hash": ""
   },
   "tests/test_prediction_tracker.py": {
@@ -2136,9 +2136,21 @@
     "semantic_hash": ""
   },
   "docs/QUANT_BETTING_GUIDE.md": {
-    "mtime": 1792678010.613119,
-    "seen": 1792678028.7008557,
-    "ast_hash": "c818344ef71f49c604fa17edb52eb31c",
+    "mtime": 1792679344.6478648,
+    "seen": 1792679578.3239913,
+    "ast_hash": "7d2c90f0bb574bcf96a65f6f6ea6dfd5",
+    "semantic_hash": ""
+  },
+  "analysis/backtesting.py": {
+    "mtime": 1792678624.4095337,
+    "seen": 1792679578.3233058,
+    "ast_hash": "77180d7211b43297e5713ca5a207d62e",
+    "semantic_hash": ""
+  },
+  "tests/test_backtesting.py": {
+    "mtime": 1792678843.0858283,
+    "seen": 1792679578.3233795,
+    "ast_hash": "445510355930478ff762ff70202125d9",
     "semantic_hash": ""
   }
 }

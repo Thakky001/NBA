@@ -119,7 +119,7 @@ def devig_power(raw_probs: List[float], tol: float = 1e-12, max_iter: int = 1000
 def devig_shin(raw_probs: List[float], tol: float = 1e-12, max_iter: int = 1000) -> Tuple[List[float], float, float, float]:
     """Shin's (1992, 1993) market-microstructure de-vigging method.
     
-    Solves for latent parameter z representing the proportion of informed/sharp traders:
+    Solves for latent parameter z under the Shin informed-trader market model:
         p_i = (sqrt(z^2 + 4*(1 - z)*(q_i^2 / overround)) - z) / (2*(1 - z))
     where sum(p_i) = 1.0.
     """
@@ -165,7 +165,7 @@ def devig(odds: Union[str, List[float]],
     Supports three methods:
     1. 'multiplicative': Proportional scaling: fair_prob[i] = raw_prob[i] / overround
     2. 'power': Geometric/power exponentiation p_i = q_i^k (corrects favorite-longshot bias)
-    3. 'shin': Market-microstructure model extracting insider/sharp fraction z
+    3. 'shin': Market-microstructure model estimating a latent parameter z
 
     Args:
         odds: Comma-separated odds string (e.g., "-110,-110" or "-150,+130")
@@ -262,21 +262,34 @@ def calculate_ev(model_prob: float, market_odds: float, odds_format: str = "amer
     return round(ev, 6)
 
 
+def calculate_ev_with_push(model_prob: float, market_odds: float, push_prob: float = 0.0,
+                           odds_format: str = "american") -> float:
+    """Return unit-stake expected profit when a push returns the stake.
+
+    ``model_prob`` is the unconditional win probability; loss probability is
+    ``1 - model_prob - push_prob``.
+    """
+    if not 0.0 <= model_prob <= 1.0 or not 0.0 <= push_prob <= 1.0 or model_prob + push_prob > 1.0:
+        raise ValueError("win and push probabilities must be in [0, 1] and sum to at most 1")
+    fmt = odds_format.lower()
+    if fmt == "american":
+        if market_odds == 0 or -100 < market_odds < 100:
+            raise ValueError("American odds must be <= -100 or >= +100")
+        profit = 100.0 / abs(market_odds) if market_odds < 0 else market_odds / 100.0
+    elif fmt == "decimal":
+        if market_odds <= 1.0:
+            raise ValueError("Decimal odds must be greater than 1")
+        profit = market_odds - 1.0
+    else:
+        raise ValueError("odds_format must be 'american' or 'decimal'")
+    loss_prob = 1.0 - model_prob - push_prob
+    return round(model_prob * profit - loss_prob, 6)
+
+
 def empirical_posterior_sigma(min_games: int, base_sigma: float = 12.5, prior_sigma: float = 14.0) -> float:
-    """Compute empirical Bayesian posterior standard deviation for game total forecast error.
+    """Legacy heuristic retained for compatibility; not an empirical posterior.
 
-    In modern NBA totals modeling, the empirical residual error of consensus lines
-    has standard deviation ~ 12.0 - 13.0 pts. In early season (min_games < 10),
-    parameter uncertainty adds variance:
-        sigma_ou = sqrt(base_sigma^2 + prior_sigma^2 / max(1, min_games))
-
-    Args:
-        min_games: Minimum games played by either matchup team (0 to 82).
-        base_sigma: Long-term empirical standard error of NBA game totals (default 12.5).
-        prior_sigma: Initial uncertainty prior scale in early season (default 14.0).
-
-    Returns:
-        float: Posterior standard deviation in points.
+    New forecasts estimate sigma from prior saved forecast residuals instead.
     """
     n = max(1, int(min_games))
     var = (base_sigma ** 2) + ((prior_sigma ** 2) / n)
@@ -287,7 +300,8 @@ def calculate_kelly(model_prob: float,
                     market_odds: Optional[float] = None,
                     market_prob: Optional[float] = None,
                     fraction: float = 0.25,
-                    max_cap: Optional[float] = 0.020) -> Dict[str, float]:
+                    max_cap: Optional[float] = 0.020,
+                    push_prob: float = 0.0) -> Dict[str, float]:
     """Compute optimal Kelly Criterion stake fraction (Pure raw or with optional safety cap).
 
     Full Kelly formula:
@@ -332,8 +346,10 @@ def calculate_kelly(model_prob: float,
         b = 100.0 / 110.0
 
     b = max(0.0001, b)
-    q = 1.0 - model_prob
-    full_f = (model_prob * b - q) / b
+    if not 0.0 <= push_prob < 1.0 or model_prob + push_prob > 1.0:
+        raise ValueError("win and push probabilities must sum to at most 1")
+    q = 1.0 - model_prob - push_prob
+    full_f = (model_prob * b - q) / (b * (model_prob + q)) if model_prob + q > 0 else 0.0
 
     # If negative edge, stake is 0
     full_f = max(0.0, min(1.0, full_f))
@@ -350,10 +366,11 @@ def calculate_kelly(model_prob: float,
 
 
 def evaluate_market_pick(model_prob: float,
-                         book_odds: Union[str, List[float]] = "-110,-110",
+                         book_odds: Optional[Union[str, List[float]]] = "-110,-110",
                          pick_idx: int = 0,
                          kelly_fraction: float = 0.25,
-                         max_stake_cap: Optional[float] = 0.020) -> Dict[str, Any]:
+                         max_stake_cap: Optional[float] = 0.020,
+                         push_prob: float = 0.0) -> Dict[str, Any]:
     """All-in-one evaluation: de-vig market, compute edge, EV, and Kelly stake.
 
     Args:
@@ -366,6 +383,14 @@ def evaluate_market_pick(model_prob: float,
     Returns:
         Dict with fair_prob, market_prob, edge, ev, kelly_fraction, and summary text.
     """
+    if book_odds is None:
+        return {
+            "model_prob": round(model_prob, 4), "fair_prob": None, "market_prob": None,
+            "chosen_odds": None, "edge": None, "edge_pct": None, "ev": None,
+            "ev_pct": None, "full_kelly": 0.0, "quarter_kelly": 0.0,
+            "capped_kelly": 0.0, "recommended_stake_pct": 0.0,
+            "has_value": False, "rating": "NO_ODDS", "vig_pct": None
+        }
     devig_res = devig(book_odds)
     fair_probs = devig_res["fair_probs"]
     raw_probs = devig_res["raw_probs"]
@@ -376,15 +401,19 @@ def evaluate_market_pick(model_prob: float,
     market_p = raw_probs[idx]
     chosen_odds = odds_list[idx]
 
-    edge = calculate_edge(model_prob, fair_p)
-    ev = calculate_ev(model_prob, chosen_odds)
-    kelly_res = calculate_kelly(model_prob, market_odds=chosen_odds, fraction=kelly_fraction, max_cap=max_stake_cap)
+    conditional_win = model_prob / (1.0 - push_prob) if push_prob < 1.0 else 0.0
+    edge = calculate_edge(conditional_win, fair_p)
+    ev = calculate_ev_with_push(model_prob, chosen_odds, push_prob=push_prob)
+    kelly_res = calculate_kelly(model_prob, market_odds=chosen_odds, fraction=kelly_fraction,
+                                max_cap=max_stake_cap, push_prob=push_prob)
 
     has_value = ev > 0.0 and edge > 0.0
     rating = "+EV Opportunity" if has_value else ("Neutral / Fair" if abs(edge) < 0.01 else "-EV (Negative Edge)")
 
     return {
         "model_prob": round(model_prob, 4),
+        "push_prob": round(push_prob, 4),
+        "conditional_model_prob": round(conditional_win, 4),
         "fair_prob": round(fair_p, 4),
         "market_prob": round(market_p, 4),
         "chosen_odds": chosen_odds,
@@ -404,8 +433,8 @@ def evaluate_market_pick(model_prob: float,
 
 def market_anchored_projection(raw_model_val: float,
                                market_line: Optional[float],
-                               market_weight: float = 0.65) -> float:
-    """Blend raw statistical projection with the consensus market line (Bayesian Shrinkage).
+                               market_weight: float = 0.0) -> float:
+    """Blend a raw projection with a market line using a caller-supplied weight.
 
     In sports quantitative handicapping, consensus lines represent vast aggregated information.
     Anchoring to market prevents extreme overconfidence from small samples or model divergence.
@@ -413,7 +442,7 @@ def market_anchored_projection(raw_model_val: float,
     Args:
         raw_model_val: Model's unconstrained projection based on team stats/ratings.
         market_line: Consensus sportsbook line (e.g., FanDuel / Vegas line).
-        market_weight: Weight assigned to market consensus line (default 0.65 = 65%).
+        market_weight: Market weight, defaulting to a raw-model baseline (0.0).
 
     Returns:
         Anchored projection value rounded to 2 decimal places.
@@ -440,12 +469,12 @@ def analyze_line_movement(open_line: Optional[float],
                           home_team: Optional[str] = None,
                           away_team: Optional[str] = None,
                           is_live: bool = False) -> Dict[str, Any]:
-    """Detect sharp line movement vs market steam against the model pick.
+    """Describe price movement relative to a model pick; no handle data is inferred.
 
     Analyzes shift between opening line and current/closing line (24h before game).
     Classifies movement into:
-      - SHARP_CONFIRMATION: Market money is moving in the same direction as model pick.
-      - STEAM_WARNING: Heavy market action is driving the line against model pick.
+      - MOVE_WITH_MODEL: The line moved in the model's direction.
+      - MOVE_AGAINST_MODEL: The line moved against the model's direction.
       - STABLE: Line has barely shifted (< 0.5 pt difference).
       - NO_DATA: Opening line not available.
 
@@ -510,25 +539,25 @@ def analyze_line_movement(open_line: Optional[float],
     if m_type == 'total':
         if diff > 0:
             flow_dir = 'สูง (OVER)'
-            flow_prob = min(0.75, round(0.50 + abs_diff * 0.025, 4))
+            flow_prob = None
         elif diff < 0:
             flow_dir = 'ต่ำ (UNDER)'
-            flow_prob = min(0.75, round(0.50 + abs_diff * 0.025, 4))
+            flow_prob = None
         else:
             flow_dir = 'สมดุล (NEUTRAL)'
-            flow_prob = 0.50
+            flow_prob = None
     else: # spread
         if diff < 0:
             flow_dir = f'{home_team} (เจ้าบ้าน)' if home_team else 'เจ้าบ้าน (HOME)'
-            flow_prob = min(0.75, round(0.50 + abs_diff * 0.033, 4))
+            flow_prob = None
         elif diff > 0:
             flow_dir = f'{away_team} (ทีมเยือน)' if away_team else 'ทีมเยือน (AWAY)'
-            flow_prob = min(0.75, round(0.50 + abs_diff * 0.033, 4))
+            flow_prob = None
         else:
             flow_dir = 'สมดุล (NEUTRAL)'
-            flow_prob = 0.50
+            flow_prob = None
 
-    # Live in-game isolation: in-game line adjustments are algorithmic bookmaker moves, not pregame sharp steam
+    # Live in-game movement is not directly comparable to pre-game movement.
     if is_live:
         return {
             'has_movement': True,
@@ -540,7 +569,7 @@ def analyze_line_movement(open_line: Optional[float],
             'market_flow_direction': flow_dir,
             'verdict': 'LIVE_TRACKING',
             'verdict_title': 'ติดตามแต้มสด (Live Tracking)',
-            'verdict_detail': 'เรตสดขยับตามแต้มจริงในสนาม ไม่นำมาตีความเป็นเงินเซียนทุ่มก่อนแข่ง'
+            'verdict_detail': 'ราคาในเกมเปลี่ยนตามสถานการณ์สด และใช้สรุปแรงเดิมพันไม่ได้'
         }
 
     # Stable line check (< 0.5 pt shift)
@@ -550,12 +579,12 @@ def analyze_line_movement(open_line: Optional[float],
             'diff': diff,
             'status': 'STABLE',
             'badge': '➖ Stable Line',
-            'detail': f'ราคานิ่งที่ {c_val:.1f} (ไม่มีการเคลื่อนไหวของเงินก้อนใหญ่)',
-            'market_flow_prob': 0.50,
+            'detail': f'ราคาแทบไม่เปลี่ยนจาก {o_val:.1f} เป็น {c_val:.1f}',
+            'market_flow_prob': None,
             'market_flow_direction': flow_dir,
             'verdict': 'STABLE_MODEL',
             'verdict_title': f'ตามสถิติ ({model_dir})',
-            'verdict_detail': 'ราคาตลาดนิ่ง ไม่มีการเคลื่อนไหวของเงินก้อนใหญ่สวนทาง'
+            'verdict_detail': 'ราคาแทบไม่เปลี่ยนแปลง'
         }
 
     status = 'LINE_MOVE'
@@ -565,25 +594,25 @@ def analyze_line_movement(open_line: Optional[float],
     if m_type == 'total':
         if diff > 0:
             if 'OVER' in rec_upper:
-                status = 'SHARP_CONFIRMATION'
-                badge = '🔥 Sharp Move Confirmed'
-                detail = f'ตลาดไหลขึ้น +{diff:.1f} แต้ม (เปิด {o_val:.1f} ➔ ปัจจุบัน {c_val:.1f}) สอดคล้องกับโมเดลสูง (เงินเซียนเทสูง)'
+                status = 'MOVE_WITH_MODEL'
+                badge = '📊 Move With Model'
+                detail = f'เส้นสูงขึ้น {diff:+.1f} แต้ม สอดคล้องกับทิศทางโมเดล Over'
             elif 'UNDER' in rec_upper:
-                status = 'STEAM_WARNING'
-                badge = '⚠️ Market Steam Warning'
-                detail = f'ตลาดไหลขึ้น +{diff:.1f} แต้ม (เปิด {o_val:.1f} ➔ ปัจจุบัน {c_val:.1f}) สวนทางกับโมเดลต่ำ (มีแรงซื้อแต้มสูงดันขึ้น)'
+                status = 'MOVE_AGAINST_MODEL'
+                badge = '⚠️ Move Against Model'
+                detail = f'เส้นสูงขึ้น {diff:+.1f} แต้ม สวนทางกับทิศทางโมเดล Under'
             else:
                 badge = '📈 Total Rose'
                 detail = f'ราคาเปิดขยับขึ้น +{diff:.1f} แต้ม (เปิด {o_val:.1f} ➔ ปัจจุบัน {c_val:.1f})'
         else:
             if 'UNDER' in rec_upper:
-                status = 'SHARP_CONFIRMATION'
-                badge = '🔥 Sharp Move Confirmed'
-                detail = f'ตลาดไหลลง {diff:.1f} แต้ม (เปิด {o_val:.1f} ➔ ปัจจุบัน {c_val:.1f}) สอดคล้องกับโมเดลต่ำ (เงินเซียนเทต่ำ)'
+                status = 'MOVE_WITH_MODEL'
+                badge = '📊 Move With Model'
+                detail = f'เส้นลดลง {diff:.1f} แต้ม สอดคล้องกับทิศทางโมเดล Under'
             elif 'OVER' in rec_upper:
-                status = 'STEAM_WARNING'
-                badge = '⚠️ Market Steam Warning'
-                detail = f'ตลาดไหลลง {diff:.1f} แต้ม (เปิด {o_val:.1f} ➔ ปัจจุบัน {c_val:.1f}) สวนทางกับโมเดลสูง (มีแรงซื้อแต้มต่ำกดลง)'
+                status = 'MOVE_AGAINST_MODEL'
+                badge = '⚠️ Move Against Model'
+                detail = f'เส้นลดลง {diff:.1f} แต้ม สวนทางกับทิศทางโมเดล Over'
             else:
                 badge = '📉 Total Dropped'
                 detail = f'ราคาเปิดขยับลง {diff:.1f} แต้ม (เปิด {o_val:.1f} ➔ ปัจจุบัน {c_val:.1f})'
@@ -593,43 +622,38 @@ def analyze_line_movement(open_line: Optional[float],
         moved_toward_home = diff < 0
         if moved_toward_home:
             if 'HOME' in rec_upper:
-                status = 'SHARP_CONFIRMATION'
-                badge = '🔥 Sharp Move Confirmed'
+                status = 'MOVE_WITH_MODEL'
+                badge = '📊 Move With Model'
                 detail = f'แต้มต่อไหลเข้าข้าง {h_name} {abs_diff:.1f} แต้ม (เปิด {o_val:+.1f} ➔ ปัจจุบัน {c_val:+.1f}) สอดคล้องกับโมเดล'
             elif 'AWAY' in rec_upper:
-                status = 'STEAM_WARNING'
-                badge = '⚠️ Market Steam Warning'
+                status = 'MOVE_AGAINST_MODEL'
+                badge = '⚠️ Move Against Model'
                 detail = f'แต้มต่อไหลเข้าข้าง {h_name} {abs_diff:.1f} แต้ม (เปิด {o_val:+.1f} ➔ ปัจจุบัน {c_val:+.1f}) สวนทางกับโมเดล {a_name}'
             else:
                 badge = '🏠 Home Money Move'
                 detail = f'แต้มต่อขยับเข้า {h_name} {abs_diff:.1f} แต้ม (เปิด {o_val:+.1f} ➔ ปัจจุบัน {c_val:+.1f})'
         else:
             if 'AWAY' in rec_upper:
-                status = 'SHARP_CONFIRMATION'
-                badge = '🔥 Sharp Move Confirmed'
+                status = 'MOVE_WITH_MODEL'
+                badge = '📊 Move With Model'
                 detail = f'แต้มต่อไหลเข้าข้าง {a_name} {abs_diff:.1f} แต้ม (เปิด {o_val:+.1f} ➔ ปัจจุบัน {c_val:+.1f}) สอดคล้องกับโมเดล'
             elif 'HOME' in rec_upper:
-                status = 'STEAM_WARNING'
-                badge = '⚠️ Market Steam Warning'
+                status = 'MOVE_AGAINST_MODEL'
+                badge = '⚠️ Move Against Model'
                 detail = f'แต้มต่อไหลเข้าข้าง {a_name} {abs_diff:.1f} แต้ม (เปิด {o_val:+.1f} ➔ ปัจจุบัน {c_val:+.1f}) สวนทางกับโมเดล {h_name}'
             else:
                 badge = '✈️ Away Money Move'
                 detail = f'แต้มต่อขยับเข้า {a_name} {abs_diff:.1f} แต้ม (เปิด {o_val:+.1f} ➔ ปัจจุบัน {c_val:+.1f})'
 
-    # Determine Verdict based on strict capital preservation criteria
-    if status == 'STEAM_WARNING':
-        if abs_diff >= 2.0:
-            verdict = 'CAPITAL_PRESERVATION'
-            verdict_title = 'ข้าม (PASS) / งดวางเงิน'
-            verdict_detail = f'สัญญาณขัดแย้งรุนแรง: โมเดลชอบ{model_dir} แต่เงินตลาดไหลสวน {abs_diff:.1f} แต้ม แนะนำงดวางเดิมพันเพื่อรักษาเงินทุน'
-        else:
-            verdict = 'FOLLOW_MODEL'
-            verdict_title = f'ตามสถิติ ({model_dir})'
-            verdict_detail = f'ราคาไหลเพียง {abs_diff:.1f} แต้ม เป็นแรงซื้อทั่วไป สถิติโมเดลยังคงได้เปรียบกว่า'
-    elif status == 'SHARP_CONFIRMATION':
-        verdict = 'CONFIRMED_ALIGNED'
-        verdict_title = f'ตามสถิติและเงินตลาด ({model_dir})'
-        verdict_detail = f'ทั้งโมเดลสถิติและกระแสเงินเซียนชี้ไปทางเดียวกัน (ไหล {diff:+.1f} แต้ม — มั่นใจสูงสุด)'
+    # Movement is descriptive; it cannot identify bettors or set a probability.
+    if status == 'MOVE_AGAINST_MODEL':
+        verdict = 'MOVE_CONFLICT'
+        verdict_title = 'ราคาเคลื่อนไหวสวนทางโมเดล'
+        verdict_detail = f'เส้นขยับ {abs_diff:.1f} แต้มสวนทางกับโมเดล; ข้อมูลนี้อย่างเดียวระบุผู้เดิมพันหรือเหตุผลไม่ได้'
+    elif status == 'MOVE_WITH_MODEL':
+        verdict = 'MOVE_ALIGNED'
+        verdict_title = f'ราคาเคลื่อนไหวสอดคล้องกับโมเดล ({model_dir})'
+        verdict_detail = f'ทิศทางราคาและโมเดลสอดคล้องกัน (ไหล {diff:+.1f} แต้ม); line movement ไม่ระบุผู้วางเดิมพันหรือ handle'
     else:
         # Neutral or mild moves with no model edge: strict capital preservation (PASS)
         verdict = 'PASS'
@@ -894,7 +918,7 @@ def calculate_mov_elo_multiplier(margin: float, delta_elo_winner: float) -> floa
     """Calculate FiveThirtyEight's Margin of Victory (MOV) Elo multiplier.
 
     Formula:
-        MOV_mult = ln(|margin| + 1) * (2.2 / (2.2 + 0.001 * delta_elo_winner))
+        MOV_mult = (|margin| + 3)^0.8 / (7.5 + 0.006 * delta_elo_winner)
 
     Args:
         margin: Absolute score differential (|winner_score - loser_score|).
@@ -904,9 +928,25 @@ def calculate_mov_elo_multiplier(margin: float, delta_elo_winner: float) -> floa
         float: Multiplier scaling the K-factor Elo rating change.
     """
     m = abs(float(margin))
-    denom = 2.2 + 0.001 * float(delta_elo_winner)
-    denom = max(0.1, denom)  # Prevent zero/negative denominator on extreme rating gap
-    return round(math.log(m + 1.0) * (2.2 / denom), 6)
+    denom = 7.5 + 0.006 * float(delta_elo_winner)
+    if denom <= 0:
+        raise ValueError("winner Elo difference produces a non-positive MOV denominator")
+    return round(((m + 3.0) ** 0.8) / denom, 6)
+
+
+def elo_expected_probability(rating_a: float, rating_b: float, home_advantage: float = 0.0) -> float:
+    """Elo logistic expectation for A; ratings and home advantage use Elo points."""
+    return 1.0 / (1.0 + 10.0 ** (-((rating_a - rating_b + home_advantage) / 400.0)))
+
+
+def update_elo(rating_a: float, rating_b: float, score_a: float, k_factor: float = 20.0,
+               home_advantage: float = 0.0, mov_multiplier: float = 1.0) -> Tuple[float, float]:
+    """Zero-sum Elo update; score_a is 1 (win), 0.5 (draw), or 0 (loss)."""
+    if score_a not in (0.0, 0.5, 1.0) or k_factor < 0 or mov_multiplier < 0:
+        raise ValueError("invalid Elo score, K-factor, or MOV multiplier")
+    expected = elo_expected_probability(rating_a, rating_b, home_advantage)
+    delta = k_factor * mov_multiplier * (score_a - expected)
+    return rating_a + delta, rating_b - delta
 
 
 def calculate_win_probability(projected_margin: float, sigma: float = 12.0) -> float:
@@ -914,9 +954,11 @@ def calculate_win_probability(projected_margin: float, sigma: float = 12.0) -> f
 
     P(Win) = P(Margin > 0) = Phi(projected_margin / sigma)
 
+    The default sigma is a convenience fallback and is not calibrated by this project.
+
     Args:
         projected_margin: Expected margin of victory for team (positive = favored, negative = underdog).
-        sigma: Standard deviation of point differential (NBA standard ~11.5 - 13.0).
+        sigma: Standard deviation of point differential, estimated from training residuals.
 
     Returns:
         float: Outright win probability (0.0 to 1.0).
@@ -946,10 +988,53 @@ def calculate_cover_probability(spread_line: float,
     - Outright win probability = Phi(6.5 / 12) = 70.6%.
     """
     if sigma <= 0.0:
-        return 1.0 if (projected_margin + spread_line) > 0 else 0.0
+        edge = projected_margin + spread_line
+        return 1.0 if edge > 0 else (0.5 if edge == 0 else 0.0)
     edge = projected_margin + spread_line
     z = edge / (sigma * math.sqrt(2.0))
     return round(0.5 * (1.0 + math.erf(z)), 6)
+
+
+def calculate_spread_probabilities(spread_line: float, projected_margin: float,
+                                   sigma: float) -> Dict[str, float]:
+    """Discrete Normal-continuity approximation with explicit integer-line push."""
+    if sigma <= 0:
+        raise ValueError("sigma must be positive")
+    edge = float(projected_margin) + float(spread_line)
+    if not float(spread_line).is_integer():
+        win = calculate_cover_probability(spread_line, projected_margin, sigma)
+        return {"win": win, "push": 0.0, "loss": round(1.0 - win, 6)}
+    # A tie at the adjusted margin is represented by the probability mass in
+    # the half-point interval around the integer threshold.
+    threshold = -float(spread_line)
+    cdf = lambda x: 0.5 * (1.0 + math.erf((x - projected_margin) / (sigma * math.sqrt(2.0))))
+    push = max(0.0, cdf(threshold + 0.5) - cdf(threshold - 0.5))
+    loss = max(0.0, cdf(threshold - 0.5))
+    win = max(0.0, 1.0 - cdf(threshold + 0.5))
+    total = win + push + loss
+    return {"win": round(win / total, 6), "push": round(push / total, 6), "loss": round(loss / total, 6)}
+
+
+def estimate_residual_sigma(residuals: List[float]) -> float:
+    """Estimate prediction-error SD from training-fold residuals only."""
+    if len(residuals) < 2:
+        raise ValueError("at least two training residuals are required")
+    mean = sum(float(x) for x in residuals) / len(residuals)
+    return math.sqrt(sum((float(x) - mean) ** 2 for x in residuals) / (len(residuals) - 1))
+
+
+def empirical_line_probabilities(line: float, projection: float,
+                                 training_residuals: List[float]) -> Dict[str, float]:
+    """Estimate win/push/loss from held-back training residuals (actual - forecast)."""
+    if not training_residuals:
+        raise ValueError("training residuals are required")
+    outcomes = []
+    for residual in training_residuals:
+        adjusted = float(projection) + float(residual) + float(line)
+        tied = float(line).is_integer() and math.isclose(adjusted, 0.0, abs_tol=1e-8)
+        outcomes.append("push" if tied else "win" if adjusted > 0 else "loss")
+    count = len(outcomes)
+    return {key: outcomes.count(key) / count for key in ("win", "push", "loss")}
 
 
 def calculate_expected_pace(pace_home: float,
@@ -1021,7 +1106,7 @@ def calculate_clv(bet_odds: float,
     """Calculate Closing Line Value (CLV).
 
     CLV is the definitive quantitative test of sports betting edge:
-    It measures the price advantage achieved relative to the sharp closing market.
+    It measures the price advantage achieved relative to the recorded closing price.
 
     CLV % = (Decimal Bet Odds / Decimal Closing Odds - 1.0) * 100.0
     """

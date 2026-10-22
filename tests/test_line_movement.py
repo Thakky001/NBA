@@ -30,36 +30,32 @@ class TestLineMovementAndAnchoring(unittest.TestCase):
         fallback = market_anchored_projection(raw_model_val=215.0, market_line=None)
         self.assertEqual(fallback, 215.0)
 
-    def test_line_movement_totals_sharp_confirmation(self):
-        """Market line drops toward UNDER pick -> Sharp Move Confirmed."""
+    def test_line_movement_totals_aligned_with_model(self):
         lm = analyze_line_movement(open_line=235.0, current_line=232.5, market_type='total', recommendation='STRONG UNDER')
         self.assertTrue(lm['has_movement'])
-        self.assertEqual(lm['status'], 'SHARP_CONFIRMATION')
-        self.assertIn('Sharp Move Confirmed', lm['badge'])
+        self.assertEqual(lm['status'], 'MOVE_WITH_MODEL')
+        self.assertIn('Move With Model', lm['badge'])
         self.assertAlmostEqual(lm['diff'], -2.5, places=1)
-        self.assertEqual(lm['verdict'], 'CONFIRMED_ALIGNED')
-        self.assertAlmostEqual(lm['market_flow_prob'], 0.5625, places=3)
+        self.assertEqual(lm['verdict'], 'MOVE_ALIGNED')
+        self.assertIsNone(lm['market_flow_prob'])
         self.assertEqual(lm['market_flow_direction'], 'ต่ำ (UNDER)')
 
-    def test_line_movement_totals_steam_warning(self):
-        """Market line rises contrary to UNDER pick -> Market Steam Warning."""
-        # Case A: Heavy steam (diff = +3.0 >= 2.0) -> CAPITAL_PRESERVATION (strict capital preservation)
+    def test_line_movement_totals_contrary_to_model(self):
+        # A line move alone cannot identify sharp action or quantify probability.
         lm = analyze_line_movement(open_line=229.5, current_line=232.5, market_type='total', recommendation='STRONG UNDER')
         self.assertTrue(lm['has_movement'])
-        self.assertEqual(lm['status'], 'STEAM_WARNING')
-        self.assertIn('Market Steam Warning', lm['badge'])
+        self.assertEqual(lm['status'], 'MOVE_AGAINST_MODEL')
+        self.assertIn('Move Against Model', lm['badge'])
         self.assertAlmostEqual(lm['diff'], 3.0, places=1)
-        self.assertEqual(lm['verdict'], 'CAPITAL_PRESERVATION')
-        self.assertIn('ข้าม (PASS)', lm['verdict_title'])
-        self.assertAlmostEqual(lm['market_flow_prob'], 0.575, places=3)
+        self.assertEqual(lm['verdict'], 'MOVE_CONFLICT')
+        self.assertIsNone(lm['market_flow_prob'])
         self.assertEqual(lm['market_flow_direction'], 'สูง (OVER)')
 
         # Case B: Mild steam (diff = +1.0 <= 1.5) -> FOLLOW_MODEL
         lm_mild = analyze_line_movement(open_line=228.5, current_line=229.5, market_type='total', recommendation='STRONG UNDER')
-        self.assertEqual(lm_mild['status'], 'STEAM_WARNING')
-        self.assertEqual(lm_mild['verdict'], 'FOLLOW_MODEL')
-        self.assertIn('ตามสถิติ', lm_mild['verdict_title'])
-        self.assertAlmostEqual(lm_mild['market_flow_prob'], 0.525, places=3)
+        self.assertEqual(lm_mild['status'], 'MOVE_AGAINST_MODEL')
+        self.assertEqual(lm_mild['verdict'], 'MOVE_CONFLICT')
+        self.assertIsNone(lm_mild['market_flow_prob'])
 
     def test_line_movement_totals_stable(self):
         """Line difference < 0.5 -> Stable Line."""
@@ -69,20 +65,20 @@ class TestLineMovementAndAnchoring(unittest.TestCase):
         self.assertIn('Stable Line', lm['badge'])
         self.assertEqual(lm['verdict'], 'STABLE_MODEL')
         self.assertIn('ตามสถิติ', lm['verdict_title'])
-        self.assertEqual(lm['market_flow_prob'], 0.50)
+        self.assertIsNone(lm['market_flow_prob'])
 
-    def test_line_movement_spread_sharp_and_steam(self):
+    def test_line_movement_spread_model_alignment(self):
         """Spread movement toward home/away properly matches model pick."""
         # Home spread moves from -3.5 to -4.5 (1 pt toward Home)
-        # Case A: Model likes HOME -> Sharp Move Confirmed
+        # Case A: Model likes HOME
         lm_home = analyze_line_movement(open_line=-3.5, current_line=-4.5, market_type='spread', recommendation='STRONG HOME')
-        self.assertEqual(lm_home['status'], 'SHARP_CONFIRMATION')
-        self.assertIn('Sharp Move Confirmed', lm_home['badge'])
+        self.assertEqual(lm_home['status'], 'MOVE_WITH_MODEL')
+        self.assertIn('Move With Model', lm_home['badge'])
 
-        # Case B: Model likes AWAY -> Steam Warning
+        # Case B: Model likes AWAY
         lm_away = analyze_line_movement(open_line=-3.5, current_line=-4.5, market_type='spread', recommendation='STRONG AWAY')
-        self.assertEqual(lm_away['status'], 'STEAM_WARNING')
-        self.assertIn('Market Steam Warning', lm_away['badge'])
+        self.assertEqual(lm_away['status'], 'MOVE_AGAINST_MODEL')
+        self.assertIn('Move Against Model', lm_away['badge'])
 
     def test_trend_analyzer_full_integration(self):
         """Verify full_matchup_analysis accepts open lines and returns anchored & line movement metrics."""
@@ -112,7 +108,7 @@ class TestLineMovementAndAnchoring(unittest.TestCase):
         self.assertIn('projected_total', ou)
         self.assertIn('raw_projected_total', ou)
         self.assertIn('line_movement', ou)
-        self.assertEqual(ou['line_movement']['status'], 'STEAM_WARNING')
+        self.assertEqual(ou['line_movement']['status'], 'MOVE_AGAINST_MODEL')
 
         sp = res['spread']
         self.assertIsNotNone(sp)

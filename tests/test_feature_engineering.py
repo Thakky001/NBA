@@ -82,8 +82,7 @@ class TestFeatureEngineering(unittest.TestCase):
         celtics_games = fe._get_team_games('Boston Celtics')
         self.assertFalse((celtics_games['home_score'] == 0).any())
 
-    def test_bayesian_shrinkage_early_season(self):
-        """Verify small sample size (<15 games) regresses observed points toward 114.5 baseline."""
+    def test_small_sample_is_reported_without_unfitted_shrinkage(self):
         early_df = pd.DataFrame({
             'date': ['2026-10-22', '2026-10-24', '2026-10-26'],
             'home_team': ['Detroit Pistons', 'Detroit Pistons', 'Detroit Pistons'],
@@ -94,11 +93,29 @@ class TestFeatureEngineering(unittest.TestCase):
         })
         fe = FeatureEngineer(early_df)
         form = fe.get_team_recent_form('Detroit Pistons')
-        self.assertTrue(form['sample_size_regressed'])
+        self.assertFalse(form['sample_size_regressed'])
         self.assertEqual(form['raw_points_scored'], 92.0)
-        # Regressed: (3 * 92.0 + 10 * 114.5) / 13 = 1421.0 / 13 = ~109.3
-        self.assertGreater(form['avg_points_scored'], 105.0)
-        self.assertLess(form['avg_points_scored'], 114.5)
+        self.assertEqual(form['avg_points_scored'], 92.0)
+
+    def test_historical_features_exclude_untimestamped_advanced_snapshot(self):
+        advanced = pd.DataFrame({
+            'team': ['Boston Celtics', 'Miami Heat'],
+            'pace': [120.0, 80.0],
+            'off_rating': [130.0, 90.0],
+            'def_rating': [90.0, 130.0],
+            'net_rating': [40.0, -40.0],
+        })
+        fe = FeatureEngineer(self.sample_logs, team_advanced=advanced)
+        features = fe.compute_matchup_features('Boston Celtics', 'Miami Heat', game_date='2026-01-16T00:00:00Z')
+        self.assertIsNone(features['home_pace'])
+        self.assertIsNone(features['away_ortg'])
+
+    def test_head_to_head_and_splits_are_as_of(self):
+        fe = FeatureEngineer(self.sample_logs)
+        h2h = fe.get_head_to_head('Boston Celtics', 'Miami Heat', before_date='2026-01-11')
+        self.assertEqual(h2h['total_games'], 1)
+        splits = fe.get_home_away_splits('Boston Celtics', before_date='2026-01-11')
+        self.assertEqual(splits['home_wins'] + splits['home_losses'], 1)
 
 
 if __name__ == '__main__':

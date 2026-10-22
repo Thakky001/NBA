@@ -200,23 +200,11 @@ class FeatureEngineer:
         raw_scored = float(np.mean(pts_scored)) if pts_scored else 114.5
         raw_allowed = float(np.mean(pts_allowed)) if pts_allowed else 114.5
         
-        # Bayesian Shrinkage Baseline (Early-Season Prior)
-        # When team has played fewer than 15 games, regress observed points toward NBA League Baseline (114.5 PTS)
         all_team_games = self._get_team_games(team, before_date=target_date)
         total_played = len(all_team_games)
-        
-        LEAGUE_BASELINE_PTS = 114.5
-        PRIOR_WEIGHT_K = 10.0
-        
-        if total_played < 15 and total_played > 0:
-            regressed_scored = (total_played * raw_scored + PRIOR_WEIGHT_K * LEAGUE_BASELINE_PTS) / (total_played + PRIOR_WEIGHT_K)
-            regressed_allowed = (total_played * raw_allowed + PRIOR_WEIGHT_K * LEAGUE_BASELINE_PTS) / (total_played + PRIOR_WEIGHT_K)
-        elif total_played == 0:
-            regressed_scored = LEAGUE_BASELINE_PTS
-            regressed_allowed = LEAGUE_BASELINE_PTS
-        else:
-            regressed_scored = raw_scored
-            regressed_allowed = raw_allowed
+
+        regressed_scored = raw_scored
+        regressed_allowed = raw_allowed
 
         result['avg_points_scored'] = round(regressed_scored, 1)
         result['avg_points_allowed'] = round(regressed_allowed, 1)
@@ -224,7 +212,7 @@ class FeatureEngineer:
         result['raw_points_allowed'] = round(raw_allowed, 1)
         result['avg_total_points'] = round(regressed_scored + regressed_allowed, 1)
         result['avg_point_diff'] = round(regressed_scored - regressed_allowed, 1)
-        result['sample_size_regressed'] = total_played < 15
+        result['sample_size_regressed'] = False
         
         result['over_count'] = overs
         result['under_count'] = unders
@@ -232,12 +220,13 @@ class FeatureEngineer:
         
         return result
 
-    def get_home_away_splits(self, team: str) -> dict:
+    def get_home_away_splits(self, team: str, before_date: Optional[str] = None) -> dict:
         """Calculate home vs away performance splits."""
         from config import normalize_team_name
         norm_team = normalize_team_name(team) or team
-        home_games = self.game_logs[self.game_logs['home_team'] == norm_team]
-        away_games = self.game_logs[self.game_logs['away_team'] == norm_team]
+        games = self._get_team_games(team, before_date=pd.to_datetime(before_date) if before_date else None)
+        home_games = games[games['home_team'] == norm_team]
+        away_games = games[games['away_team'] == norm_team]
         
         def agg_split(df, is_home):
             scored_col = 'home_score' if is_home else 'away_score'
@@ -259,16 +248,13 @@ class FeatureEngineer:
         home_stats = agg_split(home_games, True)
         away_stats = agg_split(away_games, False)
         
-        # Empirical Home Court Advantage: (Home point diff - Away point diff) / 2.0
-        # Regressed via Empirical Bayes towards modern NBA baseline (1.8 pts)
+        # Descriptive, as-of split estimate only; the forecasting margin does not add it.
         n_home_g = home_stats['wins'] + home_stats['losses']
         n_away_g = away_stats['wins'] + away_stats['losses']
         if n_home_g > 0 and n_away_g > 0:
-            raw_hca = (home_stats['avg_diff'] - away_stats['avg_diff']) / 2.0
-            n_min = min(n_home_g, n_away_g)
-            shrunk_hca = (n_min * raw_hca + 15.0 * 1.8) / (n_min + 15.0)
+            hca = (home_stats['avg_diff'] - away_stats['avg_diff']) / 2.0
         else:
-            shrunk_hca = 1.8
+            hca = None
 
         return {
             'home_wins': home_stats['wins'],
@@ -283,15 +269,20 @@ class FeatureEngineer:
             'away_avg_scored': away_stats['avg_scored'],
             'away_avg_allowed': away_stats['avg_allowed'],
             
-            'home_court_advantage': round(float(shrunk_hca), 2)
+            'home_court_advantage': round(float(hca), 2) if hca is not None else None
         }
 
-    def get_head_to_head(self, team_a: str, team_b: str, n_games: int = 10) -> dict:
+    def get_head_to_head(self, team_a: str, team_b: str, n_games: int = 10,
+                         before_date: Optional[str] = None) -> dict:
         """Get head-to-head history between two teams."""
         h2h = self.game_logs[
             ((self.game_logs['home_team'] == team_a) & (self.game_logs['away_team'] == team_b)) |
             ((self.game_logs['home_team'] == team_b) & (self.game_logs['away_team'] == team_a))
-        ].sort_values('date').tail(n_games)
+        ].sort_values('date')
+        if before_date is not None:
+            cutoff = pd.to_datetime(before_date, utc=True).tz_convert(None)
+            h2h = h2h[h2h['date'] < cutoff]
+        h2h = h2h.tail(n_games)
         
         a_wins = 0
         b_wins = 0
@@ -350,12 +341,22 @@ class FeatureEngineer:
         delta = target_date_norm - last_game_date_norm
         return max(0, delta.days - 1)
 
-    def _get_team_adv_stat(self, team: str, stat: str) -> float:
+    def _get_team_adv_stat(self, team: str, stat: str, as_of: Optional[str] = None) -> float:
         if self.team_advanced is None or 'team' not in self.team_advanced.columns:
             return None
         from config import normalize_team_name
         norm_team = normalize_team_name(team) or team
-        row = self.team_advanced[self.team_advanced['team'] == norm_team]
+        frame = self.team_advanced
+        date_col = next((c for c in ('as_of_timestamp', 'published_at', 'snapshot_at') if c in frame.columns), None)
+        if as_of is not None:
+            if date_col is None:
+                return None
+            cutoff = pd.to_datetime(as_of, utc=True)
+            available = pd.to_datetime(frame[date_col], errors='coerce', utc=True)
+            frame = frame[available < cutoff]
+        row = frame[frame['team'] == norm_team]
+        if date_col is not None and not row.empty:
+            row = row.sort_values(date_col).tail(1)
         if row.empty or stat not in row.columns:
             return None
         val = row.iloc[0][stat]
@@ -369,7 +370,7 @@ class FeatureEngineer:
         away_form_5 = self.get_team_recent_form(away_team, 5, before_date=game_date)
         away_form_10 = self.get_team_recent_form(away_team, 10, before_date=game_date)
         
-        h2h = self.get_head_to_head(home_team, away_team)
+        h2h = self.get_head_to_head(home_team, away_team, before_date=game_date)
         
         comb_5 = home_form_5['avg_points_scored'] + away_form_5['avg_points_scored']
         comb_10 = home_form_10['avg_points_scored'] + away_form_10['avg_points_scored']
@@ -401,12 +402,12 @@ class FeatureEngineer:
             
             'h2h_avg_total': h2h['avg_total_points'],
             
-            'home_pace': self._get_team_adv_stat(home_team, 'pace'),
-            'away_pace': self._get_team_adv_stat(away_team, 'pace'),
-            'home_ortg': self._get_team_adv_stat(home_team, 'off_rating'),
-            'home_drtg': self._get_team_adv_stat(home_team, 'def_rating'),
-            'away_ortg': self._get_team_adv_stat(away_team, 'off_rating'),
-            'away_drtg': self._get_team_adv_stat(away_team, 'def_rating'),
+            'home_pace': self._get_team_adv_stat(home_team, 'pace', game_date),
+            'away_pace': self._get_team_adv_stat(away_team, 'pace', game_date),
+            'home_ortg': self._get_team_adv_stat(home_team, 'off_rating', game_date),
+            'home_drtg': self._get_team_adv_stat(home_team, 'def_rating', game_date),
+            'away_ortg': self._get_team_adv_stat(away_team, 'off_rating', game_date),
+            'away_drtg': self._get_team_adv_stat(away_team, 'def_rating', game_date),
             
             'home_ou_record': (home_form_10['over_count'], home_form_10['under_count']),
             'away_ou_record': (away_form_10['over_count'], away_form_10['under_count']),
@@ -426,13 +427,13 @@ class FeatureEngineer:
         away_form_5 = self.get_team_recent_form(away_team, 5, before_date=game_date)
         away_form_10 = self.get_team_recent_form(away_team, 10, before_date=game_date)
         
-        home_splits = self.get_home_away_splits(home_team)
-        away_splits = self.get_home_away_splits(away_team)
+        home_splits = self.get_home_away_splits(home_team, before_date=game_date)
+        away_splits = self.get_home_away_splits(away_team, before_date=game_date)
         
-        h2h = self.get_head_to_head(home_team, away_team)
+        h2h = self.get_head_to_head(home_team, away_team, before_date=game_date)
         
-        h_net = self._get_team_adv_stat(home_team, 'net_rating')
-        a_net = self._get_team_adv_stat(away_team, 'net_rating')
+        h_net = self._get_team_adv_stat(home_team, 'net_rating', game_date)
+        a_net = self._get_team_adv_stat(away_team, 'net_rating', game_date)
         
         power_gap = None
         if h_net is not None and a_net is not None:
@@ -440,7 +441,7 @@ class FeatureEngineer:
             
         proj_margin = home_form_10['avg_point_diff'] - away_form_10['avg_point_diff']
         # Incorporate empirical home court advantage (modern NBA baseline 1.8 pts)
-        proj_margin += home_splits.get('home_court_advantage', 1.8)
+        # The raw point-differential features already contain home/away effects.
         
         line_vs_proj = spread_line - proj_margin if spread_line is not None else None
         
@@ -472,10 +473,21 @@ class FeatureEngineer:
             'streak_str': home_form_10['current_streak']
         }
 
-    def get_league_avg_pace(self) -> float:
+    def get_league_avg_pace(self, as_of: Optional[str] = None) -> float:
         """Calculate dynamic league average pace from team advanced stats or default 99.5."""
         if self.team_advanced is not None and not self.team_advanced.empty and 'pace' in self.team_advanced.columns:
-            pace_series = pd.to_numeric(self.team_advanced['pace'], errors='coerce').dropna()
+            frame = self.team_advanced
+            date_col = next((c for c in ('as_of_timestamp', 'published_at', 'snapshot_at') if c in frame.columns), None)
+            if as_of is not None:
+                if date_col is None:
+                    return 99.5
+                cutoff = pd.to_datetime(as_of, utc=True)
+                available = pd.to_datetime(frame[date_col], errors='coerce', utc=True)
+                frame = frame[available < cutoff]
+            if date_col is not None and not frame.empty:
+                frame = frame.assign(_asof=pd.to_datetime(frame[date_col], errors='coerce', utc=True))
+                frame = frame.sort_values('_asof').groupby('team', as_index=False).tail(1)
+            pace_series = pd.to_numeric(frame['pace'], errors='coerce').dropna()
             if not pace_series.empty and 85.0 <= pace_series.mean() <= 115.0:
                 return round(float(pace_series.mean()), 2)
         return 99.5
@@ -557,7 +569,7 @@ class FeatureEngineer:
         result.update(roster_data)
 
         # Dynamic league pace
-        result['league_avg_pace'] = self.get_league_avg_pace()
+        result['league_avg_pace'] = self.get_league_avg_pace(as_of=game_date)
 
         # Net injury impact on total points (bidirectional: offense lost vs defense leaked)
         h_off = roster_data.get('home_off_loss', 0.0)

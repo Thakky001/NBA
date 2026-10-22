@@ -20,6 +20,12 @@ from analysis.betting_math import (
     calculate_cover_probability,
     calculate_expected_pace,
     calculate_expected_total,
+    calculate_ev_with_push,
+    calculate_spread_probabilities,
+    estimate_residual_sigma,
+    empirical_line_probabilities,
+    elo_expected_probability,
+    update_elo,
     calculate_brier_score,
     calculate_log_loss,
     calculate_clv,
@@ -145,9 +151,8 @@ class TestBettingMath(unittest.TestCase):
         self.assertIn('market_prob', ou_res)
         self.assertIn('kelly_recommendation', ou_res)
         self.assertIn('STRONG OVER', ou_res['recommendation'])
-        self.assertTrue(ou_res['ev'] > 0.0)
-        self.assertTrue(ou_res['kelly_quarter'] > 0.0)
-        self.assertIn('Value & Sizing', ou_res['summary'])
+        self.assertIsNone(ou_res['ev'])
+        self.assertEqual(ou_res['kelly_quarter'], 0.0)
 
         # Test Spread Analysis with clear Home edge
         sp_res = analyzer.analyze_spread('Boston Celtics', 'Miami Heat', spread_line=-1.5)
@@ -157,9 +162,8 @@ class TestBettingMath(unittest.TestCase):
         self.assertIn('market_prob', sp_res)
         self.assertIn('kelly_recommendation', sp_res)
         self.assertIn('STRONG HOME', sp_res['recommendation'])
-        self.assertTrue(sp_res['ev'] > 0.0)
-        self.assertTrue(sp_res['kelly_quarter'] > 0.0)
-        self.assertIn('Value & Sizing', sp_res['summary'])
+        self.assertIsNone(sp_res['ev'])
+        self.assertEqual(sp_res['kelly_quarter'], 0.0)
 
     def test_kelly_safety_cap(self):
         """Verify Kelly criterion supports default cap (2.0%), custom cap, and unconstrained raw mode."""
@@ -209,7 +213,7 @@ class TestBettingMath(unittest.TestCase):
             'avg_pace': 100.0,
         }
         analyzer = TrendAnalyzer(mock_fe)
-        # Line is 220. With 65% market anchor: projected_total is 230.5, edge is +10.5 pts (> 8 pts anomaly)
+        # Default is the raw model (market blending is opt-in): edge is +30 pts.
         ou_res = analyzer.analyze_over_under('Boston Celtics', 'Miami Heat', over_under_line=220.0)
         self.assertTrue(ou_res['is_anomaly'])
         self.assertIsNotNone(ou_res['anomaly_warning'])
@@ -330,8 +334,8 @@ class TestLivePaceProjection(unittest.TestCase):
 
         # When game is pregame (is_live=False), 5.0 pt shift opposing model DOES trigger STEAM_WARNING
         res_pregame = analyze_line_movement(open_line=237.5, current_line=242.5, market_type='total', recommendation='STRONG UNDER', is_live=False)
-        self.assertEqual(res_pregame['status'], 'STEAM_WARNING')
-        self.assertEqual(res_pregame['verdict'], 'CAPITAL_PRESERVATION')
+        self.assertEqual(res_pregame['status'], 'MOVE_AGAINST_MODEL')
+        self.assertEqual(res_pregame['verdict'], 'MOVE_CONFLICT')
 
     def test_pure_remaining_decay_wolves_and_raptors(self):
         """Verify Wolves @ Heat and Raptors scenarios use pure remaining decay (w=0)."""
@@ -427,11 +431,9 @@ class TestLivePaceProjection(unittest.TestCase):
         self.assertGreater(power_res["k"], 1.0)
 
     def test_mov_elo_multiplier_fivethirtyeight(self):
-        """Verify FiveThirtyEight MOV formula with 2.2 factor and delta Elo winner direction."""
-        import math
-        # Margin = 10, delta_elo = 0 -> ln(11) * (2.2 / 2.2) = ln(11) ~ 2.3979
+        """Verify the published FiveThirtyEight NBA MOV formula and winner direction."""
         val_even = calculate_mov_elo_multiplier(10, 0)
-        self.assertAlmostEqual(val_even, math.log(11), places=4)
+        self.assertAlmostEqual(val_even, (13 ** 0.8) / 7.5, places=5)
 
         # Favorite wins (delta_elo = +300) -> multiplier is dampened
         val_fav = calculate_mov_elo_multiplier(10, 300)
@@ -490,6 +492,26 @@ class TestLivePaceProjection(unittest.TestCase):
         self.assertEqual(clv_res["clv_pct"], 10.0)
         self.assertEqual(clv_res["bet_decimal"], 2.20)
         self.assertEqual(clv_res["closing_decimal"], 2.00)
+
+    def test_push_ev_and_integer_spread_distribution(self):
+        self.assertEqual(calculate_ev_with_push(0.45, -110, push_prob=0.10), -0.040909)
+        self.assertEqual(calculate_ev_with_push(0.45, 2.0, push_prob=0.10, odds_format='decimal'), 0.0)
+        probs = calculate_spread_probabilities(-3.0, 3.0, 10.0)
+        self.assertAlmostEqual(sum(probs.values()), 1.0, places=5)
+        self.assertGreater(probs['push'], 0.0)
+
+    def test_elo_update_is_zero_sum_and_probability_direction_is_correct(self):
+        self.assertGreater(elo_expected_probability(1600, 1500), 0.5)
+        a, b = update_elo(1500, 1500, 1.0, k_factor=20)
+        self.assertGreater(a, 1500)
+        self.assertLess(b, 1500)
+        self.assertAlmostEqual(a + b, 3000)
+
+    def test_training_residual_distribution_helpers(self):
+        residuals = [-1.0, 0.0, 1.0]
+        self.assertAlmostEqual(estimate_residual_sigma(residuals), 1.0)
+        probs = empirical_line_probabilities(0.5, 0.0, residuals)
+        self.assertAlmostEqual(sum(probs.values()), 1.0)
 
 
 

@@ -6,6 +6,7 @@ and backfill historical records.
 """
 
 import os
+import json
 import logging
 from typing import Dict, List, Optional, Any
 from datetime import datetime, timezone, timedelta
@@ -41,7 +42,14 @@ LEDGER_COLUMNS = [
     'ou_result',
     'sp_result',
     'verdict_result',
-    'status'
+    'status',
+    'forecast_as_of',
+    'model_version',
+    'features_snapshot',
+    'projected_margin',
+    'projected_total',
+    'spread_odds',
+    'total_odds'
 ]
 
 
@@ -184,10 +192,19 @@ def record_slate_predictions(
 
         # 1. Odds API consensus lines
         c_spread, c_total = None, None
+        spread_odds = total_odds = None
         if odds_coll:
             try:
                 odds_data = odds_coll.get_game_odds(home, away)
                 c_spread, c_total = odds_coll.get_consensus_lines(odds_data)
+                for book in odds_data.get('spreads', {}).values():
+                    if book.get('home') == c_spread and book.get('home_price') is not None and book.get('away_price') is not None:
+                        spread_odds = [book['home_price'], book['away_price']]
+                        break
+                for book in odds_data.get('totals', {}).values():
+                    if book.get('over') == c_total and book.get('over_price') is not None and book.get('under_price') is not None:
+                        total_odds = [book['over_price'], book['under_price']]
+                        break
             except Exception:
                 pass
 
@@ -218,13 +235,31 @@ def record_slate_predictions(
 
         # Run analysis
         try:
+            forecast_as_of = datetime.now(timezone.utc).isoformat()
+            prior = load_ledger()
+            margin_residuals, total_residuals = [], []
+            if not prior.empty and {'forecast_as_of', 'model_version', 'status', 'actual_margin', 'actual_total', 'projected_margin', 'projected_total'}.issubset(prior.columns):
+                prior['forecast_as_of'] = pd.to_datetime(prior['forecast_as_of'], utc=True, errors='coerce')
+                eligible = prior[(prior['model_version'] == 'nba-baseline-v2') & (prior['status'] == 'GRADED') & (prior['forecast_as_of'] < pd.Timestamp(forecast_as_of))]
+                for _, prior_row in eligible.iterrows():
+                    if pd.notna(prior_row['actual_margin']) and pd.notna(prior_row['projected_margin']):
+                        margin_residuals.append(float(prior_row['actual_margin']) - float(prior_row['projected_margin']))
+                    if pd.notna(prior_row['actual_total']) and pd.notna(prior_row['projected_total']):
+                        total_residuals.append(float(prior_row['actual_total']) - float(prior_row['projected_total']))
+            margin_residuals = margin_residuals if len(margin_residuals) >= 2 else None
+            total_residuals = total_residuals if len(total_residuals) >= 2 else None
             analysis = analyzer.full_matchup_analysis(
                 home_team=home,
                 away_team=away,
                 spread_line=sp_val,
                 over_under_line=ou_val,
                 open_spread=open_spread,
-                open_line=open_total
+                open_line=open_total,
+                game_date=forecast_as_of,
+                spread_odds=spread_odds,
+                total_odds=total_odds,
+                margin_residuals=margin_residuals,
+                total_residuals=total_residuals
             )
         except Exception as exc:
             logger.warning(f"Error analyzing game {gid} ({away} @ {home}): {exc}")
@@ -258,7 +293,14 @@ def record_slate_predictions(
             'ou_result': None,
             'sp_result': None,
             'verdict_result': None,
-            'status': 'PENDING'
+            'status': 'PENDING',
+            'forecast_as_of': forecast_as_of,
+            'model_version': 'nba-baseline-v2',
+            'features_snapshot': json.dumps(analysis.get('features', {}), default=str, sort_keys=True),
+            'projected_margin': sp_res.get('projected_margin'),
+            'projected_total': ou_res.get('projected_total'),
+            'spread_odds': json.dumps(spread_odds),
+            'total_odds': json.dumps(total_odds)
         })
         existing_gids.add(gid)
 

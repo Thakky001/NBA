@@ -41,13 +41,16 @@ class TrendAnalyzer:
     def analyze_over_under(self, home_team: str, away_team: str,
                            over_under_line: float = None,
                            open_line: float = None,
-                           market_weight: float = 0.65,
+                           market_weight: float = 0.0,
                            is_live: bool = False,
+                           game_date: str = None,
+                           market_odds: Any = None,
+                           training_residuals: Any = None,
                            **kwargs) -> Dict[str, Any]:
         """Full Over/Under analysis with Market-Anchored Projection and Line Movement."""
         
         # Use compute_matchup_features
-        features = self.fe.compute_matchup_features(home_team, away_team, over_under_line=over_under_line) if hasattr(self.fe, 'compute_matchup_features') else {}
+        features = self.fe.compute_matchup_features(home_team, away_team, over_under_line=over_under_line, game_date=game_date) if hasattr(self.fe, 'compute_matchup_features') else {}
         
         factors = []
         score = 0.0
@@ -173,11 +176,11 @@ class TrendAnalyzer:
         away_drtg = features.get('away_drtg')
         league_avg_pace = features.get('league_avg_pace') or 99.5
 
-        if home_ortg and home_drtg and away_ortg and away_drtg and home_pace and away_pace:
+        if home_ortg is not None and home_drtg is not None and away_ortg is not None and away_drtg is not None and home_pace and away_pace:
             # Dean Oliver Possession & Efficiency Model with dynamic league pace & home court baseline
-            expected_pace = (home_pace * away_pace) / league_avg_pace
-            home_exp_eff = (home_ortg + away_drtg + 1.5) / 2.0
-            away_exp_eff = (away_ortg + home_drtg - 1.5) / 2.0
+            expected_pace = home_pace + away_pace - league_avg_pace
+            home_exp_eff = (home_ortg + away_drtg) / 2.0
+            away_exp_eff = (away_ortg + home_drtg) / 2.0
             
             raw_home_pts = expected_pace * (home_exp_eff / 100.0)
             raw_away_pts = expected_pace * (away_exp_eff / 100.0)
@@ -186,71 +189,11 @@ class TrendAnalyzer:
             # Fallback when advanced ratings unavailable: use combined_avg directly without double pace
             raw_projected_total = combined_avg if combined_avg > 0 else (over_under_line or 220.0)
 
-        # Injury & Roster Replacement Impact on Total Points (Bidirectional: Offense Lost vs Defense Leaked)
-        home_off_loss = features.get('home_off_loss')
-        home_def_loss = features.get('home_def_loss')
-        away_off_loss = features.get('away_off_loss')
-        away_def_loss = features.get('away_def_loss')
-
-        if home_off_loss is not None or away_off_loss is not None:
-            h_off = home_off_loss or 0.0
-            h_def = home_def_loss or 0.0
-            a_off = away_off_loss or 0.0
-            a_def = away_def_loss or 0.0
-            injury_adj_total = -(h_off + a_off) * 0.20 + (h_def + a_def) * 0.16
-        else:
-            # Fallback to total roster rating drop if detailed off/def splits not provided
-            home_full = features.get('home_full_roster_rating', 0)
-            home_active = features.get('home_roster_rating', home_full)
-            away_full = features.get('away_full_roster_rating', 0)
-            away_active = features.get('away_roster_rating', away_full)
-            h_loss = max(0.0, home_full - home_active) if home_full > 0 else 0.0
-            a_loss = max(0.0, away_full - away_active) if away_full > 0 else 0.0
-            # Heuristic split: 65% offensive impact, 35% defensive impact
-            injury_adj_total = -(h_loss + a_loss) * 0.65 * 0.20 + (h_loss + a_loss) * 0.35 * 0.16
-
-        # Bidirectional clamp between -6.0 and +6.0
-        injury_adj_total = max(-6.0, min(6.0, injury_adj_total))
-        raw_projected_total += injury_adj_total
-
-        if abs(injury_adj_total) >= 0.5:
-            direction_inj = 'under' if injury_adj_total < 0 else 'over'
-            descr = 'Missing Scorers/Playmakers' if injury_adj_total < 0 else 'Missing Rim/Perimeter Defenders'
-            factors.append({
-                'name': 'Injury Impact on Total',
-                'value': f'{injury_adj_total:+.1f} pts ({descr})',
-                'direction': direction_inj,
-                'weight': 0.10,
-                'score': min(max(injury_adj_total / 5.0, -1.0), 1.0)
-            })
-
-        # Schedule & Rest Fatigue Modifier (Back-to-Back fatigue)
-        home_rest = features.get('home_rest_days', 2)
-        away_rest = features.get('away_rest_days', 2)
-        if home_rest is None or home_rest < 0: home_rest = 2
-        if away_rest is None or away_rest < 0: away_rest = 2
-
-        rest_adj_total = 0.0
-        if home_rest == 0:
-            rest_adj_total -= 1.0
-        if away_rest == 0:
-            rest_adj_total -= 1.8  # Road B2B has higher travel fatigue impact
-        # Extended rest (>= 3 days) is neutral (0.0): shooting rust offsets fresh defensive legs
-
-        raw_projected_total += rest_adj_total
-
-        if abs(rest_adj_total) >= 0.5:
-            direction_rest = 'under' if rest_adj_total < 0 else 'over'
-            factors.append({
-                'name': 'Schedule & Rest Fatigue',
-                'value': f'Home: {home_rest}d rest | Away: {away_rest}d rest ({rest_adj_total:+.1f} pts)',
-                'direction': direction_rest,
-                'weight': 0.05,
-                'score': -0.4 if rest_adj_total < 0 else 0.3
-            })
+        # Injury and rest remain descriptive features until their effects are fit
+        # on timestamped historical data.
         
-        # Quantitative Market-Anchored Projection (Bayesian Edge Shrinkage to eliminate edge inversion)
-        from analysis.betting_math import empirical_posterior_sigma, calculate_ev, evaluate_market_pick, analyze_line_movement
+        # Optional market blend; zero by default until weights are validated.
+        from analysis.betting_math import calculate_ev_with_push, calculate_spread_probabilities, evaluate_market_pick, analyze_line_movement
         
         # Anchor line for tracking line movement
         anchor_line = open_line if (open_line is not None and open_line > 0) else over_under_line
@@ -261,12 +204,10 @@ class TrendAnalyzer:
         min_games = min(home_games, away_games)
         is_early_season = min_games < 10
 
-        effective_market_weight = 0.70 if is_early_season else market_weight
+        effective_market_weight = max(0.0, min(1.0, float(market_weight)))
 
         if over_under_line is not None and over_under_line > 0:
             raw_edge = raw_projected_total - over_under_line
-            # Bayesian Shrinkage on Edge: shrink edge toward 0 (market consensus)
-            # This mathematically guarantees the edge will NEVER flip direction!
             shrunk_edge = raw_edge * (1.0 - effective_market_weight)
             projected_total = round(over_under_line + shrunk_edge, 2)
             total_edge = round(shrunk_edge, 2)
@@ -275,13 +216,23 @@ class TrendAnalyzer:
             total_edge = 0.0
             raw_edge = 0.0
             
-        # Dynamic Totals Sigma derived from Bayesian posterior prediction variance
-        sigma_ou = empirical_posterior_sigma(min_games)
+        from analysis.betting_math import estimate_residual_sigma, empirical_line_probabilities
+        sigma_ou = estimate_residual_sigma(training_residuals) if training_residuals and len(training_residuals) >= 2 else 12.5
+        probability_method = 'empirical_training_residuals' if training_residuals is not None and len(training_residuals) >= 2 else 'normal_unvalidated_sigma'
 
         # Calculate realistic win probability and EV-based conviction filter
         if over_under_line and over_under_line > 0:
-            win_prob_over = 0.5 * (1.0 + math.erf(total_edge / (sigma_ou * math.sqrt(2.0))))
-            win_prob_under = 1.0 - win_prob_over
+            total_probs = (empirical_line_probabilities(-over_under_line, projected_total, training_residuals)
+                           if training_residuals else None)
+            if total_probs:
+                win_prob_over = total_probs['win']
+                win_prob_under = total_probs['loss']
+                push_prob = total_probs['push']
+            else:
+                total_probs = calculate_spread_probabilities(-over_under_line, projected_total, sigma_ou)
+                win_prob_over = total_probs['win']
+                win_prob_under = total_probs['loss']
+                push_prob = total_probs['push']
 
             if total_edge > 0:
                 cand_dir = 'OVER'
@@ -294,27 +245,29 @@ class TrendAnalyzer:
                 cand_prob = 0.50
 
             # Candidate EV against standard -110 bookmaker line (breakeven 52.38%)
-            cand_ev = calculate_ev(cand_prob, market_odds=-110)
+            cand_ev = calculate_ev_with_push(cand_prob, market_odds[0 if cand_dir == 'OVER' else 1], push_prob=push_prob) if market_odds else None
 
             # Dual Conviction Gate:
             # STRONG: |total_edge| >= 2.0 pts AND cand_prob >= 56.5% AND cand_ev >= +5.0%
             # LEAN: |total_edge| >= 1.0 pts AND cand_prob >= 53.8% AND cand_ev >= +1.5% (Only mid-season min_games >= 10)
-            if abs(total_edge) >= 2.0 and cand_prob >= 0.565 and cand_ev >= 0.05:
+            if abs(total_edge) >= 2.0 and cand_prob >= 0.565 and (cand_ev is None or cand_ev >= 0.05):
                 recommendation = f"STRONG {cand_dir}"
-            elif not is_early_season and abs(total_edge) >= 1.0 and cand_prob >= 0.538 and cand_ev >= 0.015:
+            elif not is_early_season and abs(total_edge) >= 1.0 and cand_prob >= 0.538 and (cand_ev is None or cand_ev >= 0.015):
                 recommendation = f"LEAN {cand_dir}"
             else:
                 recommendation = 'NEUTRAL'
 
             win_prob = win_prob_over
+            win_prob_under = total_probs['loss']
         else:
+            push_prob = 0.0
             win_prob = 0.50
             recommendation = 'NEUTRAL'
 
         # Probability for the recommended side
-        pick_win_prob = win_prob if 'OVER' in recommendation else (1.0 - win_prob if 'UNDER' in recommendation else 0.50)
+        pick_win_prob = win_prob if 'OVER' in recommendation else (win_prob_under if 'UNDER' in recommendation else 0.50)
         
-        # Line Movement & Sharp Action Detection
+        # Line movement is descriptive and does not identify betting flow.
         line_mv = analyze_line_movement(open_line, over_under_line, market_type='total', recommendation=recommendation, is_live=is_live)
         
         # Anomaly Detection (flagging extreme discrepancies without clamping)
@@ -326,17 +279,17 @@ class TrendAnalyzer:
             
         confidence = abs(pick_win_prob - 0.5) * 2.0
         
-        # Quantitative Value & Risk Evaluation via betting_math (safe 2.0% bankroll cap)
-        market_odds_str = '-110,-110'
+        # Value and sizing are unavailable without actual market odds.
+        market_odds_str = market_odds
         pick_idx = 0 if 'OVER' in recommendation else 1
-        eval_metrics = evaluate_market_pick(pick_win_prob, book_odds=market_odds_str, pick_idx=pick_idx, kelly_fraction=0.25, max_stake_cap=0.020)
+        eval_metrics = evaluate_market_pick(pick_win_prob, book_odds=market_odds_str, pick_idx=pick_idx, kelly_fraction=0.25, max_stake_cap=0.020, push_prob=push_prob if over_under_line else 0.0)
         
-        # Market Clash Detection: Severe steam opposing model (>= 2.0 pts) mandates capital preservation
-        is_market_clash = (line_mv.get('status') == 'STEAM_WARNING' and abs(line_mv.get('diff', 0)) >= 2.0 and not is_live) or line_mv.get('verdict') in ['CAPITAL_PRESERVATION', 'PASS']
+        # Line movement is not validated as a bet-selection rule.
+        is_market_clash = False
 
-        is_bet = recommendation != 'NEUTRAL' and not is_market_clash
-        ev_val = eval_metrics['ev'] if is_bet else 0.0
-        edge_pct_val = eval_metrics['edge_pct'] if is_bet else 0.0
+        is_bet = recommendation != 'NEUTRAL' and not is_market_clash and eval_metrics['ev'] is not None
+        ev_val = eval_metrics['ev'] if is_bet else None
+        edge_pct_val = eval_metrics['edge_pct'] if is_bet else None
         full_kelly = eval_metrics['full_kelly'] if is_bet else 0.0
         quarter_kelly = (eval_metrics['recommended_stake_pct'] / 100.0) if is_bet else 0.0
         if is_market_clash:
@@ -386,19 +339,25 @@ class TrendAnalyzer:
             'score': score,
             'factors': factors,
             'summary': summary,
-            'features': features
+            'features': features,
+            'sigma_total': sigma_ou,
+            'probability_method': probability_method,
+            'push_prob': push_prob if over_under_line else 0.0
         }
 
     def analyze_spread(self, home_team: str, away_team: str,
                        spread_line: float = None,
                        open_spread: float = None,
-                       market_weight: float = 0.65,
+                       market_weight: float = 0.0,
                        is_live: bool = False,
+                       game_date: str = None,
+                       market_odds: Any = None,
+                       training_residuals: Any = None,
                        **kwargs) -> Dict[str, Any]:
         """Full Spread analysis with Market-Anchored Projection and Line Movement."""
         
         # Use compute_matchup_features to ensure we get rest days as well
-        features = self.fe.compute_matchup_features(home_team, away_team, spread_line=spread_line) if hasattr(self.fe, 'compute_matchup_features') else {}
+        features = self.fe.compute_matchup_features(home_team, away_team, spread_line=spread_line, game_date=game_date) if hasattr(self.fe, 'compute_matchup_features') else {}
         
         factors = []
         score = 0.0
@@ -582,33 +541,23 @@ class TrendAnalyzer:
             score += factor_score_roster * weights['roster']
 
         # Projected margin (Home win margin)
-        # Basketball analytics: Pace-adjusted Net Rating + Home Court Advantage + Rest + Roster Gap
+        # Use one strength signal to avoid combining collinear ratings and score margins.
         # Avoids collinear double counting of pt_diff and net_rtg
         home_pace = features.get('home_pace')
         away_pace = features.get('away_pace')
         avg_pace = (home_pace + away_pace) / 2 if (home_pace and away_pace) else 99.5
         pace_factor = avg_pace / 100.0
 
-        # 1. Stale Net Rating Bayesian Prior Ramp (Prior Weight Floor 35%)
-        # Avoids unadjusted stale 82-game stats dominating early season games while preventing parrot behavior
-        prior_weight = 0.35 + 0.65 * min(1.0, min_games / 10.0)
-        if is_crisis:
-            prior_weight *= 0.50
+        prior_weight = 1.0
 
         if (home_net_rtg != 0.0 or away_net_rtg != 0.0):
             base_margin = (net_rtg_diff * pace_factor) * prior_weight
         else:
             base_margin = pt_diff_gap * prior_weight
 
-        hca = 2.0  # NBA baseline home court advantage (+2.0 points)
-        rest_adj = (home_rest - away_rest) * 0.75
-
-        # 2. Elevated Roster Multiplier (35% when early season or injury crisis)
-        roster_multiplier = 0.35 if (is_early_season or is_crisis) else 0.20
-        roster_diff = (home_roster - away_roster) if (home_roster and away_roster) else 0.0
-        roster_adj = roster_diff * roster_multiplier
-
-        raw_projected_margin = base_margin + hca + rest_adj + roster_adj
+        # Net/point differentials already reflect venue and rest in their samples;
+        # avoid adding unvalidated HCA, rest and roster coefficients a second time.
+        raw_projected_margin = base_margin
 
         cover_edge = 0.0
         raw_cover_edge = 0.0
@@ -622,18 +571,21 @@ class TrendAnalyzer:
             
             raw_cover_edge = raw_projected_margin + s_line
             
-            # Quantitative Market-Anchored Margin (Bayesian Blend with Open Line)
+            # Optional market blend; zero by default until weights are validated.
             from analysis.betting_math import market_anchored_projection, analyze_line_movement
             anchor_spread = open_spread if (open_spread is not None) else s_line
             market_expected_margin = -float(anchor_spread)
-            # 3. Market Anchoring Weight: 0.70 in early season to balance sharp consensus lines without double shrinkage
-            market_weight_spread = 0.70 if is_early_season else market_weight
+            market_weight_spread = max(0.0, min(1.0, float(market_weight)))
             projected_margin = market_anchored_projection(raw_projected_margin, market_expected_margin, market_weight=market_weight_spread)
             cover_edge = projected_margin + s_line
 
-            # 4. Dynamic Sigma: Expands variance from 12.5 up to 16.5 points early season to avoid overconfident win probabilities
-            sigma = 12.5 + max(0, 10 - min_games) * 0.4
-            win_prob = 0.5 * (1.0 + math.erf(cover_edge / (sigma * math.sqrt(2.0))))
+            from analysis.betting_math import estimate_residual_sigma, empirical_line_probabilities, calculate_spread_probabilities
+            sigma = estimate_residual_sigma(training_residuals) if training_residuals and len(training_residuals) >= 2 else 12.5
+            probability_method = 'empirical_training_residuals' if training_residuals is not None and len(training_residuals) >= 2 else 'normal_unvalidated_sigma'
+            spread_probs = (empirical_line_probabilities(s_line, projected_margin, training_residuals)
+                            if training_residuals else calculate_spread_probabilities(s_line, projected_margin, sigma))
+            win_prob = spread_probs['win']
+            push_prob = spread_probs['push']
             factor_score_cover = min(max(cover_edge / 5.0, -1.0), 1.0)
             direction_cover = 'home' if factor_score_cover > 0 else ('away' if factor_score_cover < 0 else 'neutral')
             factors.append({
@@ -668,13 +620,16 @@ class TrendAnalyzer:
                 else:
                     recommendation = 'NEUTRAL'
         else:
+            sigma = None
+            push_prob = 0.0
+            probability_method = 'not_calculated'
             projected_margin = raw_projected_margin
             recommendation = 'NEUTRAL'
 
         # Probability for the recommended side
-        pick_win_prob = win_prob if 'HOME' in recommendation else (1.0 - win_prob if 'AWAY' in recommendation else 0.50)
+        pick_win_prob = win_prob if 'HOME' in recommendation else (spread_probs['loss'] if spread_probs and 'AWAY' in recommendation else (1.0 - win_prob if 'AWAY' in recommendation else 0.50))
         
-        # Line Movement & Sharp Action Detection
+        # Line movement is descriptive and does not identify betting flow.
         from analysis.betting_math import analyze_line_movement
         line_mv = analyze_line_movement(open_spread, spread_line, market_type='spread', recommendation=recommendation, home_team=home_team, away_team=away_team, is_live=is_live)
         
@@ -687,19 +642,19 @@ class TrendAnalyzer:
             
         confidence = abs(pick_win_prob - 0.5) * 2.0
 
-        # Quantitative Value & Risk Evaluation via betting_math
+        # Value and sizing are unavailable without actual market odds.
         from analysis.betting_math import evaluate_market_pick
         
-        market_odds_str = '-110,-110'
+        market_odds_str = market_odds
         pick_idx = 0 if 'HOME' in recommendation else 1
-        eval_metrics = evaluate_market_pick(pick_win_prob, book_odds=market_odds_str, pick_idx=pick_idx, kelly_fraction=0.25)
+        eval_metrics = evaluate_market_pick(pick_win_prob, book_odds=market_odds_str, pick_idx=pick_idx, kelly_fraction=0.25, push_prob=push_prob if spread_line is not None else 0.0)
         
-        # Market Clash Detection: Severe steam opposing model (>= 2.0 pts) mandates capital preservation
-        is_market_clash = (line_mv.get('status') == 'STEAM_WARNING' and abs(line_mv.get('diff', 0)) >= 2.0 and not is_live) or line_mv.get('verdict') in ['CAPITAL_PRESERVATION', 'PASS']
+        # Line movement is not validated as a bet-selection rule.
+        is_market_clash = False
 
-        is_bet = recommendation != 'NEUTRAL' and not is_market_clash
-        ev_val = eval_metrics['ev'] if is_bet else 0.0
-        edge_pct_val = eval_metrics['edge_pct'] if is_bet else 0.0
+        is_bet = recommendation != 'NEUTRAL' and not is_market_clash and eval_metrics['ev'] is not None
+        ev_val = eval_metrics['ev'] if is_bet else None
+        edge_pct_val = eval_metrics['edge_pct'] if is_bet else None
         full_kelly = eval_metrics['full_kelly'] if is_bet else 0.0
         quarter_kelly = (eval_metrics['recommended_stake_pct'] / 100.0) if is_bet else 0.0
         if is_market_clash:
@@ -748,7 +703,10 @@ class TrendAnalyzer:
             'score': score,
             'factors': factors,
             'summary': summary,
-            'features': features
+            'features': features,
+            'sigma_margin': sigma if spread_line is not None else None,
+            'probability_method': probability_method if spread_line is not None else 'not_calculated',
+            'push_prob': push_prob if spread_line is not None else 0.0
         }
 
     def full_matchup_analysis(self, home_team: str, away_team: str,
@@ -756,8 +714,13 @@ class TrendAnalyzer:
                                over_under_line: float = None,
                                open_spread: float = None,
                                open_line: float = None,
-                               market_weight: float = 0.65,
+                               market_weight: float = 0.0,
                                is_live: bool = False,
+                               game_date: str = None,
+                               spread_odds: Any = None,
+                               total_odds: Any = None,
+                               margin_residuals: Any = None,
+                               total_residuals: Any = None,
                                **kwargs) -> Dict[str, Any]:
         """Complete matchup analysis combining O/U and Spread with Market Anchoring and Line Movement.
         Returns dict with:
@@ -775,15 +738,15 @@ class TrendAnalyzer:
         
         # Home and away profiles
         if hasattr(self.fe, 'get_team_recent_form'):
-            result['home_profile'] = self.fe.get_team_recent_form(home_team)
-            result['away_profile'] = self.fe.get_team_recent_form(away_team)
+            result['home_profile'] = self.fe.get_team_recent_form(home_team, before_date=game_date)
+            result['away_profile'] = self.fe.get_team_recent_form(away_team, before_date=game_date)
         else:
             result['home_profile'] = {}
             result['away_profile'] = {}
         
         # Head to head
         if hasattr(self.fe, 'get_head_to_head'):
-            result['h2h'] = self.fe.get_head_to_head(home_team, away_team)
+            result['h2h'] = self.fe.get_head_to_head(home_team, away_team, before_date=game_date)
         else:
             result['h2h'] = {}
         
@@ -791,7 +754,8 @@ class TrendAnalyzer:
         features = self.fe.compute_matchup_features(
             home_team, away_team,
             over_under_line=over_under_line,
-            spread_line=spread_line
+            spread_line=spread_line,
+            game_date=game_date
         ) if hasattr(self.fe, 'compute_matchup_features') else {}
         result['features'] = features
 
@@ -802,7 +766,10 @@ class TrendAnalyzer:
                 over_under_line=over_under_line,
                 open_line=open_line,
                 market_weight=market_weight,
-                is_live=is_live
+                is_live=is_live,
+                game_date=game_date,
+                market_odds=total_odds,
+                training_residuals=total_residuals
             )
         else:
             result['over_under'] = None
@@ -814,7 +781,10 @@ class TrendAnalyzer:
                 spread_line=spread_line,
                 open_spread=open_spread,
                 market_weight=market_weight,
-                is_live=is_live
+                is_live=is_live,
+                game_date=game_date,
+                market_odds=spread_odds,
+                training_residuals=margin_residuals
             )
         else:
             result['spread'] = None
