@@ -38,12 +38,13 @@ except (ImportError, KeyError, AttributeError):
     from analysis.trend_analyzer import TrendAnalyzer
 
 try:
-    from analysis.betting_math import calculate_live_pace_projection
+    from analysis.betting_math import calculate_live_pace_projection, evaluate_live_pick
 except (ImportError, KeyError, AttributeError):
     try:
         sys.modules.pop('analysis.betting_math', None)
-        from analysis.betting_math import calculate_live_pace_projection
+        from analysis.betting_math import calculate_live_pace_projection, evaluate_live_pick
     except Exception:
+        evaluate_live_pick = None
         def calculate_live_pace_projection(
             period: Any,
             clock_str: Any,
@@ -213,7 +214,7 @@ if st.sidebar.button("🔄 อัปเดตฐานข้อมูลสถ�
 
 # Load Data with Streamlit Caching
 @st.cache_resource
-def get_analyzer(cache_version: str = "v7_bayesian_live_pace_and_market_clash"):
+def get_analyzer(cache_version: str = "v8_pure_decay_and_live_edge"):
     from processing.data_merger import DataMerger
     from processing.feature_engineering import FeatureEngineer
     from analysis.trend_analyzer import TrendAnalyzer
@@ -443,13 +444,45 @@ def render_game_slate(selected_date, is_live_refresh):
                     
                         ou_res = analysis.get('over_under')
                         if ou_res:
-                            rec_text = t_rec(ou_res['recommendation'])
-                            t_edge = ou_res.get('total_edge', 0.0)
-                            win_p = ou_res.get('win_prob', 0.5)
-                            is_clash_ou = ou_res.get('is_market_clash', False)
+                            # In-play Live Evaluation: compare live projected final vs current live line
+                            live_eval_ou = None
+                            if is_live and live_proj and evaluate_live_pick:
+                                live_t = lm_data.get('live_total')
+                                effective_ou_line = live_t if live_t is not None else ou_val
+                                rem_mins = live_proj.get('rem_mins', max(0.0, live_proj.get('target_mins', 48.0) - live_proj.get('elapsed_mins', 0.0)))
+                                if effective_ou_line is not None:
+                                    live_eval_ou = evaluate_live_pick(
+                                        live_proj['proj_total'],
+                                        current_line=effective_ou_line,
+                                        bet_type='total',
+                                        rem_mins=rem_mins
+                                    )
+
+                            if live_eval_ou:
+                                rec_text = live_eval_ou['rec_text']
+                                t_edge = live_eval_ou['edge']
+                                win_p = live_eval_ou['win_prob']
+                                ev_val = live_eval_ou['ev']
+                                edge_pct_val = live_eval_ou['edge_pct']
+                                q_kelly = live_eval_ou['quarter_kelly']
+                                fair_p = live_eval_ou['fair_prob']
+                                is_bet_live = live_eval_ou['is_bet']
+                                rec_tag = " (Live In-Play)"
+                            else:
+                                rec_text = t_rec(ou_res['recommendation'])
+                                t_edge = ou_res.get('total_edge', 0.0)
+                                win_p = ou_res.get('win_prob', 0.5)
+                                ev_val = ou_res.get('ev', 0.0)
+                                edge_pct_val = ou_res.get('edge_pct', 0.0)
+                                q_kelly = ou_res.get('kelly_quarter', 0.0)
+                                fair_p = ou_res.get('fair_prob', 0.5)
+                                is_bet_live = ou_res.get('recommendation') != 'NEUTRAL' and ev_val is not None
+                                rec_tag = ""
+
+                            is_clash_ou = ou_res.get('is_market_clash', False) and not is_live
                         
                             clash_tag = " *(⚠️ สัญญาณเงินตลาดสวนทาง)*" if is_clash_ou else ""
-                            st.markdown(f"**คำแนะนำ:** **{rec_text}** (Edge: `{t_edge:+.1f}` แต้ม){clash_tag}")
+                            st.markdown(f"**คำแนะนำ{rec_tag}:** **{rec_text}** (Edge: `{t_edge:+.1f}` แต้ม){clash_tag}")
                             st.progress(win_p, text=f"ความน่าจะเป็นทางสถิติ (Win Prob): {win_p:.1%}")
                         
                             # --- LINE MOVEMENT BADGE & TWO-SIDED VERDICT ---
@@ -494,20 +527,17 @@ def render_game_slate(selected_date, is_live_refresh):
                                 st.caption(f"🎯 **Market-Anchored Projection:** `{ou_res['projected_total']:.1f}` PTS *(คำนวณจาก: ราคาเปิด {anchor_used:.1f} × 65% + โมเดลดิบ {ou_res['raw_projected_total']:.1f} × 35%)*")
                         
                             # --- QUANTITATIVE VALUE & KELLY METRICS ---
-                            if ou_res.get('recommendation') != 'NEUTRAL' and ou_res.get('ev') is not None:
-                                ev_val = ou_res.get('ev', 0.0)
-                                q_kelly = ou_res.get('kelly_quarter', 0.0)
-                                fair_p = ou_res.get('fair_prob', 0.5)
+                            if is_bet_live:
                                 m_col1, m_col2 = st.columns(2)
                                 with m_col1:
                                     ev_delta_color = "normal" if ev_val >= 0 else "inverse"
-                                    st.metric("Expected Value (+EV)", f"{ev_val:+.1%}", delta=f"{ou_res.get('edge_pct', 0.0):+.1f}% Edge", delta_color=ev_delta_color)
+                                    st.metric("Expected Value (+EV)", f"{ev_val:+.1%}", delta=f"{edge_pct_val:+.1f}% Edge", delta_color=ev_delta_color)
                                 with m_col2:
                                     st.metric("Market Fair Prob", f"{fair_p:.1%}", help="คำนวณผ่าน De-vigging ถอดค่าน้ำของตลาดออก (ราคาที่ตลาดมองว่ายุติธรรม)")
                                 if is_clash_ou:
                                     st.info("💡 **คำแนะนำบริหารหน้าตัก (Kelly):** ลงทุน **0.0%** (ข้ามคู่ที่มีสัญญาณขัดแย้งกับตลาด)")
                                 elif q_kelly > 0:
-                                    st.info(f"💡 **คำแนะนำบริหารหน้าตัก (Kelly):** ลงทุน **{q_kelly*100:.1f}%** ของพอร์ต (1/4 Kelly)")
+                                    st.info(f"💡 **คำแนะนำบริหารหน้าตัก{'สด ' if live_eval_ou else ''}(Kelly):** ลงทุน **{q_kelly*100:.1f}%** ของพอร์ต (1/4 Kelly)")
                         
                             if ou_res.get('is_anomaly'):
                                 st.warning("⚠️ **ระวังข้อมูลผันผวน:** ส่วนต่างแต้มห่างจากราคาเปิดเกิน 8 แต้ม (ข้อมูลต้นฤดูกาลผันผวน)")
@@ -580,13 +610,47 @@ def render_game_slate(selected_date, is_live_refresh):
                     
                         sp_res = analysis.get('spread')
                         if sp_res:
-                            rec_text = t_rec(sp_res['recommendation'], spread_line=sp_val, home_team=home, away_team=away)
-                            c_edge = sp_res.get('cover_edge', 0.0)
-                            win_p = sp_res.get('win_prob', 0.5)
-                            is_clash_sp = sp_res.get('is_market_clash', False)
+                            # In-play Live Evaluation: compare live projected margin vs current live spread
+                            live_eval_sp = None
+                            if is_live and live_proj and evaluate_live_pick:
+                                live_s = lm_data.get('live_spread')
+                                effective_sp_line = live_s if live_s is not None else sp_val
+                                rem_mins = live_proj.get('rem_mins', max(0.0, live_proj.get('target_mins', 48.0) - live_proj.get('elapsed_mins', 0.0)))
+                                if effective_sp_line is not None:
+                                    live_eval_sp = evaluate_live_pick(
+                                        live_proj['proj_margin'],
+                                        current_line=effective_sp_line,
+                                        bet_type='spread',
+                                        rem_mins=rem_mins,
+                                        home_team=home,
+                                        away_team=away
+                                    )
+
+                            if live_eval_sp:
+                                rec_text = live_eval_sp['rec_text']
+                                c_edge = live_eval_sp['edge']
+                                win_p = live_eval_sp['win_prob']
+                                ev_val = live_eval_sp['ev']
+                                edge_pct_val = live_eval_sp['edge_pct']
+                                q_kelly = live_eval_sp['quarter_kelly']
+                                fair_p = live_eval_sp['fair_prob']
+                                is_bet_live_sp = live_eval_sp['is_bet']
+                                rec_tag = " (Live In-Play)"
+                            else:
+                                rec_text = t_rec(sp_res['recommendation'], spread_line=sp_val, home_team=home, away_team=away)
+                                c_edge = sp_res.get('cover_edge', 0.0)
+                                win_p = sp_res.get('win_prob', 0.5)
+                                ev_val = sp_res.get('ev', 0.0)
+                                edge_pct_val = sp_res.get('edge_pct', 0.0)
+                                q_kelly = sp_res.get('kelly_quarter', 0.0)
+                                fair_p = sp_res.get('fair_prob', 0.5)
+                                is_bet_live_sp = sp_res.get('recommendation') != 'NEUTRAL' and ev_val is not None
+                                rec_tag = ""
+
+                            is_clash_sp = sp_res.get('is_market_clash', False) and not is_live
                         
                             clash_tag = " *(⚠️ สัญญาณเงินตลาดสวนทาง)*" if is_clash_sp else ""
-                            st.markdown(f"🎯 **คำแนะนำ:** **{rec_text}** (Cover Edge: `{c_edge:+.1f}` แต้ม){clash_tag}")
+                            st.markdown(f"🎯 **คำแนะนำ{rec_tag}:** **{rec_text}** (Cover Edge: `{c_edge:+.1f}` แต้ม){clash_tag}")
                             st.progress(win_p, text=f"ความน่าจะเป็นทางสถิติ (Win Prob): {win_p:.1%}")
                         
                             # --- LINE MOVEMENT BADGE & TWO-SIDED VERDICT ---
@@ -631,20 +695,17 @@ def render_game_slate(selected_date, is_live_refresh):
                                 st.caption(f"🎯 **Market-Anchored Margin:** `{sp_res['projected_margin']:+.1f}` PTS *(คำนวณจาก: แต้มต่อเปิด {anchor_sp:+.1f} × 65% + โมเดลดิบ {sp_res['raw_projected_margin']:+.1f} × 35%)*")
                         
                             # --- QUANTITATIVE VALUE & KELLY METRICS ---
-                            if sp_res.get('recommendation') != 'NEUTRAL' and sp_res.get('ev') is not None:
-                                ev_val = sp_res.get('ev', 0.0)
-                                q_kelly = sp_res.get('kelly_quarter', 0.0)
-                                fair_p = sp_res.get('fair_prob', 0.5)
+                            if is_bet_live_sp:
                                 m_col1, m_col2 = st.columns(2)
                                 with m_col1:
                                     ev_delta_color = "normal" if ev_val >= 0 else "inverse"
-                                    st.metric("Expected Value (+EV)", f"{ev_val:+.1%}", delta=f"{sp_res.get('edge_pct', 0.0):+.1f}% Edge", delta_color=ev_delta_color)
+                                    st.metric("Expected Value (+EV)", f"{ev_val:+.1%}", delta=f"{edge_pct_val:+.1f}% Edge", delta_color=ev_delta_color)
                                 with m_col2:
                                     st.metric("Market Fair Prob", f"{fair_p:.1%}", help="คำนวณผ่าน De-vigging ถอดค่าน้ำของตลาดออก (ราคาที่ตลาดมองว่ายุติธรรม)")
                                 if is_clash_sp:
                                     st.info("💡 **คำแนะนำบริหารหน้าตัก (Kelly):** ลงทุน **0.0%** (ข้ามคู่ที่มีสัญญาณขัดแย้งกับตลาด)")
                                 elif q_kelly > 0:
-                                    st.info(f"💡 **คำแนะนำบริหารหน้าตัก (Kelly):** ลงทุน **{q_kelly*100:.1f}%** ของพอร์ต (1/4 Kelly)")
+                                    st.info(f"💡 **คำแนะนำบริหารหน้าตัก{'สด ' if live_eval_sp else ''}(Kelly):** ลงทุน **{q_kelly*100:.1f}%** ของพอร์ต (1/4 Kelly)")
                         
                             if sp_res.get('is_anomaly'):
                                 st.warning("⚠️ **ระวังข้อมูลผันผวน:** แต้มต่อห่างจากโมเดลเกิน 6 แต้ม (ข้อมูลต้นฤดูกาลผันผวน)")

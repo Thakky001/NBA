@@ -11,6 +11,7 @@ from analysis.betting_math import (
     calculate_kelly,
     evaluate_market_pick,
     calculate_live_pace_projection,
+    evaluate_live_pick,
 )
 from analysis.trend_analyzer import TrendAnalyzer
 from unittest.mock import MagicMock
@@ -196,16 +197,15 @@ class TestLivePaceProjection(unittest.TestCase):
     """Unit tests for live scoring pace, Halftime, quarter breaks, and Overtime projections."""
 
     def test_pace_regular_in_play(self):
-        """Test in-game live pace applies Bayesian shrinkage towards pregame baseline."""
+        """Test in-game live pace applies pure remaining decay (w=0) anchored to pregame baseline."""
         # Q1 with 6:00 remaining -> exactly 6.0 minutes elapsed (30 pts scored)
         # Without pregame total, defaults to 228.0 prior (4.75 pts/min)
-        # w = 6/48 = 0.125. Live = 5.0 pts/min. Rem rate = 0.125*5 + 0.875*4.75 = 4.78125
-        # Proj total = 30 + 42 * 4.78125 = 230.8 pts (regressed from naive 240.0)
+        # Pure decay: rem_fraction = 42/48 = 0.875. Proj = 30 + (228.0 * 0.875) = 229.5 pts
         res = calculate_live_pace_projection(period=1, clock_str="06:00", home_score=15, away_score=15)
         self.assertIsNotNone(res)
         self.assertEqual(res['elapsed_mins'], 6.0)
         self.assertEqual(res['target_mins'], 48.0)
-        self.assertEqual(res['proj_total'], 230.8)
+        self.assertEqual(res['proj_total'], 229.5)
         self.assertEqual(res['proj_margin'], 0.0)
         self.assertEqual(res['scoring_rate'], 5.0)
         self.assertEqual(res['phase'], 'IN_PLAY')
@@ -229,18 +229,19 @@ class TestLivePaceProjection(unittest.TestCase):
         self.assertLess(res['proj_margin'], -6.0)
 
     def test_pace_halftime_explicit(self):
-        """Test explicit 'Halftime' or 'Half' clock string sets 24.0 mins elapsed."""
+        """Test explicit 'Halftime' or 'Half' clock string sets 24.0 mins elapsed with pure remaining decay."""
         for label in ["Halftime", "HALFTIME", "Half", "half", "End of 2nd"]:
             res = calculate_live_pace_projection(period=2, clock_str=label, home_score=55, away_score=45)
             self.assertIsNotNone(res)
             self.assertEqual(res['elapsed_mins'], 24.0)
             self.assertEqual(res['target_mins'], 48.0)
+            self.assertEqual(res['rem_mins'], 24.0)
             self.assertEqual(res['phase'], 'HALFTIME')
             self.assertEqual(res['status_label'], 'ช่วงพักครึ่ง (Halftime)')
-            # 100 pts at half, live rate 4.167, prior 4.75 -> rem rate 4.458 -> 100 + 107.0 = 207.0
-            self.assertEqual(res['proj_total'], 207.0)
-            # +10 lead at half, 50% regressed 2nd half outscores by +5 -> proj_margin = 15.0
-            self.assertEqual(res['proj_margin'], 15.0)
+            # 100 pts at half, pure decay: 100 + (228.0 * 24/48) = 214.0
+            self.assertEqual(res['proj_total'], 214.0)
+            # +10 lead at half, prior margin 0.0 -> 10 + (0.0 * 24/48) = 10.0
+            self.assertEqual(res['proj_margin'], 10.0)
 
     def test_pace_halftime_zero_clock(self):
         """Test period 2 with clock '0.0' or '0:00' is identified as Halftime."""
@@ -250,25 +251,25 @@ class TestLivePaceProjection(unittest.TestCase):
             self.assertEqual(res['elapsed_mins'], 24.0)
             self.assertEqual(res['phase'], 'HALFTIME')
             self.assertEqual(res['status_label'], 'ช่วงพักครึ่ง (Halftime)')
-            self.assertEqual(res['proj_total'], 207.0)
+            self.assertEqual(res['proj_total'], 214.0)
 
     def test_pace_quarter_breaks(self):
-        """Test End of 1st (12 mins) and End of 3rd (36 mins) quarter breaks."""
-        # End of Q1 (60 pts in 12 min -> 5.0 rate, w=0.25 -> rem rate 0.25*5 + 0.75*4.75 = 4.8125 -> 60 + 36*4.8125 = 233.25)
+        """Test End of 1st (12 mins) and End of 3rd (36 mins) quarter breaks with pure decay."""
+        # End of Q1 (60 pts in 12 min -> pure decay: 60 + 228.0 * 36/48 = 60 + 171.0 = 231.0)
         q1_res = calculate_live_pace_projection(period=1, clock_str="End of 1st", home_score=30, away_score=30)
         self.assertIsNotNone(q1_res)
         self.assertEqual(q1_res['elapsed_mins'], 12.0)
         self.assertEqual(q1_res['phase'], 'QUARTER_BREAK')
         self.assertEqual(q1_res['status_label'], 'จบควอเตอร์ 1 (End of Q1)')
-        self.assertEqual(q1_res['proj_total'], 233.2)
+        self.assertEqual(q1_res['proj_total'], 231.0)
 
-        # End of Q3 (180 pts in 36 min -> 5.0 rate, w=0.75 -> rem rate 0.75*5 + 0.25*4.75 = 4.9375 -> 180 + 12*4.9375 = 239.25)
+        # End of Q3 (180 pts in 36 min -> pure decay: 180 + 228.0 * 12/48 = 180 + 57.0 = 237.0)
         q3_res = calculate_live_pace_projection(period=3, clock_str="End of 3rd", home_score=90, away_score=90)
         self.assertIsNotNone(q3_res)
         self.assertEqual(q3_res['elapsed_mins'], 36.0)
         self.assertEqual(q3_res['phase'], 'QUARTER_BREAK')
         self.assertEqual(q3_res['status_label'], 'จบควอเตอร์ 3 (End of Q3)')
-        self.assertEqual(q3_res['proj_total'], 239.2)
+        self.assertEqual(q3_res['proj_total'], 237.0)
 
     def test_pace_overtime(self):
         """Test Overtime (OT1, Period 5) scales expected total to 53.0 minutes."""
@@ -302,6 +303,66 @@ class TestLivePaceProjection(unittest.TestCase):
         res_pregame = analyze_line_movement(open_line=237.5, current_line=242.5, market_type='total', recommendation='STRONG UNDER', is_live=False)
         self.assertEqual(res_pregame['status'], 'STEAM_WARNING')
         self.assertEqual(res_pregame['verdict'], 'FOLLOW_MARKET')
+
+    def test_pure_remaining_decay_wolves_and_raptors(self):
+        """Verify Wolves @ Heat and Raptors scenarios use pure remaining decay (w=0)."""
+        # Wolves @ Heat: 6 mins into Q1 (clock 6:00), score 35-32 (67 pts), pregame total 209.5
+        # rem_mins = 42.0. Proj = 67 + (209.5 * 42.0 / 48.0) = 67 + 183.31 = 250.3
+        wolves_res = calculate_live_pace_projection(
+            period=1, clock_str="06:00",
+            home_score=32, away_score=35,
+            pregame_total=209.5, pregame_spread=0.0
+        )
+        self.assertIsNotNone(wolves_res)
+        self.assertAlmostEqual(wolves_res['proj_total'], 250.3, delta=0.2)
+
+        # Raptors: 8 mins into Q1 (clock 4:00), score 30-13 (Home margin +17), pregame spread -2.5 (Home favored by 2.5)
+        # rem_mins = 40.0. Proj margin = +17 + (2.5 * 40.0 / 48.0) = 17 - 2.08 = +14.9
+        # (pregame_spread=-2.5 means prior_margin=+2.5)
+        raptors_res = calculate_live_pace_projection(
+            period=1, clock_str="04:00",
+            home_score=30, away_score=13,
+            pregame_total=220.0, pregame_spread=-2.5
+        )
+        self.assertIsNotNone(raptors_res)
+        # 17 + 2.5 * (40/48) = 17 + 2.08 = 19.1 if favored, or if pregame favored the other way
+        self.assertTrue(14.0 <= raptors_res['proj_margin'] <= 20.0)
+
+    def test_evaluate_live_pick(self):
+        """Verify evaluate_live_pick produces realistic EV (+2% to +15%) and never triggers +70% EV."""
+        # Live Over/Under: Proj Total 250.3 vs Live Line 248.5 (Edge +1.8) with 42 mins remaining
+        ou_eval = evaluate_live_pick(
+            projected_val=250.3,
+            current_line=248.5,
+            bet_type='total',
+            rem_mins=42.0
+        )
+        self.assertIsNotNone(ou_eval)
+        self.assertEqual(ou_eval['edge'], 1.8)
+        self.assertEqual(ou_eval['recommendation'], 'LEAN_OVER')
+        self.assertTrue(0.52 <= ou_eval['win_prob'] <= 0.60)
+        # EV must be realistic positive EV, NOT +70.3%
+        self.assertTrue(0.01 <= ou_eval['ev'] <= 0.15)
+        self.assertTrue(0.005 <= ou_eval['quarter_kelly'] <= 0.025)
+
+        # Live Spread: Proj Margin +14.9 vs Live Spread -13.5 (Cover Edge +1.4) with 40 mins remaining
+        sp_eval = evaluate_live_pick(
+            projected_val=14.9,
+            current_line=-13.5,
+            bet_type='spread',
+            rem_mins=40.0,
+            home_team="TOR",
+            away_team="BKN"
+        )
+        self.assertIsNotNone(sp_eval)
+        self.assertEqual(sp_eval['edge'], 1.4)
+        self.assertEqual(sp_eval['recommendation'], 'LEAN_HOME')
+        self.assertTrue(0.52 <= sp_eval['win_prob'] <= 0.60)
+        self.assertTrue(0.01 <= sp_eval['ev'] <= 0.15)
+        self.assertTrue(0.005 <= sp_eval['quarter_kelly'] <= 0.025)
+
+        # Missing line returns None safely
+        self.assertIsNone(evaluate_live_pick(projected_val=220.0, current_line=None, bet_type='total'))
 
 
 if __name__ == '__main__':

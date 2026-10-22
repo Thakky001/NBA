@@ -612,25 +612,20 @@ def calculate_live_pace_projection(
         expected_total_mins = 48.0 if p_int <= 4 else 48.0 + (p_int - 4) * 5.0
         rem_mins = max(0.0, expected_total_mins - elapsed_total)
 
-        # Dynamic Bayesian weight: linear fraction of game elapsed (regresses remaining time to pregame baseline)
-        w = min(1.0, elapsed_total / expected_total_mins)
-
-        # Baseline prior rates (points / minute)
-        prior_total_rate = (float(pregame_total) / 48.0) if (pregame_total is not None and float(pregame_total) > 150.0) else (228.0 / 48.0)
+        # Baseline prior totals and margins
+        prior_total = float(pregame_total) if (pregame_total is not None and float(pregame_total) > 150.0) else 228.0
         # In NBA betting, spread_line is home margin relative to away. (e.g. -4.5 means home favored by 4.5 pts)
-        prior_margin_rate = (-float(pregame_spread) / 48.0) if (pregame_spread is not None) else 0.0
+        prior_margin = -float(pregame_spread) if (pregame_spread is not None) else 0.0
 
-        # Current observed live rates (points / minute)
-        live_total_rate = total_pts / elapsed_total
-        live_margin_rate = (h_pts - a_pts) / elapsed_total
+        # Current observed live rates (points / minute) for UI display
+        live_total_rate = total_pts / elapsed_total if elapsed_total > 0 else 0.0
+        live_margin_rate = (h_pts - a_pts) / elapsed_total if elapsed_total > 0 else 0.0
 
-        # Blended expected rates for the remaining minutes
-        rem_total_rate = w * live_total_rate + (1.0 - w) * prior_total_rate
-        rem_margin_rate = w * live_margin_rate + (1.0 - w) * prior_margin_rate
-
-        # Final projections: current banked score + remaining projection
-        proj_total = total_pts + (rem_mins * rem_total_rate)
-        proj_margin = (h_pts - a_pts) + (rem_mins * rem_margin_rate)
+        # Remaining minutes projection purely anchored to pre-game baseline (zero live pace weight: w = 0)
+        # Prevents early quarter shooting anomalies from distorting full game projections
+        rem_fraction = rem_mins / 48.0
+        proj_total = total_pts + (prior_total * rem_fraction)
+        proj_margin = (h_pts - a_pts) + (prior_margin * rem_fraction)
 
         proj_home = (proj_total + proj_margin) / 2.0
         proj_away = (proj_total - proj_margin) / 2.0
@@ -638,6 +633,7 @@ def calculate_live_pace_projection(
         return {
             'elapsed_mins': round(elapsed_total, 1),
             'target_mins': round(expected_total_mins, 1),
+            'rem_mins': round(rem_mins, 1),
             'proj_total': round(proj_total, 1),
             'proj_margin': round(proj_margin, 1),
             'proj_home': round(proj_home, 1),
@@ -648,4 +644,118 @@ def calculate_live_pace_projection(
         }
     except Exception:
         return None
+
+
+def evaluate_live_pick(projected_val: float,
+                       current_line: Optional[float],
+                       bet_type: str = 'total',
+                       rem_mins: float = 48.0,
+                       home_team: str = "Home",
+                       away_team: str = "Away",
+                       market_odds_str: str = "-110,-110") -> Optional[Dict[str, Any]]:
+    """Evaluate live in-game pick comparing live projected final vs current live line.
+
+    Args:
+        projected_val: Live projected total (if bet_type=='total') or projected home margin (if bet_type=='spread').
+        current_line: Live consensus line (e.g. 224.5 for total, or -4.5 for home spread).
+        bet_type: 'total' (Over/Under) or 'spread' (Point Spread).
+        rem_mins: Game minutes remaining (out of 48.0+).
+        home_team: Home team abbreviation or name.
+        away_team: Away team abbreviation or name.
+        market_odds_str: American odds string for de-vigging (default "-110,-110").
+
+    Returns:
+        Dict with edge, win_prob, recommendation, ev, edge_pct, quarter_kelly, or None if line is missing.
+    """
+    if current_line is None:
+        return None
+
+    # Time decay factor for remaining game variance
+    decay = math.sqrt(max(0.01, rem_mins / 48.0))
+
+    if bet_type == 'total':
+        # Edge = Projected Total - Current Live Total Line
+        edge = projected_val - current_line
+        sigma = max(3.0, 13.5 * decay)
+        z = edge / (sigma * math.sqrt(2.0))
+        prob_over = 0.5 * (1.0 + math.erf(z))
+        prob_under = 1.0 - prob_over
+
+        if edge >= 2.0:
+            rec = "STRONG_OVER"
+            rec_text = "🔥 สปีดสดชี้สูง (Strong Over)"
+            pick_prob = prob_over
+            pick_idx = 0
+        elif edge >= 0.8:
+            rec = "LEAN_OVER"
+            rec_text = "📈 สปีดสดชี้สูง (Lean Over)"
+            pick_prob = prob_over
+            pick_idx = 0
+        elif edge <= -2.0:
+            rec = "STRONG_UNDER"
+            rec_text = "🧊 สปีดสดชี้ต่ำ (Strong Under)"
+            pick_prob = prob_under
+            pick_idx = 1
+        elif edge <= -0.8:
+            rec = "LEAN_UNDER"
+            rec_text = "📉 สปีดสดชี้ต่ำ (Lean Under)"
+            pick_prob = prob_under
+            pick_idx = 1
+        else:
+            rec = "NEUTRAL"
+            rec_text = "⚖️ สปีดสดสูสีเรตตลาด (Neutral / Pass)"
+            pick_prob = 0.50
+            pick_idx = 0
+
+    else:  # 'spread'
+        # In NBA betting convention, current_line is Home spread.
+        # Home covers if (Home Score - Away Score) + Spread > 0
+        # Cover Edge = Projected Home Margin + Live Spread Line
+        edge = projected_val + current_line
+        sigma = max(2.5, 11.5 * decay)
+        z = edge / (sigma * math.sqrt(2.0))
+        prob_home = 0.5 * (1.0 + math.erf(z))
+        prob_away = 1.0 - prob_home
+
+        if edge >= 2.0:
+            rec = "STRONG_HOME"
+            rec_text = f"🔥 สปีดสดชี้ {home_team} (Strong Cover)"
+            pick_prob = prob_home
+            pick_idx = 0
+        elif edge >= 0.8:
+            rec = "LEAN_HOME"
+            rec_text = f"📈 สปีดสดชี้ {home_team} (Lean Cover)"
+            pick_prob = prob_home
+            pick_idx = 0
+        elif edge <= -2.0:
+            rec = "STRONG_AWAY"
+            rec_text = f"✈️ สปีดสดชี้ {away_team} (Strong Cover)"
+            pick_prob = prob_away
+            pick_idx = 1
+        elif edge <= -0.8:
+            rec = "LEAN_AWAY"
+            rec_text = f"📉 สปีดสดชี้ {away_team} (Lean Cover)"
+            pick_prob = prob_away
+            pick_idx = 1
+        else:
+            rec = "NEUTRAL"
+            rec_text = "⚖️ สปีดสดสูสีเรตตลาด (Neutral / Pass)"
+            pick_prob = 0.50
+            pick_idx = 0
+
+    eval_metrics = evaluate_market_pick(pick_prob, book_odds=market_odds_str, pick_idx=pick_idx, kelly_fraction=0.25)
+    is_bet = rec != "NEUTRAL" and eval_metrics["ev"] > 0
+
+    return {
+        'edge': round(edge, 1),
+        'win_prob': round(pick_prob, 4),
+        'recommendation': rec,
+        'rec_text': rec_text,
+        'ev': eval_metrics['ev'] if is_bet else 0.0,
+        'edge_pct': eval_metrics['edge_pct'] if is_bet else 0.0,
+        'quarter_kelly': eval_metrics['quarter_kelly'] if is_bet else 0.0,
+        'fair_prob': eval_metrics['fair_prob'],
+        'market_prob': eval_metrics['market_prob'],
+        'is_bet': is_bet
+    }
 
