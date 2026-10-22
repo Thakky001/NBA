@@ -224,5 +224,50 @@ class TestPredictionTracker(unittest.TestCase):
                     self.assertIn('P3', loaded['game_id'].values)
                     mock_save.assert_called_once()
 
+    def test_calculate_track_record_four_distinct_subsets(self):
+        """calculate_track_record must calculate strong_spread, strong_ou, lean_spread, lean_ou."""
+        from analysis.prediction_tracker import get_available_ledger_dates
+
+        mock_ledger = pd.DataFrame([
+            # Game 1: Strong Spread WIN, Strong OU LOSS
+            {'game_id': '1', 'date': '2026-10-22', 'status': 'GRADED', 'sp_recommendation': 'STRONG HOME', 'sp_result': 'WIN', 'ou_recommendation': 'STRONG OVER', 'ou_result': 'LOSS', 'verdict_result': 'WIN'},
+            # Game 2: Strong Spread WIN, Lean OU WIN
+            {'game_id': '2', 'date': '2026-10-22', 'status': 'GRADED', 'sp_recommendation': 'STRONG AWAY', 'sp_result': 'WIN', 'ou_recommendation': 'LEAN UNDER', 'ou_result': 'WIN', 'verdict_result': 'WIN'},
+            # Game 3: Lean Spread LOSS, Strong OU WIN
+            {'game_id': '3', 'date': '2026-10-21', 'status': 'GRADED', 'sp_recommendation': 'LEAN HOME', 'sp_result': 'LOSS', 'ou_recommendation': 'STRONG UNDER', 'ou_result': 'WIN', 'verdict_result': 'LOSS'},
+            # Game 4: Lean Spread WIN, Lean OU LOSS
+            {'game_id': '4', 'date': '2026-10-21', 'status': 'GRADED', 'sp_recommendation': 'LEAN AWAY', 'sp_result': 'WIN', 'ou_recommendation': 'LEAN OVER', 'ou_result': 'LOSS', 'verdict_result': 'LOSS'},
+        ])
+
+        stats = calculate_track_record(mock_ledger)
+
+        # 1. Strong Spread: 2 wins, 0 losses -> 100% win rate
+        self.assertIn('strong_spread', stats)
+        self.assertEqual(stats['strong_spread']['wins'], 2)
+        self.assertEqual(stats['strong_spread']['losses'], 0)
+        self.assertEqual(stats['strong_spread']['win_rate'], 100.0)
+
+        # 2. Strong OU: 1 win, 1 loss -> 50% win rate
+        self.assertIn('strong_ou', stats)
+        self.assertEqual(stats['strong_ou']['wins'], 1)
+        self.assertEqual(stats['strong_ou']['losses'], 1)
+        self.assertEqual(stats['strong_ou']['win_rate'], 50.0)
+
+        # 3. Lean Spread: 1 win, 1 loss -> 50% win rate
+        self.assertIn('lean_spread', stats)
+        self.assertEqual(stats['lean_spread']['wins'], 1)
+        self.assertEqual(stats['lean_spread']['losses'], 1)
+        self.assertEqual(stats['lean_spread']['win_rate'], 50.0)
+
+        # 4. Lean OU: 1 win, 1 loss -> 50% win rate
+        self.assertIn('lean_ou', stats)
+        self.assertEqual(stats['lean_ou']['wins'], 1)
+        self.assertEqual(stats['lean_ou']['losses'], 1)
+        self.assertEqual(stats['lean_ou']['win_rate'], 50.0)
+
+        # 5. Dates helper
+        dates = get_available_ledger_dates(mock_ledger)
+        self.assertEqual(dates, ['2026-10-22', '2026-10-21'])
+
 if __name__ == '__main__':
     unittest.main()

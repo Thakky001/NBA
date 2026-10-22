@@ -444,6 +444,10 @@ def calculate_track_record(ledger_df: pd.DataFrame) -> Dict[str, Any]:
     verdict_results = []
     strong_results = []
     lean_results = []
+    strong_sp_results = []
+    strong_ou_results = []
+    lean_sp_results = []
+    lean_ou_results = []
 
     for _, row in graded.iterrows():
         ou_r = row.get('ou_result')
@@ -455,14 +459,22 @@ def calculate_track_record(ledger_df: pd.DataFrame) -> Dict[str, Any]:
         if ou_r in ['WIN', 'LOSS', 'PUSH']:
             ou_results.append(ou_r)
             all_results.append(ou_r)
-            if 'STRONG' in ou_rec: strong_results.append(ou_r)
-            elif 'LEAN' in ou_rec: lean_results.append(ou_r)
+            if 'STRONG' in ou_rec:
+                strong_results.append(ou_r)
+                strong_ou_results.append(ou_r)
+            elif 'LEAN' in ou_rec:
+                lean_results.append(ou_r)
+                lean_ou_results.append(ou_r)
 
         if sp_r in ['WIN', 'LOSS', 'PUSH']:
             sp_results.append(sp_r)
             all_results.append(sp_r)
-            if 'STRONG' in sp_rec: strong_results.append(sp_r)
-            elif 'LEAN' in sp_rec: lean_results.append(sp_r)
+            if 'STRONG' in sp_rec:
+                strong_results.append(sp_r)
+                strong_sp_results.append(sp_r)
+            elif 'LEAN' in sp_rec:
+                lean_results.append(sp_r)
+                lean_sp_results.append(sp_r)
 
         if v_r in ['WIN', 'LOSS', 'PUSH']:
             verdict_results.append(v_r)
@@ -476,8 +488,20 @@ def calculate_track_record(ledger_df: pd.DataFrame) -> Dict[str, Any]:
         'lean': _calc_subset(lean_results),
         'over_under': _calc_subset(ou_results),
         'spread': _calc_subset(sp_results),
+        'strong_spread': _calc_subset(strong_sp_results),
+        'strong_ou': _calc_subset(strong_ou_results),
+        'lean_spread': _calc_subset(lean_sp_results),
+        'lean_ou': _calc_subset(lean_ou_results),
         'verdict': _calc_subset(verdict_results)
     }
+
+
+def get_available_ledger_dates(ledger_df: pd.DataFrame) -> List[str]:
+    """Return sorted list of unique dates from ledger in descending order."""
+    if ledger_df is None or ledger_df.empty or 'date' not in ledger_df.columns:
+        return []
+    dates = [str(d).strip() for d in ledger_df['date'].dropna().unique() if str(d).strip() != '']
+    return sorted(dates, reverse=True)
 
 
 def backfill_season_history(analyzer: Any) -> int:

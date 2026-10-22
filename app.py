@@ -117,6 +117,7 @@ try:
         grade_finished_games,
         calculate_track_record,
         record_slate_predictions,
+        get_available_ledger_dates,
     )
 except (ImportError, AttributeError):
     try:
@@ -127,12 +128,14 @@ except (ImportError, AttributeError):
             grade_finished_games,
             calculate_track_record,
             record_slate_predictions,
+            get_available_ledger_dates,
         )
     except Exception:
         def load_ledger(): return pd.DataFrame()
         def grade_finished_games(*a, **k): return 0
         def calculate_track_record(*a, **k): return {}
         def record_slate_predictions(*a, **k): return 0
+        def get_available_ledger_dates(*a, **k): return []
 from config import parse_spread, calculate_home_spread, resolve_team_info, normalize_team_name, t_rec
 
 def t_dir(direction, factor_type):
@@ -820,58 +823,112 @@ def render_track_record_tab():
 
     st.markdown("---")
 
-    # Detailed Category Breakdown in expander
+    # Detailed Category Breakdown in expander (2 rows: Strong vs Lean + Verdict summary)
     with st.expander("📊 ดูรายละเอียดแยกตามหมวดหมู่ (Breakdown by Category)", expanded=True):
-        b_cols = st.columns(4)
-        with b_cols[0]:
-            st.markdown("##### 🏀 สูง/ต่ำ (Over/Under)")
-            ou = stats['over_under']
-            st.write(f"- ชนะ/แพ้: **{ou['wins']}W - {ou['losses']}L - {ou['pushes']}P**")
-            st.write(f"- Win Rate: **{ou['win_rate']:.1f}%**")
-            st.write(f"- กำไร/ขาดทุน: **{ou['net_units']:+.2f} Units** (`{ou['roi_pct']:+.1f}% ROI`)")
-        with b_cols[1]:
-            st.markdown("##### 🛡️ แต้มต่อ (Spread)")
-            sp = stats['spread']
-            st.write(f"- ชนะ/แพ้: **{sp['wins']}W - {sp['losses']}L - {sp['pushes']}P**")
-            st.write(f"- Win Rate: **{sp['win_rate']:.1f}%**")
-            st.write(f"- กำไร/ขาดทุน: **{sp['net_units']:+.2f} Units** (`{sp['roi_pct']:+.1f}% ROI`)")
-        with b_cols[2]:
-            st.markdown("##### 📈 น่าสนใจ (Lean Picks)")
-            ln = stats['lean']
-            st.write(f"- ชนะ/แพ้: **{ln['wins']}W - {ln['losses']}L - {ln['pushes']}P**")
-            st.write(f"- Win Rate: **{ln['win_rate']:.1f}%**")
-            st.write(f"- กำไร/ขาดทุน: **{ln['net_units']:+.2f} Units** (`{ln['roi_pct']:+.1f}% ROI`)")
-        with b_cols[3]:
-            st.markdown("##### 🌊 ฟันธงกระแสเงิน (Verdict)")
-            vd = stats['verdict']
-            st.write(f"- ชนะ/แพ้: **{vd['wins']}W - {vd['losses']}L - {vd['pushes']}P**")
-            st.write(f"- Win Rate: **{vd['win_rate']:.1f}%**")
-            st.write(f"- กำไร/ขาดทุน: **{vd['net_units']:+.2f} Units** (`{vd['roi_pct']:+.1f}% ROI`)")
+        st.markdown("#### 🔥 ไม้เน้น (Strong Picks - โมเดลมั่นใจสูง)")
+        b_r1_c1, b_r1_c2 = st.columns(2)
+        with b_r1_c1:
+            st.markdown("##### 🛡️ มั่นใจแต้มต่อ (Strong Spread)")
+            s_sp = stats.get('strong_spread', {})
+            st.write(f"- ชนะ/แพ้: **{s_sp.get('wins', 0)}W - {s_sp.get('losses', 0)}L - {s_sp.get('pushes', 0)}P**")
+            st.write(f"- Win Rate: **{s_sp.get('win_rate', 0.0):.1f}%**")
+            st.write(f"- กำไร/ขาดทุน: **{s_sp.get('net_units', 0.0):+.2f} Units** (`{s_sp.get('roi_pct', 0.0):+.1f}% ROI`)")
+        with b_r1_c2:
+            st.markdown("##### 🏀 มั่นใจสูง/ต่ำ (Strong O/U)")
+            s_ou = stats.get('strong_ou', {})
+            st.write(f"- ชนะ/แพ้: **{s_ou.get('wins', 0)}W - {s_ou.get('losses', 0)}L - {s_ou.get('pushes', 0)}P**")
+            st.write(f"- Win Rate: **{s_ou.get('win_rate', 0.0):.1f}%**")
+            st.write(f"- กำไร/ขาดทุน: **{s_ou.get('net_units', 0.0):+.2f} Units** (`{s_ou.get('roi_pct', 0.0):+.1f}% ROI`)")
+
+        st.markdown("---")
+        st.markdown("#### 📈 ไม้น่าสนใจ (Lean Picks - สัญญาณน่าจับตา)")
+        b_r2_c1, b_r2_c2 = st.columns(2)
+        with b_r2_c1:
+            st.markdown("##### ✈️ น่าสนใจแต้มต่อ (Lean Spread)")
+            l_sp = stats.get('lean_spread', {})
+            st.write(f"- ชนะ/แพ้: **{l_sp.get('wins', 0)}W - {l_sp.get('losses', 0)}L - {l_sp.get('pushes', 0)}P**")
+            st.write(f"- Win Rate: **{l_sp.get('win_rate', 0.0):.1f}%**")
+            st.write(f"- กำไร/ขาดทุน: **{l_sp.get('net_units', 0.0):+.2f} Units** (`{l_sp.get('roi_pct', 0.0):+.1f}% ROI`)")
+        with b_r2_c2:
+            st.markdown("##### 🏀 น่าสนใจสูง/ต่ำ (Lean O/U)")
+            l_ou = stats.get('lean_ou', {})
+            st.write(f"- ชนะ/แพ้: **{l_ou.get('wins', 0)}W - {l_ou.get('losses', 0)}L - {l_ou.get('pushes', 0)}P**")
+            st.write(f"- Win Rate: **{l_ou.get('win_rate', 0.0):.1f}%**")
+            st.write(f"- กำไร/ขาดทุน: **{l_ou.get('net_units', 0.0):+.2f} Units** (`{l_ou.get('roi_pct', 0.0):+.1f}% ROI`)")
+
+        st.markdown("---")
+        vd = stats.get('verdict', {})
+        st.caption(
+            f"🌊 **สรุปฟันธงกระแสเงิน (Verdict Summary):** ชนะ/แพ้ **{vd.get('wins', 0)}W - {vd.get('losses', 0)}L - {vd.get('pushes', 0)}P** "
+            f"| Win Rate **{vd.get('win_rate', 0.0):.1f}%** | กำไร/ขาดทุน **{vd.get('net_units', 0.0):+.2f} Units** (`{vd.get('roi_pct', 0.0):+.1f}% ROI`)"
+        )
 
     st.markdown("### 📋 ตารางประวัติคำทำนายย้อนหลัง")
 
-    # Filter controls
-    f_c1, f_c2 = st.columns([2, 2])
+    # Available dates for date filtering
+    avail_dates = get_available_ledger_dates(ledger_df)
+
+    # 3 Filter controls
+    f_c1, f_c2, f_c3 = st.columns([1.5, 1.2, 2.0])
     with f_c1:
-        filter_status = st.selectbox("สถานะการแข่งขัน", ["ทั้งหมด", "ตรวจผลแล้ว (GRADED)", "รอผล (PENDING)"])
+        date_options = ["ทั้งหมด (All Dates)"] + avail_dates
+        filter_date = st.selectbox("📅 เลือกวันที่", date_options)
     with f_c2:
-        filter_tier = st.selectbox("ระดับความมั่นใจ", ["ทั้งหมด", "เฉพาะไม้เน้น (🔥 STRONG)", "เฉพาะน่าสนใจ (LEAN)"])
+        filter_status = st.selectbox("สถานะการแข่งขัน", ["ทั้งหมด", "ตรวจผลแล้ว (GRADED)", "รอผล (PENDING)"])
+    with f_c3:
+        filter_tier = st.selectbox(
+            "ระดับความมั่นใจและประเภทไม้",
+            [
+                "ทั้งหมด",
+                "🔥 มั่นใจแต้มต่อ (Strong Spread)",
+                "🔥 มั่นใจสูงต่ำ (Strong O/U)",
+                "✈️ น่าสนใจแต้มต่อ (Lean Spread)",
+                "📈 น่าสนใจสูงต่ำ (Lean O/U)",
+                "เฉพาะไม้เน้นทั้งหมด (Strong All)"
+            ]
+        )
+
+    # Daily performance banner when a specific date is selected
+    if filter_date != "ทั้งหมด (All Dates)":
+        daily_ledger = ledger_df[ledger_df['date'] == filter_date]
+        d_stats = calculate_track_record(daily_ledger)
+        d_total_games = len(daily_ledger)
+        d_graded_games = d_stats.get('graded_games', 0)
+        d_wins = d_stats['overall']['wins']
+        d_losses = d_stats['overall']['losses']
+        d_pushes = d_stats['overall']['pushes']
+        d_wr = d_stats['overall']['win_rate']
+        d_units = d_stats['overall']['net_units']
+        d_roi = d_stats['overall']['roi_pct']
+
+        st.info(
+            f"📅 **สรุปผลงานวันที่ {filter_date}:** แข่งขันทั้งหมด **{d_total_games} คู่** (จบแล้ว {d_graded_games} คู่) | "
+            f"ผลรวมคำทำนาย: ชนะ **{d_wins}W - {d_losses}L - {d_pushes}P** "
+            f"(`{d_wr:.1f}%` Win Rate) | "
+            f"ผลตอบแทนจำลอง **{d_units:+.2f} Units** (`{d_roi:+.1f}%` ROI)"
+        )
 
     filtered_df = ledger_df.copy()
+    if filter_date != "ทั้งหมด (All Dates)":
+        filtered_df = filtered_df[filtered_df['date'] == filter_date]
+
     if filter_status == "ตรวจผลแล้ว (GRADED)":
         filtered_df = filtered_df[filtered_df['status'] == 'GRADED']
     elif filter_status == "รอผล (PENDING)":
         filtered_df = filtered_df[filtered_df['status'] == 'PENDING']
 
-    if filter_tier == "เฉพาะไม้เน้น (🔥 STRONG)":
+    if filter_tier == "🔥 มั่นใจแต้มต่อ (Strong Spread)":
+        filtered_df = filtered_df[filtered_df['sp_recommendation'].astype(str).str.contains('STRONG', na=False)]
+    elif filter_tier == "🔥 มั่นใจสูงต่ำ (Strong O/U)":
+        filtered_df = filtered_df[filtered_df['ou_recommendation'].astype(str).str.contains('STRONG', na=False)]
+    elif filter_tier == "✈️ น่าสนใจแต้มต่อ (Lean Spread)":
+        filtered_df = filtered_df[filtered_df['sp_recommendation'].astype(str).str.contains('LEAN', na=False)]
+    elif filter_tier == "📈 น่าสนใจสูงต่ำ (Lean O/U)":
+        filtered_df = filtered_df[filtered_df['ou_recommendation'].astype(str).str.contains('LEAN', na=False)]
+    elif filter_tier == "เฉพาะไม้เน้นทั้งหมด (Strong All)":
         filtered_df = filtered_df[
             filtered_df['ou_recommendation'].astype(str).str.contains('STRONG', na=False) |
             filtered_df['sp_recommendation'].astype(str).str.contains('STRONG', na=False)
-        ]
-    elif filter_tier == "เฉพาะน่าสนใจ (LEAN)":
-        filtered_df = filtered_df[
-            filtered_df['ou_recommendation'].astype(str).str.contains('LEAN', na=False) |
-            filtered_df['sp_recommendation'].astype(str).str.contains('LEAN', na=False)
         ]
 
     # Helper badge formatter
