@@ -259,6 +259,17 @@ class FeatureEngineer:
         home_stats = agg_split(home_games, True)
         away_stats = agg_split(away_games, False)
         
+        # Empirical Home Court Advantage: (Home point diff - Away point diff) / 2.0
+        # Regressed via Empirical Bayes towards modern NBA baseline (1.8 pts)
+        n_home_g = home_stats['wins'] + home_stats['losses']
+        n_away_g = away_stats['wins'] + away_stats['losses']
+        if n_home_g > 0 and n_away_g > 0:
+            raw_hca = (home_stats['avg_diff'] - away_stats['avg_diff']) / 2.0
+            n_min = min(n_home_g, n_away_g)
+            shrunk_hca = (n_min * raw_hca + 15.0 * 1.8) / (n_min + 15.0)
+        else:
+            shrunk_hca = 1.8
+
         return {
             'home_wins': home_stats['wins'],
             'home_losses': home_stats['losses'],
@@ -272,7 +283,7 @@ class FeatureEngineer:
             'away_avg_scored': away_stats['avg_scored'],
             'away_avg_allowed': away_stats['avg_allowed'],
             
-            'home_court_advantage': home_stats['avg_diff'] - away_stats['avg_diff']
+            'home_court_advantage': round(float(shrunk_hca), 2)
         }
 
     def get_head_to_head(self, team_a: str, team_b: str, n_games: int = 10) -> dict:
@@ -428,8 +439,8 @@ class FeatureEngineer:
             power_gap = h_net - a_net
             
         proj_margin = home_form_10['avg_point_diff'] - away_form_10['avg_point_diff']
-        # Incorporate home court advantage
-        proj_margin += home_splits.get('home_court_advantage', 3.0)
+        # Incorporate empirical home court advantage (modern NBA baseline 1.8 pts)
+        proj_margin += home_splits.get('home_court_advantage', 1.8)
         
         line_vs_proj = spread_line - proj_margin if spread_line is not None else None
         
@@ -461,6 +472,14 @@ class FeatureEngineer:
             'streak_str': home_form_10['current_streak']
         }
 
+    def get_league_avg_pace(self) -> float:
+        """Calculate dynamic league average pace from team advanced stats or default 99.5."""
+        if self.team_advanced is not None and not self.team_advanced.empty and 'pace' in self.team_advanced.columns:
+            pace_series = pd.to_numeric(self.team_advanced['pace'], errors='coerce').dropna()
+            if not pace_series.empty and 85.0 <= pace_series.mean() <= 115.0:
+                return round(float(pace_series.mean()), 2)
+        return 99.5
+
     def get_roster_ratings(self, home_team: str, away_team: str) -> dict:
         """Fetch roster-based ratings using PlayerRatingEngine."""
         if not hasattr(self, '_player_engine'):
@@ -479,6 +498,10 @@ class FeatureEngineer:
                 'away_roster_rating': away_data.get('roster_rating', 0.0),
                 'home_full_roster_rating': home_data.get('full_roster_rating', 0.0),
                 'away_full_roster_rating': away_data.get('full_roster_rating', 0.0),
+                'home_off_loss': home_data.get('off_loss', 0.0),
+                'home_def_loss': home_data.get('def_loss', 0.0),
+                'away_off_loss': away_data.get('off_loss', 0.0),
+                'away_def_loss': away_data.get('def_loss', 0.0),
                 'home_top_players': home_data.get('top_players', []),
                 'away_top_players': away_data.get('top_players', []),
                 'home_injuries': home_data.get('injuries', []),
@@ -532,5 +555,16 @@ class FeatureEngineer:
         # Add Player-Based Valuation (Roster Ratings)
         roster_data = self.get_roster_ratings(home_team, away_team)
         result.update(roster_data)
+
+        # Dynamic league pace
+        result['league_avg_pace'] = self.get_league_avg_pace()
+
+        # Net injury impact on total points (bidirectional: offense lost vs defense leaked)
+        h_off = roster_data.get('home_off_loss', 0.0)
+        h_def = roster_data.get('home_def_loss', 0.0)
+        a_off = roster_data.get('away_off_loss', 0.0)
+        a_def = roster_data.get('away_def_loss', 0.0)
+        net_injury_impact = -(h_off + a_off) * 0.20 + (h_def + a_def) * 0.16
+        result['injury_net_total_impact'] = round(net_injury_impact, 2)
         
         return result

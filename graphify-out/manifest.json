@@ -594,9 +594,9 @@
     "semantic_hash": ""
   },
   "analysis/trend_analyzer.py": {
-    "mtime": 1792651925.205533,
-    "seen": 1792652425.3089268,
-    "ast_hash": "25e48d00e2b7e5ff1a9857d2af0b316d",
+    "mtime": 1792677402.0662675,
+    "seen": 1792677563.871509,
+    "ast_hash": "01fed56a12193c114b8b0d067f6adcd6",
     "semantic_hash": ""
   },
   "app.py": {
@@ -660,15 +660,15 @@
     "semantic_hash": ""
   },
   "processing/feature_engineering.py": {
-    "mtime": 1792502081.0029867,
-    "seen": 1792502237.3211884,
-    "ast_hash": "bcebae22b575fa6ef727fe7479579052",
+    "mtime": 1792677887.6977253,
+    "seen": 1792678028.7003448,
+    "ast_hash": "464328237576c3d940b272bd0e50d7ce",
     "semantic_hash": ""
   },
   "processing/player_rating.py": {
-    "mtime": 1792625912.0030546,
-    "seen": 1792626702.2519581,
-    "ast_hash": "f86c2b53a1d80abf6828a1bc14b7cdb6",
+    "mtime": 1792677287.3103013,
+    "seen": 1792677563.8715305,
+    "ast_hash": "d35a2e08d2c10400d8d902cdd0d49c5e",
     "semantic_hash": ""
   },
   "reports/__init__.py": {
@@ -738,9 +738,9 @@
     "semantic_hash": ""
   },
   "tests/test_trend_analyzer.py": {
-    "mtime": 1792651925.2463408,
-    "seen": 1792652425.3089654,
-    "ast_hash": "753d1a56e6e7f50abe9024948bd8a107",
+    "mtime": 1792677482.027551,
+    "seen": 1792677563.8715527,
+    "ast_hash": "4c72b71c07ccb0af280fead0709c9f58",
     "semantic_hash": ""
   },
   ".agents/skills/deploy-to-vercel/SKILL.md": {
@@ -2028,15 +2028,15 @@
     "semantic_hash": ""
   },
   "analysis/betting_math.py": {
-    "mtime": 1792651925.205533,
-    "seen": 1792652425.3089232,
-    "ast_hash": "10e5fb0c6e73349cfdc367579830ecb8",
+    "mtime": 1792677862.6861403,
+    "seen": 1792678028.7002993,
+    "ast_hash": "31333c3868fdcacf1531b0a6009a15ac",
     "semantic_hash": ""
   },
   "tests/test_betting_math.py": {
-    "mtime": 1792651925.2441058,
-    "seen": 1792652425.3089552,
-    "ast_hash": "22dc36da109fa38fb4bf85112848f356",
+    "mtime": 1792677929.3042457,
+    "seen": 1792678028.700364,
+    "ast_hash": "e895b116750db0f9f6fb5ff390088b25",
     "semantic_hash": ""
   },
   ".agents/skills/betting/SKILL.md": {
@@ -2133,6 +2133,12 @@
     "mtime": 1792655128.5719025,
     "seen": 1792655202.4532497,
     "ast_hash": "0507403315c57ce23f1bcee6881dfabc",
+    "semantic_hash": ""
+  },
+  "docs/QUANT_BETTING_GUIDE.md": {
+    "mtime": 1792678010.613119,
+    "seen": 1792678028.7008557,
+    "ast_hash": "c818344ef71f49c604fa17edb52eb31c",
     "semantic_hash": ""
   }
 }

@@ -219,6 +219,21 @@ class PlayerRatingEngine:
                     except (ValueError, TypeError):
                         gp = 0
 
+                    # Calculate separate offensive and defensive efficiency if detailed stats present
+                    pts = float(row.get('PTS', 0) or 0) / gp if gp > 0 else 0.0
+                    ast = float(row.get('AST', 0) or 0) / gp if gp > 0 else 0.0
+                    oreb = float(row.get('OREB', 0) or 0) / gp if gp > 0 else 0.0
+                    stl = float(row.get('STL', 0) or 0) / gp if gp > 0 else 0.0
+                    blk = float(row.get('BLK', 0) or 0) / gp if gp > 0 else 0.0
+                    dreb = float(row.get('DREB', 0) or 0) / gp if gp > 0 else 0.0
+                    
+                    if pts > 0 or ast > 0:
+                        off_eff = round(pts + 1.5 * ast + oreb, 1)
+                        def_eff = round(stl * 2.0 + blk * 2.0 + dreb, 1)
+                    else:
+                        off_eff = round(eff * 0.65, 1)
+                        def_eff = round(eff * 0.35, 1)
+
                     # Base tier lookup for small-sample blend or baseline
                     pick = draft_map.get(p_name_norm, 999)
                     if pick <= 5:
@@ -236,6 +251,8 @@ class PlayerRatingEngine:
                             'name': active_player_map[p_name_norm],
                             'clean_name': active_player_map[p_name_norm],
                             'eff_pg': eff,
+                            'off_eff': off_eff,
+                            'def_eff': def_eff,
                             'gp': gp
                         })
                         found_players.add(p_name_norm)
@@ -246,6 +263,8 @@ class PlayerRatingEngine:
                             'name': active_player_map[p_name_norm],
                             'clean_name': active_player_map[p_name_norm],
                             'eff_pg': round(blended_eff, 1),
+                            'off_eff': round(off_eff * gp / 5.0 + (base_eff * 0.65) * (5 - gp) / 5.0, 1),
+                            'def_eff': round(def_eff * gp / 5.0 + (base_eff * 0.35) * (5 - gp) / 5.0, 1),
                             'gp': gp
                         })
                         found_players.add(p_name_norm)
@@ -270,6 +289,8 @@ class PlayerRatingEngine:
                     'name': f"{original_name} (Base)",
                     'clean_name': original_name,
                     'eff_pg': eff,
+                    'off_eff': round(eff * 0.65, 1),
+                    'def_eff': round(eff * 0.35, 1),
                     'gp': 0
                 })
         # 3. Match Injuries for this team
@@ -288,24 +309,36 @@ class PlayerRatingEngine:
         for p in matched_ratings:
             p_clean = p.get('clean_name', p['name'])
             p_norm = normalize_name(p_clean)
+            p_off = p.get('off_eff', round(p['eff_pg'] * 0.65, 1))
+            p_def = p.get('def_eff', round(p['eff_pg'] * 0.35, 1))
             inj_info = injury_map.get(p_norm) or injury_map.get(normalize_name(p['name']))
             if inj_info:
                 st_lower = inj_info['status'].lower()
                 detail_str = f" - {inj_info['detail']}" if inj_info['detail'] else ""
                 if any(k in st_lower for k in ['out', 'ofs', 'injured reserve', 'season']):
                     p['active_eff'] = 0.0
+                    p['active_off_eff'] = 0.0
+                    p['active_def_eff'] = 0.0
                     p['injury_status'] = f"OUT{detail_str}"
                 elif 'doubtful' in st_lower:
                     p['active_eff'] = p['eff_pg'] * 0.25
+                    p['active_off_eff'] = round(p_off * 0.25, 1)
+                    p['active_def_eff'] = round(p_def * 0.25, 1)
                     p['injury_status'] = f"DOUBTFUL{detail_str}"
                 elif any(k in st_lower for k in ['questionable', 'day-to-day', 'gtd']):
                     p['active_eff'] = p['eff_pg'] * 0.60
+                    p['active_off_eff'] = round(p_off * 0.60, 1)
+                    p['active_def_eff'] = round(p_def * 0.60, 1)
                     p['injury_status'] = f"GTD/QST{detail_str}"
                 else:
                     p['active_eff'] = p['eff_pg']
+                    p['active_off_eff'] = p_off
+                    p['active_def_eff'] = p_def
                     p['injury_status'] = None
             else:
                 p['active_eff'] = p['eff_pg']
+                p['active_off_eff'] = p_off
+                p['active_def_eff'] = p_def
                 p['injury_status'] = None
 
         # Full health power: Top 8 sorted by original EFF_PG
@@ -313,10 +346,17 @@ class PlayerRatingEngine:
         if not full_top_8:
             return result
         full_roster_rating = sum(p['eff_pg'] for p in full_top_8)
+        full_off_rating = sum(p.get('off_eff', p['eff_pg'] * 0.65) for p in full_top_8)
+        full_def_rating = sum(p.get('def_eff', p['eff_pg'] * 0.35) for p in full_top_8)
 
         # Active power: Top 8 sorted by active EFF_PG (injured players drop down, bench steps up)
         active_top_8 = sorted(matched_ratings, key=lambda x: x['active_eff'], reverse=True)[:8]
         active_roster_rating = sum(p['active_eff'] for p in active_top_8)
+        active_off_rating = sum(p.get('active_off_eff', p['active_eff'] * 0.65) for p in active_top_8)
+        active_def_rating = sum(p.get('active_def_eff', p['active_eff'] * 0.35) for p in active_top_8)
+
+        off_loss = max(0.0, full_off_rating - active_off_rating)
+        def_loss = max(0.0, full_def_rating - active_def_rating)
 
         # Injuries list for this team
         team_injuries = [
@@ -326,6 +366,12 @@ class PlayerRatingEngine:
 
         result['roster_rating'] = float(active_roster_rating)
         result['full_roster_rating'] = float(full_roster_rating)
+        result['off_loss'] = float(round(off_loss, 2))
+        result['def_loss'] = float(round(def_loss, 2))
+        result['full_off_rating'] = float(round(full_off_rating, 2))
+        result['full_def_rating'] = float(round(full_def_rating, 2))
+        result['active_off_rating'] = float(round(active_off_rating, 2))
+        result['active_def_rating'] = float(round(active_def_rating, 2))
         result['injuries'] = team_injuries
         result['top_players'] = [
             f"{p['name']} ({p['active_eff']:.1f}" + (f" - {p['injury_status']})" if p.get('injury_status') else ")")

@@ -171,13 +171,13 @@ class TrendAnalyzer:
         home_drtg = features.get('home_drtg')
         away_ortg = features.get('away_ortg')
         away_drtg = features.get('away_drtg')
-        league_avg_pace = 99.5
+        league_avg_pace = features.get('league_avg_pace') or 99.5
 
         if home_ortg and home_drtg and away_ortg and away_drtg and home_pace and away_pace:
-            # Dean Oliver Possession & Efficiency Model (eliminates double-counting pace)
+            # Dean Oliver Possession & Efficiency Model with dynamic league pace & home court baseline
             expected_pace = (home_pace * away_pace) / league_avg_pace
-            home_exp_eff = (home_ortg + away_drtg) / 2.0
-            away_exp_eff = (away_ortg + home_drtg) / 2.0
+            home_exp_eff = (home_ortg + away_drtg + 1.5) / 2.0
+            away_exp_eff = (away_ortg + home_drtg - 1.5) / 2.0
             
             raw_home_pts = expected_pace * (home_exp_eff / 100.0)
             raw_away_pts = expected_pace * (away_exp_eff / 100.0)
@@ -186,31 +186,42 @@ class TrendAnalyzer:
             # Fallback when advanced ratings unavailable: use combined_avg directly without double pace
             raw_projected_total = combined_avg if combined_avg > 0 else (over_under_line or 220.0)
 
-        # Injury & Roster Replacement Impact on Total Points
-        injury_adj_total = 0.0
-        home_full = features.get('home_full_roster_rating', 0)
-        home_active = features.get('home_roster_rating', home_full)
-        away_full = features.get('away_full_roster_rating', 0)
-        away_active = features.get('away_roster_rating', away_full)
+        # Injury & Roster Replacement Impact on Total Points (Bidirectional: Offense Lost vs Defense Leaked)
+        home_off_loss = features.get('home_off_loss')
+        home_def_loss = features.get('home_def_loss')
+        away_off_loss = features.get('away_off_loss')
+        away_def_loss = features.get('away_def_loss')
 
-        if home_full > 0 and home_active < home_full:
-            home_loss = max(0.0, home_full - home_active)
-            injury_adj_total -= home_loss * 0.22
+        if home_off_loss is not None or away_off_loss is not None:
+            h_off = home_off_loss or 0.0
+            h_def = home_def_loss or 0.0
+            a_off = away_off_loss or 0.0
+            a_def = away_def_loss or 0.0
+            injury_adj_total = -(h_off + a_off) * 0.20 + (h_def + a_def) * 0.16
+        else:
+            # Fallback to total roster rating drop if detailed off/def splits not provided
+            home_full = features.get('home_full_roster_rating', 0)
+            home_active = features.get('home_roster_rating', home_full)
+            away_full = features.get('away_full_roster_rating', 0)
+            away_active = features.get('away_roster_rating', away_full)
+            h_loss = max(0.0, home_full - home_active) if home_full > 0 else 0.0
+            a_loss = max(0.0, away_full - away_active) if away_full > 0 else 0.0
+            # Heuristic split: 65% offensive impact, 35% defensive impact
+            injury_adj_total = -(h_loss + a_loss) * 0.65 * 0.20 + (h_loss + a_loss) * 0.35 * 0.16
 
-        if away_full > 0 and away_active < away_full:
-            away_loss = max(0.0, away_full - away_active)
-            injury_adj_total -= away_loss * 0.22
-
-        injury_adj_total = max(-8.0, min(0.0, injury_adj_total))
+        # Bidirectional clamp between -6.0 and +6.0
+        injury_adj_total = max(-6.0, min(6.0, injury_adj_total))
         raw_projected_total += injury_adj_total
 
-        if injury_adj_total <= -0.5:
+        if abs(injury_adj_total) >= 0.5:
+            direction_inj = 'under' if injury_adj_total < 0 else 'over'
+            descr = 'Missing Scorers/Playmakers' if injury_adj_total < 0 else 'Missing Rim/Perimeter Defenders'
             factors.append({
                 'name': 'Injury Impact on Total',
-                'value': f'{injury_adj_total:+.1f} pts (Key players/starters OUT)',
-                'direction': 'under',
+                'value': f'{injury_adj_total:+.1f} pts ({descr})',
+                'direction': direction_inj,
                 'weight': 0.10,
-                'score': min(max(injury_adj_total / 5.0, -1.0), 0.0)
+                'score': min(max(injury_adj_total / 5.0, -1.0), 1.0)
             })
 
         # Schedule & Rest Fatigue Modifier (Back-to-Back fatigue)
@@ -221,11 +232,10 @@ class TrendAnalyzer:
 
         rest_adj_total = 0.0
         if home_rest == 0:
-            rest_adj_total -= 1.2
+            rest_adj_total -= 1.0
         if away_rest == 0:
-            rest_adj_total -= 1.8  # Road B2B has higher fatigue impact
-        if home_rest >= 3 and away_rest >= 3:
-            rest_adj_total += 1.0  # Fresh legs and well-rested offenses
+            rest_adj_total -= 1.8  # Road B2B has higher travel fatigue impact
+        # Extended rest (>= 3 days) is neutral (0.0): shooting rust offsets fresh defensive legs
 
         raw_projected_total += rest_adj_total
 
@@ -239,13 +249,13 @@ class TrendAnalyzer:
                 'score': -0.4 if rest_adj_total < 0 else 0.3
             })
         
-        # Quantitative Market-Anchored Projection (Bayesian Blending with Open Line)
-        from analysis.betting_math import market_anchored_projection, analyze_line_movement
+        # Quantitative Market-Anchored Projection (Bayesian Edge Shrinkage to eliminate edge inversion)
+        from analysis.betting_math import empirical_posterior_sigma, calculate_ev, evaluate_market_pick, analyze_line_movement
         
-        # Anchor to Open Line (unmanipulated bookmaker baseline) if available
+        # Anchor line for tracking line movement
         anchor_line = open_line if (open_line is not None and open_line > 0) else over_under_line
 
-        # Check early season status to prevent wild uncalibrated swings
+        # Check early season status
         home_games = features.get('home_games_played', 0)
         away_games = features.get('away_games_played', 0)
         min_games = min(home_games, away_games)
@@ -253,44 +263,54 @@ class TrendAnalyzer:
 
         effective_market_weight = 0.70 if is_early_season else market_weight
 
-        if anchor_line is not None and anchor_line > 0:
-            projected_total = market_anchored_projection(raw_projected_total, anchor_line, market_weight=effective_market_weight)
+        if over_under_line is not None and over_under_line > 0:
+            raw_edge = raw_projected_total - over_under_line
+            # Bayesian Shrinkage on Edge: shrink edge toward 0 (market consensus)
+            # This mathematically guarantees the edge will NEVER flip direction!
+            shrunk_edge = raw_edge * (1.0 - effective_market_weight)
+            projected_total = round(over_under_line + shrunk_edge, 2)
+            total_edge = round(shrunk_edge, 2)
         else:
-            projected_total = raw_projected_total
+            projected_total = round(raw_projected_total, 2)
+            total_edge = 0.0
+            raw_edge = 0.0
             
-        total_edge = (projected_total - over_under_line) if over_under_line else 0.0
-        raw_edge = (raw_projected_total - over_under_line) if over_under_line else 0.0
-        
-        # Dynamic Early-Season Totals Sigma: wider variance in opening 10 games (sigma ~ 13.5 to 18.5)
-        sigma_ou = 13.5 + max(0, 10 - min_games) * 0.5
+        # Dynamic Totals Sigma derived from Bayesian posterior prediction variance
+        sigma_ou = empirical_posterior_sigma(min_games)
 
-        # Calculate realistic win probability using Normal CDF with dynamic totals sigma
-        if over_under_line:
-            win_prob = 0.5 * (1.0 + math.erf(total_edge / (sigma_ou * math.sqrt(2.0))))
-            
-            # Conviction Filter: In early season (min_games < 10), high variance wipes out thin edges.
-            # Suppress LEAN picks (< 2.5 pts edge) to NEUTRAL / PASS to protect bankroll.
-            if is_early_season:
-                if total_edge >= 2.5:
-                    recommendation = 'STRONG OVER'
-                elif total_edge <= -2.5:
-                    recommendation = 'STRONG UNDER'
-                else:
-                    recommendation = 'NEUTRAL'
+        # Calculate realistic win probability and EV-based conviction filter
+        if over_under_line and over_under_line > 0:
+            win_prob_over = 0.5 * (1.0 + math.erf(total_edge / (sigma_ou * math.sqrt(2.0))))
+            win_prob_under = 1.0 - win_prob_over
+
+            if total_edge > 0:
+                cand_dir = 'OVER'
+                cand_prob = win_prob_over
+            elif total_edge < 0:
+                cand_dir = 'UNDER'
+                cand_prob = win_prob_under
             else:
-                if total_edge >= 2.5:
-                    recommendation = 'STRONG OVER'
-                elif total_edge >= 1.0:
-                    recommendation = 'LEAN OVER'
-                elif total_edge <= -2.5:
-                    recommendation = 'STRONG UNDER'
-                elif total_edge <= -1.0:
-                    recommendation = 'LEAN UNDER'
-                else:
-                    recommendation = 'NEUTRAL'
+                cand_dir = 'NEUTRAL'
+                cand_prob = 0.50
+
+            # Candidate EV against standard -110 bookmaker line (breakeven 52.38%)
+            cand_ev = calculate_ev(cand_prob, market_odds=-110)
+
+            # Dual Conviction Gate:
+            # STRONG: |total_edge| >= 2.0 pts AND cand_prob >= 56.5% AND cand_ev >= +5.0%
+            # LEAN: |total_edge| >= 1.0 pts AND cand_prob >= 53.8% AND cand_ev >= +1.5% (Only mid-season min_games >= 10)
+            if abs(total_edge) >= 2.0 and cand_prob >= 0.565 and cand_ev >= 0.05:
+                recommendation = f"STRONG {cand_dir}"
+            elif not is_early_season and abs(total_edge) >= 1.0 and cand_prob >= 0.538 and cand_ev >= 0.015:
+                recommendation = f"LEAN {cand_dir}"
+            else:
+                recommendation = 'NEUTRAL'
+
+            win_prob = win_prob_over
         else:
             win_prob = 0.50
             recommendation = 'NEUTRAL'
+
         # Probability for the recommended side
         pick_win_prob = win_prob if 'OVER' in recommendation else (1.0 - win_prob if 'UNDER' in recommendation else 0.50)
         
@@ -306,12 +326,10 @@ class TrendAnalyzer:
             
         confidence = abs(pick_win_prob - 0.5) * 2.0
         
-        # Quantitative Value & Risk Evaluation via betting_math
-        from analysis.betting_math import evaluate_market_pick
-        
+        # Quantitative Value & Risk Evaluation via betting_math (safe 2.0% bankroll cap)
         market_odds_str = '-110,-110'
         pick_idx = 0 if 'OVER' in recommendation else 1
-        eval_metrics = evaluate_market_pick(pick_win_prob, book_odds=market_odds_str, pick_idx=pick_idx, kelly_fraction=0.25)
+        eval_metrics = evaluate_market_pick(pick_win_prob, book_odds=market_odds_str, pick_idx=pick_idx, kelly_fraction=0.25, max_stake_cap=0.020)
         
         # Market Clash Detection: Severe steam opposing model (>= 2.0 pts) mandates capital preservation
         is_market_clash = (line_mv.get('status') == 'STEAM_WARNING' and abs(line_mv.get('diff', 0)) >= 2.0 and not is_live) or line_mv.get('verdict') in ['CAPITAL_PRESERVATION', 'PASS']

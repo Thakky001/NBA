@@ -6,12 +6,23 @@ from analysis.betting_math import (
     prob_to_decimal,
     convert_odds,
     devig,
+    devig_multiplicative,
+    devig_power,
+    devig_shin,
     calculate_edge,
     calculate_ev,
     calculate_kelly,
     evaluate_market_pick,
     calculate_live_pace_projection,
     evaluate_live_pick,
+    calculate_mov_elo_multiplier,
+    calculate_win_probability,
+    calculate_cover_probability,
+    calculate_expected_pace,
+    calculate_expected_total,
+    calculate_brier_score,
+    calculate_log_loss,
+    calculate_clv,
 )
 from analysis.trend_analyzer import TrendAnalyzer
 from unittest.mock import MagicMock
@@ -151,12 +162,12 @@ class TestBettingMath(unittest.TestCase):
         self.assertIn('Value & Sizing', sp_res['summary'])
 
     def test_kelly_safety_cap(self):
-        """Verify Kelly criterion supports default cap (2.5%), custom cap, and unconstrained raw mode."""
-        # Extreme win prob (e.g. 0.90) with default safety cap 2.5%
+        """Verify Kelly criterion supports default cap (2.0%), custom cap, and unconstrained raw mode."""
+        # Extreme win prob (e.g. 0.90) with default safety cap 2.0%
         k_default = calculate_kelly(model_prob=0.90, market_odds=-110, fraction=0.25)
-        self.assertEqual(k_default["recommended_stake_pct"], 2.5)
-        self.assertEqual(k_default["capped_kelly"], 0.025)
-        self.assertGreater(k_default["fractional_kelly"], 0.025)
+        self.assertEqual(k_default["recommended_stake_pct"], 2.0)
+        self.assertEqual(k_default["capped_kelly"], 0.020)
+        self.assertGreater(k_default["fractional_kelly"], 0.020)
 
         # Extreme win prob with explicit custom safety cap 5.0%
         k_capped = calculate_kelly(model_prob=0.90, market_odds=-110, fraction=0.25, max_cap=0.05)
@@ -168,6 +179,22 @@ class TestBettingMath(unittest.TestCase):
         k_raw = calculate_kelly(model_prob=0.90, market_odds=-110, fraction=0.25, max_cap=None)
         self.assertAlmostEqual(k_raw["recommended_stake_pct"], k_raw["fractional_kelly"] * 100.0, places=2)
         self.assertGreater(k_raw["recommended_stake_pct"], 15.0)
+
+    def test_empirical_posterior_sigma(self):
+        """Verify empirical Bayesian posterior sigma scales with games played."""
+        from analysis.betting_math import empirical_posterior_sigma
+        # Early season (n=1) has high variance (~18.8 pts)
+        sigma_1 = empirical_posterior_sigma(min_games=1)
+        self.assertAlmostEqual(sigma_1, 18.77, delta=0.5)
+
+        # Mid-season (n=10) stabilizes close to base variance (~13.2 pts)
+        sigma_10 = empirical_posterior_sigma(min_games=10)
+        self.assertLess(sigma_10, sigma_1)
+        self.assertAlmostEqual(sigma_10, 13.26, delta=0.5)
+
+        # Late-season (n=40) approaches 12.5 pts base
+        sigma_40 = empirical_posterior_sigma(min_games=40)
+        self.assertAlmostEqual(sigma_40, 12.70, delta=0.5)
 
     def test_anomaly_detection_and_raw_prob(self):
         """Verify extreme edge (>8.0 pts) triggers anomaly flag while preserving unconstrained win_prob."""
@@ -365,6 +392,105 @@ class TestLivePaceProjection(unittest.TestCase):
 
         # Missing line returns None safely
         self.assertIsNone(evaluate_live_pick(projected_val=220.0, current_line=None, bet_type='total'))
+
+    def test_overround_vs_theoretical_hold(self):
+        """Verify -110/-110 market has overround 104.76% (vig 4.76%) and hold 4.55%."""
+        res = devig("-110,-110", format="american")
+        self.assertAlmostEqual(res["overround"], 1.0476, delta=0.001)
+        self.assertAlmostEqual(res["vig_pct"], 4.76, delta=0.02)
+        self.assertAlmostEqual(res["hold_pct"], 4.55, delta=0.02)
+
+    def test_advanced_devig_power_and_shin(self):
+        """Verify Power and Shin de-vigging address favorite-longshot bias."""
+        # Asymmetric market: -200 (1.50) vs +170 (2.70)
+        # Raw probs: 0.6667 and 0.3704 -> overround ~ 1.037
+        mult_res = devig("-200,+170", format="american", method="multiplicative")
+        power_res = devig("-200,+170", format="american", method="power")
+        shin_res = devig("-200,+170", format="american", method="shin")
+
+        # Sum of fair probs must be exactly 1.0 for all methods
+        self.assertAlmostEqual(sum(mult_res["fair_probs"]), 1.0, places=5)
+        self.assertAlmostEqual(sum(power_res["fair_probs"]), 1.0, places=5)
+        self.assertAlmostEqual(sum(shin_res["fair_probs"]), 1.0, places=5)
+
+        # Shin & Power correct favorite-longshot bias by assigning higher fair prob to the favorite
+        # compared to naive multiplicative devigging
+        fav_mult = mult_res["fair_probs"][0]
+        fav_power = power_res["fair_probs"][0]
+        fav_shin = shin_res["fair_probs"][0]
+
+        self.assertGreater(fav_power, fav_mult)
+        self.assertGreater(fav_shin, fav_mult)
+        self.assertIn("z", shin_res)
+        self.assertGreater(shin_res["z"], 0.0)
+        self.assertIn("k", power_res)
+        self.assertGreater(power_res["k"], 1.0)
+
+    def test_mov_elo_multiplier_fivethirtyeight(self):
+        """Verify FiveThirtyEight MOV formula with 2.2 factor and delta Elo winner direction."""
+        import math
+        # Margin = 10, delta_elo = 0 -> ln(11) * (2.2 / 2.2) = ln(11) ~ 2.3979
+        val_even = calculate_mov_elo_multiplier(10, 0)
+        self.assertAlmostEqual(val_even, math.log(11), places=4)
+
+        # Favorite wins (delta_elo = +300) -> multiplier is dampened
+        val_fav = calculate_mov_elo_multiplier(10, 300)
+        # Underdog wins (delta_elo = -300) -> multiplier is amplified
+        val_dog = calculate_mov_elo_multiplier(10, -300)
+
+        self.assertLess(val_fav, val_even)
+        self.assertGreater(val_dog, val_even)
+
+    def test_win_probability_vs_cover_probability(self):
+        """Verify clear separation between Moneyline Win Prob and Spread Cover Prob."""
+        # Boston favored by 6.5 pts with sigma = 12.0
+        # 1. Outright Win probability (Moneyline): P(Margin > 0)
+        win_prob = calculate_win_probability(projected_margin=6.5, sigma=12.0)
+        self.assertAlmostEqual(win_prob, 0.706, delta=0.01)
+
+        # 2. Cover probability at fair spread (-6.5): MUST be exactly 50.0%
+        cover_prob_fair = calculate_cover_probability(spread_line=-6.5, projected_margin=6.5, sigma=12.0)
+        self.assertAlmostEqual(cover_prob_fair, 0.50, places=4)
+
+        # 3. Cover probability at soft line (-4.5): Boston has edge of +2.0 pts
+        cover_prob_soft = calculate_cover_probability(spread_line=-4.5, projected_margin=6.5, sigma=12.0)
+        self.assertAlmostEqual(cover_prob_soft, 0.566, delta=0.01)
+
+    def test_expected_pace_and_total_formulations(self):
+        """Verify Additive/Multiplicative Pace and Expected Total calculations."""
+        # Home pace = 98.0, Away pace = 96.0, League pace = 99.0
+        # Additive: 98 + 96 - 99 = 95.0
+        pace_add = calculate_expected_pace(98.0, 96.0, league_pace=99.0, method="additive")
+        self.assertEqual(pace_add, 95.0)
+
+        # Multiplicative: (98 * 96) / 99 = 95.03
+        pace_mult = calculate_expected_pace(98.0, 96.0, league_pace=99.0, method="multiplicative")
+        self.assertAlmostEqual(pace_mult, 95.03, places=2)
+
+        # Expected total with Pace 95.0, Adj ORtg A = 116.0, Adj ORtg B = 114.0
+        # Total = (95.0 / 100) * (116.0 + 114.0) = 0.95 * 230 = 218.5
+        exp_total = calculate_expected_total(expected_pace=95.0, home_adj_ortg=116.0, away_adj_ortg=114.0)
+        self.assertEqual(exp_total, 218.5)
+
+    def test_model_evaluation_metrics(self):
+        """Verify Brier Score, Log Loss, and Closing Line Value (CLV)."""
+        # Perfect predictions: [1.0, 0.0] on [1, 0] -> Brier = 0.0
+        self.assertEqual(calculate_brier_score([1.0, 0.0], [1, 0]), 0.0)
+        # Random 50/50 predictions: [0.5, 0.5] on [1, 0] -> Brier = 0.25
+        self.assertEqual(calculate_brier_score([0.5, 0.5], [1, 0]), 0.25)
+
+        # Log Loss:
+        loss_perfect = calculate_log_loss([0.999, 0.001], [1, 0])
+        loss_unskilled = calculate_log_loss([0.5, 0.5], [1, 0])
+        self.assertLess(loss_perfect, loss_unskilled)
+
+        # CLV: Bet placed at +120 (decimal 2.20), closing odds moved to +100 (decimal 2.00)
+        # CLV % = (2.20 / 2.00 - 1.0) * 100 = +10.0%
+        clv_res = calculate_clv(bet_odds=120, closing_odds=100, odds_format="american")
+        self.assertEqual(clv_res["clv_pct"], 10.0)
+        self.assertEqual(clv_res["bet_decimal"], 2.20)
+        self.assertEqual(clv_res["closing_decimal"], 2.00)
+
 
 
 if __name__ == '__main__':

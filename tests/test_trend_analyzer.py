@@ -120,19 +120,47 @@ class TestTrendAnalyzer(unittest.TestCase):
         self.assertAlmostEqual(res['raw_projected_total'], 218.2, places=1)
 
     def test_market_anchoring_to_open_line(self):
-        """Verify Bayesian projection anchors to Open Line so steam line drops reveal OVER value."""
+        """Verify Bayesian edge shrinkage anchors residual edge towards consensus line without direction inversion."""
         self.mock_fe.compute_matchup_features.return_value = {
             'combined_avg_10': 224.0,
             'home_rest_days': 2,
             'away_rest_days': 2,
         }
-        # Open line is 224.0, but market steamed down to 220.0
-        # Anchoring to Open Line 224: 0.65 * 224.0 + 0.35 * 224.0 = 224.0
-        # Edge against current line (220.0) = 224.0 - 220.0 = +4.0 (STRONG OVER value!)
+        # Raw model is 224.0, current market line is 220.0 -> Raw Edge is +4.0
+        # Edge shrinkage with 0.70 market weight: shrunk_edge = 4.0 * (1 - 0.70) = +1.2
+        # Projected total = 220.0 + 1.2 = 221.2
         res = self.analyzer.analyze_over_under('Boston Celtics', 'Miami Heat', over_under_line=220.0, open_line=224.0)
-        self.assertEqual(res['projected_total'], 224.0)
-        self.assertAlmostEqual(res['total_edge'], 4.0, places=1)
-        self.assertEqual(res['recommendation'], 'STRONG OVER')
+        self.assertEqual(res['projected_total'], 221.2)
+        self.assertAlmostEqual(res['total_edge'], 1.2, places=1)
+        self.assertGreater(res['total_edge'], 0.0)
+
+    def test_bidirectional_injury_modeling(self):
+        """Verify bidirectional injury modeling: offensive loss drives Under, defensive loss drives Over."""
+        # Case A: Missing Primary Scorer/Creator (High Offense Loss)
+        self.mock_fe.compute_matchup_features.return_value = {
+            'combined_avg_10': 220.0,
+            'home_off_loss': 18.0,
+            'home_def_loss': 2.0,
+            'home_rest_days': 2,
+            'away_rest_days': 2,
+        }
+        res_off = self.analyzer.analyze_over_under('BOS', 'MIA', over_under_line=220.0)
+        # Net impact = -(18.0 * 0.20) + (2.0 * 0.16) = -3.6 + 0.32 = -3.28 pts
+        self.assertLess(res_off['raw_projected_total'], 220.0)
+        self.assertTrue(any('Missing Scorers' in f['value'] for f in res_off['factors']))
+
+        # Case B: Missing Elite Rim Protector / Defensive Anchor (High Defense Loss)
+        self.mock_fe.compute_matchup_features.return_value = {
+            'combined_avg_10': 220.0,
+            'home_off_loss': 2.0,
+            'home_def_loss': 18.0,
+            'home_rest_days': 2,
+            'away_rest_days': 2,
+        }
+        res_def = self.analyzer.analyze_over_under('BOS', 'MIA', over_under_line=220.0)
+        # Net impact = -(2.0 * 0.20) + (18.0 * 0.16) = -0.4 + 2.88 = +2.48 pts (drives OVER!)
+        self.assertGreater(res_def['raw_projected_total'], 220.0)
+        self.assertTrue(any('Missing Rim/Perimeter Defenders' in f['value'] for f in res_def['factors']))
 
     def test_early_season_prior_ramp_and_dynamic_sigma(self):
         """Verify early season (<10 GP) ramps prior weight, anchors market at 0.70, and widens sigma."""

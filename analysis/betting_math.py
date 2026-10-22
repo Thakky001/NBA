@@ -72,18 +72,110 @@ def convert_odds(odds: float, from_format: str = "american") -> Dict[str, float]
     }
 
 
-def devig(odds: Union[str, List[float]], format: str = "american") -> Dict[str, Any]:
-    """Remove vig/juice from sportsbook odds using the multiplicative method.
+def devig_multiplicative(raw_probs: List[float]) -> Tuple[List[float], float, float]:
+    """Multiplicative (proportional) normalization method.
+    
+    fair_prob[i] = raw_prob[i] / overround
+    """
+    overround = sum(raw_probs)
+    if overround <= 0:
+        return [1.0 / len(raw_probs)] * len(raw_probs), 0.0, 0.0
+    fair_probs = [p / overround for p in raw_probs]
+    vig_pct = (overround - 1.0) * 100.0
+    hold_pct = (1.0 - (1.0 / overround)) * 100.0
+    return fair_probs, vig_pct, hold_pct
 
-    fair_prob[i] = raw_prob[i] / sum(raw_probs)
+
+def devig_power(raw_probs: List[float], tol: float = 1e-12, max_iter: int = 1000) -> Tuple[List[float], float, float, float]:
+    """Power (Geometric) de-vigging method: solves for exponent k such that sum(q_i^k) = 1.0.
+    
+    Effectively corrects favorite-longshot bias by penalizing longshots more than favorites.
+    """
+    overround = sum(raw_probs)
+    if overround <= 1.0:
+        s = overround if overround > 0 else 1.0
+        return [p / s for p in raw_probs], max(0.0, (overround - 1.0) * 100.0), 0.0, 1.0
+    
+    low, high = 1.0, 10.0
+    mid = 1.0
+    for _ in range(max_iter):
+        mid = (low + high) / 2.0
+        sum_p = sum(p ** mid for p in raw_probs)
+        if abs(sum_p - 1.0) < tol:
+            break
+        if sum_p > 1.0:
+            low = mid
+        else:
+            high = mid
+            
+    p_unnorm = [p ** mid for p in raw_probs]
+    s = sum(p_unnorm)
+    fair_probs = [p / s for p in p_unnorm]
+    vig_pct = (overround - 1.0) * 100.0
+    hold_pct = (1.0 - (1.0 / overround)) * 100.0
+    return fair_probs, vig_pct, hold_pct, round(mid, 6)
+
+
+def devig_shin(raw_probs: List[float], tol: float = 1e-12, max_iter: int = 1000) -> Tuple[List[float], float, float, float]:
+    """Shin's (1992, 1993) market-microstructure de-vigging method.
+    
+    Solves for latent parameter z representing the proportion of informed/sharp traders:
+        p_i = (sqrt(z^2 + 4*(1 - z)*(q_i^2 / overround)) - z) / (2*(1 - z))
+    where sum(p_i) = 1.0.
+    """
+    overround = sum(raw_probs)
+    if overround <= 1.0:
+        s = overround if overround > 0 else 1.0
+        return [p / s for p in raw_probs], max(0.0, (overround - 1.0) * 100.0), 0.0, 0.0
+
+    low, high = 0.0, 1.0 - 1e-9
+    mid = 0.0
+    for _ in range(max_iter):
+        mid = (low + high) / 2.0
+        p_trial = []
+        for qi in raw_probs:
+            term = (mid ** 2) + 4.0 * (1.0 - mid) * (qi ** 2 / overround)
+            p_val = (math.sqrt(max(0.0, term)) - mid) / (2.0 * (1.0 - mid))
+            p_trial.append(p_val)
+        sum_p = sum(p_trial)
+        if abs(sum_p - 1.0) < tol:
+            break
+        if sum_p > 1.0:
+            low = mid
+        else:
+            high = mid
+
+    p_final = []
+    for qi in raw_probs:
+        term = (mid ** 2) + 4.0 * (1.0 - mid) * (qi ** 2 / overround)
+        p_val = (math.sqrt(max(0.0, term)) - mid) / (2.0 * (1.0 - mid))
+        p_final.append(p_val)
+    s = sum(p_final)
+    fair_probs = [p / s for p in p_final]
+    vig_pct = (overround - 1.0) * 100.0
+    hold_pct = (1.0 - (1.0 / overround)) * 100.0
+    return fair_probs, vig_pct, hold_pct, round(mid, 6)
+
+
+def devig(odds: Union[str, List[float]],
+          format: str = "american",
+          method: str = "multiplicative") -> Dict[str, Any]:
+    """Remove vig/juice from sportsbook odds to obtain fair probabilities.
+
+    Supports three methods:
+    1. 'multiplicative': Proportional scaling: fair_prob[i] = raw_prob[i] / overround
+    2. 'power': Geometric/power exponentiation p_i = q_i^k (corrects favorite-longshot bias)
+    3. 'shin': Market-microstructure model extracting insider/sharp fraction z
 
     Args:
         odds: Comma-separated odds string (e.g., "-110,-110" or "-150,+130")
               or list of numeric odds.
         format: Format of input odds ("american", "decimal", or "probability").
+        method: De-vigging model ("multiplicative", "power", or "shin").
 
     Returns:
-        Dict with status, fair_probs, raw_probs, vig_pct, and overround.
+        Dict with fair_probs, raw_probs, vig_pct (overround-1), hold_pct (theoretical hold),
+        overround, method, and extra parameters (z for shin, k for power).
     """
     if isinstance(odds, str):
         odds_list = [float(x.strip()) for x in odds.split(",") if x.strip()]
@@ -106,21 +198,33 @@ def devig(odds: Union[str, List[float]], format: str = "american") -> Dict[str, 
         raise ValueError(f"Unknown format '{format}'. Use 'american', 'decimal', or 'probability'.")
 
     overround = sum(raw_probs)
-    if overround <= 0:
-        fair_probs = [1.0 / len(raw_probs)] * len(raw_probs)
-        vig_pct = 0.0
-    else:
-        fair_probs = [p / overround for p in raw_probs]
-        vig_pct = (overround - 1.0) * 100.0
+    m = method.lower()
+    extra_param = None
 
-    return {
+    if m == "multiplicative":
+        fair_probs, vig_pct, hold_pct = devig_multiplicative(raw_probs)
+    elif m == "power":
+        fair_probs, vig_pct, hold_pct, k = devig_power(raw_probs)
+        extra_param = {"k": k}
+    elif m == "shin":
+        fair_probs, vig_pct, hold_pct, z = devig_shin(raw_probs)
+        extra_param = {"z": z}
+    else:
+        raise ValueError(f"Unknown de-vigging method '{method}'. Choose 'multiplicative', 'power', or 'shin'.")
+
+    res = {
         "fair_probs": [round(p, 6) for p in fair_probs],
         "raw_probs": [round(p, 6) for p in raw_probs],
         "vig_pct": round(vig_pct, 2),
+        "hold_pct": round(hold_pct, 2),
         "overround": round(overround, 6),
         "odds": odds_list,
-        "format": fmt
+        "format": fmt,
+        "method": m
     }
+    if extra_param:
+        res.update(extra_param)
+    return res
 
 
 def calculate_edge(model_prob: float, market_prob: float) -> float:
@@ -158,11 +262,32 @@ def calculate_ev(model_prob: float, market_odds: float, odds_format: str = "amer
     return round(ev, 6)
 
 
+def empirical_posterior_sigma(min_games: int, base_sigma: float = 12.5, prior_sigma: float = 14.0) -> float:
+    """Compute empirical Bayesian posterior standard deviation for game total forecast error.
+
+    In modern NBA totals modeling, the empirical residual error of consensus lines
+    has standard deviation ~ 12.0 - 13.0 pts. In early season (min_games < 10),
+    parameter uncertainty adds variance:
+        sigma_ou = sqrt(base_sigma^2 + prior_sigma^2 / max(1, min_games))
+
+    Args:
+        min_games: Minimum games played by either matchup team (0 to 82).
+        base_sigma: Long-term empirical standard error of NBA game totals (default 12.5).
+        prior_sigma: Initial uncertainty prior scale in early season (default 14.0).
+
+    Returns:
+        float: Posterior standard deviation in points.
+    """
+    n = max(1, int(min_games))
+    var = (base_sigma ** 2) + ((prior_sigma ** 2) / n)
+    return round(math.sqrt(var), 2)
+
+
 def calculate_kelly(model_prob: float,
                     market_odds: Optional[float] = None,
                     market_prob: Optional[float] = None,
                     fraction: float = 0.25,
-                    max_cap: Optional[float] = 0.025) -> Dict[str, float]:
+                    max_cap: Optional[float] = 0.020) -> Dict[str, float]:
     """Compute optimal Kelly Criterion stake fraction (Pure raw or with optional safety cap).
 
     Full Kelly formula:
@@ -177,7 +302,7 @@ def calculate_kelly(model_prob: float,
         market_odds: American or decimal market odds (optional if market_prob provided).
         market_prob: Implied probability if market odds not given.
         fraction: Kelly multiplier (0.25 for Quarter Kelly, 0.50 for Half Kelly).
-        max_cap: Optional maximum bankroll allocation safety cap (default 0.025 = 2.5% max bankroll).
+        max_cap: Optional maximum bankroll allocation safety cap (default 0.020 = 2.0% max bankroll).
 
     Returns:
         Dict with full_kelly, fractional_kelly, capped_kelly, and recommended_stake_pct.
@@ -228,7 +353,7 @@ def evaluate_market_pick(model_prob: float,
                          book_odds: Union[str, List[float]] = "-110,-110",
                          pick_idx: int = 0,
                          kelly_fraction: float = 0.25,
-                         max_stake_cap: Optional[float] = 0.025) -> Dict[str, Any]:
+                         max_stake_cap: Optional[float] = 0.020) -> Dict[str, Any]:
     """All-in-one evaluation: de-vig market, compute edge, EV, and Kelly stake.
 
     Args:
@@ -236,7 +361,7 @@ def evaluate_market_pick(model_prob: float,
         book_odds: Bookmaker odds for all outcomes (e.g., "-110,-110").
         pick_idx: Index of the outcome being evaluated (0 for first outcome, 1 for second).
         kelly_fraction: Fractional Kelly divisor (default 0.25 for quarter-Kelly).
-        max_stake_cap: Optional safety cap on bankroll stake (default 0.025 = 2.5%).
+        max_stake_cap: Optional safety cap on bankroll stake (default 0.020 = 2.0%).
 
     Returns:
         Dict with fair_prob, market_prob, edge, ev, kelly_fraction, and summary text.
@@ -759,4 +884,169 @@ def evaluate_live_pick(projected_val: float,
         'market_prob': eval_metrics['market_prob'],
         'is_bet': is_bet
     }
+
+
+# ==============================================================================
+# SECTION: QUANTITATIVE SPORTS FINANCE & ACCURATE FORMULATIONS
+# ==============================================================================
+
+def calculate_mov_elo_multiplier(margin: float, delta_elo_winner: float) -> float:
+    """Calculate FiveThirtyEight's Margin of Victory (MOV) Elo multiplier.
+
+    Formula:
+        MOV_mult = ln(|margin| + 1) * (2.2 / (2.2 + 0.001 * delta_elo_winner))
+
+    Args:
+        margin: Absolute score differential (|winner_score - loser_score|).
+        delta_elo_winner: Winner's Elo minus Loser's Elo (including HCA if winner was home).
+
+    Returns:
+        float: Multiplier scaling the K-factor Elo rating change.
+    """
+    m = abs(float(margin))
+    denom = 2.2 + 0.001 * float(delta_elo_winner)
+    denom = max(0.1, denom)  # Prevent zero/negative denominator on extreme rating gap
+    return round(math.log(m + 1.0) * (2.2 / denom), 6)
+
+
+def calculate_win_probability(projected_margin: float, sigma: float = 12.0) -> float:
+    """Calculate outright win probability (Moneyline) via Normal CDF.
+
+    P(Win) = P(Margin > 0) = Phi(projected_margin / sigma)
+
+    Args:
+        projected_margin: Expected margin of victory for team (positive = favored, negative = underdog).
+        sigma: Standard deviation of point differential (NBA standard ~11.5 - 13.0).
+
+    Returns:
+        float: Outright win probability (0.0 to 1.0).
+    """
+    if sigma <= 0.0:
+        return 1.0 if projected_margin > 0 else (0.5 if projected_margin == 0 else 0.0)
+    z = projected_margin / (sigma * math.sqrt(2.0))
+    return round(0.5 * (1.0 + math.erf(z)), 6)
+
+
+def calculate_cover_probability(spread_line: float,
+                                projected_margin: float,
+                                sigma: float = 12.0) -> float:
+    """Calculate probability of covering the point spread (Against The Spread - ATS).
+
+    Convention:
+        spread_line: Team's spread line (e.g., -6.5 for favorite, +6.5 for underdog).
+        projected_margin: Model expected margin of victory for this team (e.g., +6.5).
+        sigma: Standard deviation of point differential.
+
+    Cover condition: Actual Margin + Spread Line > 0
+    P(Cover) = Phi((projected_margin + spread_line) / sigma)
+
+    CRITICAL DISTINCTION:
+    - If projected_margin == 6.5 and spread_line == -6.5 (Fair Spread):
+      Cover probability = Phi((6.5 - 6.5) / sigma) = Phi(0) = 50.0% exactly!
+    - Outright win probability = Phi(6.5 / 12) = 70.6%.
+    """
+    if sigma <= 0.0:
+        return 1.0 if (projected_margin + spread_line) > 0 else 0.0
+    edge = projected_margin + spread_line
+    z = edge / (sigma * math.sqrt(2.0))
+    return round(0.5 * (1.0 + math.erf(z)), 6)
+
+
+def calculate_expected_pace(pace_home: float,
+                            pace_away: float,
+                            league_pace: float = 99.5,
+                            method: str = "additive") -> float:
+    """Calculate projected game pace using additive or multiplicative modeling.
+
+    Additive model (Recommended baseline):
+        Pace = League + (Pace_home - League) + (Pace_away - League) = Pace_home + Pace_away - League
+
+    Multiplicative model:
+        Pace = (Pace_home * Pace_away) / League
+    """
+    m = method.lower()
+    if m == "additive":
+        return round(float(pace_home) + float(pace_away) - float(league_pace), 2)
+    elif m == "multiplicative":
+        if league_pace <= 0:
+            return round((float(pace_home) + float(pace_away)) / 2.0, 2)
+        return round((float(pace_home) * float(pace_away)) / float(league_pace), 2)
+    else:
+        raise ValueError(f"Unknown pace method: {method}. Choose 'additive' or 'multiplicative'.")
+
+
+def calculate_expected_total(expected_pace: float,
+                             home_adj_ortg: float,
+                             away_adj_ortg: float) -> float:
+    """Calculate expected total game points from pace and adjusted offensive ratings.
+
+    Formula:
+        Expected Total = (Expected Pace / 100) * (Home Adj ORtg + Away Adj ORtg)
+    """
+    total = (float(expected_pace) / 100.0) * (float(home_adj_ortg) + float(away_adj_ortg))
+    return round(total, 2)
+
+
+def calculate_brier_score(predictions: List[float], outcomes: List[int]) -> float:
+    """Calculate Brier Score: Mean squared error of probabilistic forecasts.
+
+    Score = (1/N) * sum((prob_i - outcome_i)^2)
+    Range: [0.0 (perfect) to 1.0 (completely wrong)].
+    Reference: For a 50/50 binary market, random guessing yields 0.25.
+    """
+    if len(predictions) != len(outcomes) or len(predictions) == 0:
+        raise ValueError("predictions and outcomes must be non-empty lists of identical length.")
+    sq_err = sum((float(p) - float(y)) ** 2 for p, y in zip(predictions, outcomes))
+    return round(sq_err / len(predictions), 6)
+
+
+def calculate_log_loss(predictions: List[float], outcomes: List[int], eps: float = 1e-15) -> float:
+    """Calculate Binary Logarithmic Loss (Cross-Entropy).
+
+    Loss = - (1/N) * sum( y_i * ln(p_i) + (1 - y_i) * ln(1 - p_i) )
+    """
+    if len(predictions) != len(outcomes) or len(predictions) == 0:
+        raise ValueError("predictions and outcomes must be non-empty lists of identical length.")
+    loss_sum = 0.0
+    for p, y in zip(predictions, outcomes):
+        p_val = max(eps, min(1.0 - eps, float(p)))
+        y_val = float(y)
+        loss_sum += y_val * math.log(p_val) + (1.0 - y_val) * math.log(1.0 - p_val)
+    return round(-loss_sum / len(predictions), 6)
+
+
+def calculate_clv(bet_odds: float,
+                  closing_odds: float,
+                  odds_format: str = "american") -> Dict[str, float]:
+    """Calculate Closing Line Value (CLV).
+
+    CLV is the definitive quantitative test of sports betting edge:
+    It measures the price advantage achieved relative to the sharp closing market.
+
+    CLV % = (Decimal Bet Odds / Decimal Closing Odds - 1.0) * 100.0
+    """
+    fmt = odds_format.lower()
+    if fmt == "american":
+        bet_dec = prob_to_decimal(american_to_prob(bet_odds))
+        close_dec = prob_to_decimal(american_to_prob(closing_odds))
+    elif fmt == "decimal":
+        bet_dec = float(bet_odds)
+        close_dec = float(closing_odds)
+    elif fmt == "probability":
+        bet_dec = 1.0 / float(bet_odds) if float(bet_odds) > 0 else 1.0
+        close_dec = 1.0 / float(closing_odds) if float(closing_odds) > 0 else 1.0
+    else:
+        raise ValueError(f"Unknown format: {odds_format}")
+
+    if close_dec <= 0:
+        clv_pct = 0.0
+    else:
+        clv_pct = ((bet_dec / close_dec) - 1.0) * 100.0
+
+    return {
+        "bet_decimal": round(bet_dec, 4),
+        "closing_decimal": round(close_dec, 4),
+        "clv_pct": round(clv_pct, 2)
+    }
+
 
