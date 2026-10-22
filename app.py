@@ -154,8 +154,16 @@ st.markdown("""
 st.title("🏀 ระบบวิเคราะห์สถิติและแต้มต่อ NBA (Advanced Statistical Trends & Edge Engine)")
 st.markdown("ระบบวิเคราะห์เชิงสถิติขั้นสูง คำนวณจากฟอร์มการเล่น ความเร็วเกม (Pace) สภาพความพร้อมผู้เล่นบาดเจ็บ และราคาต่อรองสด (ESPN / The Odds API)")
 
-espn = ESPNCollector()
-odds_coll = OddsCollector()
+@st.cache_resource
+def get_espn_collector():
+    return ESPNCollector()
+
+@st.cache_resource
+def get_odds_collector():
+    return OddsCollector()
+
+espn = get_espn_collector()
+odds_coll = get_odds_collector()
 
 
 

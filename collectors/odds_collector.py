@@ -17,6 +17,10 @@ class OddsCollector:
     _circuit_breaker_reason: str = ""
     _circuit_breaker_logged: bool = False
 
+    # Class-level shared cache to persist across Streamlit reruns and multiple instances
+    _shared_cached_games: Optional[list] = None
+    _shared_cache_time: float = 0.0
+
     def __init__(self, max_retries: int = 3, retry_delay: float = 0.1, backoff_factor: float = 2.0):
         try:
             from config import ODDS_API_KEY
@@ -43,6 +47,8 @@ class OddsCollector:
         self._cached_games = None
         self._cache_time = 0
         self._logged_no_key = False
+        OddsCollector._shared_cached_games = None
+        OddsCollector._shared_cache_time = 0.0
 
     @classmethod
     def reset_circuit_breaker(cls) -> None:
@@ -50,6 +56,8 @@ class OddsCollector:
         cls._circuit_breaker_until = 0.0
         cls._circuit_breaker_reason = ""
         cls._circuit_breaker_logged = False
+        cls._shared_cached_games = None
+        cls._shared_cache_time = 0.0
 
     def _resolve_raw_dir(self) -> str:
         """Resolve path to data/raw directory."""
@@ -140,8 +148,15 @@ class OddsCollector:
     def _fetch_all_odds(self) -> list:
         """Fetch all odds from API with retry backoff and fallback on failure."""
         now = self.time.time()
+        # 1. Instance cache (for unit tests / custom overrides)
         if self._cached_games is not None and (now - self._cache_time) < 3600:
             return self._cached_games
+
+        # 2. Class-level shared cache (persists across Streamlit reruns)
+        if OddsCollector._shared_cached_games is not None and (now - OddsCollector._shared_cache_time) < 3600:
+            self._cached_games = OddsCollector._shared_cached_games
+            self._cache_time = OddsCollector._shared_cache_time
+            return OddsCollector._shared_cached_games
 
         # Check class-level circuit breaker (e.g. quota exhausted or API key invalid)
         if now < OddsCollector._circuit_breaker_until:
@@ -175,6 +190,8 @@ class OddsCollector:
             # Cache empty result for 1 hour so it does not spam logs on every game & 10s refresh
             self._cached_games = []
             self._cache_time = now
+            OddsCollector._shared_cached_games = []
+            OddsCollector._shared_cache_time = now
             return []
 
         params = {
@@ -203,6 +220,8 @@ class OddsCollector:
                     OddsCollector._circuit_breaker_logged = True
                     self._cached_games = []
                     self._cache_time = now
+                    OddsCollector._shared_cached_games = []
+                    OddsCollector._shared_cache_time = now
                     return []
 
                 if res.status_code in [429, 500, 502, 503, 504]:
@@ -217,6 +236,8 @@ class OddsCollector:
 
                 self._cached_games = res.json()
                 self._cache_time = now
+                OddsCollector._shared_cached_games = self._cached_games
+                OddsCollector._shared_cache_time = now
                 OddsCollector._circuit_breaker_until = 0.0
                 OddsCollector._circuit_breaker_logged = False
                 return self._cached_games
@@ -236,6 +257,8 @@ class OddsCollector:
         # Cache failure for 300s (5 minutes) so remaining games in slate don't repeat retries
         self._cached_games = []
         self._cache_time = now
+        OddsCollector._shared_cached_games = []
+        OddsCollector._shared_cache_time = now
         return []
 
     def get_game_odds(self, home_team: str, away_team: str) -> Dict:
