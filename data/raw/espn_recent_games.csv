@@ -145,3 +145,17 @@ game_id,date,status,period,clock,clock_detail,season_type,home_team,home_id,home
 401909842,2026-10-22T02:30Z,STATUS_FINAL,4,12:00,Final,2,LA Clippers,12,121,Sacramento Kings,23,96,,,,,Intuit Dome
 401909093,2026-10-22T23:00Z,STATUS_SCHEDULED,0,0.0,"Thu, October 22nd at 7:00 PM EDT",2,Philadelphia 76ers,20,0,Cleveland Cavaliers,5,0,PHI -3.5,235.5,,,Xfinity Mobile Arena
 401909094,2026-10-23T01:30Z,STATUS_SCHEDULED,0,0.0,"Thu, October 22nd at 9:30 PM EDT",2,Oklahoma City Thunder,25,0,Denver Nuggets,7,0,OKC -8.5,235.5,,,Paycom Center
+401909088,2026-10-20T19:00Z,STATUS_FINAL,4,0.0,Final,2,Detroit Pistons,8,121,Boston Celtics,2,113,,,,,Little Caesars Arena
+401909089,2026-10-20T23:00Z,STATUS_FINAL,4,12:00,Final,2,New York Knicks,18,100,Philadelphia 76ers,20,106,,,,,Madison Square Garden
+401909090,2026-10-21T01:50Z,STATUS_FINAL,4,0.0,Final,2,San Antonio Spurs,24,104,Oklahoma City Thunder,25,116,,,,,Frost Bank Center
+401909834,2026-10-21T23:00Z,STATUS_FINAL,4,12:00,Final,2,Orlando Magic,19,125,Atlanta Hawks,1,132,,,,,Kia Center
+401909835,2026-10-21T23:00Z,STATUS_FINAL,4,0.0,Final,2,Washington Wizards,27,128,Milwaukee Bucks,15,116,,,,,Capital One Arena
+401909091,2026-10-21T23:30Z,STATUS_FINAL,4,12:00,Final,2,Miami Heat,14,106,Minnesota Timberwolves,16,131,,,,,Kaseya Center
+401909836,2026-10-21T23:30Z,STATUS_FINAL,4,12:00,Final,2,Brooklyn Nets,17,103,Charlotte Hornets,30,110,,,,,Barclays Center
+401909837,2026-10-21T23:30Z,STATUS_FINAL,4,0.0,Final,2,Toronto Raptors,28,135,Chicago Bulls,4,92,,,,,Scotiabank Arena
+401909838,2026-10-22T00:00Z,STATUS_FINAL,4,12:00,Final,2,Memphis Grizzlies,29,123,Utah Jazz,26,103,,,,,FedExForum
+401909839,2026-10-22T00:00Z,STATUS_FINAL,4,12:00,Final,2,New Orleans Pelicans,3,120,Indiana Pacers,11,123,,,,,Smoothie King Center
+401909840,2026-10-22T00:30Z,STATUS_FINAL,4,12:00,Final,2,Houston Rockets,10,128,Dallas Mavericks,6,110,,,,,Toyota Center (Houston)
+401909092,2026-10-22T02:00Z,STATUS_FINAL,4,0.0,Final,2,Los Angeles Lakers,13,127,Golden State Warriors,9,105,,,,,crypto.com Arena
+401909841,2026-10-22T02:00Z,STATUS_FINAL,4,12:00,Final,2,Portland Trail Blazers,22,124,Phoenix Suns,21,83,,,,,Moda Center
+401909842,2026-10-22T02:30Z,STATUS_FINAL,4,12:00,Final,2,LA Clippers,12,121,Sacramento Kings,23,96,,,,,Intuit Dome

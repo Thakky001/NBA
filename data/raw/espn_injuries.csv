@@ -3,21 +3,21 @@ Atlanta Hawks,Mouhamed Gueye,Out,Fracture,Left,Foot,2026-11-20
 Atlanta Hawks,Henri Veesaar,Out,,Right,Knee,2027-07-01
 Boston Celtics,Devin Carter,Out,,,Illness,2026-11-08
 Brooklyn Nets,Tyler Bilodeau,Day-To-Day,,Not Specified,Shoulder,2026-10-24
-Charlotte Hornets,Grant Williams,Day-To-Day,,Right,Hamstring,2026-10-23
-Charlotte Hornets,Coby White,Day-To-Day,Strain,Left,Calf,2026-10-23
-Charlotte Hornets,Kon Knueppel,Day-To-Day,,Left,Hamstring,2026-10-23
+Charlotte Hornets,Grant Williams,Out,,Right,Hamstring,2026-10-24
+Charlotte Hornets,Coby White,Out,Strain,Left,Calf,2026-10-24
+Charlotte Hornets,Kon Knueppel,Out,,Left,Hamstring,2026-10-24
 Charlotte Hornets,Kylan Boswell,Out,,Right,Knee,2026-11-02
 Chicago Bulls,Dailyn Swain,Day-To-Day,,,Illness,2026-10-23
 Chicago Bulls,Jordan Hawkins,Day-To-Day,,,Illness,2026-10-23
+Chicago Bulls,Zach Collins,Day-To-Day,,,Quadriceps,2026-10-23
+Chicago Bulls,Tobe Awaka,Day-To-Day,,,Knee,2026-10-23
+Chicago Bulls,Josh Giddey,Day-To-Day,,,Wrist,2026-10-23
 Chicago Bulls,Nic Claxton,Out,,Not Specified,Hamstring,2026-11-04
-Cleveland Cavaliers,Khalifa Diop,Out,,Left,Knee,2026-10-24
-Cleveland Cavaliers,Jarrett Allen,Day-To-Day,,Right,Knee,2026-10-22
-Cleveland Cavaliers,Nae'Qwan Tomlin,Out,,,Back,2026-11-16
-Dallas Mavericks,Dereck Lively II,Day-To-Day,Surgery,Right,Foot,2026-10-23
-Dallas Mavericks,Caleb Martin,Day-To-Day,Sprain,Right,Thumb,2026-10-23
 Dallas Mavericks,Jett Howard,Day-To-Day,,Right,Calf,2026-10-23
-Dallas Mavericks,Tarik Biberovic,Day-To-Day,,Right,Heel,2026-10-23
-Dallas Mavericks,Santi Aldama,Day-To-Day,,Not Specified,Knee,2026-10-23
+Dallas Mavericks,Caleb Martin,Out,Sprain,Right,Thumb,2026-10-24
+Dallas Mavericks,Santi Aldama,Out,,Not Specified,Knee,2026-10-24
+Dallas Mavericks,Tarik Biberovic,Out,,Right,Heel,2026-10-24
+Dallas Mavericks,Dereck Lively II,Out,Surgery,Right,Foot,2026-10-26
 Denver Nuggets,Spencer Jones,Day-To-Day,,Not Specified,Hamstring,2026-10-22
 Denver Nuggets,Julian Strawther,Out,Sprain,Left,Knee,2026-11-29
 Detroit Pistons,Taurean Prince,Day-To-Day,,,Personal,2026-10-23
@@ -27,14 +27,17 @@ Golden State Warriors,Kristaps Porzingis,Out,,,Illness,2026-12-01
 Golden State Warriors,Moses Moody,Out,Surgery,Left,Knee,2026-12-01
 Golden State Warriors,Jimmy Butler III,Out,Surgery,Right,Knee,2027-01-02
 Houston Rockets,Steven Adams,Day-To-Day,Soreness,Right,Calf,2026-10-23
+Houston Rockets,Reed Sheppard,Day-To-Day,Bruise,Left,Knee,2026-10-23
+Indiana Pacers,Ben Sheppard,Day-To-Day,Soreness,Left,Knee,2026-10-23
 Indiana Pacers,Aaron Nesmith,Day-To-Day,Strain,Left,Hamstring,2026-10-23
-Indiana Pacers,T.J. McConnell,Day-To-Day,,Right,Hamstring,2026-10-23
+Indiana Pacers,T.J. McConnell,Out,,Right,Hamstring,2026-10-25
 Indiana Pacers,Johnny Furphy,Out,Surgery,Right,Knee,2027-01-02
 LA Clippers,Bradley Beal,Out,Inflammation,Not Specified,Knee,2026-11-08
 LA Clippers,Max Strus,Out,,Right,Foot,2026-11-08
 LA Clippers,Yanic Konan Niederhauser,Out,Surgery,Right,Foot,2026-11-08
 LA Clippers,Brandon Ingram,Out,Surgery,Not Specified,Achilles,2026-11-08
 LA Clippers,Jordan Miller,Out,Surgery,,Shoulder,2027-03-02
+Los Angeles Lakers,Jake LaRavia,Day-To-Day,,Right,Ankle,2026-10-23
 Los Angeles Lakers,Adou Thiero,Day-To-Day,,Left,Knee,2026-10-23
 Los Angeles Lakers,Collin Sexton,Day-To-Day,,Right,Calf,2026-10-23
 Los Angeles Lakers,Cameron Carr,Day-To-Day,Strain,Right,Oblique,2026-10-23
@@ -43,12 +46,12 @@ Minnesota Timberwolves,Donte DiVincenzo,Out,Surgery,Right,Achilles,2027-04-02
 Oklahoma City Thunder,Nikola Topic,Out,Surgery,Not Specified,Back,2026-10-26
 Oklahoma City Thunder,Thomas Sorber,Out,Surgery,Right,Knee,2026-10-26
 Oklahoma City Thunder,Otega Oweh,Out,Surgery,Right,Achilles,2027-07-01
-Orlando Magic,Jonathan Isaac,Day-To-Day,,Left,Knee,2026-10-23
-Orlando Magic,Anthony Black,Day-To-Day,Sprain,Right,Ankle,2026-10-23
+Orlando Magic,Anthony Black,Out,Sprain,Right,Ankle,2026-10-25
+Orlando Magic,Jonathan Isaac,Out,,Left,Knee,2026-10-25
 Orlando Magic,Noah Penda,Out,,Right,Hamstring,2026-11-18
 Orlando Magic,Izaiyah Nelson,Out,Surgery,Left,Ankle,2026-11-18
+Philadelphia 76ers,Dean Wade,Out,Sprain,Not Specified,Ankle,2026-10-24
 Philadelphia 76ers,Tacko Fall,Out,,Left,Quadriceps,2026-10-24
-Philadelphia 76ers,Dean Wade,Day-To-Day,Sprain,Not Specified,Ankle,2026-10-22
 Philadelphia 76ers,Dominick Barlow,Out,,,Back,2026-11-02
 Philadelphia 76ers,Ariel Hukporti,Out,Ruptured,Right,Achilles,2027-10-01
 Phoenix Suns,Luke Kennard,Day-To-Day,Strain,Left,Knee,2026-10-24
@@ -61,12 +64,15 @@ Sacramento Kings,Malik Monk,Day-To-Day,Soreness,Left,Ankle,2026-10-23
 Sacramento Kings,Ben Simmons,Out,Ruptured,,Achilles,2027-10-01
 Sacramento Kings,Dylan Cardwell,Out,Strain,Left,Calf,2026-11-02
 Sacramento Kings,Maxime Raynaud,Out,Dislocated,Right,Knee,2026-11-02
-San Antonio Spurs,Tobias Harris,Day-To-Day,Strain,Left,Calf,2026-10-23
+San Antonio Spurs,De'Aaron Fox,Day-To-Day,Sprain,Right,Wrist,2026-10-23
+San Antonio Spurs,Keldon Johnson,Day-To-Day,Laceration,,Mouth,2026-10-23
+San Antonio Spurs,Tobias Harris,Out,Strain,Left,Calf,2026-10-24
 San Antonio Spurs,Jayden Quaintance,Out,Surgery,Right,Knee,2026-12-03
 Toronto Raptors,Nate Bittle,Out,,Right,Foot,2026-10-28
+Utah Jazz,Trey Alexander,Out,,Left,Knee,2026-10-25
 Utah Jazz,Tony Bradley,Day-To-Day,,Left,Quadriceps,2026-10-23
-Utah Jazz,Trey Alexander,Day-To-Day,,Left,Knee,2026-10-23
 Utah Jazz,Jusuf Nurkic,Out,,Right,Foot,2026-11-04
-Washington Wizards,AJ Dybantsa,Day-To-Day,Sprain,Left,Ankle,2026-10-23
+Washington Wizards,Felix Okpara,Day-To-Day,,,Illness,2026-10-23
+Washington Wizards,AJ Dybantsa,Out,Sprain,Left,Ankle,2026-10-24
 Washington Wizards,Tristan Vukcevic,Out,,Left,Hip,2026-11-02
 Washington Wizards,Jamir Watkins,Out,,Left,Knee,2027-04-02

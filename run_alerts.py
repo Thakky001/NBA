@@ -164,8 +164,9 @@ def format_game_card(analysis: Dict[str, Any], game_info: Dict[str, Any], odds_d
                 card_lines.append(
                     f"🏀 <b>สูง/ต่ำ: {action_text}{line_str}</b> (Edge: <code>{edge:+.1f} pts</code> | Win Prob: <code>{win_p:.1%}</code>)"
                 )
-            if ev > 0:
-                card_lines.append(f"  └ ⚡ <b>+EV:</b> <code>+{ev*100:.1f}%</code> | <b>Kelly:</b> <code>{q_kelly*100:.1f}%</code>")
+            if ev is not None and ev > 0:
+                q_kelly_val = q_kelly or 0.0
+                card_lines.append(f"  └ ⚡ <b>+EV:</b> <code>+{ev*100:.1f}%</code> | <b>Kelly:</b> <code>{q_kelly_val*100:.1f}%</code>")
 
             # Line shopping hint
             if p_type == 'Total' and odds_data:
