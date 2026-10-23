@@ -562,6 +562,8 @@ class TrendAnalyzer:
         cover_edge = 0.0
         raw_cover_edge = 0.0
         win_prob = 0.50
+        spread_probs = None
+        anchor_spread = open_spread if open_spread is not None else spread_line
         # Evaluate against spread_line (Against The Spread - ATS)
         if spread_line is not None:
             try:

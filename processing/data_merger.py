@@ -72,6 +72,7 @@ class DataMerger:
                 elif lower_col in ['home_ml', 'homemoneyline']: col_mapping[col] = 'home_ml'
                 elif lower_col in ['away_ml', 'awaymoneyline']: col_mapping[col] = 'away_ml'
                 elif lower_col in ['venue', 'location', 'arena']: col_mapping[col] = 'venue'
+                elif lower_col in ['season_type', 'seasontype']: col_mapping[col] = 'season_type'
                 
             df_std.rename(columns=col_mapping, inplace=True)
             
@@ -120,12 +121,16 @@ class DataMerger:
         expected_cols = [
             'game_id', 'date', 'season', 'home_team', 'away_team', 'home_score', 
             'away_score', 'total_points', 'point_diff', 'spread', 'over_under',
-            'home_ml', 'away_ml', 'venue'
+            'home_ml', 'away_ml', 'venue', 'season_type'
         ]
         
         for col in expected_cols:
             if col not in combined.columns:
                 combined[col] = None
+                
+        # Filter out preseason games (season_type == 1)
+        if 'season_type' in combined.columns:
+            combined = combined[combined['season_type'].astype(str) != '1'].copy()
                 
         return combined[expected_cols]
     
