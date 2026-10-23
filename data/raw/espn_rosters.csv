@@ -88,7 +88,6 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 5095151,Caleb Wilson,8,Forward,"6' 9""",211 lbs,20,0,North Carolina,4,Chicago Bulls
 4066328,Jarrett Allen,31,Center,"6' 9""",243 lbs,28,10,Texas,5,Cleveland Cavaliers
 3934723,Thomas Bryant,3,Center,"6' 9""",248 lbs,29,10,Indiana,5,Cleveland Cavaliers
-4997530,Khalifa Diop,18,Center,"6' 11""",231 lbs,24,0,,5,Cleveland Cavaliers
 4431734,Tristan Enaruna,21,Forward,"6' 8""",220 lbs,25,2,Cleveland State,5,Cleveland Cavaliers
 3992,James Harden,1,Guard,"6' 5""",220 lbs,37,18,Arizona State,5,Cleveland Cavaliers
 2995706,Mario Hezonja,33,Forward,"6' 8""",220 lbs,31,6,,5,Cleveland Cavaliers
@@ -99,9 +98,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 4701233,Craig Porter Jr.,9,Guard,"6' 1""",180 lbs,26,4,Wichita State,5,Cleveland Cavaliers
 5023693,Tyrese Proctor,24,Guard,"6' 4""",185 lbs,22,2,Duke,5,Cleveland Cavaliers
 5041951,Meleek Thomas,15,Guard,"6' 3""",190 lbs,20,0,Arkansas,5,Cleveland Cavaliers
-5106268,Nae'Qwan Tomlin,35,Forward,"6' 8""",210 lbs,25,3,Memphis,5,Cleveland Cavaliers
 4683747,Jaylon Tyson,20,Guard,"6' 6""",215 lbs,23,3,California,5,Cleveland Cavaliers
-5106261,Ernest Udeh Jr.,39,Center,"6' 11""",266 lbs,22,0,Miami,5,Cleveland Cavaliers
 4576087,Peyton Watson,8,Guard,"6' 8""",200 lbs,24,5,UCLA,5,Cleveland Cavaliers
 4593125,Santi Aldama,34,Forward,"7' 0""",215 lbs,25,6,Loyola Maryland,6,Dallas Mavericks
 5148538,Tarik Biberovic,13,Forward,"6' 7""",218 lbs,25,0,,6,Dallas Mavericks
@@ -406,7 +403,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 4888725,Ryan Dunn,0,Forward,"6' 7""",216 lbs,23,3,Virginia,21,Phoenix Suns
 5105977,Rasheer Fleming,20,Forward,"6' 9""",240 lbs,22,2,Saint Joseph's,21,Phoenix Suns
 4278585,Collin Gillespie,12,Guard,"6' 1""",195 lbs,27,4,Villanova,21,Phoenix Suns
-4278402,Jordan Goodwin,23,Guard,"6' 3""",215 lbs,27,6,Saint Louis,21,Phoenix Suns
+4278402,Jordan Goodwin,23,Guard,"6' 3""",215 lbs,28,6,Saint Louis,21,Phoenix Suns
 4437244,Jalen Green,4,Guard,"6' 4""",186 lbs,24,6,,21,Phoenix Suns
 4601023,Oso Ighodaro,11,Forward,"6' 11""",235 lbs,24,3,Marquette,21,Phoenix Suns
 3913174,Luke Kennard,8,Guard,"6' 5""",206 lbs,30,10,Duke,21,Phoenix Suns
