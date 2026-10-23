@@ -225,7 +225,7 @@ if st.sidebar.button("🔄 อัปเดตฐานข้อมูลสถ�
 
 # Load Data with Streamlit Caching
 @st.cache_resource
-def get_analyzer(cache_version: str = "v9_early_season_conviction_and_auto_sync"):
+def get_analyzer(cache_version: str = "v10_catboost_ai_residuals"):
     from processing.data_merger import DataMerger
     from processing.feature_engineering import FeatureEngineer
     from analysis.trend_analyzer import TrendAnalyzer
@@ -543,6 +543,8 @@ def render_game_slate(selected_date, is_live_refresh):
                             if ou_res.get('raw_projected_total') is not None and ou_res.get('projected_total') is not None:
                                 anchor_used = ou_res.get('anchor_line') or ou_val or 0.0
                                 st.caption(f"🎯 **Market-Anchored Projection:** `{ou_res['projected_total']:.1f}` PTS *(คำนวณจาก: ราคาเปิด {anchor_used:.1f} × 65% + โมเดลดิบ {ou_res['raw_projected_total']:.1f} × 35%)*")
+                                if ou_res.get('ai_residual') is not None and ou_res.get('ai_residual') != 0.0:
+                                    st.caption(f"🤖 **AI Tuned (CatBoost):** `{ou_res['ai_residual']:+.1f}` PTS *(ปรับจูนความล้า / B2B / จังหวะเกม)*")
                         
                             # --- QUANTITATIVE VALUE & KELLY METRICS ---
                             if is_bet_live:
@@ -709,6 +711,8 @@ def render_game_slate(selected_date, is_live_refresh):
                             if sp_res.get('raw_projected_margin') is not None and sp_res.get('projected_margin') is not None:
                                 anchor_sp = sp_res.get('anchor_spread', sp_val) or 0.0
                                 st.caption(f"🎯 **Market-Anchored Margin:** `{sp_res['projected_margin']:+.1f}` PTS *(คำนวณจาก: แต้มต่อเปิด {anchor_sp:+.1f} × 65% + โมเดลดิบ {sp_res['raw_projected_margin']:+.1f} × 35%)*")
+                                if sp_res.get('ai_residual') is not None and sp_res.get('ai_residual') != 0.0:
+                                    st.caption(f"🤖 **AI Tuned (CatBoost):** `{sp_res['ai_residual']:+.1f}` PTS *(ปรับจูนความล้า / B2B / ฟอร์มทีม)*")
                         
                             # --- QUANTITATIVE VALUE & KELLY METRICS ---
                             if is_bet_live_sp:

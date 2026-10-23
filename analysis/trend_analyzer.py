@@ -790,6 +790,62 @@ class TrendAnalyzer:
             )
         else:
             result['spread'] = None
+
+        # AI CatBoost Residual Adjustments (Unified across Web Dashboard, Alerts & Ledger)
+        try:
+            from analysis.ai_residual_model import OverUnderResidualModel, SpreadResidualModel
+            if not hasattr(self, '_ai_ou_model'):
+                self._ai_ou_model = OverUnderResidualModel()
+            if not hasattr(self, '_ai_sp_model'):
+                self._ai_sp_model = SpreadResidualModel()
+
+            # 1. Over/Under AI Adjustment
+            if self._ai_ou_model and self._ai_ou_model.is_fitted and result.get('over_under'):
+                ou_res = result['over_under']
+                adj_ou = self._ai_ou_model.get_adjusted_projection(
+                    home_team, away_team, self.fe, self, game_date=game_date, over_under_line=over_under_line
+                )
+                ou_res['ai_residual'] = adj_ou['ai_residual']
+                ou_res['base_math_total'] = adj_ou['base_math_total']
+                ou_res['adjusted_total'] = adj_ou['adjusted_total']
+                if adj_ou['ai_residual'] != 0.0 and over_under_line is not None:
+                    ou_res['projected_total'] = adj_ou['adjusted_total']
+                    ou_res['total_edge'] = round(adj_ou['adjusted_total'] - over_under_line, 1)
+                    if ou_res['total_edge'] >= 2.0:
+                        ou_res['recommendation'] = 'STRONG OVER'
+                    elif ou_res['total_edge'] <= -2.0:
+                        ou_res['recommendation'] = 'STRONG UNDER'
+                    elif ou_res['total_edge'] >= 1.0:
+                        ou_res['recommendation'] = 'LEAN OVER'
+                    elif ou_res['total_edge'] <= -1.0:
+                        ou_res['recommendation'] = 'LEAN UNDER'
+                    else:
+                        ou_res['recommendation'] = 'NEUTRAL'
+
+            # 2. Spread AI Adjustment
+            if self._ai_sp_model and self._ai_sp_model.is_fitted and result.get('spread'):
+                sp_res = result['spread']
+                adj_sp = self._ai_sp_model.get_adjusted_spread_projection(
+                    home_team, away_team, self.fe, self, game_date=game_date, spread_line=spread_line
+                )
+                sp_res['ai_residual'] = adj_sp['ai_residual']
+                sp_res['base_math_margin'] = adj_sp['base_math_margin']
+                sp_res['adjusted_margin'] = adj_sp['adjusted_margin']
+                if adj_sp['ai_residual'] != 0.0 and spread_line is not None:
+                    sp_res['projected_margin'] = adj_sp['adjusted_margin']
+                    sp_res['cover_edge'] = round(adj_sp['adjusted_margin'] + spread_line, 1)
+                    if sp_res['cover_edge'] >= 2.0:
+                        sp_res['recommendation'] = 'STRONG HOME'
+                    elif sp_res['cover_edge'] <= -2.0:
+                        sp_res['recommendation'] = 'STRONG AWAY'
+                    elif sp_res['cover_edge'] >= 1.0:
+                        sp_res['recommendation'] = 'LEAN HOME'
+                    elif sp_res['cover_edge'] <= -1.0:
+                        sp_res['recommendation'] = 'LEAN AWAY'
+                    else:
+                        sp_res['recommendation'] = 'NEUTRAL'
+        except Exception as e:
+            logger.warning(f"AI Residual adjustment failed gracefully in full_matchup_analysis: {e}")
             
         return result
 

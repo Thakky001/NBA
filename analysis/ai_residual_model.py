@@ -132,8 +132,14 @@ class OverUnderResidualModel:
         h_rest = fe.get_rest_days(h_team, game_date=g_date_str)
         a_rest = fe.get_rest_days(a_team, game_date=g_date_str)
 
-        h_b2b = 1 if h_rest <= 1 else 0
-        a_b2b = 1 if a_rest <= 1 else 0
+        try:
+            h_b2b = 1 if float(h_rest) <= 1.0 else 0
+        except (ValueError, TypeError):
+            h_b2b = 0
+        try:
+            a_b2b = 1 if float(a_rest) <= 1.0 else 0
+        except (ValueError, TypeError):
+            a_b2b = 0
 
         h_pace = fe._get_team_adv_stat(h_team, 'pace', game_date) if hasattr(fe, '_get_team_adv_stat') else None
         a_pace = fe._get_team_adv_stat(a_team, 'pace', game_date) if hasattr(fe, '_get_team_adv_stat') else None
@@ -318,8 +324,14 @@ class SpreadResidualModel:
         h_rest = fe.get_rest_days(h_team, game_date=g_date_str)
         a_rest = fe.get_rest_days(a_team, game_date=g_date_str)
 
-        h_b2b = 1 if h_rest <= 1 else 0
-        a_b2b = 1 if a_rest <= 1 else 0
+        try:
+            h_b2b = 1 if float(h_rest) <= 1.0 else 0
+        except (ValueError, TypeError):
+            h_b2b = 0
+        try:
+            a_b2b = 1 if float(a_rest) <= 1.0 else 0
+        except (ValueError, TypeError):
+            a_b2b = 0
 
         # Advanced stats (Net Rating & Pace)
         h_net = fe._get_team_adv_stat(h_team, 'net_rating', game_date) if hasattr(fe, '_get_team_adv_stat') else None
