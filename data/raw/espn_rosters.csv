@@ -338,6 +338,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 5289900,Mohamed Diawara,51,Forward,"6' 9""",225 lbs,21,2,,18,New York Knicks
 6585,Andre Drummond,0,Center,"6' 11""",279 lbs,33,15,UConn,18,New York Knicks
 3062679,Josh Hart,3,Guard,"6' 5""",215 lbs,31,10,Villanova,18,New York Knicks
+4897943,Dalton Knecht,99,Forward,"6' 6""",215 lbs,25,3,Tennessee,18,New York Knicks
 4433225,Tyler Kolek,13,Guard,"6' 2""",195 lbs,25,3,Marquette,18,New York Knicks
 4431823,Miles McBride,2,Guard,"6' 2""",195 lbs,26,6,West Virginia,18,New York Knicks
 4411057,Kevin McCullar Jr.,9,Guard,"6' 6""",210 lbs,25,3,Kansas,18,New York Knicks
@@ -355,6 +356,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 4683778,Jared McCain,3,Guard,"6' 3""",195 lbs,22,3,Duke,25,Oklahoma City Thunder
 4900671,Ajay Mitchell,25,Guard,"6' 4""",190 lbs,24,3,UC Santa Barbara,25,Oklahoma City Thunder
 5106270,Otega Oweh,13,Guard,"6' 4""",217 lbs,23,0,Kentucky,25,Oklahoma City Thunder
+4432185,Micah Peavy,,Guard,"6' 7""",220 lbs,25,2,Georgetown,25,Oklahoma City Thunder
 5061603,Thomas Sorber,12,Center,"6' 9""",250 lbs,20,0,Georgetown,25,Oklahoma City Thunder
 5241364,Bennett Stirtz,14,Guard,"6' 4""",190 lbs,23,0,Iowa,25,Oklahoma City Thunder
 5159925,Nikola Topic,44,Guard,"6' 6""",200 lbs,21,2,,25,Oklahoma City Thunder
@@ -441,6 +443,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 5107897,Jonathan Mogbo,22,Forward,"6' 9""",225 lbs,24,3,San Francisco,23,Sacramento Kings
 4066262,Malik Monk,0,Guard,"6' 3""",200 lbs,28,10,Kentucky,23,Sacramento Kings
 4594327,Keegan Murray,13,Forward,"6' 8""",225 lbs,26,5,Iowa,23,Sacramento Kings
+4709131,Sean Pedulla,,Guard,"6' 1""",195 lbs,24,2,Ole Miss,23,Sacramento Kings
 4279318,Daeqwon Plowden,29,Guard,"6' 6""",216 lbs,28,3,Bowling Green,23,Sacramento Kings
 4898371,Maxime Raynaud,42,Center,"7' 1""",250 lbs,23,2,Stanford,23,Sacramento Kings
 3155942,Domantas Sabonis,11,Forward,"6' 10""",240 lbs,30,11,Gonzaga,23,Sacramento Kings
