@@ -47,25 +47,42 @@ class RotoWireCollector:
         self._memory_cache: Optional[Dict[str, Any]] = None
         self._cache_mtime: float = 0.0
 
+    def _resolve_raw_dir(self) -> str:
+        """Resolve path to data/raw directory robustly across local and cloud environments."""
+        try:
+            from config import RAW_DIR
+            if os.path.isdir(RAW_DIR):
+                return RAW_DIR
+        except Exception:
+            pass
+        base = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        raw_path = os.path.join(base, 'data', 'raw')
+        if os.path.isdir(raw_path):
+            return raw_path
+        cwd_raw = os.path.join(os.getcwd(), 'data', 'raw')
+        return cwd_raw
+
     def _get_cache_path(self) -> str:
         """Resolve path to local cache JSON file."""
-        os.makedirs(RAW_DIR, exist_ok=True)
-        return os.path.join(RAW_DIR, self.CACHE_FILENAME)
+        raw_dir = self._resolve_raw_dir()
+        os.makedirs(raw_dir, exist_ok=True)
+        return os.path.join(raw_dir, self.CACHE_FILENAME)
 
-    def _load_cache(self) -> Optional[Dict[str, Any]]:
-        """Load cached lineups from disk if not expired."""
+    def _load_cache(self, allow_expired: bool = False) -> Optional[Dict[str, Any]]:
+        """Load cached lineups from disk if not expired (or always if allow_expired=True)."""
         cache_path = self._get_cache_path()
         if not os.path.exists(cache_path):
             return None
         try:
             mtime = os.path.getmtime(cache_path)
-            if (time.time() - mtime) < self.cache_ttl:
+            if allow_expired or (time.time() - mtime) < self.cache_ttl:
                 with open(cache_path, "r", encoding="utf-8") as f:
                     data = json.load(f)
-                self._memory_cache = data
-                self._cache_mtime = mtime
-                logger.debug(f"Loaded RotoWire lineups from cache ({len(data)} teams)")
-                return data
+                if data:
+                    self._memory_cache = data
+                    self._cache_mtime = mtime
+                    logger.debug(f"Loaded RotoWire lineups from cache ({len(data)} teams)")
+                    return data
         except Exception as e:
             logger.warning(f"Error reading RotoWire cache: {e}")
         return None
@@ -217,16 +234,11 @@ class RotoWireCollector:
         except Exception as e:
             logger.warning(f"Failed to fetch live RotoWire lineups: {e}")
 
-        # 3. Fallback to expired cache if available
-        cache_path = self._get_cache_path()
-        if os.path.exists(cache_path):
-            try:
-                with open(cache_path, "r", encoding="utf-8") as f:
-                    expired_data = json.load(f)
-                logger.info("Using expired RotoWire cache as fallback.")
-                return expired_data
-            except Exception:
-                pass
+        # 3. Fallback to cache even if expired
+        fallback = self._load_cache(allow_expired=True)
+        if fallback:
+            logger.info("Using cached RotoWire lineups as fallback.")
+            return fallback
 
         return {}
 

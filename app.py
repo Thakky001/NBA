@@ -230,7 +230,7 @@ if st.sidebar.button("🔄 อัปเดตฐานข้อมูลสถ�
 
 # Load Data with Streamlit Caching
 @st.cache_resource
-def get_analyzer(cache_version: str = "v10_catboost_ai_residuals"):
+def get_analyzer(cache_version: str = "v11_rotowire_lineups"):
     from processing.data_merger import DataMerger
     from processing.feature_engineering import FeatureEngineer
     from analysis.trend_analyzer import TrendAnalyzer
