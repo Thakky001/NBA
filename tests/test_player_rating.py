@@ -122,6 +122,85 @@ class TestPlayerRating(unittest.TestCase):
             top_players_str = " | ".join(res['top_players'])
             self.assertIn('Kon Knueppel (Base) (0.0 - OUT - Hamstring)', top_players_str)
 
+    def test_rotowire_70_30_weighted_rating(self):
+        """Verify that 5 confirmed starters receive 70% weight and bench receives 30% weight."""
+        mock_rw = MagicMock()
+        mock_rw.get_lineup_for_team.return_value = {
+            'lineup_status': 'Confirmed',
+            'is_confirmed': True,
+            'starters': [
+                {'name': 'Player One', 'position': 'PG'},
+                {'name': 'Player Two', 'position': 'SG'},
+                {'name': 'Player Three', 'position': 'SF'},
+                {'name': 'Player Four', 'position': 'PF'},
+                {'name': 'Player Five', 'position': 'C'},
+            ]
+        }
+        engine = PlayerRatingEngine(rotowire_collector=mock_rw)
+        engine._roster_cache[777] = pd.DataFrame([
+            {'name': 'Player One'},
+            {'name': 'Player Two'},
+            {'name': 'Player Three'},
+            {'name': 'Player Four'},
+            {'name': 'Player Five'},
+            {'name': 'Bench Six'},
+            {'name': 'Bench Seven'},
+            {'name': 'Bench Eight'},
+        ])
+        engine.draft_history = pd.DataFrame()
+        # Starters have 20.0 EFF each, Bench have 10.0 EFF each
+        engine.player_stats = pd.DataFrame([
+            {'PLAYER_NAME': 'Player One', 'GP': 10, 'EFF_PG': 20.0},
+            {'PLAYER_NAME': 'Player Two', 'GP': 10, 'EFF_PG': 20.0},
+            {'PLAYER_NAME': 'Player Three', 'GP': 10, 'EFF_PG': 20.0},
+            {'PLAYER_NAME': 'Player Four', 'GP': 10, 'EFF_PG': 20.0},
+            {'PLAYER_NAME': 'Player Five', 'GP': 10, 'EFF_PG': 20.0},
+            {'PLAYER_NAME': 'Bench Six', 'GP': 10, 'EFF_PG': 10.0},
+            {'PLAYER_NAME': 'Bench Seven', 'GP': 10, 'EFF_PG': 10.0},
+            {'PLAYER_NAME': 'Bench Eight', 'GP': 10, 'EFF_PG': 10.0},
+        ])
+        engine.injuries_df = pd.DataFrame()
+
+        with patch('config.resolve_team_info', return_value={'espn_id': 777}):
+            res = engine.calculate_team_roster_rating("Mock Team")
+            self.assertEqual(res['status'], 'success')
+            self.assertEqual(res['lineup_status'], 'Confirmed')
+            self.assertTrue(res['is_lineup_confirmed'])
+            self.assertEqual(len(res['starters']), 5)
+            # Weighted expected rating: 8 * (0.70 * 20.0 + 0.30 * 10.0) = 8 * (14.0 + 3.0) = 8 * 17.0 = 136.0
+            self.assertAlmostEqual(res['roster_rating'], 136.0, places=1)
+
+    def test_rotowire_missing_silent_fallback(self):
+        """Verify clean fallback to legacy top 8 unweighted calculation when RotoWire is unavailable."""
+        mock_rw = MagicMock()
+        mock_rw.get_lineup_for_team.return_value = None
+        engine = PlayerRatingEngine(rotowire_collector=mock_rw)
+        engine._roster_cache[777] = pd.DataFrame([
+            {'name': 'Player One'},
+            {'name': 'Player Two'},
+            {'name': 'Player Three'},
+            {'name': 'Player Four'},
+            {'name': 'Player Five'},
+            {'name': 'Bench Six'},
+            {'name': 'Bench Seven'},
+            {'name': 'Bench Eight'},
+        ])
+        engine.draft_history = pd.DataFrame()
+        engine.player_stats = pd.DataFrame([
+            {'PLAYER_NAME': f'Player {i}', 'GP': 10, 'EFF_PG': 15.0} for i in ['One', 'Two', 'Three', 'Four', 'Five']
+        ] + [
+            {'PLAYER_NAME': f'Bench {j}', 'GP': 10, 'EFF_PG': 10.0} for j in ['Six', 'Seven', 'Eight']
+        ])
+        engine.injuries_df = pd.DataFrame()
+
+        with patch('config.resolve_team_info', return_value={'espn_id': 777}):
+            res = engine.calculate_team_roster_rating("Mock Team")
+            self.assertEqual(res['status'], 'success')
+            self.assertEqual(res['lineup_status'], 'Unconfirmed')
+            self.assertFalse(res['is_lineup_confirmed'])
+            # Legacy expected rating: 5 * 15.0 + 3 * 10.0 = 75.0 + 30.0 = 105.0
+            self.assertAlmostEqual(res['roster_rating'], 105.0, places=1)
+
 
 if __name__ == '__main__':
     unittest.main()

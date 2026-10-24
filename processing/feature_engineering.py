@@ -516,6 +516,11 @@ class FeatureEngineer:
                 'away_def_loss': away_data.get('def_loss', 0.0),
                 'home_top_players': home_data.get('top_players', []),
                 'away_top_players': away_data.get('top_players', []),
+                'home_starters': home_data.get('starters', []),
+                'away_starters': away_data.get('starters', []),
+                'home_lineup_status': home_data.get('lineup_status', 'Unconfirmed'),
+                'away_lineup_status': away_data.get('lineup_status', 'Unconfirmed'),
+                'is_lineup_confirmed': home_data.get('is_lineup_confirmed', False) and away_data.get('is_lineup_confirmed', False),
                 'home_injuries': home_data.get('injuries', []),
                 'away_injuries': away_data.get('injuries', [])
             }

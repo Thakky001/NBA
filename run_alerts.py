@@ -137,13 +137,38 @@ def format_game_card(analysis: Dict[str, Any], game_info: Dict[str, Any], odds_d
     if 'STRONG' in ou_rec or 'LEAN' in ou_rec:
         picks.append((ou_res, 'Total'))
 
+    # Lineup status & starters
+    h_st = feat.get('home_lineup_status', 'Unconfirmed')
+    a_st = feat.get('away_lineup_status', 'Unconfirmed')
+    if h_st == 'Confirmed' and a_st == 'Confirmed':
+        lineup_badge = "📋 <b>Lineup:</b> <code>Confirmed ✅</code>"
+    elif h_st in ['Confirmed', 'Expected'] or a_st in ['Confirmed', 'Expected']:
+        lineup_badge = f"📋 <b>Lineup:</b> <code>Expected ⚠️</code> ({away}: {a_st} | {home}: {h_st})"
+    else:
+        lineup_badge = "📋 <b>Lineup:</b> <code>Projected</code>"
+
+    h_starters = feat.get('home_starters', [])
+    a_starters = feat.get('away_starters', [])
+    starter_parts = []
+    if a_starters:
+        a_names = ", ".join(f"{s.get('position', '')} {s.get('name', '').split()[-1]}".strip() for s in a_starters[:5])
+        starter_parts.append(f"<b>{away}:</b> {a_names}")
+    if h_starters:
+        h_names = ", ".join(f"{s.get('position', '')} {s.get('name', '').split()[-1]}".strip() for s in h_starters[:5])
+        starter_parts.append(f"<b>{home}:</b> {h_names}")
+
     # Best pick summary
     card_lines = [
         f"🏀 <b>{away} @ {home}</b> (⏰ {time_str} น.)",
         f"📍 สนาม: {venue}",
+        lineup_badge,
+    ]
+    if starter_parts:
+        card_lines.append(f"⛹️ <b>5 ตัวจริง:</b> {' | '.join(starter_parts)}")
+    card_lines.extend([
         f"🏥 <i>{inj_str}</i>",
         f"📊 เรต: {sp_text} | O/U {ou_text}"
-    ]
+    ])
 
     if picks:
         for res, p_type in picks:
@@ -279,6 +304,13 @@ def run_alert_cycle(
         return 0
 
     logger.info(f"Found {len(candidate_games)} game(s) matching pre-game alert criteria!")
+
+    # Refresh live lineups right before analyzing pre-game candidates to catch confirmed starters
+    try:
+        from collectors.rotowire_collector import RotoWireCollector
+        RotoWireCollector().get_todays_lineups(force_refresh=True)
+    except Exception as rw_err:
+        logger.warning(f"Could not force refresh RotoWire lineups: {rw_err}")
 
     # Lazy load heavy models only when games qualify
     merger = DataMerger()

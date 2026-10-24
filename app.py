@@ -209,7 +209,12 @@ if st.sidebar.button("🔄 อัปเดตฐานข้อมูลสถ�
                         except Exception:
                             pass
         
-        progress.progress(75, text="4/5 กำลังอัปเดตราคาต่อรองล่าสุด...")
+        progress.progress(75, text="4/5 กำลังอัปเดตราคาต่อรองและรายชื่อ 5 ตัวจริง (RotoWire)...")
+        try:
+            from collectors.rotowire_collector import RotoWireCollector
+            RotoWireCollector().get_todays_lineups(force_refresh=True)
+        except Exception:
+            pass
         collector_odds = OddsCollector()
         collector_odds.get_odds_dataframe()
         
@@ -364,6 +369,13 @@ def render_game_slate(selected_date, is_live_refresh):
                     is_live=is_live
                 )
             
+                sp_feat = (analysis.get('spread') or {}).get('features') or {}
+                ou_feat = (analysis.get('over_under') or {}).get('features') or {}
+                m_feat = sp_feat or ou_feat or analysis.get('features') or {}
+                h_st = m_feat.get('home_lineup_status')
+                a_st = m_feat.get('away_lineup_status')
+                lineup_tag = " [Confirmed ✅]" if (h_st == 'Confirmed' and a_st == 'Confirmed') else ""
+
                 thai_time_str = game.get('thai_time')
                 time_badge = f" ⏰ {thai_time_str} น." if thai_time_str else ""
                 status_thai = ""
@@ -372,7 +384,7 @@ def render_game_slate(selected_date, is_live_refresh):
                 elif is_live:
                     status_thai = " [🔴 กำลังแข่งขัน]"
             
-                with st.expander(f"🏀 {away} (เยือน) @ {home} (เหย้า){time_badge}{status_thai}", expanded=True):
+                with st.expander(f"🏀 {away} (เยือน) @ {home} (เหย้า){time_badge}{lineup_tag}{status_thai}", expanded=True):
                     # --- MATCH INFO (Kickoff time & Venue) ---
                     venue_str = game.get('venue') or 'TBD'
                     full_time_display = game.get('thai_time_display') or ''
@@ -412,7 +424,7 @@ def render_game_slate(selected_date, is_live_refresh):
                         a_rec = f"{ap['wins']}-{ap['losses']}"
                         st.markdown(f"**ฟอร์มทีม:** {home} ({h_rec} | {hp['avg_points_scored']:.1f} PTS) 🆚 {away} ({a_rec} | {ap['avg_points_scored']:.1f} PTS)")
 
-                    # --- INJURY BANNER ---
+                    # --- INJURY & LINEUP BANNER ---
                     spread_dict = analysis.get('spread') or {}
                     ou_dict = analysis.get('over_under') or {}
                     feat = spread_dict.get('features') or ou_dict.get('features') or analysis.get('features') or {}
@@ -423,6 +435,30 @@ def render_game_slate(selected_date, is_live_refresh):
                         if h_inj: inj_notes.append(f"🏥 **{home}:** {', '.join(h_inj)}")
                         if a_inj: inj_notes.append(f"🏥 **{away}:** {', '.join(a_inj)}")
                         st.warning("  \n".join(inj_notes))
+
+                    # Lineup status & 5 starters
+                    h_lineup_st = feat.get('home_lineup_status', 'Unconfirmed')
+                    a_lineup_st = feat.get('away_lineup_status', 'Unconfirmed')
+                    if h_lineup_st == 'Confirmed' and a_lineup_st == 'Confirmed':
+                        lineup_banner = "🟢 **สถานะ Lineup:** `Confirmed ✅` *(ยืนยัน 5 ตัวจริงเป็นทางการแล้ว)*"
+                    elif h_lineup_st in ['Confirmed', 'Expected'] or a_lineup_st in ['Confirmed', 'Expected']:
+                        lineup_banner = f"🟡 **สถานะ Lineup:** `Expected ⚠️` *(คาดการณ์ — {away}: {a_lineup_st} | {home}: {h_lineup_st})*"
+                    else:
+                        lineup_banner = "⚪ **สถานะ Lineup:** `Projected (ระบบประมาณการ)`"
+                    st.markdown(lineup_banner)
+
+                    h_starters = feat.get('home_starters', [])
+                    a_starters = feat.get('away_starters', [])
+                    if h_starters or a_starters:
+                        def _fmt_s(s_list):
+                            return ", ".join(f"{s.get('position') + ': ' if s.get('position') else ''}{s.get('name', '')}" for s in s_list[:5])
+                        sc_col1, sc_col2 = st.columns(2)
+                        with sc_col1:
+                            if a_starters:
+                                st.caption(f"🏀 **5 ตัวจริง {away}:** {_fmt_s(a_starters)}")
+                        with sc_col2:
+                            if h_starters:
+                                st.caption(f"🏀 **5 ตัวจริง {home}:** {_fmt_s(h_starters)}")
                 
                     st.divider()
 
