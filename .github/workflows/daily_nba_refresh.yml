@@ -20,7 +20,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 1
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -44,4 +44,8 @@ jobs:
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git add data/raw/
-          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: daily NBA data refresh [skip ci]" && git push)
+          if ! git diff --staged --quiet; then
+            git commit -m "chore: daily NBA data refresh [skip ci]"
+            git pull --rebase origin main || git rebase --abort
+            git push origin main
+          fi
