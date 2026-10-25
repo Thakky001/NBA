@@ -2,6 +2,7 @@ team_name,player_name,status,detail,side,type,return_date
 Atlanta Hawks,Mouhamed Gueye,Out,Fracture,Left,Foot,2026-11-20
 Atlanta Hawks,Henri Veesaar,Out,,Right,Knee,2027-07-01
 Boston Celtics,Devin Carter,Out,,,Illness,2026-11-08
+Brooklyn Nets,Mikel Brown Jr.,Out,,,Rest,2026-10-27
 Brooklyn Nets,Tyler Bilodeau,Out,,Not Specified,Shoulder,2026-10-25
 Charlotte Hornets,Grant Williams,Out,,Right,Hamstring,2026-10-30
 Charlotte Hornets,Coby White,Out,Strain,Left,Calf,2026-10-26
@@ -22,6 +23,7 @@ Denver Nuggets,Spencer Jones,Out,Not Specified,Not Specified,Hamstring,2026-10-2
 Denver Nuggets,Julian Strawther,Out,Sprain,Left,Knee,2026-11-29
 Detroit Pistons,Ausar Thompson,Day-To-Day,Sprain,Right,Ankle,2026-10-25
 Detroit Pistons,Jalen Duren,Out,Strain,Right,Hamstring,2026-10-27
+Golden State Warriors,Gui Santos,Day-To-Day,,,Undisclosed,2026-10-26
 Golden State Warriors,Draymond Green,Out,,,Back,2026-10-26
 Golden State Warriors,Al Horford,Out,,,Back,2026-10-26
 Golden State Warriors,Stephen Curry,Out,,,Rest,2026-10-26
@@ -56,7 +58,8 @@ Orlando Magic,Anthony Black,Day-To-Day,Sprain,Right,Ankle,2026-10-25
 Orlando Magic,Paolo Banchero,Out,Sprain,Right,Ankle,2026-11-22
 Orlando Magic,Noah Penda,Out,Strain,Right,Hamstring,2026-11-18
 Orlando Magic,Izaiyah Nelson,Out,Surgery,Left,Ankle,2026-11-18
-Philadelphia 76ers,Jabari Walker,Day-To-Day,,,Ankle,2026-10-24
+Philadelphia 76ers,Joel Embiid,Day-To-Day,,,Rest,2026-10-25
+Philadelphia 76ers,Jabari Walker,Day-To-Day,,Right,Knee,2026-10-25
 Philadelphia 76ers,LeBron James,Out,,,Back,2026-10-25
 Philadelphia 76ers,Tacko Fall,Out,Strain,Left,Quadriceps,2026-10-25
 Philadelphia 76ers,Dominick Barlow,Out,Fracture,Not Specified,Back,2026-11-02

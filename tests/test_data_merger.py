@@ -80,5 +80,20 @@ class TestDataMerger(unittest.TestCase):
         self.assertEqual(len(merged), 3)  # 401584001, 401584002, 401584003
 
 
+
+    def test_merge_game_data_excludes_preseason_and_playoffs(self):
+        espn_games = pd.DataFrame({
+            'game_id': ['1', '2', '3', '4'],
+            'date': ['2026-10-10', '2026-05-15', '2026-10-22', '2026-10-24'],
+            'home_team': ['BOS', 'BOS', 'BOS', 'BOS'],
+            'away_team': ['MIA', 'MIA', 'MIA', 'MIA'],
+            'home_score': [95, 98, 120, 125],
+            'away_score': [90, 92, 110, 115],
+            'season_type': [1, 3, 2, 2]
+        })
+        merged = self.merger.merge_game_data(espn_games, pd.DataFrame())
+        self.assertEqual(len(merged), 2)
+        self.assertTrue((merged['game_id'].isin(['3', '4'])).all())
+
 if __name__ == '__main__':
     unittest.main()

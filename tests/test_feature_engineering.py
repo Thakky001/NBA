@@ -118,5 +118,20 @@ class TestFeatureEngineering(unittest.TestCase):
         self.assertEqual(splits['home_wins'] + splits['home_losses'], 1)
 
 
+
+
+    def test_preseason_and_playoffs_excluded(self):
+        df = pd.DataFrame({
+            'date': ['2026-10-10', '2026-10-15', '2026-10-22', '2026-10-24'],
+            'home_team': ['Boston Celtics', 'Boston Celtics', 'Boston Celtics', 'Boston Celtics'],
+            'away_team': ['Miami Heat', 'Miami Heat', 'Miami Heat', 'Miami Heat'],
+            'home_score': [95, 98, 120, 125],
+            'away_score': [90, 92, 110, 115],
+            'season_type': [1, 3, 2, 2]
+        })
+        fe = FeatureEngineer(df)
+        self.assertEqual(len(fe.game_logs), 2)
+        self.assertTrue((fe.game_logs['home_score'].isin([120, 125])).all())
+
 if __name__ == '__main__':
     unittest.main()

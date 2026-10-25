@@ -57,9 +57,10 @@ class FeatureEngineer:
             self.game_logs = self.game_logs.dropna(subset=['home_score', 'away_score']).copy()
             self.game_logs = self.game_logs[(self.game_logs['home_score'] > 0) | (self.game_logs['away_score'] > 0)].copy()
 
-            # Filter out Preseason games if tagged (ESPN season_type == 1)
+            # Filter out Preseason (1) and Postseason/Playoffs (3) games if tagged
+            # to maintain consistent regular-season pace and scoring distribution
             if 'season_type' in self.game_logs.columns:
-                self.game_logs = self.game_logs[self.game_logs['season_type'] != 1].copy()
+                self.game_logs = self.game_logs[~self.game_logs['season_type'].isin([1, 1.0, '1', '1.0', 3, 3.0, '3', '3.0'])].copy()
             
             self.game_logs['total_points'] = self.game_logs['home_score'] + self.game_logs['away_score']
             self.game_logs['point_diff'] = self.game_logs['home_score'] - self.game_logs['away_score']

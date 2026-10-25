@@ -330,10 +330,10 @@ def _load_game_history(espn):
             end.strftime('%Y%m%d')
         )
         if not games.empty:
-            # Filter only completed games (scores > 0) and exclude preseason (season_type == 1)
+            # Filter only completed games (scores > 0) and exclude preseason (1) and playoffs (3)
             games = games[(pd.to_numeric(games['home_score'], errors='coerce') > 0) | (pd.to_numeric(games['away_score'], errors='coerce') > 0)]
             if 'season_type' in games.columns:
-                games = games[games['season_type'] != 1]
+                games = games[~games['season_type'].isin([1, 1.0, '1', '1.0', 3, 3.0, '3', '3.0'])]
             ensure_dirs()
             games.to_csv(cache_path, index=False)
             logger.info(f"Cached {len(games)} games to {cache_path}")
@@ -365,10 +365,10 @@ def _load_game_history(espn):
                     
                     if not new_games.empty:
                         new_games['date'] = pd.to_datetime(new_games['date'], errors='coerce')
-                        # Filter only completed games (scores > 0) and exclude preseason
+                        # Filter only completed games (scores > 0) and exclude preseason (1) and playoffs (3)
                         new_games = new_games[(pd.to_numeric(new_games['home_score'], errors='coerce') > 0) | (pd.to_numeric(new_games['away_score'], errors='coerce') > 0)]
                         if 'season_type' in new_games.columns:
-                            new_games = new_games[new_games['season_type'] != 1]
+                            new_games = new_games[~new_games['season_type'].isin([1, 1.0, '1', '1.0', 3, 3.0, '3', '3.0'])]
                         cutoff = latest_cached - timedelta(days=1)
                         old_kept = existing[existing['date'] < cutoff]
                         

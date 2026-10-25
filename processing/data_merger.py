@@ -128,9 +128,9 @@ class DataMerger:
             if col not in combined.columns:
                 combined[col] = None
                 
-        # Filter out preseason games (season_type == 1)
+        # Filter out preseason (1) and postseason/playoff (3) games to ensure only regular season form
         if 'season_type' in combined.columns:
-            combined = combined[~combined['season_type'].isin([1, 1.0, '1', '1.0'])].copy()
+            combined = combined[~combined['season_type'].isin([1, 1.0, '1', '1.0', 3, 3.0, '3', '3.0'])].copy()
                 
         return combined[expected_cols]
     
@@ -241,7 +241,7 @@ class DataMerger:
                     (pd.to_numeric(new_games['home_score'], errors='coerce') > 0)
                 ].copy()
                 if 'season_type' in finished.columns:
-                    finished = finished[~finished['season_type'].isin([1, 1.0, '1', '1.0'])].copy()
+                    finished = finished[~finished['season_type'].isin([1, 1.0, '1', '1.0', 3, 3.0, '3', '3.0'])].copy()
                     
                 if not finished.empty:
                     if os.path.exists(espn_path):
