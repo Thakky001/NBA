@@ -35,7 +35,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-10-25 00:35:51"
+    "scraped_at": "2026-10-25 01:35:59"
   },
   "MIA": {
     "team": "Miami Heat",
@@ -73,7 +73,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-10-25 00:35:51"
+    "scraped_at": "2026-10-25 01:35:59"
   },
   "Charlotte Hornets": {
     "team": "Charlotte Hornets",
@@ -132,7 +132,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 00:35:51"
+    "scraped_at": "2026-10-25 01:35:59"
   },
   "CHA": {
     "team": "Charlotte Hornets",
@@ -191,7 +191,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 00:35:51"
+    "scraped_at": "2026-10-25 01:35:59"
   },
   "Brooklyn Nets": {
     "team": "Brooklyn Nets",
@@ -235,7 +235,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 00:35:51"
+    "scraped_at": "2026-10-25 01:35:59"
   },
   "BKN": {
     "team": "Brooklyn Nets",
@@ -279,7 +279,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 00:35:51"
+    "scraped_at": "2026-10-25 01:35:59"
   },
   "Cleveland Cavaliers": {
     "team": "Cleveland Cavaliers",
@@ -328,7 +328,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 00:35:51"
+    "scraped_at": "2026-10-25 01:35:59"
   },
   "CLE": {
     "team": "Cleveland Cavaliers",
@@ -377,7 +377,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 00:35:51"
+    "scraped_at": "2026-10-25 01:35:59"
   },
   "Milwaukee Bucks": {
     "team": "Milwaukee Bucks",
@@ -415,7 +415,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-10-25 00:35:51"
+    "scraped_at": "2026-10-25 01:35:59"
   },
   "MIL": {
     "team": "Milwaukee Bucks",
@@ -453,7 +453,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-10-25 00:35:51"
+    "scraped_at": "2026-10-25 01:35:59"
   },
   "Philadelphia 76ers": {
     "team": "Philadelphia 76ers",
@@ -497,6 +497,11 @@
         "status": "Very Likely To Play"
       },
       {
+        "name": "Jabari Walker",
+        "position": "F",
+        "status": "Very Likely To Play"
+      },
+      {
         "name": "Dominick Barlow",
         "position": "C",
         "status": "Very Unlikely To Play"
@@ -512,7 +517,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 00:35:51"
+    "scraped_at": "2026-10-25 01:35:59"
   },
   "PHI": {
     "team": "Philadelphia 76ers",
@@ -556,6 +561,11 @@
         "status": "Very Likely To Play"
       },
       {
+        "name": "Jabari Walker",
+        "position": "F",
+        "status": "Very Likely To Play"
+      },
+      {
         "name": "Dominick Barlow",
         "position": "C",
         "status": "Very Unlikely To Play"
@@ -571,7 +581,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 00:35:51"
+    "scraped_at": "2026-10-25 01:35:59"
   },
   "Washington Wizards": {
     "team": "Washington Wizards",
@@ -625,7 +635,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 00:35:51"
+    "scraped_at": "2026-10-25 01:35:59"
   },
   "WAS": {
     "team": "Washington Wizards",
@@ -679,7 +689,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 00:35:51"
+    "scraped_at": "2026-10-25 01:35:59"
   },
   "Chicago Bulls": {
     "team": "Chicago Bulls",
@@ -733,7 +743,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 00:35:51"
+    "scraped_at": "2026-10-25 01:35:59"
   },
   "CHI": {
     "team": "Chicago Bulls",
@@ -787,7 +797,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 00:35:51"
+    "scraped_at": "2026-10-25 01:35:59"
   },
   "San Antonio Spurs": {
     "team": "San Antonio Spurs",
@@ -836,7 +846,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 00:35:51"
+    "scraped_at": "2026-10-25 01:35:59"
   },
   "SAS": {
     "team": "San Antonio Spurs",
@@ -885,7 +895,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 00:35:51"
+    "scraped_at": "2026-10-25 01:35:59"
   },
   "Dallas Mavericks": {
     "team": "Dallas Mavericks",
@@ -954,7 +964,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 00:35:51"
+    "scraped_at": "2026-10-25 01:35:59"
   },
   "DAL": {
     "team": "Dallas Mavericks",
@@ -1023,7 +1033,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 00:35:51"
+    "scraped_at": "2026-10-25 01:35:59"
   },
   "Houston Rockets": {
     "team": "Houston Rockets",
@@ -1077,7 +1087,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 00:35:51"
+    "scraped_at": "2026-10-25 01:35:59"
   },
   "HOU": {
     "team": "Houston Rockets",
@@ -1131,7 +1141,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 00:35:51"
+    "scraped_at": "2026-10-25 01:35:59"
   },
   "Atlanta Hawks": {
     "team": "Atlanta Hawks",
@@ -1180,7 +1190,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 00:35:51"
+    "scraped_at": "2026-10-25 01:35:59"
   },
   "ATL": {
     "team": "Atlanta Hawks",
@@ -1229,7 +1239,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 00:35:51"
+    "scraped_at": "2026-10-25 01:35:59"
   },
   "New Orleans Pelicans": {
     "team": "New Orleans Pelicans",
@@ -1237,8 +1247,8 @@
     "opponent": "Denver Nuggets",
     "opponent_abbr": "DEN",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Dejounte Murray",
@@ -1261,7 +1271,7 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Derik Queen",
+        "name": "DeAndre Jordan",
         "position": "C",
         "status": "Very Likely To Play"
       }
@@ -1273,7 +1283,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 00:35:51"
+    "scraped_at": "2026-10-25 01:35:59"
   },
   "NOP": {
     "team": "New Orleans Pelicans",
@@ -1281,8 +1291,8 @@
     "opponent": "Denver Nuggets",
     "opponent_abbr": "DEN",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Dejounte Murray",
@@ -1305,7 +1315,7 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Derik Queen",
+        "name": "DeAndre Jordan",
         "position": "C",
         "status": "Very Likely To Play"
       }
@@ -1317,7 +1327,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 00:35:51"
+    "scraped_at": "2026-10-25 01:35:59"
   },
   "Denver Nuggets": {
     "team": "Denver Nuggets",
@@ -1376,7 +1386,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 00:35:51"
+    "scraped_at": "2026-10-25 01:35:59"
   },
   "DEN": {
     "team": "Denver Nuggets",
@@ -1435,7 +1445,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 00:35:51"
+    "scraped_at": "2026-10-25 01:35:59"
   },
   "Golden State Warriors": {
     "team": "Golden State Warriors",
@@ -1443,8 +1453,8 @@
     "opponent": "Phoenix Suns",
     "opponent_abbr": "PHX",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Brandon Williams",
@@ -1452,7 +1462,7 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "De'Anthony Melton",
+        "name": "Will Richard",
         "position": "SG",
         "status": "Very Likely To Play"
       },
@@ -1473,11 +1483,6 @@
       }
     ],
     "injuries": [
-      {
-        "name": "Charles Bassey",
-        "position": "C",
-        "status": "Toss Up To Play"
-      },
       {
         "name": "Jimmy Butler",
         "position": "F",
@@ -1514,7 +1519,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 00:35:51"
+    "scraped_at": "2026-10-25 01:35:59"
   },
   "GSW": {
     "team": "Golden State Warriors",
@@ -1522,8 +1527,8 @@
     "opponent": "Phoenix Suns",
     "opponent_abbr": "PHX",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Brandon Williams",
@@ -1531,7 +1536,7 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "De'Anthony Melton",
+        "name": "Will Richard",
         "position": "SG",
         "status": "Very Likely To Play"
       },
@@ -1552,11 +1557,6 @@
       }
     ],
     "injuries": [
-      {
-        "name": "Charles Bassey",
-        "position": "C",
-        "status": "Toss Up To Play"
-      },
       {
         "name": "Jimmy Butler",
         "position": "F",
@@ -1593,7 +1593,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 00:35:51"
+    "scraped_at": "2026-10-25 01:35:59"
   },
   "Phoenix Suns": {
     "team": "Phoenix Suns",
@@ -1601,8 +1601,8 @@
     "opponent": "Golden State Warriors",
     "opponent_abbr": "GSW",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Devin Booker",
@@ -1642,7 +1642,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 00:35:51"
+    "scraped_at": "2026-10-25 01:35:59"
   },
   "PHX": {
     "team": "Phoenix Suns",
@@ -1650,8 +1650,8 @@
     "opponent": "Golden State Warriors",
     "opponent_abbr": "GSW",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Devin Booker",
@@ -1691,6 +1691,6 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 00:35:51"
+    "scraped_at": "2026-10-25 01:35:59"
   }
 }
