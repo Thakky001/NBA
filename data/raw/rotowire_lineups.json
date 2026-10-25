@@ -46,7 +46,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 22:36:05"
+    "scraped_at": "2026-10-25 23:11:08"
   },
   "LAL": {
     "team": "Los Angeles Lakers",
@@ -95,7 +95,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 22:36:05"
+    "scraped_at": "2026-10-25 23:11:08"
   },
   "Utah Jazz": {
     "team": "Utah Jazz",
@@ -139,7 +139,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 22:36:05"
+    "scraped_at": "2026-10-25 23:11:08"
   },
   "UTA": {
     "team": "Utah Jazz",
@@ -183,7 +183,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 22:36:05"
+    "scraped_at": "2026-10-25 23:11:08"
   },
   "Indiana Pacers": {
     "team": "Indiana Pacers",
@@ -242,7 +242,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 22:36:05"
+    "scraped_at": "2026-10-25 23:11:08"
   },
   "IND": {
     "team": "Indiana Pacers",
@@ -301,7 +301,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 22:36:05"
+    "scraped_at": "2026-10-25 23:11:08"
   },
   "Brooklyn Nets": {
     "team": "Brooklyn Nets",
@@ -350,7 +350,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 22:36:05"
+    "scraped_at": "2026-10-25 23:11:08"
   },
   "BKN": {
     "team": "Brooklyn Nets",
@@ -399,7 +399,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 22:36:05"
+    "scraped_at": "2026-10-25 23:11:08"
   },
   "Toronto Raptors": {
     "team": "Toronto Raptors",
@@ -407,8 +407,8 @@
     "opponent": "Minnesota Timberwolves",
     "opponent_abbr": "MIN",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Immanuel Quickley",
@@ -448,7 +448,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 22:36:05"
+    "scraped_at": "2026-10-25 23:11:08"
   },
   "TOR": {
     "team": "Toronto Raptors",
@@ -456,8 +456,8 @@
     "opponent": "Minnesota Timberwolves",
     "opponent_abbr": "MIN",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Immanuel Quickley",
@@ -497,7 +497,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 22:36:05"
+    "scraped_at": "2026-10-25 23:11:08"
   },
   "Minnesota Timberwolves": {
     "team": "Minnesota Timberwolves",
@@ -505,8 +505,8 @@
     "opponent": "Toronto Raptors",
     "opponent_abbr": "TOR",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "LaMelo Ball",
@@ -541,7 +541,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 22:36:05"
+    "scraped_at": "2026-10-25 23:11:08"
   },
   "MIN": {
     "team": "Minnesota Timberwolves",
@@ -549,8 +549,8 @@
     "opponent": "Toronto Raptors",
     "opponent_abbr": "TOR",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "LaMelo Ball",
@@ -585,7 +585,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 22:36:05"
+    "scraped_at": "2026-10-25 23:11:08"
   },
   "Orlando Magic": {
     "team": "Orlando Magic",
@@ -644,7 +644,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 22:36:05"
+    "scraped_at": "2026-10-25 23:11:08"
   },
   "ORL": {
     "team": "Orlando Magic",
@@ -703,7 +703,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 22:36:05"
+    "scraped_at": "2026-10-25 23:11:08"
   },
   "New York Knicks": {
     "team": "New York Knicks",
@@ -747,7 +747,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 22:36:05"
+    "scraped_at": "2026-10-25 23:11:08"
   },
   "NYK": {
     "team": "New York Knicks",
@@ -791,7 +791,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 22:36:05"
+    "scraped_at": "2026-10-25 23:11:08"
   },
   "Los Angeles Clippers": {
     "team": "Los Angeles Clippers",
@@ -855,7 +855,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 22:36:05"
+    "scraped_at": "2026-10-25 23:11:08"
   },
   "LAC": {
     "team": "Los Angeles Clippers",
@@ -919,7 +919,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 22:36:05"
+    "scraped_at": "2026-10-25 23:11:08"
   },
   "Oklahoma City Thunder": {
     "team": "Oklahoma City Thunder",
@@ -927,8 +927,8 @@
     "opponent": "Los Angeles Clippers",
     "opponent_abbr": "LAC",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Shai Gilgeous-Alexander",
@@ -968,7 +968,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 22:36:05"
+    "scraped_at": "2026-10-25 23:11:08"
   },
   "OKC": {
     "team": "Oklahoma City Thunder",
@@ -976,8 +976,8 @@
     "opponent": "Los Angeles Clippers",
     "opponent_abbr": "LAC",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Shai Gilgeous-Alexander",
@@ -1017,7 +1017,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 22:36:05"
+    "scraped_at": "2026-10-25 23:11:08"
   },
   "Detroit Pistons": {
     "team": "Detroit Pistons",
@@ -1066,7 +1066,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 22:36:05"
+    "scraped_at": "2026-10-25 23:11:08"
   },
   "DET": {
     "team": "Detroit Pistons",
@@ -1115,7 +1115,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 22:36:05"
+    "scraped_at": "2026-10-25 23:11:08"
   },
   "Philadelphia 76ers": {
     "team": "Philadelphia 76ers",
@@ -1123,8 +1123,8 @@
     "opponent": "Detroit Pistons",
     "opponent_abbr": "DET",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Tyrese Maxey",
@@ -1132,9 +1132,9 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "VJ Edgecombe",
+        "name": "Kentavious Caldwell-Pope",
         "position": "SG",
-        "status": "Toss Up To Play"
+        "status": "Very Likely To Play"
       },
       {
         "name": "Jaylen Brown",
@@ -1147,7 +1147,7 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Adem Bona",
+        "name": "Dean Wade",
         "position": "C",
         "status": "Very Likely To Play"
       }
@@ -1159,13 +1159,13 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "VJ Edgecombe",
-        "position": "G",
-        "status": "Toss Up To Play"
-      },
-      {
         "name": "Dominick Barlow",
         "position": "C",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "VJ Edgecombe",
+        "position": "G",
         "status": "Very Unlikely To Play"
       },
       {
@@ -1184,7 +1184,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 22:36:05"
+    "scraped_at": "2026-10-25 23:11:08"
   },
   "PHI": {
     "team": "Philadelphia 76ers",
@@ -1192,8 +1192,8 @@
     "opponent": "Detroit Pistons",
     "opponent_abbr": "DET",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Tyrese Maxey",
@@ -1201,9 +1201,9 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "VJ Edgecombe",
+        "name": "Kentavious Caldwell-Pope",
         "position": "SG",
-        "status": "Toss Up To Play"
+        "status": "Very Likely To Play"
       },
       {
         "name": "Jaylen Brown",
@@ -1216,7 +1216,7 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Adem Bona",
+        "name": "Dean Wade",
         "position": "C",
         "status": "Very Likely To Play"
       }
@@ -1228,13 +1228,13 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "VJ Edgecombe",
-        "position": "G",
-        "status": "Toss Up To Play"
-      },
-      {
         "name": "Dominick Barlow",
         "position": "C",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "VJ Edgecombe",
+        "position": "G",
         "status": "Very Unlikely To Play"
       },
       {
@@ -1253,7 +1253,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 22:36:05"
+    "scraped_at": "2026-10-25 23:11:08"
   },
   "Memphis Grizzlies": {
     "team": "Memphis Grizzlies",
@@ -1307,7 +1307,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 22:36:05"
+    "scraped_at": "2026-10-25 23:11:08"
   },
   "MEM": {
     "team": "Memphis Grizzlies",
@@ -1361,7 +1361,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 22:36:05"
+    "scraped_at": "2026-10-25 23:11:08"
   },
   "Sacramento Kings": {
     "team": "Sacramento Kings",
@@ -1405,13 +1405,13 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Keegan Murray",
-        "position": "F",
-        "status": "Unlikely To Play"
-      },
-      {
         "name": "Dylan Cardwell",
         "position": "C",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Keegan Murray",
+        "position": "F",
         "status": "Very Unlikely To Play"
       },
       {
@@ -1420,7 +1420,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 22:36:05"
+    "scraped_at": "2026-10-25 23:11:08"
   },
   "SAC": {
     "team": "Sacramento Kings",
@@ -1464,13 +1464,13 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Keegan Murray",
-        "position": "F",
-        "status": "Unlikely To Play"
-      },
-      {
         "name": "Dylan Cardwell",
         "position": "C",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Keegan Murray",
+        "position": "F",
         "status": "Very Unlikely To Play"
       },
       {
@@ -1479,6 +1479,6 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 22:36:05"
+    "scraped_at": "2026-10-25 23:11:08"
   }
 }
