@@ -10,7 +10,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 4712863,Mouhamed Gueye,18,Forward,"6' 11""",210 lbs,23,4,Washington State,1,Atlanta Hawks
 4701230,Jalen Johnson,1,Forward,"6' 8""",219 lbs,24,6,Duke,1,Atlanta Hawks
 4280151,Corey Kispert,24,Forward,"6' 6""",224 lbs,27,6,Gonzaga,1,Atlanta Hawks
-3146557,Jock Landale,31,Center,"6' 11""",255 lbs,30,6,Saint Mary's,1,Atlanta Hawks
+3146557,Jock Landale,31,Center,"6' 11""",255 lbs,31,6,Saint Mary's,1,Atlanta Hawks
 2490149,CJ McCollum,3,Guard,"6' 3""",190 lbs,35,14,Lehigh,1,Atlanta Hawks
 4873201,Asa Newell,14,Forward,"6' 11""",224 lbs,21,2,Georgia,1,Atlanta Hawks
 4431680,Onyeka Okongwu,17,Forward,"6' 10""",240 lbs,25,7,USC,1,Atlanta Hawks
@@ -382,7 +382,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 4566434,Franz Wagner,22,Forward,"6' 10""",220 lbs,25,6,Michigan,19,Orlando Magic
 4870562,Dominick Barlow,25,Forward,"6' 9""",238 lbs,23,5,,20,Philadelphia 76ers
 5105637,Adem Bona,30,Center,"6' 10""",239 lbs,23,3,UCLA,20,Philadelphia 76ers
-3917376,Jaylen Brown,7,Guard,"6' 6""",223 lbs,29,11,California,20,Philadelphia 76ers
+3917376,Jaylen Brown,7,Guard,"6' 6""",223 lbs,30,11,California,20,Philadelphia 76ers
 2581018,Kentavious Caldwell-Pope,1,Guard,"6' 5""",213 lbs,33,14,Georgia,20,Philadelphia 76ers
 5124612,VJ Edgecombe,77,Guard,"6' 5""",180 lbs,21,2,Baylor,20,Philadelphia 76ers
 4711297,Justin Edwards,11,Forward,"6' 7""",222 lbs,22,3,Kentucky,20,Philadelphia 76ers
