@@ -112,13 +112,11 @@ class TestTelegramAlerts(unittest.TestCase):
         }
 
         card = format_game_card(mock_analysis, mock_game_info, mock_odds)
-        self.assertIn("Boston Celtics", card)
-        self.assertIn("Miami Heat", card)
-        self.assertIn("TD Garden", card)
+        self.assertIn("MIA @ BOS", card)
         self.assertIn("07:30", card)
         self.assertIn("ต่อ Boston Celtics (-4.5)", card)
-        self.assertIn("+EV:", card)
-        self.assertIn("Kelly:", card)
+        self.assertIn("+EV", card)
+        self.assertIn("Kelly", card)
 
     def test_alerted_ledger_roundtrip(self):
         """Marking games as alerted persists and is_game_already_alerted checks accurately."""

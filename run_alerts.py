@@ -11,6 +11,7 @@ import sys
 import json
 import logging
 import argparse
+import re
 from datetime import datetime, timezone, timedelta
 from typing import Dict, Any, List, Optional
 
@@ -101,33 +102,89 @@ def is_game_already_alerted(date_str: str, game_id: str) -> bool:
 
 
 def format_game_card(analysis: Dict[str, Any], game_info: Dict[str, Any], odds_data: Dict[str, Any]) -> str:
-    """Format an actionable, compact HTML card for a single NBA game."""
+    """Format an actionable, compact HTML card for a single NBA game (6-line compact mobile layout)."""
     home = game_info.get('home_team', 'Home')
     away = game_info.get('away_team', 'Away')
     time_str = game_info.get('thai_time', 'N/A')
-    venue = game_info.get('venue', 'TBD')
+
+    h_info = resolve_team_info(home) or {}
+    a_info = resolve_team_info(away) or {}
+    h_abbr = h_info.get('abbreviation') or home[:3].upper()
+    a_abbr = a_info.get('abbreviation') or away[:3].upper()
 
     ou_res = analysis.get('over_under') or {}
     sp_res = analysis.get('spread') or {}
     feat = sp_res.get('features') or ou_res.get('features') or analysis.get('features') or {}
 
-    # 1. Injuries
+    card_lines = []
+
+    # Line 1: Matchup Header with 3-letter abbreviations
+    card_lines.append(f"🏀 <b>{a_abbr} @ {h_abbr}</b> (⏰ {time_str} น.)")
+
+    # Line 2: Lines and Lineup status
+    sp_val = sp_res.get('features', {}).get('spread_line')
+    ou_val = ou_res.get('features', {}).get('over_under_line')
+    sp_text = f"{h_abbr} {sp_val:+g}" if sp_val is not None else "N/A"
+    ou_text = f"{ou_val:.1f}" if ou_val is not None else "N/A"
+
+    h_st = feat.get('home_lineup_status', 'Unconfirmed')
+    a_st = feat.get('away_lineup_status', 'Unconfirmed')
+    if h_st == 'Confirmed' and a_st == 'Confirmed':
+        st_badge = "✅ Confirmed"
+    elif h_st in ['Confirmed', 'Expected'] or a_st in ['Confirmed', 'Expected']:
+        st_badge = "⚠️ Expected"
+    else:
+        st_badge = "Projected"
+
+    card_lines.append(f"📊 <b>เรต:</b> {sp_text} | O/U {ou_text} ({st_badge})")
+
+    # Line 3: 5 Starters (only surnames, 1 line)
+    h_starters = feat.get('home_starters', [])
+    a_starters = feat.get('away_starters', [])
+    starter_parts = []
+    if a_starters:
+        a_surnames = ", ".join(s.get('name', '').split()[-1] for s in a_starters[:5] if s.get('name'))
+        if a_surnames:
+            starter_parts.append(f"{a_abbr}: {a_surnames}")
+    if h_starters:
+        h_surnames = ", ".join(s.get('name', '').split()[-1] for s in h_starters[:5] if s.get('name'))
+        if h_surnames:
+            starter_parts.append(f"{h_abbr}: {h_surnames}")
+    if starter_parts:
+        card_lines.append(f"⛹️ <b>ตัวจริง:</b> {' | '.join(starter_parts)}")
+
+    # Line 4: Key Injuries (condensed to surname & status, 1 line)
+    def _clean_inj(inj_list):
+        items = []
+        for item in inj_list[:3]:
+            match = re.search(r"([A-Za-z\.\'\-]+)(?:\s+\(Base\))?\s*\[(.*?)\]", item)
+            if match:
+                name_part = item.split('[')[0].strip().replace('(Base)', '').strip().split()[-1]
+                status_raw = match.group(2).split('-')[0].strip()
+                items.append(f"{name_part} [{status_raw}]")
+            else:
+                parts = item.split()
+                items.append(parts[-1] if parts else item)
+        return ", ".join(items)
+
     h_inj = feat.get('home_injuries', [])
     a_inj = feat.get('away_injuries', [])
     inj_parts = []
-    if h_inj:
-        inj_parts.append(f"{home}: {', '.join(h_inj[:2])}")
     if a_inj:
-        inj_parts.append(f"{away}: {', '.join(a_inj[:2])}")
-    inj_str = " | ".join(inj_parts) if inj_parts else "สภาพทีมสมบูรณ์ / ไม่มีตัวหลักเจ็บ"
+        cleaned_a = _clean_inj(a_inj)
+        if cleaned_a:
+            inj_parts.append(f"{a_abbr}: {cleaned_a}")
+    if h_inj:
+        cleaned_h = _clean_inj(h_inj)
+        if cleaned_h:
+            inj_parts.append(f"{h_abbr}: {cleaned_h}")
 
-    # 2. Lines
-    sp_val = sp_res.get('features', {}).get('spread_line')
-    ou_val = ou_res.get('features', {}).get('over_under_line')
-    sp_text = f"{home} {sp_val:+g}" if sp_val is not None else "ยังไม่ออกราคา"
-    ou_text = f"{ou_val:.1f}" if ou_val is not None else "ยังไม่ออกราคา"
+    if inj_parts:
+        card_lines.append(f"🏥 <b>ตัวเจ็บ:</b> {' | '.join(inj_parts)}")
+    else:
+        card_lines.append("🏥 <b>ตัวเจ็บ:</b> สภาพทีมสมบูรณ์ทั้งสองทีม")
 
-    # 3. Recommendations
+    # Lines 5 & 6: Picks & Supporting Stats
     sp_rec = sp_res.get('recommendation', 'NEUTRAL')
     ou_rec = ou_res.get('recommendation', 'NEUTRAL')
 
@@ -137,39 +194,6 @@ def format_game_card(analysis: Dict[str, Any], game_info: Dict[str, Any], odds_d
     if 'STRONG' in ou_rec or 'LEAN' in ou_rec:
         picks.append((ou_res, 'Total'))
 
-    # Lineup status & starters
-    h_st = feat.get('home_lineup_status', 'Unconfirmed')
-    a_st = feat.get('away_lineup_status', 'Unconfirmed')
-    if h_st == 'Confirmed' and a_st == 'Confirmed':
-        lineup_badge = "📋 <b>Lineup:</b> <code>Confirmed ✅</code>"
-    elif h_st in ['Confirmed', 'Expected'] or a_st in ['Confirmed', 'Expected']:
-        lineup_badge = f"📋 <b>Lineup:</b> <code>Expected ⚠️</code> ({away}: {a_st} | {home}: {h_st})"
-    else:
-        lineup_badge = "📋 <b>Lineup:</b> <code>Projected</code>"
-
-    h_starters = feat.get('home_starters', [])
-    a_starters = feat.get('away_starters', [])
-    starter_parts = []
-    if a_starters:
-        a_names = ", ".join(f"{s.get('position', '')} {s.get('name', '').split()[-1]}".strip() for s in a_starters[:5])
-        starter_parts.append(f"<b>{away}:</b> {a_names}")
-    if h_starters:
-        h_names = ", ".join(f"{s.get('position', '')} {s.get('name', '').split()[-1]}".strip() for s in h_starters[:5])
-        starter_parts.append(f"<b>{home}:</b> {h_names}")
-
-    # Best pick summary
-    card_lines = [
-        f"🏀 <b>{away} @ {home}</b> (⏰ {time_str} น.)",
-        f"📍 สนาม: {venue}",
-        lineup_badge,
-    ]
-    if starter_parts:
-        card_lines.append(f"⛹️ <b>5 ตัวจริง:</b> {' | '.join(starter_parts)}")
-    card_lines.extend([
-        f"🏥 <i>{inj_str}</i>",
-        f"📊 เรต: {sp_text} | O/U {ou_text}"
-    ])
-
     if picks:
         for res, p_type in picks:
             rec = res.get('recommendation', '')
@@ -177,48 +201,29 @@ def format_game_card(analysis: Dict[str, Any], game_info: Dict[str, Any], odds_d
             win_p = res.get('win_prob', 0.5)
             ev = res.get('ev', 0.0)
             q_kelly = res.get('kelly_quarter', 0.0)
+            ai_adj = res.get('ai_residual')
 
             if p_type == 'Spread':
                 action_text = t_rec(rec, spread_line=sp_val, home_team=home, away_team=away)
-                card_lines.append(
-                    f"🛡️ <b>แต้มต่อ: {action_text}</b> (Edge: <code>{edge:+.1f} pts</code> | Win Prob: <code>{win_p:.1%}</code>)"
-                )
-                ai_adj = res.get('ai_residual')
-                if ai_adj is not None and ai_adj != 0.0:
-                    card_lines.append(f"  └ 🤖 <b>AI Tuned:</b> <code>{ai_adj:+.1f} pts</code> (ชดเชยความล้า/B2B/ฟอร์ม)")
+                card_lines.append(f"🎯 <b>แต้มต่อ: {action_text}</b>")
             else:
                 action_text = t_rec(rec)
                 line_str = f" {ou_val:.1f}" if ou_val is not None else ""
-                card_lines.append(
-                    f"🏀 <b>สูง/ต่ำ: {action_text}{line_str}</b> (Edge: <code>{edge:+.1f} pts</code> | Win Prob: <code>{win_p:.1%}</code>)"
-                )
-                ai_adj = res.get('ai_residual')
-                if ai_adj is not None and ai_adj != 0.0:
-                    card_lines.append(f"  └ 🤖 <b>AI Tuned:</b> <code>{ai_adj:+.1f} pts</code> (ชดเชยความล้า/B2B/ฟอร์ม)")
-            if ev is not None and ev > 0:
-                q_kelly_val = q_kelly or 0.0
-                card_lines.append(f"  └ ⚡ <b>+EV:</b> <code>+{ev*100:.1f}%</code> | <b>Kelly:</b> <code>{q_kelly_val*100:.1f}%</code>")
+                card_lines.append(f"🎯 <b>สูง/ต่ำ: {action_text}{line_str}</b>")
 
-            # Line shopping hint
-            if p_type == 'Total' and odds_data:
-                is_over = 'OVER' in rec.upper()
-                b_book, b_val = None, None
-                for bookie, totals in odds_data.get('totals', {}).items():
-                    val = totals.get('over' if is_over else 'under')
-                    if val is not None and (b_val is None or (val < b_val if is_over else val > b_val)):
-                        b_val, b_book = val, bookie
-                if b_book:
-                    card_lines.append(f"  └ 🛒 <b>Line Shopping:</b> {b_book.upper()} ({b_val})")
-            elif p_type == 'Spread' and odds_data:
-                is_home = 'HOME' in rec.upper()
-                pick_team = home if is_home else away
-                b_book, b_val = None, None
-                for bookie, spreads in odds_data.get('spreads', {}).items():
-                    val = spreads.get('home' if is_home else 'away')
-                    if val is not None and (b_val is None or val > b_val):
-                        b_val, b_book = val, bookie
-                if b_book:
-                    card_lines.append(f"  └ 🛒 <b>Line Shopping:</b> {b_book.upper()} ({pick_team} {b_val:+g})")
+            stat_items = [
+                f"Win <code>{win_p:.1%}</code>",
+                f"Edge <code>{edge:+.1f} pts</code>"
+            ]
+            if ai_adj is not None and ai_adj != 0.0:
+                stat_items.append(f"🤖 AI: <code>{ai_adj:+.1f}</code>")
+            if ev is not None and ev > 0:
+                ev_str = f"⚡ +EV <code>+{ev*100:.1f}%</code>"
+                if q_kelly and q_kelly > 0:
+                    ev_str += f" (Kelly <code>{q_kelly*100:.1f}%</code>)"
+                stat_items.append(ev_str)
+
+            card_lines.append(f"📈 {' | '.join(stat_items)}")
     else:
         card_lines.append("⚖️ <b>คำแนะนำ:</b> เรตราคาเปิดมาสมดุล (NEUTRAL)")
 
