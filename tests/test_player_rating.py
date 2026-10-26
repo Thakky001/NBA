@@ -202,5 +202,50 @@ class TestPlayerRating(unittest.TestCase):
             self.assertAlmostEqual(res['roster_rating'], 105.0, places=1)
 
 
+    def test_starter_suffix_matching_and_fallback(self):
+        """Verify starters with missing/differing suffixes (Jr, III) and unlisted players match to 5 starters."""
+        mock_rw = MagicMock()
+        mock_rw.get_lineup_for_team.return_value = {
+            'lineup_status': 'Expected',
+            'is_confirmed': False,
+            'starters': [
+                {'name': 'Jabari Smith', 'position': 'PF'},
+                {'name': 'Jaren Jackson', 'position': 'C'},
+                {'name': 'Trey Murphy', 'position': 'SF'},
+                {'name': 'Jaime Jaquez', 'position': 'SG'},
+                {'name': 'New Guy', 'position': 'PG'},
+            ]
+        }
+        engine = PlayerRatingEngine(rotowire_collector=mock_rw)
+        engine._roster_cache[666] = pd.DataFrame([
+            {'name': 'Jabari Smith Jr.'},
+            {'name': 'Jaren Jackson Jr.'},
+            {'name': 'Trey Murphy III'},
+            {'name': 'Jaime Jaquez Jr.'},
+            {'name': 'Bench Ten'},
+        ])
+        engine.draft_history = pd.DataFrame()
+        engine.player_stats = pd.DataFrame([
+            {'PLAYER_NAME': 'Jabari Smith Jr.', 'GP': 10, 'EFF_PG': 18.0},
+            {'PLAYER_NAME': 'Jaren Jackson Jr.', 'GP': 10, 'EFF_PG': 20.0},
+            {'PLAYER_NAME': 'Trey Murphy III', 'GP': 10, 'EFF_PG': 16.0},
+            {'PLAYER_NAME': 'Jaime Jaquez Jr.', 'GP': 10, 'EFF_PG': 15.0},
+            {'PLAYER_NAME': 'Bench Ten', 'GP': 10, 'EFF_PG': 10.0},
+        ])
+        engine.injuries_df = pd.DataFrame()
+
+        with patch('config.resolve_team_info', return_value={'espn_id': 666}):
+            res = engine.calculate_team_roster_rating('Mock Suffix Team')
+            self.assertEqual(res['status'], 'success')
+            self.assertEqual(len(res['starters']), 5)
+            # 4 matched via suffix removal, 1 matched via fallback dummy starter
+            names = [s['name'] for s in res['starters']]
+            self.assertIn('Jabari Smith Jr.', names)
+            self.assertIn('Jaren Jackson Jr.', names)
+            self.assertIn('Trey Murphy III', names)
+            self.assertIn('Jaime Jaquez Jr.', names)
+            self.assertIn('New Guy', names)
+
+
 if __name__ == '__main__':
     unittest.main()

@@ -1,3 +1,4 @@
+import re
 import pandas as pd
 import logging
 import os
@@ -28,6 +29,24 @@ def _load_cached_draft_history() -> pd.DataFrame:
             except Exception:
                 pass
     return pd.DataFrame()
+
+
+def normalize_name(name: str) -> str:
+    """Strip unicode diacritics, generational suffixes (Jr., Sr., III), punctuation, and lowercase for matching."""
+    if not name:
+        return ""
+    nfkd = unicodedata.normalize('NFKD', str(name))
+    clean = nfkd.encode('ascii', 'ignore').decode('ascii').lower().strip()
+    if clean.endswith('(base)'):
+        clean = clean[:-6].strip()
+    clean = re.sub(r'[-_]', ' ', clean)
+    clean = re.sub(r'[^\w\s]', '', clean)
+    while True:
+        stripped = re.sub(r'\s+(?:jr|sr|ii|iii|iv|v)$', '', clean).strip()
+        if stripped == clean:
+            break
+        clean = stripped
+    return re.sub(r'\s+', ' ', clean)
 
 
 class PlayerRatingEngine:
@@ -194,15 +213,6 @@ class PlayerRatingEngine:
             return result
             
         # 3. Match players and get their EFF_PG
-        # Normalize names: strip diacritics (e.g. Dončić -> Doncic) for cross-source matching
-        def normalize_name(name):
-            """Strip unicode diacritics, optional tags, and lowercase for matching."""
-            nfkd = unicodedata.normalize('NFKD', str(name))
-            clean = nfkd.encode('ascii', 'ignore').decode('ascii').lower().strip()
-            if clean.endswith('(base)'):
-                clean = clean[:-6].strip()
-            return clean
-        
         active_player_map = {normalize_name(n): n for n in roster_df['name'].tolist()}
         
         # Create draft map for fast lookup: normalize_name -> overall_pick
@@ -400,6 +410,20 @@ class PlayerRatingEngine:
                     sp_copy['position'] = s_pos
                     starter_players.append(sp_copy)
                     starter_ids.add(id(matched_player))
+                elif not matched_player:
+                    dummy_starter = {
+                        'name': s_name,
+                        'clean_name': s_name,
+                        'position': s_pos,
+                        'eff_pg': 4.5,
+                        'active_eff': 4.5,
+                        'off_eff': 3.0,
+                        'def_eff': 1.5,
+                        'gp': 0,
+                        'injury_status': None
+                    }
+                    starter_players.append(dummy_starter)
+                    starter_ids.add(id(dummy_starter))
 
         # Bench players = remaining players not in starters sorted by active_eff
         bench_candidates = [p for p in matched_ratings if id(p) not in starter_ids]

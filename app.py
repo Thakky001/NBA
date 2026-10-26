@@ -21,6 +21,14 @@ if PROJECT_ROOT not in sys.path:
 from typing import Any, Dict, Optional
 import importlib
 
+def render_html(html_str: str):
+    """Safely renders raw HTML in Streamlit without 4-space markdown codeblock wrapping."""
+    cleaned = "\n".join(line.lstrip() for line in html_str.strip().splitlines())
+    if hasattr(st, 'html'):
+        st.html(cleaned)
+    else:
+        st.markdown(cleaned, unsafe_allow_html=True)
+
 # Resilient imports with auto-recovery for Streamlit Cloud hot-reloading race conditions
 try:
     from collectors.espn_collector import ESPNCollector
@@ -136,7 +144,7 @@ except (ImportError, AttributeError):
         def calculate_track_record(*a, **k): return {}
         def record_slate_predictions(*a, **k): return 0
         def get_available_ledger_dates(*a, **k): return []
-from config import parse_spread, calculate_home_spread, resolve_team_info, normalize_team_name, t_rec
+from config import parse_spread, calculate_home_spread, resolve_team_info, normalize_team_name, t_rec, DATA_DIR, RAW_DIR
 
 def t_dir(direction, factor_type):
     if factor_type == 'ou':
@@ -144,18 +152,974 @@ def t_dir(direction, factor_type):
     else:
         return "🏠" if direction == 'home' else "✈️" if direction == 'away' else "➖"
 
-# Page config
-st.set_page_config(page_title="NBA Statistical Trends & Edge Engine", layout="wide", page_icon="🏀")
+# Page config - Lock expanded sidebar for desktop view
+st.set_page_config(
+    page_title="NBA Statistical Trends & Edge Engine",
+    layout="wide",
+    page_icon="🏀",
+    initial_sidebar_state="expanded"
+)
 
-# ซ่อนปุ่ม Deploy ที่มุมขวาบน
+# Design System & Responsive Architecture (frontend-design + better-layout)
 st.markdown("""
     <style>
-    .stAppDeployButton {display:none;}
+    /* 1. Global Reset & Layout Constraints */
+    .stAppDeployButton { display: none !important; }
+    html, body {
+        overflow-x: hidden;
+        scroll-behavior: smooth;
+        scroll-padding-top: 4rem;
+    }
+    
+    /* Remove wasteful default Streamlit top margin */
+    .main .block-container {
+        padding-top: 1.25rem !important;
+        padding-bottom: 2rem !important;
+        padding-left: 0.85rem !important;
+        padding-right: 0.85rem !important;
+        max-width: 1200px !important;
+    }
+
+    /* 2. Quant Typography & Tokens (frontend-design) */
+    :root {
+        --quant-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+        --quant-bg: #0B0F17;
+        --quant-card-bg: #111827;
+        --quant-card-border: rgba(255, 255, 255, 0.08);
+        --quant-card-hover: rgba(59, 130, 246, 0.35);
+        --quant-accent-blue: #3B82F6;
+        --quant-accent-green: #10B981;
+        --quant-accent-cyan: #06B6D4;
+        --quant-accent-amber: #F59E0B;
+        --quant-accent-rose: #F43F5E;
+    }
+
+    /* Monospaced Tabular Numbers */
+    code, pre, [data-testid="stMetricValue"], [data-testid="stMetricDelta"] {
+        font-family: var(--quant-font-mono) !important;
+        font-variant-numeric: tabular-nums !important;
+        letter-spacing: -0.02em;
+    }
+
+    /* 3. Bespoke Quant Hero Component (frontend-design) */
+    .quant-hero {
+        background: linear-gradient(135deg, rgba(17, 24, 39, 0.95) 0%, rgba(15, 23, 42, 0.85) 100%);
+        border: 1px solid var(--quant-card-border);
+        border-radius: 14px;
+        padding: 1rem 1.25rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+        position: relative;
+        overflow: hidden;
+    }
+    .quant-hero::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; right: 0; height: 2px;
+        background: linear-gradient(90deg, #3B82F6, #10B981, #06B6D4);
+    }
+    .quant-hero-badge {
+        display: inline-flex;
+        align-items: center;
+        background: rgba(16, 185, 129, 0.12);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        border-radius: 9999px;
+        padding: 2px 10px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: #34D399;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.4rem;
+    }
+    .quant-pulse-dot {
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        background: #10B981;
+        border-radius: 50%;
+        margin-right: 6px;
+        box-shadow: 0 0 8px #10B981;
+    }
+    .quant-hero-title {
+        font-size: 1.45rem;
+        font-weight: 800;
+        color: #F8FAFC;
+        letter-spacing: -0.02em;
+        line-height: 1.2;
+        margin-bottom: 0.3rem;
+    }
+    .quant-hero-subtitle {
+        font-size: 0.82rem;
+        color: #94A3B8;
+        line-height: 1.4;
+    }
+
+    /* 4. Matchday Status Bar */
+    .matchday-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid var(--quant-card-border);
+        border-radius: 10px;
+        padding: 0.6rem 0.85rem;
+        margin-bottom: 0.85rem;
+    }
+    .matchday-title {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: #E2E8F0;
+    }
+    .matchday-sync {
+        font-size: 0.76rem;
+        font-weight: 600;
+        color: #38BDF8;
+        background: rgba(56, 189, 248, 0.1);
+        border: 1px solid rgba(56, 189, 248, 0.25);
+        padding: 2px 8px;
+        border-radius: 6px;
+    }
+
+    /* 4.1 Match Meta Strip (Time & Venue) */
+    .match-meta-strip {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 16px;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid var(--quant-card-border);
+        border-radius: 8px;
+        padding: 6px 12px;
+        font-size: 0.82rem;
+        color: #94A3B8;
+        margin-bottom: 0.75rem;
+        align-items: center;
+    }
+    .match-meta-strip span.time-highlight {
+        color: #38BDF8;
+        font-family: var(--quant-font-mono);
+        font-weight: 600;
+    }
+
+    /* 4.2 Sports Scoreboard Banner */
+    .scoreboard-banner {
+        background: linear-gradient(180deg, rgba(30, 41, 59, 0.75) 0%, rgba(15, 23, 42, 0.95) 100%);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 0.85rem 1rem;
+        margin-bottom: 0.85rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.35);
+    }
+    .scoreboard-status-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        padding-bottom: 0.4rem;
+    }
+    .scoreboard-badge {
+        font-size: 0.72rem;
+        font-weight: 800;
+        letter-spacing: 0.05em;
+        padding: 2px 8px;
+        border-radius: 4px;
+        text-transform: uppercase;
+    }
+    .scoreboard-badge.final {
+        background: rgba(148, 163, 184, 0.15);
+        color: #CBD5E1;
+        border: 1px solid rgba(148, 163, 184, 0.3);
+    }
+    .scoreboard-badge.live {
+        background: rgba(239, 68, 68, 0.2);
+        color: #F87171;
+        border: 1px solid #EF4444;
+        animation: pulse-glow 1.5s infinite;
+    }
+    .scoreboard-teams {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        gap: 12px;
+        margin: 0.4rem 0;
+    }
+    .score-team-box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex: 1;
+    }
+    .score-team-name {
+        font-size: 0.92rem;
+        font-weight: 700;
+        color: #E2E8F0;
+        text-align: center;
+    }
+    .score-team-pts {
+        font-size: 1.85rem;
+        font-weight: 900;
+        font-family: var(--quant-font-mono);
+        color: #F8FAFC;
+        line-height: 1.1;
+    }
+    .score-team-pts.winner {
+        color: #34D399;
+        text-shadow: 0 0 12px rgba(52, 211, 153, 0.35);
+    }
+    .score-vs-divider {
+        font-size: 1.1rem;
+        font-weight: 800;
+        color: #475569;
+    }
+    .scoreboard-footer {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.78rem;
+        color: #94A3B8;
+        padding-top: 0.4rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .scoreboard-footer strong {
+        color: #38BDF8;
+        font-family: var(--quant-font-mono);
+    }
+
+    /* 4.3 Head-to-Head Team Form Grid (frontend-design + better-layout) */
+    .team-form-grid {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid var(--quant-card-border);
+        border-radius: 10px;
+        padding: 8px 10px;
+        margin-bottom: 0.75rem;
+    }
+    .team-form-card {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        min-width: 0;
+    }
+    .team-form-card.home {
+        text-align: right;
+        align-items: flex-end;
+    }
+    .team-form-header {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        width: 100%;
+    }
+    .team-form-card.home .team-form-header {
+        justify-content: flex-end;
+    }
+    .team-role-tag {
+        font-size: 0.68rem;
+        font-weight: 700;
+        padding: 1px 6px;
+        border-radius: 4px;
+        background: rgba(148, 163, 184, 0.12);
+        color: #94A3B8;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+    .team-role-tag.home {
+        background: rgba(59, 130, 246, 0.15);
+        color: #60A5FA;
+    }
+    .team-name-label {
+        font-size: 0.88rem;
+        font-weight: 700;
+        color: #F8FAFC;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* 4.6 Modern Quantitative Analysis Cards (Spread & Over/Under) */
+    .analysis-card {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid var(--quant-card-border);
+        border-radius: 12px;
+        padding: 12px 14px;
+        margin-bottom: 0.75rem;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .analysis-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 6px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        padding-bottom: 6px;
+    }
+    .analysis-title {
+        font-size: 0.94rem;
+        font-weight: 700;
+        color: #F8FAFC;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        white-space: nowrap;
+    }
+    .market-line-pill {
+        font-family: var(--quant-font-mono);
+        font-size: 0.76rem;
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 6px;
+        background: rgba(56, 189, 248, 0.12);
+        color: #38BDF8;
+        border: 1px solid rgba(56, 189, 248, 0.25);
+        white-space: nowrap;
+    }
+    .live-pace-banner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(239, 68, 68, 0.12);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        border-radius: 6px;
+        padding: 4px 8px;
+        font-size: 0.76rem;
+        color: #FCA5A5;
+    }
+    
+    /* Structured Matchup Subrows (Spread & O/U) - Responsive & Clean */
+    .matchup-roles-card {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        background: rgba(0, 0, 0, 0.22);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 8px;
+        padding: 6px 10px;
+    }
+    .matchup-role-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        min-height: 24px;
+        gap: 8px;
+    }
+    .matchup-role-row:not(:last-child) {
+        border-bottom: 1px dashed rgba(255, 255, 255, 0.06);
+        padding-bottom: 4px;
+    }
+    .matchup-team-side {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 0;
+        overflow: hidden;
+    }
+    .role-pill {
+        font-size: 0.72rem;
+        font-weight: 700;
+        padding: 2px 7px;
+        border-radius: 4px;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+    .role-pill.fav {
+        background: rgba(239, 68, 68, 0.18);
+        color: #FCA5A5;
+        border: 1px solid rgba(239, 68, 68, 0.35);
+    }
+    .role-pill.dog {
+        background: rgba(16, 185, 129, 0.18);
+        color: #6EE7B7;
+        border: 1px solid rgba(16, 185, 129, 0.35);
+    }
+    .role-pill.neutral {
+        background: rgba(148, 163, 184, 0.15);
+        color: #CBD5E1;
+        border: 1px solid rgba(148, 163, 184, 0.3);
+    }
+    .matchup-team-name {
+        font-size: 0.84rem;
+        font-weight: 700;
+        color: #F1F5F9;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .matchup-sub-desc {
+        font-size: 0.74rem;
+        color: #94A3B8;
+        white-space: nowrap;
+    }
+    .matchup-point-val {
+        font-family: var(--quant-font-mono);
+        font-size: 0.88rem;
+        font-weight: 800;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+    .matchup-point-val.fav { color: #FCA5A5; }
+    .matchup-point-val.dog { color: #6EE7B7; }
+    .matchup-point-val.open { color: #CBD5E1; }
+    .matchup-point-val.current { color: #38BDF8; }
+    .trend-chip {
+        font-size: 0.70rem;
+        font-weight: 700;
+        padding: 1px 6px;
+        border-radius: 4px;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+    .trend-chip.up {
+        background: rgba(239, 68, 68, 0.18);
+        color: #FCA5A5;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+    .trend-chip.down {
+        background: rgba(16, 185, 129, 0.18);
+        color: #6EE7B7;
+        border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .trend-chip.flat {
+        background: rgba(148, 163, 184, 0.15);
+        color: #CBD5E1;
+        border: 1px solid rgba(148, 163, 184, 0.25);
+    }
+    .hero-pick-box {
+        background: linear-gradient(135deg, rgba(37, 99, 235, 0.14), rgba(16, 185, 129, 0.08));
+        border: 1px solid rgba(59, 130, 246, 0.35);
+        border-radius: 10px;
+        padding: 10px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+    .hero-pick-box.clash {
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(239, 68, 68, 0.08));
+        border-color: rgba(245, 158, 11, 0.35);
+    }
+    .hero-pick-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    .hero-pick-text {
+        font-size: 1.02rem;
+        font-weight: 800;
+        color: #F8FAFC;
+    }
+    .hero-pick-badges {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .confidence-pill {
+        font-size: 0.72rem;
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 4px;
+        white-space: nowrap;
+    }
+    .confidence-pill.high {
+        background: rgba(16, 185, 129, 0.2);
+        color: #34D399;
+        border: 1px solid rgba(16, 185, 129, 0.4);
+    }
+    .confidence-pill.medium {
+        background: rgba(56, 189, 248, 0.2);
+        color: #38BDF8;
+        border: 1px solid rgba(56, 189, 248, 0.4);
+    }
+    .confidence-pill.caution {
+        background: rgba(245, 158, 11, 0.2);
+        color: #FBBF24;
+        border: 1px solid rgba(245, 158, 11, 0.4);
+    }
+    .confidence-pill.neutral {
+        background: rgba(148, 163, 184, 0.2);
+        color: #94A3B8;
+        border: 1px solid rgba(148, 163, 184, 0.4);
+    }
+    .edge-pill {
+        font-family: var(--quant-font-mono);
+        font-size: 0.74rem;
+        font-weight: 700;
+        padding: 2px 7px;
+        border-radius: 4px;
+        background: rgba(255, 255, 255, 0.06);
+        color: #E2E8F0;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        white-space: nowrap;
+    }
+    .win-prob-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        margin-top: 2px;
+    }
+    .win-prob-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.76rem;
+        color: #94A3B8;
+        font-weight: 600;
+    }
+    .win-prob-header strong {
+        color: #38BDF8;
+        font-family: var(--quant-font-mono);
+    }
+    .custom-prob-bar {
+        height: 6px;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 999px;
+        overflow: hidden;
+        position: relative;
+    }
+    .custom-prob-fill {
+        height: 100%;
+        border-radius: 999px;
+        background: linear-gradient(90deg, #0284C7, #10B981);
+        transition: width 0.4s ease;
+    }
+    .custom-prob-fill.clash {
+        background: linear-gradient(90deg, #F59E0B, #EF4444);
+    }
+    .market-callout {
+        border-radius: 8px;
+        padding: 8px 10px;
+        font-size: 0.78rem;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+    .market-callout.warning {
+        background: rgba(245, 158, 11, 0.08);
+        border: 1px solid rgba(245, 158, 11, 0.25);
+        color: #FDE68A;
+    }
+    .market-callout.success {
+        background: rgba(16, 185, 129, 0.08);
+        border: 1px solid rgba(16, 185, 129, 0.25);
+        color: #A7F3D0;
+    }
+    .market-callout.info {
+        background: rgba(56, 189, 248, 0.08);
+        border: 1px solid rgba(56, 189, 248, 0.25);
+        color: #BAE6FD;
+    }
+    .market-compare-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 3px;
+    }
+    .market-compare-col {
+        flex: 1 1 135px;
+        background: rgba(0, 0, 0, 0.25);
+        padding: 5px 8px;
+        border-radius: 5px;
+        font-size: 0.74rem;
+    }
+    .verdict-banner {
+        display: block;
+        font-size: 0.82rem;
+        line-height: 1.5;
+        padding: 6px 10px;
+        border-radius: 6px;
+        margin-top: 4px;
+        word-break: break-word;
+        overflow-wrap: break-word;
+    }
+    .verdict-banner.pass {
+        background: rgba(239, 68, 68, 0.15);
+        color: #FCA5A5;
+        border: 1px solid rgba(239, 68, 68, 0.35);
+    }
+    .verdict-banner.confirm {
+        background: rgba(16, 185, 129, 0.15);
+        color: #6EE7B7;
+        border: 1px solid rgba(16, 185, 129, 0.35);
+    }
+    .verdict-badge {
+        font-weight: 800;
+        white-space: nowrap;
+        display: inline-block;
+        margin-right: 4px;
+    }
+    .verdict-title {
+        font-weight: 700;
+        display: inline;
+    }
+    .verdict-sep {
+        color: rgba(255, 255, 255, 0.45);
+        margin: 0 4px;
+        display: inline;
+    }
+    .verdict-detail {
+        font-weight: 400;
+        opacity: 0.95;
+        display: inline;
+    }
+    .model-metrics-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(115px, 1fr));
+        gap: 6px;
+        background: rgba(255, 255, 255, 0.015);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        border-radius: 8px;
+        padding: 6px 8px;
+    }
+    .model-metric-item {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+    .model-metric-label {
+        font-size: 0.65rem;
+        color: #94A3B8;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+    }
+    .model-metric-val {
+        font-family: var(--quant-font-mono);
+        font-size: 0.84rem;
+        font-weight: 700;
+        color: #F1F5F9;
+    }
+    .model-metric-val.pos { color: #34D399; }
+    .model-metric-sub {
+        font-size: 0.64rem;
+        color: #64748B;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .team-stat-badges {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+    .team-form-card.home .team-stat-badges {
+        justify-content: flex-end;
+    }
+    .stat-chip {
+        font-size: 0.76rem;
+        font-family: var(--quant-font-mono);
+        font-weight: 600;
+        padding: 2px 7px;
+        border-radius: 5px;
+        white-space: nowrap;
+        display: inline-flex;
+        align-items: center;
+    }
+    .stat-chip.record {
+        background: rgba(255, 255, 255, 0.06);
+        color: #F1F5F9;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .stat-chip.scoring {
+        background: rgba(56, 189, 248, 0.1);
+        color: #38BDF8;
+        border: 1px solid rgba(56, 189, 248, 0.2);
+    }
+    .team-form-vs-badge {
+        font-size: 0.7rem;
+        font-weight: 800;
+        color: #64748B;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        flex-shrink: 0;
+    }
+
+    /* 4.4 Injury & Lineup Modern Card */
+    .injury-card {
+        background: rgba(245, 158, 11, 0.04);
+        border: 1px solid rgba(245, 158, 11, 0.2);
+        border-radius: 8px;
+        padding: 8px 12px;
+        margin-bottom: 0.75rem;
+        font-size: 0.82rem;
+    }
+    .injury-card-title {
+        font-weight: 700;
+        color: #FBBF24;
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+    .inj-player-chip {
+        display: inline-flex;
+        align-items: center;
+        background: rgba(239, 68, 68, 0.12);
+        border: 1px solid rgba(239, 68, 68, 0.25);
+        border-radius: 4px;
+        padding: 1px 6px;
+        margin: 2px 4px 2px 0;
+        font-size: 0.78rem;
+        color: #FCA5A5;
+    }
+
+    /* 4.5 Starting 5 Lineup Board (Position-ordered, No clutter) */
+    .starting5-card {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid var(--quant-card-border);
+        border-radius: 10px;
+        padding: 8px 12px;
+        margin-bottom: 0.65rem;
+    }
+    .starting5-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.84rem;
+        font-weight: 700;
+        color: #E2E8F0;
+        margin-bottom: 6px;
+        padding-bottom: 4px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .starting5-list {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+    .starter-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        border-radius: 6px;
+        padding: 4px 8px;
+        transition: background 0.15s ease;
+    }
+    .starter-row:hover {
+        background: rgba(255, 255, 255, 0.06);
+    }
+    .pos-badge {
+        font-size: 0.72rem;
+        font-weight: 800;
+        font-family: var(--quant-font-mono);
+        padding: 1px 6px;
+        border-radius: 4px;
+        min-width: 28px;
+        text-align: center;
+        flex-shrink: 0;
+    }
+    .pos-badge.pos-pg { background: rgba(2, 132, 199, 0.2); color: #38BDF8; border: 1px solid rgba(2, 132, 199, 0.4); }
+    .pos-badge.pos-sg { background: rgba(14, 165, 233, 0.2); color: #7DD3FC; border: 1px solid rgba(14, 165, 233, 0.4); }
+    .pos-badge.pos-sf { background: rgba(139, 92, 246, 0.2); color: #C4B5FD; border: 1px solid rgba(139, 92, 246, 0.4); }
+    .pos-badge.pos-pf { background: rgba(245, 158, 11, 0.2); color: #FCD34D; border: 1px solid rgba(245, 158, 11, 0.4); }
+    .pos-badge.pos-c  { background: rgba(16, 185, 129, 0.2); color: #6EE7B7; border: 1px solid rgba(16, 185, 129, 0.4); }
+    .pos-badge.pos-g  { background: rgba(56, 189, 248, 0.2); color: #BAE6FD; border: 1px solid rgba(56, 189, 248, 0.4); }
+    .pos-badge.pos-f  { background: rgba(168, 85, 247, 0.2); color: #E9D5FF; border: 1px solid rgba(168, 85, 247, 0.4); }
+    .starter-name {
+        font-size: 0.84rem;
+        font-weight: 600;
+        color: #F1F5F9;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* 5. Modern Pill Tabs (better-layout: 50/50 split, zero clipping) */
+    div[data-baseweb="tab-list"] {
+        display: flex !important;
+        width: 100% !important;
+        background: rgba(255, 255, 255, 0.04) !important;
+        border-radius: 12px !important;
+        padding: 4px !important;
+        border: 1px solid var(--quant-card-border) !important;
+        gap: 6px !important;
+        margin-bottom: 1rem !important;
+    }
+    div[data-baseweb="tab"] {
+        flex: 1 1 50% !important;
+        justify-content: center !important;
+        text-align: center !important;
+        padding: 8px 12px !important;
+        border-radius: 8px !important;
+        font-weight: 600 !important;
+        font-size: 0.9rem !important;
+        color: #94A3B8 !important;
+        border: none !important;
+        background: transparent !important;
+        transition: all 0.2s ease !important;
+    }
+    div[data-baseweb="tab"][aria-selected="true"] {
+        background: rgba(37, 99, 235, 0.25) !important;
+        border: 1px solid rgba(59, 130, 246, 0.5) !important;
+        color: #60A5FA !important;
+        box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25) !important;
+    }
+
+    /* 6. Matchup Card Elevation (details & summary) */
+    div[data-testid="stExpander"], details {
+        border-radius: 12px !important;
+        border: 1px solid var(--quant-card-border) !important;
+        background-color: var(--quant-card-bg) !important;
+        margin-bottom: 0.75rem !important;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2) !important;
+        overflow: hidden !important;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    div[data-testid="stExpander"]:hover, details:hover {
+        border-color: var(--quant-card-hover) !important;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3) !important;
+    }
+    div[data-testid="stExpander"] summary, details summary {
+        font-weight: 600 !important;
+        font-size: 0.95rem !important;
+        padding: 0.75rem 1rem !important;
+        background: rgba(255, 255, 255, 0.02) !important;
+        color: #F8FAFC !important;
+        cursor: pointer !important;
+    }
+
+    /* 7. Metric Containers */
+    div[data-testid="stMetric"] {
+        background: rgba(255, 255, 255, 0.02) !important;
+        border: 1px solid var(--quant-card-border) !important;
+        border-radius: 10px !important;
+        padding: 0.65rem 0.85rem !important;
+    }
+
+    /* ========================================================
+       DESKTOP: Lock sidebar permanently open (min-width: 992px)
+       ======================================================== */
+    @media (min-width: 992px) {
+        /* Hide all sidebar collapse buttons on desktop so user cannot close it */
+        [data-testid="stSidebarCollapseButton"],
+        [data-testid="stSidebarHeader"] button,
+        section[data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"],
+        section[data-testid="stSidebar"] button[aria-label*="sidebar" i],
+        section[data-testid="stSidebar"] button[aria-label*="close" i],
+        section[data-testid="stSidebar"] button[aria-label*="collapse" i],
+        [data-testid="collapsedControl"] {
+            display: none !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+        }
+
+        /* Permanently lock sidebar open and fixed width on desktop */
+        section[data-testid="stSidebar"] {
+            display: block !important;
+            visibility: visible !important;
+            transform: none !important;
+            margin-left: 0 !important;
+            min-width: 310px !important;
+            max-width: 320px !important;
+            width: 315px !important;
+        }
+    }
+
+    /* 8. Mobile-First Layout & Touch Ergonomics (better-layout) */
+    @media (max-width: 768px) {
+        /* In game card analysis, stack Spread and Over/Under into full-width cards on mobile */
+        div[data-testid="stHorizontalBlock"]:has(.analysis-card) {
+            flex-direction: column !important;
+            gap: 12px !important;
+        }
+        div[data-testid="stHorizontalBlock"]:has(.analysis-card) > div[data-testid="column"] {
+            width: 100% !important;
+            min-width: 100% !important;
+            flex: 1 1 100% !important;
+        }
+        .analysis-card {
+            padding: 10px 10px !important;
+            margin-bottom: 8px !important;
+        }
+        .analysis-title {
+            font-size: 0.88rem !important;
+        }
+        .market-line-pill {
+            font-size: 0.72rem !important;
+            padding: 2px 6px !important;
+        }
+        .matchup-roles-card {
+            padding: 5px 8px !important;
+        }
+        .matchup-team-name {
+            font-size: 0.80rem !important;
+        }
+        .role-pill {
+            font-size: 0.68rem !important;
+            padding: 1px 5px !important;
+        }
+        .matchup-point-val {
+            font-size: 0.84rem !important;
+        }
+        .hero-pick-text {
+            font-size: 0.95rem !important;
+        }
+        .market-compare-col {
+            font-size: 0.74rem !important;
+            padding: 5px 8px !important;
+        }
+        .verdict-banner {
+            font-size: 0.78rem !important;
+            padding: 6px 8px !important;
+        }
+        .quant-hero {
+            padding: 0.85rem 1rem;
+        }
+        .quant-hero-title {
+            font-size: 1.25rem;
+        }
+        .quant-hero-subtitle {
+            font-size: 0.78rem;
+        }
+
+        /* Enforce Touch Target >= 44px on interactive controls */
+        .stButton > button {
+            min-height: 44px !important;
+            padding: 0.6rem 1.1rem !important;
+            font-size: 0.95rem !important;
+            border-radius: 8px !important;
+            width: 100% !important;
+        }
+
+        /* Compact metric padding for mobile */
+        div[data-testid="stMetric"] {
+            padding: 0.45rem 0.6rem !important;
+            margin-bottom: 0.5rem !important;
+        }
+        div[data-testid="stMetricValue"] {
+            font-size: 1.25rem !important;
+        }
+        div[data-testid="stMetricDelta"] {
+            font-size: 0.78rem !important;
+        }
+    }
     </style>
 """, unsafe_allow_html=True)
 
-st.title("🏀 ระบบวิเคราะห์สถิติและแต้มต่อ NBA (Advanced Statistical Trends & Edge Engine)")
-st.markdown("ระบบวิเคราะห์เชิงสถิติขั้นสูง คำนวณจากฟอร์มการเล่น ความเร็วเกม (Pace) สภาพความพร้อมผู้เล่นบาดเจ็บ และราคาต่อรองสด (ESPN / The Odds API)")
+# Sleek Custom Hero (frontend-design)
+st.markdown("""
+<div class="quant-hero">
+    <div class="quant-hero-badge">
+        <span class="quant-pulse-dot"></span>
+        <span>QUANT SPORTS INTELLIGENCE • LIVE ENGINE</span>
+    </div>
+    <div class="quant-hero-title">🏀 NBA Statistical Edge Engine</div>
+    <div class="quant-hero-subtitle">ระบบวิเคราะห์สถิติขั้นสูง • Pace & Efficiency • FiveThirtyEight MOV-Elo • CatBoost Residuals</div>
+</div>
+""", unsafe_allow_html=True)
 
 @st.cache_resource
 def get_espn_collector():
@@ -167,6 +1131,270 @@ def get_odds_collector():
 
 espn = get_espn_collector()
 odds_coll = get_odds_collector()
+
+@st.cache_data(ttl=3600)
+def get_espn_position_map():
+    pos_map = {}
+    data_dir = globals().get('DATA_DIR') or os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
+    p_path = os.path.join(data_dir, 'raw', 'espn_rosters.csv')
+    if os.path.exists(p_path):
+        try:
+            df = pd.read_csv(p_path)
+            for _, r in df.iterrows():
+                p_name = str(r.get('name', '')).strip().lower()
+                pos = str(r.get('position', '')).strip().upper()
+                if p_name and pos and pos != 'NAN':
+                    pos_map[p_name] = pos
+                    # Suffix-stripped alias
+                    clean_p = re.sub(r'[-_]', ' ', p_name)
+                    clean_p = re.sub(r'[^\w\s]', '', clean_p)
+                    clean_p = re.sub(r'\s+(?:jr|sr|ii|iii|iv|v)$', '', clean_p).strip()
+                    clean_p = re.sub(r'\s+', ' ', clean_p)
+                    if clean_p:
+                        pos_map[clean_p] = pos
+        except Exception:
+            pass
+    return pos_map
+
+POS_ORDER = {'PG': 1, 'SG': 2, 'G': 2.5, 'SF': 3, 'F': 3.5, 'PF': 4, 'C': 5}
+
+def format_and_sort_starters(starters_list, pos_map):
+    formatted = []
+    default_positions = ['PG', 'SG', 'SF', 'PF', 'C']
+    for idx, s in enumerate(starters_list[:5]):
+        name = s.get('name', '') if isinstance(s, dict) else str(s)
+        pos = s.get('position', '').strip().upper() if isinstance(s, dict) else ''
+        if not pos or pos not in POS_ORDER:
+            clean_name = re.sub(r'[-_]', ' ', name.lower().strip())
+            clean_name = re.sub(r'[^\w\s]', '', clean_name)
+            clean_name = re.sub(r'\s+(?:jr|sr|ii|iii|iv|v)$', '', clean_name).strip()
+            clean_name = re.sub(r'\s+', ' ', clean_name)
+            raw_pos = pos_map.get(name.lower().strip()) or pos_map.get(clean_name, '')
+            if 'POINT' in raw_pos or raw_pos == 'PG': pos = 'PG'
+            elif 'SHOOTING' in raw_pos or raw_pos == 'SG': pos = 'SG'
+            elif 'CENTER' in raw_pos or raw_pos == 'C': pos = 'C'
+            elif 'POWER' in raw_pos or raw_pos == 'PF': pos = 'PF'
+            elif 'SMALL' in raw_pos or raw_pos == 'SF': pos = 'SF'
+            elif 'GUARD' in raw_pos or raw_pos == 'G': pos = 'PG' if idx == 0 else 'SG'
+            elif 'FORWARD' in raw_pos or raw_pos == 'F': pos = 'SF' if idx <= 2 else 'PF'
+            else:
+                pos = default_positions[idx] if idx < len(default_positions) else 'G'
+        formatted.append({'name': name, 'position': pos})
+    formatted.sort(key=lambda x: POS_ORDER.get(x['position'], 9))
+    return formatted
+
+
+def _render_spread_analysis_card(home, away, sp_val, open_spread, sp_res, rec_text, c_edge, win_p, is_clash_sp, is_live=False, live_proj=None, lm_data=None):
+    lm_data = lm_data or {}
+    
+    # 1. Consensus line pill (Compact with team abbreviation)
+    if sp_val is not None:
+        try:
+            s_val = float(sp_val)
+            h_info = resolve_team_info(home)
+            h_abbr = h_info.get('abbreviation', home) if h_info else home
+            sp_line_pill = f"{h_abbr} {s_val:+.1f}" if s_val != 0.0 else "Pick'em (0.0)"
+        except Exception:
+            sp_line_pill = str(sp_val)
+    else:
+        sp_line_pill = "ยังไม่ออกราคา"
+
+    # 2. Roles Bar (Favorite vs Underdog - 2-row clean structured matchup)
+    roles_html = ""
+    if sp_val is not None:
+        try:
+            s_val = float(sp_val)
+            if s_val < 0:
+                fav_team, fav_pts = home, f"{s_val:+.1f}"
+                dog_team, dog_pts = away, f"+{abs(s_val):.1f}"
+            elif s_val > 0:
+                fav_team, fav_pts = away, f"{-s_val:+.1f}"
+                dog_team, dog_pts = home, f"+{s_val:.1f}"
+            else:
+                fav_team, fav_pts = home, "0.0"
+                dog_team, dog_pts = away, "0.0"
+
+            roles_html = f'''<div class="matchup-roles-card"><div class="matchup-role-row"><div class="matchup-team-side"><span class="role-pill fav">🔴 ทีมต่อ</span><span class="matchup-team-name">{fav_team}</span></div><span class="matchup-point-val fav">{fav_pts}</span></div><div class="matchup-role-row"><div class="matchup-team-side"><span class="role-pill dog">🟢 ทีมรอง</span><span class="matchup-team-name">{dog_team}</span></div><span class="matchup-point-val dog">{dog_pts}</span></div></div>'''
+        except Exception:
+            roles_html = f'''<div class="matchup-roles-card"><div class="matchup-role-row"><div class="matchup-team-side"><span class="role-pill neutral">⚖️ เรตราคา</span><span class="matchup-team-name">{sp_line_pill}</span></div></div></div>'''
+
+    # 3. Live Pace Banner if in-play
+    live_banner_html = ""
+    if is_live and live_proj:
+        margin = live_proj.get('proj_margin', 0.0)
+        proj_leader = home if margin > 0 else away
+        live_banner_html = f'''<div class="live-pace-banner"><span>⚡ <strong>Live Proj Margin:</strong> {proj_leader} +{abs(margin):.1f} PTS</span><span style="color:#94A3B8;">({away} {live_proj.get("proj_away",0):.0f} - {live_proj.get("proj_home",0):.0f} {home})</span></div>'''
+
+    # 4. Hero Pick Box
+    is_strong = 'STRONG' in sp_res.get('recommendation', '') or 'มั่นใจมาก' in rec_text
+    is_lean = 'LEAN' in sp_res.get('recommendation', '') or 'น่าสนใจ' in rec_text
+    
+    if is_clash_sp:
+        conf_badge = '<span class="confidence-pill caution">⚠️ สัญญาณขัดแย้ง</span>'
+        box_class = "hero-pick-box clash"
+        fill_class = "custom-prob-fill clash"
+    elif is_strong:
+        conf_badge = '<span class="confidence-pill high">🔥 มั่นใจมาก</span>'
+        box_class = "hero-pick-box"
+        fill_class = "custom-prob-fill"
+    elif is_lean:
+        conf_badge = '<span class="confidence-pill medium">⚡ น่าสนใจ</span>'
+        box_class = "hero-pick-box"
+        fill_class = "custom-prob-fill"
+    else:
+        conf_badge = '<span class="confidence-pill neutral">⚖️ รอดู / สูสี</span>'
+        box_class = "hero-pick-box"
+        fill_class = "custom-prob-fill"
+
+    prob_pct = f"{win_p * 100:.1f}%"
+    edge_chip = f'<span class="edge-pill">Cover Edge: {c_edge:+.1f} แต้ม</span>' if c_edge else ''
+    clean_rec = rec_text.replace('(มั่นใจมาก)', '').replace('(น่าสนใจ)', '').replace('🔥', '').replace('🏠', '').replace('✈️', '').replace('🎯', '').strip()
+
+    # 5. Market Flow & Line Movement Callout
+    lm_sp = sp_res.get('line_movement') or {}
+    market_html = ""
+    if lm_sp and lm_sp.get('badge'):
+        badge_txt = lm_sp.get('badge', '')
+        detail_txt = lm_sp.get('detail', '')
+        m_prob = lm_sp.get('market_flow_prob')
+        m_dir = lm_sp.get('market_flow_direction', '')
+        diff_val = lm_sp.get('diff', 0.0)
+        v_title = lm_sp.get('verdict_title', '')
+        v_detail = lm_sp.get('verdict_detail', '')
+
+        compare_html = ""
+        if m_prob is not None and lm_sp.get('status') != 'NO_DATA':
+            diff_str = f" ({diff_val:+.1f})" if abs(diff_val) >= 0.5 else ""
+            compare_html = f'''<div class="market-compare-grid"><div class="market-compare-col"><span style="color:#94A3B8;">📊 ฝั่งโมเดล:</span><br><strong style="color:#F1F5F9;">{clean_rec}</strong> <span style="color:#38BDF8;">({prob_pct})</span></div><div class="market-compare-col"><span style="color:#94A3B8;">🌊 ฝั่งกระแสเงิน:</span><br><strong style="color:#F1F5F9;">ดัน{m_dir}</strong> <span style="color:#FBBF24;">({m_prob:.1%}{diff_str})</span></div></div>'''
+
+        verdict_html = ""
+        if is_clash_sp or lm_sp.get('verdict') in ['CAPITAL_PRESERVATION', 'PASS']:
+            detail_sub = f' <span class="verdict-sep">—</span> <span class="verdict-detail">{v_detail or "สัญญาณขัดแย้งกับตลาด แนะนำรักษาเงินทุน"}</span>'
+            verdict_html = f'''<div class="verdict-banner pass"><span class="verdict-badge">🎯 ฟันธง:</span> <strong class="verdict-title">ข้าม (PASS) / งดวางเงิน</strong>{detail_sub}</div>'''
+        elif lm_sp.get('verdict') == 'CONFIRMED_ALIGNED' or v_title:
+            detail_sub = f' <span class="verdict-sep">—</span> <span class="verdict-detail">{v_detail}</span>' if v_detail else ""
+            verdict_html = f'''<div class="verdict-banner confirm"><span class="verdict-badge">🎯 ฟันธง:</span> <strong class="verdict-title">{v_title}</strong>{detail_sub}</div>'''
+
+        callout_type = "warning" if (is_clash_sp or lm_sp.get('status') == 'STEAM_WARNING') else ("success" if lm_sp.get('status') == 'SHARP_CONFIRMATION' else "info")
+        market_html = f'''<div class="market-callout {callout_type}"><div><strong>{badge_txt}:</strong> {detail_txt}</div>{compare_html}{verdict_html}</div>'''
+
+    # 6. Model Deep-Dive Metrics
+    proj_margin = sp_res.get('projected_margin')
+    raw_margin = sp_res.get('raw_projected_margin')
+    ai_res = sp_res.get('ai_residual')
+    anchor_sp = sp_res.get('anchor_spread', sp_val) or 0.0
+
+    metrics_html = ""
+    if proj_margin is not None:
+        ai_val_str = f"{ai_res:+.1f} PTS" if (ai_res is not None and ai_res != 0.0) else "0.0 PTS"
+        raw_val_str = f"{raw_margin:+.1f} PTS" if raw_margin is not None else "-"
+        metrics_html = f'''<div class="model-metrics-grid"><div class="model-metric-item"><span class="model-metric-label">Market-Anchored</span><span class="model-metric-val pos">{proj_margin:+.1f} PTS</span><span class="model-metric-sub">เปิด {anchor_sp:+.1f}×65% + ดิบ×35%</span></div><div class="model-metric-item"><span class="model-metric-label">AI Tuned (CatBoost)</span><span class="model-metric-val">{ai_val_str}</span><span class="model-metric-sub">ปรับความล้า / B2B / ฟอร์ม</span></div><div class="model-metric-item"><span class="model-metric-label">Raw Model</span><span class="model-metric-val">{raw_val_str}</span><span class="model-metric-sub">โมเดลสถิติดั้งเดิม</span></div></div>'''
+
+    return f'''<div class="analysis-card"><div class="analysis-header"><span class="analysis-title">⚖️ วิเคราะห์ แต้มต่อ (Spread)</span><span class="market-line-pill">เรตตลาด: {sp_line_pill}</span></div>{live_banner_html}{roles_html}<div class="{box_class}"><div class="hero-pick-row"><span class="hero-pick-text">🎯 {clean_rec}</span><div class="hero-pick-badges">{conf_badge}{edge_chip}</div></div><div class="win-prob-wrapper"><div class="win-prob-header"><span>โอกาสชนะทางสถิติ (Win Prob)</span><strong>{prob_pct}</strong></div><div class="custom-prob-bar"><div class="{fill_class}" style="width: {min(100.0, max(0.0, win_p * 100)):.1f}%;"></div></div></div></div>{market_html}{metrics_html}</div>'''
+
+
+def _render_ou_analysis_card(ou_val, open_total, ou_res, rec_text, t_edge, win_p, is_clash_ou, is_live=False, live_proj=None, lm_data=None):
+    lm_data = lm_data or {}
+    
+    # 1. Consensus line pill
+    if ou_val is not None:
+        ou_line_pill = f"O/U {ou_val:.1f}"
+    else:
+        ou_line_pill = "ยังไม่ออกราคา"
+
+    # 2. Market Line Movement Bar (Open vs Current - 2-row clean structured matchup)
+    roles_html = ""
+    if open_total is not None and ou_val is not None:
+        move_diff = ou_val - open_total
+        diff_sign = "+" if move_diff > 0 else ""
+        if move_diff > 0:
+            trend_class = "up"
+            move_label = "▲ ดันสูงขึ้น"
+            trend_text = f"{move_label} ({diff_sign}{move_diff:.1f})"
+        elif move_diff < 0:
+            trend_class = "down"
+            move_label = "▼ ไหลต่ำลง"
+            trend_text = f"{move_label} ({diff_sign}{move_diff:.1f})"
+        else:
+            trend_class = "flat"
+            move_label = "คงที่"
+            trend_text = f"{move_label} (0.0)"
+
+        roles_html = f'''<div class="matchup-roles-card"><div class="matchup-role-row"><div class="matchup-team-side"><span class="role-pill neutral">📌 ราคาเปิด</span><span class="matchup-sub-desc">เรตเปิดแรกของตลาด</span></div><span class="matchup-point-val open">{open_total:.1f}</span></div><div class="matchup-role-row"><div class="matchup-team-side"><span class="role-pill neutral">🎯 ปัจจุบัน</span><span class="trend-chip {trend_class}">{trend_text}</span></div><span class="matchup-point-val current">{ou_val:.1f}</span></div></div>'''
+    elif ou_val is not None:
+        roles_html = f'''<div class="matchup-roles-card"><div class="matchup-role-row"><div class="matchup-team-side"><span class="role-pill neutral">🎯 ปัจจุบัน</span><span class="matchup-sub-desc">Consensus Line</span></div><span class="matchup-point-val current">{ou_val:.1f}</span></div></div>'''
+
+    # 3. Live Pace Banner if in-play
+    live_banner_html = ""
+    if is_live and live_proj:
+        live_banner_html = f'''<div class="live-pace-banner"><span>⚡ <strong>Live Projected Total:</strong> {live_proj.get("proj_total", 0):.1f} PTS</span><span style="color:#94A3B8;">(Pace: {live_proj.get("scoring_rate", 0):.2f} pts/m)</span></div>'''
+
+    # 4. Hero Pick Box
+    is_strong = 'STRONG' in ou_res.get('recommendation', '') or 'มั่นใจมาก' in rec_text
+    is_lean = 'LEAN' in ou_res.get('recommendation', '') or 'น่าสนใจ' in rec_text
+    
+    if is_clash_ou:
+        conf_badge = '<span class="confidence-pill caution">⚠️ สัญญาณขัดแย้ง</span>'
+        box_class = "hero-pick-box clash"
+        fill_class = "custom-prob-fill clash"
+    elif is_strong:
+        conf_badge = '<span class="confidence-pill high">🔥 มั่นใจมาก</span>'
+        box_class = "hero-pick-box"
+        fill_class = "custom-prob-fill"
+    elif is_lean:
+        conf_badge = '<span class="confidence-pill medium">⚡ น่าสนใจ</span>'
+        box_class = "hero-pick-box"
+        fill_class = "custom-prob-fill"
+    else:
+        conf_badge = '<span class="confidence-pill neutral">⚖️ รอดู / สูสี</span>'
+        box_class = "hero-pick-box"
+        fill_class = "custom-prob-fill"
+
+    prob_pct = f"{win_p * 100:.1f}%"
+    edge_chip = f'<span class="edge-pill">Edge: {t_edge:+.1f} แต้ม</span>' if t_edge else ''
+    clean_rec = rec_text.replace('(มั่นใจมาก)', '').replace('(น่าสนใจ)', '').replace('🔥', '').replace('📈', '').replace('📉', '').replace('🎯', '').strip()
+
+    # 5. Market Flow & Line Movement Callout
+    lm_ou = ou_res.get('line_movement') or {}
+    market_html = ""
+    if lm_ou and lm_ou.get('badge'):
+        badge_txt = lm_ou.get('badge', '')
+        detail_txt = lm_ou.get('detail', '')
+        m_prob = lm_ou.get('market_flow_prob')
+        m_dir = lm_ou.get('market_flow_direction', '')
+        diff_val = lm_ou.get('diff', 0.0)
+        v_title = lm_ou.get('verdict_title', '')
+        v_detail = lm_ou.get('verdict_detail', '')
+
+        compare_html = ""
+        if m_prob is not None and lm_ou.get('status') != 'NO_DATA':
+            diff_str = f" ({diff_val:+.1f})" if abs(diff_val) >= 0.5 else ""
+            compare_html = f'''<div class="market-compare-grid"><div class="market-compare-col"><span style="color:#94A3B8;">📊 ฝั่งโมเดล:</span><br><strong style="color:#F1F5F9;">{clean_rec}</strong> <span style="color:#38BDF8;">({prob_pct})</span></div><div class="market-compare-col"><span style="color:#94A3B8;">🌊 ฝั่งกระแสเงิน:</span><br><strong style="color:#F1F5F9;">ดัน{m_dir}</strong> <span style="color:#FBBF24;">({m_prob:.1%}{diff_str})</span></div></div>'''
+
+        verdict_html = ""
+        if is_clash_ou or lm_ou.get('verdict') in ['CAPITAL_PRESERVATION', 'PASS']:
+            detail_sub = f' <span class="verdict-sep">—</span> <span class="verdict-detail">{v_detail or "สัญญาณขัดแย้งกับตลาด แนะนำรักษาเงินทุน"}</span>'
+            verdict_html = f'''<div class="verdict-banner pass"><span class="verdict-badge">🎯 ฟันธง:</span> <strong class="verdict-title">ข้าม (PASS) / งดวางเงิน</strong>{detail_sub}</div>'''
+        elif lm_ou.get('verdict') == 'CONFIRMED_ALIGNED' or v_title:
+            detail_sub = f' <span class="verdict-sep">—</span> <span class="verdict-detail">{v_detail}</span>' if v_detail else ""
+            verdict_html = f'''<div class="verdict-banner confirm"><span class="verdict-badge">🎯 ฟันธง:</span> <strong class="verdict-title">{v_title}</strong>{detail_sub}</div>'''
+
+        callout_type = "warning" if (is_clash_ou or lm_ou.get('status') == 'STEAM_WARNING') else ("success" if lm_ou.get('status') == 'SHARP_CONFIRMATION' else "info")
+        market_html = f'''<div class="market-callout {callout_type}"><div><strong>{badge_txt}:</strong> {detail_txt}</div>{compare_html}{verdict_html}</div>'''
+
+    # 6. Model Deep-Dive Metrics
+    proj_total = ou_res.get('projected_total')
+    raw_total = ou_res.get('raw_projected_total')
+    ai_res = ou_res.get('ai_residual')
+    anchor_used = ou_res.get('anchor_line') or ou_val or 0.0
+
+    metrics_html = ""
+    if proj_total is not None:
+        ai_val_str = f"{ai_res:+.1f} PTS" if (ai_res is not None and ai_res != 0.0) else "0.0 PTS"
+        raw_val_str = f"{raw_total:.1f} PTS" if raw_total is not None else "-"
+        metrics_html = f'''<div class="model-metrics-grid"><div class="model-metric-item"><span class="model-metric-label">Market-Anchored</span><span class="model-metric-val pos">{proj_total:.1f} PTS</span><span class="model-metric-sub">เปิด {anchor_used:.1f}×65% + ดิบ×35%</span></div><div class="model-metric-item"><span class="model-metric-label">AI Tuned (CatBoost)</span><span class="model-metric-val">{ai_val_str}</span><span class="model-metric-sub">ปรับความล้า / B2B / สปีด</span></div><div class="model-metric-item"><span class="model-metric-label">Raw Model</span><span class="model-metric-val">{raw_val_str}</span><span class="model-metric-sub">โมเดลสถิติดั้งเดิม</span></div></div>'''
+
+    return f'''<div class="analysis-card"><div class="analysis-header"><span class="analysis-title">📊 วิเคราะห์ สูง/ต่ำ (Over/Under)</span><span class="market-line-pill">เรตตลาด: {ou_line_pill}</span></div>{live_banner_html}{roles_html}<div class="{box_class}"><div class="hero-pick-row"><span class="hero-pick-text">🎯 {clean_rec}</span><div class="hero-pick-badges">{conf_badge}{edge_chip}</div></div><div class="win-prob-wrapper"><div class="win-prob-header"><span>โอกาสชนะทางสถิติ (Win Prob)</span><strong>{prob_pct}</strong></div><div class="custom-prob-bar"><div class="{fill_class}" style="width: {min(100.0, max(0.0, win_p * 100)):.1f}%;"></div></div></div></div>{market_html}{metrics_html}</div>'''
 
 
 
@@ -282,10 +1510,13 @@ refresh_interval = 10 if (auto_refresh and is_today) else None
 
 @st.fragment(run_every=refresh_interval)
 def render_game_slate(selected_date, is_live_refresh):
-    st.subheader(f"โปรแกรมการแข่งขันวันที่ {selected_date.strftime('%d/%m/%Y')} (เวลาประเทศไทย)")
-    if is_live_refresh:
-        now_str = datetime.now(THAI_TZ).strftime('%H:%M:%S')
-        st.caption(f"⚡ **Live Sync Active:** กำลังอัปเดตข้อมูลสดทุก 10 วินาที *(ล่าสุดเมื่อ: `{now_str}` น.)*")
+    now_badge = f'<div class="matchday-sync">⚡ Live Sync: {datetime.now(THAI_TZ).strftime("%H:%M:%S")} น.</div>' if is_live_refresh else ''
+    st.markdown(f"""
+    <div class="matchday-bar">
+        <div class="matchday-title">📅 โปรแกรมการแข่งขันวันที่ {selected_date.strftime('%d/%m/%Y')} (เวลาไทย)</div>
+        {now_badge}
+    </div>
+    """, unsafe_allow_html=True)
 
 
     with st.spinner("กำลังประมวลผลการวิเคราะห์..."):
@@ -377,26 +1608,18 @@ def render_game_slate(selected_date, is_live_refresh):
                 lineup_tag = " [Confirmed ✅]" if (h_st == 'Confirmed' and a_st == 'Confirmed') else ""
 
                 thai_time_str = game.get('thai_time')
-                time_badge = f" ⏰ {thai_time_str} น." if thai_time_str else ""
-                status_thai = ""
-                if 'FINAL' in st_raw.upper():
-                    status_thai = " [จบการแข่งขัน]"
-                elif is_live:
-                    status_thai = " [🔴 กำลังแข่งขัน]"
+                status_pill = "🏁 จบเกม" if 'FINAL' in st_raw.upper() else ("🔴 LIVE" if is_live else f"⏰ {thai_time_str} น." if thai_time_str else "TBD")
+                lineup_pill = " • ✅ Lineup" if (h_st == 'Confirmed' and a_st == 'Confirmed') else ""
             
-                with st.expander(f"🏀 {away} (เยือน) @ {home} (เหย้า){time_badge}{lineup_tag}{status_thai}", expanded=True):
+                with st.expander(f"🏀 {away} @ {home}  •  {status_pill}{lineup_pill}", expanded=True):
                     # --- MATCH INFO (Kickoff time & Venue) ---
                     venue_str = game.get('venue') or 'TBD'
                     full_time_display = game.get('thai_time_display') or ''
-                    info_col1, info_col2 = st.columns(2)
-                    with info_col1:
-                        if full_time_display:
-                            st.markdown(f"🕒 **เวลาแข่งขัน (ไทย):** `{full_time_display}`")
-                    with info_col2:
-                        if venue_str:
-                            st.markdown(f"📍 **สนาม:** {venue_str}")
+                    time_html = f'<div class="meta-item">🕒 <span class="time-highlight">{full_time_display}</span></div>' if full_time_display else ''
+                    venue_html = f'<div class="meta-item">📍 {venue_str}</div>' if venue_str else ''
+                    render_html(f'<div class="match-meta-strip">{time_html}{venue_html}</div>')
 
-                    # --- LIVE / FINAL SCORE BANNER ---
+                    # --- SPORTS SCOREBOARD BANNER (frontend-design) ---
                     h_score = game.get('home_score')
                     a_score = game.get('away_score')
                     if pd.notna(h_score) and pd.notna(a_score) and str(h_score).strip() != '' and str(a_score).strip() != '':
@@ -404,61 +1627,126 @@ def render_game_slate(selected_date, is_live_refresh):
                             h_pts = int(float(h_score))
                             a_pts = int(float(a_score))
                             total_pts = h_pts + a_pts
-                            lead = h_pts - a_pts
-                            lead_str = f"{home} นำ +{lead}" if lead > 0 else (f"{away} นำ +{-lead}" if lead < 0 else "เสมอกัน")
+                            h_winner = " winner" if h_pts > a_pts else ""
+                            a_winner = " winner" if a_pts > h_pts else ""
                         
-                            if 'PROGRESS' in st_raw.upper() or 'LIVE' in st_raw.upper():
+                            if is_live:
                                 c_detail = str(game.get('clock_detail') or (f"Q{game.get('period', '')} {game.get('clock', '')}".strip())).strip()
-                                clock_str = f" (เวลา: `{c_detail}`)" if c_detail else ""
-                                st.info(f"🔴 **สกอร์สด (Live Score):** **{away} {a_pts} - {h_pts} {home}**{clock_str} ({lead_str} | ผลรวมแต้มปัจจุบัน: **{total_pts}** PTS)")
-                            elif 'FINAL' in st_raw.upper():
-                                st.success(f"🏁 **ผลการแข่งขัน (Final):** **{away} {a_pts} - {h_pts} {home}** (ผลรวมจริง: **{total_pts}** PTS)")
+                                status_html = f'<span class="scoreboard-badge live">🔴 LIVE {c_detail}</span>'
+                                lead = h_pts - a_pts
+                                lead_str = f"{home} +{lead}" if lead > 0 else (f"{away} +{-lead}" if lead < 0 else "เสมอกัน")
+                                sub_info = f'สถานะ: <strong>{lead_str}</strong>'
+                            else:
+                                status_html = '<span class="scoreboard-badge final">🏁 FINAL</span>'
+                                sub_info = f'ผู้ชนะ: <strong>{home if h_pts > a_pts else away}</strong>'
+
+                            render_html(f"""
+                            <div class="scoreboard-banner">
+                                <div class="scoreboard-status-bar">
+                                    {status_html}
+                                    <span style="font-size: 0.78rem; color: #94A3B8;">NBA Game</span>
+                                </div>
+                                <div class="scoreboard-teams">
+                                    <div class="score-team-box">
+                                        <span class="score-team-name">{away}</span>
+                                        <span class="score-team-pts{a_winner}">{a_pts}</span>
+                                    </div>
+                                    <div class="score-vs-divider">-</div>
+                                    <div class="score-team-box">
+                                        <span class="score-team-name">{home}</span>
+                                        <span class="score-team-pts{h_winner}">{h_pts}</span>
+                                    </div>
+                                </div>
+                                <div class="scoreboard-footer">
+                                    <div>{sub_info}</div>
+                                    <div>แต้มรวมจริง: <strong>{total_pts} PTS</strong></div>
+                                </div>
+                            </div>
+                            """)
                         except Exception:
                             pass
                 
-                    # --- TEAM PROFILES (Always visible even if no odds) ---
+                    # --- TEAM PROFILES BAR (Head-to-Head Comparison) ---
                     if 'home_profile' in analysis and 'away_profile' in analysis:
                         hp = analysis['home_profile']
                         ap = analysis['away_profile']
                         h_rec = f"{hp['wins']}-{hp['losses']}"
                         a_rec = f"{ap['wins']}-{ap['losses']}"
-                        st.markdown(f"**ฟอร์มทีม:** {home} ({h_rec} | {hp['avg_points_scored']:.1f} PTS) 🆚 {away} ({a_rec} | {ap['avg_points_scored']:.1f} PTS)")
+                        render_html(f"""
+                        <div class="team-form-grid">
+                            <div class="team-form-card away">
+                                <div class="team-form-header">
+                                    <span class="team-role-tag">เยือน</span>
+                                    <span class="team-name-label">{away}</span>
+                                </div>
+                                <div class="team-stat-badges">
+                                    <span class="stat-chip record">สถิติ {a_rec}</span>
+                                    <span class="stat-chip scoring">{ap['avg_points_scored']:.1f} PTS/G</span>
+                                </div>
+                            </div>
+                            <div class="team-form-vs-badge">VS</div>
+                            <div class="team-form-card home">
+                                <div class="team-form-header">
+                                    <span class="team-name-label">{home}</span>
+                                    <span class="team-role-tag home">เหย้า</span>
+                                </div>
+                                <div class="team-stat-badges">
+                                    <span class="stat-chip record">สถิติ {h_rec}</span>
+                                    <span class="stat-chip scoring">{hp['avg_points_scored']:.1f} PTS/G</span>
+                                </div>
+                            </div>
+                        </div>
+                        """)
 
-                    # --- INJURY & LINEUP BANNER ---
+                    # --- INJURY REPORT CARD ---
                     spread_dict = analysis.get('spread') or {}
                     ou_dict = analysis.get('over_under') or {}
                     feat = spread_dict.get('features') or ou_dict.get('features') or analysis.get('features') or {}
                     h_inj = feat.get('home_injuries', [])
                     a_inj = feat.get('away_injuries', [])
                     if h_inj or a_inj:
-                        inj_notes = []
-                        if h_inj: inj_notes.append(f"🏥 **{home}:** {', '.join(h_inj)}")
-                        if a_inj: inj_notes.append(f"🏥 **{away}:** {', '.join(a_inj)}")
-                        st.warning("  \n".join(inj_notes))
+                        def _render_chips(inj_list):
+                            return "".join(f'<span class="inj-player-chip">🏥 {p}</span>' for p in inj_list)
+                        away_chips = f"<div><strong style='color:#E2E8F0;'>{away}:</strong> {_render_chips(a_inj)}</div>" if a_inj else ""
+                        home_chips = f"<div style='margin-top: 4px;'><strong style='color:#E2E8F0;'>{home}:</strong> {_render_chips(h_inj)}</div>" if h_inj else ""
+                        render_html(f"""
+                        <div class="injury-card">
+                            <div class="injury-card-title">🏥 ผู้เล่นบาดเจ็บ / พักแข่ง (Injury Report)</div>
+                            {away_chips}
+                            {home_chips}
+                        </div>
+                        """)
 
                     # Lineup status & 5 starters
                     h_lineup_st = feat.get('home_lineup_status', 'Unconfirmed')
                     a_lineup_st = feat.get('away_lineup_status', 'Unconfirmed')
-                    if h_lineup_st == 'Confirmed' and a_lineup_st == 'Confirmed':
-                        lineup_banner = "🟢 **สถานะ Lineup:** `Confirmed ✅` *(ยืนยัน 5 ตัวจริงเป็นทางการแล้ว)*"
-                    elif h_lineup_st in ['Confirmed', 'Expected'] or a_lineup_st in ['Confirmed', 'Expected']:
-                        lineup_banner = f"🟡 **สถานะ Lineup:** `Expected ⚠️` *(คาดการณ์ — {away}: {a_lineup_st} | {home}: {h_lineup_st})*"
-                    else:
-                        lineup_banner = "⚪ **สถานะ Lineup:** `Projected (ระบบประมาณการ)`"
-                    st.markdown(lineup_banner)
 
                     h_starters = feat.get('home_starters', [])
                     a_starters = feat.get('away_starters', [])
                     if h_starters or a_starters:
-                        def _fmt_s(s_list):
-                            return ", ".join(f"{s.get('position') + ': ' if s.get('position') else ''}{s.get('name', '')}" for s in s_list[:5])
+                        pos_map = get_espn_position_map()
+                        sorted_a = format_and_sort_starters(a_starters, pos_map) if a_starters else []
+                        sorted_h = format_and_sort_starters(h_starters, pos_map) if h_starters else []
+
+                        def _render_starter_card(team_label, s_list, l_status):
+                            if not s_list: return ""
+                            pill_color = "rgba(16, 185, 129, 0.2)" if l_status == 'Confirmed' else "rgba(245, 158, 11, 0.2)"
+                            pill_text_color = "#34D399" if l_status == 'Confirmed' else "#FBBF24"
+                            pill_html = f'<span style="font-size:0.7rem; padding:1px 6px; border-radius:4px; background:{pill_color}; color:{pill_text_color}; font-weight:700;">{l_status}</span>'
+                            
+                            rows_html = "".join(
+                                f'<div class="starter-row"><span class="pos-badge pos-{s["position"].lower()}">{s["position"]}</span><span class="starter-name">{s["name"]}</span></div>'
+                                for s in s_list
+                            )
+                            return f'<div class="starting5-card"><div class="starting5-header"><span>🏀 5 ตัวจริง {team_label}</span>{pill_html}</div><div class="starting5-list">{rows_html}</div></div>'
+
                         sc_col1, sc_col2 = st.columns(2)
                         with sc_col1:
-                            if a_starters:
-                                st.caption(f"🏀 **5 ตัวจริง {away}:** {_fmt_s(a_starters)}")
+                            if sorted_a:
+                                render_html(_render_starter_card(away, sorted_a, a_lineup_st))
                         with sc_col2:
-                            if h_starters:
-                                st.caption(f"🏀 **5 ตัวจริง {home}:** {_fmt_s(h_starters)}")
+                            if sorted_h:
+                                render_html(_render_starter_card(home, sorted_h, h_lineup_st))
                 
                     st.divider()
 
@@ -471,33 +1759,6 @@ def render_game_slate(selected_date, is_live_refresh):
                 
                     # O/U Column
                     with col1:
-                        st.markdown("### 📊 วิเคราะห์ สูง/ต่ำ (Over/Under)")
-                        if is_live and live_proj:
-                            st.markdown(f"**⚡ Live Projected Final PTS:** `{live_proj['proj_total']:.1f}` แต้ม")
-                            tgt_mins = live_proj.get('target_mins', 48.0)
-                            status_lbl = live_proj.get('status_label', '')
-                            status_info = f" ({status_lbl} | {live_proj['elapsed_mins']:.1f}/{tgt_mins:.0f} นาที)" if status_lbl else f" *({live_proj['elapsed_mins']:.1f}/{tgt_mins:.0f} นาที)*"
-                            st.caption(f"⏱️ **Live Scoring Pace:** `{live_proj['scoring_rate']:.2f}` แต้ม/นาที{status_info}")
-                            if ou_val is not None:
-                                diff = live_proj['proj_total'] - ou_val
-                                diff_sign = "+" if diff > 0 else ""
-                                direction = "สูงกว่าเรตก่อนแข่ง" if diff > 0 else "ต่ำกว่าเรตก่อนแข่ง"
-                                st.caption(f"🎯 **เทียบเรตก่อนแข่ง ({ou_val:.1f}):** สปีดสด `{diff_sign}{diff:.1f}` แต้ม ({direction})")
-                            live_t = lm_data.get('live_total')
-                            if live_t is not None:
-                                ldiff = live_proj['proj_total'] - live_t
-                                ldiff_sign = "+" if ldiff > 0 else ""
-                                ldir = "สูงกว่าเรตสด" if ldiff > 0 else "ต่ำกว่าเรตสด"
-                                st.caption(f"🔴 **เทียบเรตสดในเกม ({live_t:.1f}):** สปีดสด `{ldiff_sign}{ldiff:.1f}` แต้ม ({ldir})")
-                            st.divider()
-
-                        if open_total is not None and ou_val is not None and abs(open_total - ou_val) >= 0.5:
-                            st.markdown(f"**เรตราคาตลาด:** เปิด `{open_total:.1f}` ➔ ปัจจุบัน `{ou_val:.1f}` (ขยับ `{ou_val - open_total:+.1f}` แต้ม)")
-                        elif ou_val is not None:
-                            st.markdown(f"**เรตราคาตลาด (Consensus):** `{ou_val:.1f}`")
-                        else:
-                            st.markdown("**เรตราคาตลาด:** `ยังไม่ออกราคา`")
-                    
                         ou_res = analysis.get('over_under')
                         if ou_res:
                             # In-play Live Evaluation: compare live projected final vs current live line
@@ -536,52 +1797,21 @@ def render_game_slate(selected_date, is_live_refresh):
                                 rec_tag = ""
 
                             is_clash_ou = ou_res.get('is_market_clash', False) and not is_live
-                        
-                            clash_tag = " *(⚠️ สัญญาณเงินตลาดสวนทาง)*" if is_clash_ou else ""
-                            st.markdown(f"**คำแนะนำ{rec_tag}:** **{rec_text}** (Edge: `{t_edge:+.1f}` แต้ม){clash_tag}")
-                            st.progress(win_p, text=f"ความน่าจะเป็นทางสถิติ (Win Prob): {win_p:.1%}")
-                        
-                            # --- LINE MOVEMENT BADGE & TWO-SIDED VERDICT ---
-                            lm_ou = ou_res.get('line_movement')
-                            if lm_ou and lm_ou.get('badge'):
-                                if is_clash_ou:
-                                    st.warning(f"**{lm_ou['badge']}:** {lm_ou['detail']}")
-                                elif lm_ou.get('status') == 'SHARP_CONFIRMATION':
-                                    st.success(f"**{lm_ou['badge']}:** {lm_ou['detail']}")
-                                elif lm_ou.get('status') == 'STEAM_WARNING':
-                                    st.warning(f"**{lm_ou['badge']}:** {lm_ou['detail']}")
-                                else:
-                                    st.caption(f"**{lm_ou['badge']}:** {lm_ou['detail']}")
 
-                                # Two-sided comparison & Directional Verdict
-                                if lm_ou.get('market_flow_prob') is not None and lm_ou.get('status') != 'NO_DATA':
-                                    m_prob = lm_ou['market_flow_prob']
-                                    m_dir = lm_ou.get('market_flow_direction', '')
-                                    diff_val = lm_ou.get('diff', 0.0)
-                                    diff_str = f" *(แรงไหล {diff_val:+.1f} แต้ม)*" if abs(diff_val) >= 0.5 else ""
-                                
-                                    st.markdown(f"""
-                                    ⚖️ **เปรียบเทียบ 2 ฝั่ง:**
-                                    * 📊 **ฝั่งโมเดลสถิติ:** {rec_text} (`{win_p:.1%}`)
-                                    * 🌊 **ฝั่งกระแสเงินตลาด:** ดัน{m_dir} (`{m_prob:.1%}`){diff_str}
-                                    """)
-                                
-                                    v_title = lm_ou.get('verdict_title', '')
-                                    v_detail = lm_ou.get('verdict_detail', '')
-                                    if is_clash_ou or lm_ou.get('verdict') in ['CAPITAL_PRESERVATION', 'PASS']:
-                                        st.warning(f"🎯 **ฟันธง (Unified Verdict):** **ข้าม (PASS) / งดวางเงิน** — {v_detail or 'สัญญาณขัดแย้งรุนแรงหรือไม่มี Edge ที่คุ้มค่า แนะนำรักษาเงินทุน'}")
-                                    elif lm_ou.get('verdict') == 'CONFIRMED_ALIGNED':
-                                        st.success(f"🎯 **ฟันธง:** **{v_title}** — *{v_detail}*")
-                                    else:
-                                        st.info(f"🎯 **ฟันธง:** **{v_title}** — *{v_detail}*")
-                        
-                            # --- MARKET-ANCHORED PROJECTION INFO ---
-                            if ou_res.get('raw_projected_total') is not None and ou_res.get('projected_total') is not None:
-                                anchor_used = ou_res.get('anchor_line') or ou_val or 0.0
-                                st.caption(f"🎯 **Market-Anchored Projection:** `{ou_res['projected_total']:.1f}` PTS *(คำนวณจาก: ราคาเปิด {anchor_used:.1f} × 65% + โมเดลดิบ {ou_res['raw_projected_total']:.1f} × 35%)*")
-                                if ou_res.get('ai_residual') is not None and ou_res.get('ai_residual') != 0.0:
-                                    st.caption(f"🤖 **AI Tuned (CatBoost):** `{ou_res['ai_residual']:+.1f}` PTS *(ปรับจูนความล้า / B2B / จังหวะเกม)*")
-                        
+                            # Render the modern, structured Over/Under Analysis Card
+                            render_html(_render_ou_analysis_card(
+                                ou_val=ou_val,
+                                open_total=open_total,
+                                ou_res=ou_res,
+                                rec_text=rec_text,
+                                t_edge=t_edge,
+                                win_p=win_p,
+                                is_clash_ou=is_clash_ou,
+                                is_live=is_live,
+                                live_proj=live_proj,
+                                lm_data=lm_data
+                            ))
+
                             # --- QUANTITATIVE VALUE & KELLY METRICS ---
                             if is_bet_live:
                                 m_col1, m_col2 = st.columns(2)
@@ -594,10 +1824,10 @@ def render_game_slate(selected_date, is_live_refresh):
                                     st.info("💡 **คำแนะนำบริหารหน้าตัก (Kelly):** ลงทุน **0.0%** (ข้ามคู่ที่มีสัญญาณขัดแย้งกับตลาด)")
                                 elif q_kelly > 0:
                                     st.info(f"💡 **คำแนะนำบริหารหน้าตัก{'สด ' if live_eval_ou else ''}(Kelly):** ลงทุน **{q_kelly*100:.1f}%** ของพอร์ต (1/4 Kelly)")
-                        
+
                             if ou_res.get('is_anomaly'):
                                 st.warning("⚠️ **ระวังข้อมูลผันผวน:** ส่วนต่างแต้มห่างจากราคาเปิดเกิน 8 แต้ม (ข้อมูลต้นฤดูกาลผันผวน)")
-                        
+
                             # --- LINE SHOPPING O/U ---
                             if odds_data and ('STRONG' in ou_res['recommendation'] or 'LEAN' in ou_res['recommendation']):
                                 is_over = 'OVER' in ou_res['recommendation'].upper()
@@ -618,52 +1848,16 @@ def render_game_slate(selected_date, is_live_refresh):
                                         st.caption(f"🛒 **Line Watch:** ราคาตลาดดีที่สุดขณะนี้คือ {b_book.upper()} ({b_val}) — เฝ้าระวัง")
                                     else:
                                         st.success(f"🛒 **Line Shopping:** ควรแทง {'สูง' if is_over else 'ต่ำ'} {b_val} ที่ **{b_book.upper()}** (ค่าน้ำ {b_price})")
-                        
+
                             with st.expander("อ่านเหตุผลประกอบ"):
                                 for f in ou_res['factors']:
                                     icon = t_dir(f['direction'], 'ou')
                                     st.write(f"- {icon} **{f['name']}**: {f['value']}")
                         else:
                             st.write("ไม่สามารถวิเคราะห์ได้เนื่องจากไม่มีราคา")
-                        
+                    
                     # Spread Column
                     with col2:
-                        st.markdown("### ⚖️ วิเคราะห์ แต้มต่อ (Spread)")
-                        if is_live and live_proj:
-                            margin = live_proj['proj_margin']
-                            proj_leader = home if margin > 0 else away
-                            margin_abs = abs(margin)
-                            st.markdown(f"**⚡ Live Projected Final Margin:** `{proj_leader} +{margin_abs:.1f}` แต้ม")
-                            st.caption(f"🏀 **คาดการณ์สกอร์จบเกม:** `{away} {live_proj['proj_away']:.1f} - {live_proj['proj_home']:.1f} {home}`")
-                            if sp_val is not None:
-                                sp_str = f"{home} {sp_val:+.1f}" if sp_val != 0.0 else f"{home} PK (0.0)"
-                                cover_diff = margin + sp_val
-                                cover_team = home if cover_diff > 0 else away
-                                st.caption(f"🎯 **เทียบแต้มต่อเปิด ({sp_str}):** สปีดสดชี้ `{cover_team}` ได้เปรียบ `{abs(cover_diff):.1f}` แต้ม")
-                            live_s = lm_data.get('live_spread')
-                            if live_s is not None:
-                                lsp_str = f"{home} {live_s:+.1f}" if live_s != 0.0 else f"{home} PK (0.0)"
-                                lcover_diff = margin + live_s
-                                lcover_team = home if lcover_diff > 0 else away
-                                st.caption(f"🔴 **เทียบแต้มต่อสดในเกม ({lsp_str}):** สปีดสดชี้ `{lcover_team}` ได้เปรียบ `{abs(lcover_diff):.1f}` แต้ม")
-                            st.divider()
-
-                        if sp_val is not None:
-                            try:
-                                s_val = float(sp_val)
-                                if s_val < 0:
-                                    role_display = f"🔴 **{home}** (ทีมต่อ `{s_val:+.1f}`) | 🟢 **{away}** (ทีมรอง `+{abs(s_val):.1f}`)"
-                                elif s_val > 0:
-                                    role_display = f"🔴 **{away}** (ทีมต่อ `{-s_val:+.1f}`) | 🟢 **{home}** (ทีมรอง `+{s_val:.1f}`)"
-                                else:
-                                    role_display = f"⚖️ **ราคาเสมอ (Pick'em):** `{home}` vs `{away}` ไม่มีใครต่อใครรอง (0.0)"
-                            except Exception:
-                                sp_str = f"{home} {sp_val:+.1f}" if sp_val != 0.0 else f"{home} PK (0.0)"
-                                role_display = f"`{sp_str}`"
-                            st.markdown(f"**บทบาทแต้มต่อ:** {role_display}")
-                        else:
-                            st.markdown("**บทบาทแต้มต่อ:** `ยังไม่ออกราคา`")
-                    
                         sp_res = analysis.get('spread')
                         if sp_res:
                             # In-play Live Evaluation: compare live projected margin vs current live spread
@@ -704,52 +1898,23 @@ def render_game_slate(selected_date, is_live_refresh):
                                 rec_tag = ""
 
                             is_clash_sp = sp_res.get('is_market_clash', False) and not is_live
-                        
-                            clash_tag = " *(⚠️ สัญญาณเงินตลาดสวนทาง)*" if is_clash_sp else ""
-                            st.markdown(f"🎯 **คำแนะนำ{rec_tag}:** **{rec_text}** (Cover Edge: `{c_edge:+.1f}` แต้ม){clash_tag}")
-                            st.progress(win_p, text=f"ความน่าจะเป็นทางสถิติ (Win Prob): {win_p:.1%}")
-                        
-                            # --- LINE MOVEMENT BADGE & TWO-SIDED VERDICT ---
-                            lm_sp = sp_res.get('line_movement')
-                            if lm_sp and lm_sp.get('badge'):
-                                if is_clash_sp:
-                                    st.warning(f"**{lm_sp['badge']}:** {lm_sp['detail']}")
-                                elif lm_sp.get('status') == 'SHARP_CONFIRMATION':
-                                    st.success(f"**{lm_sp['badge']}:** {lm_sp['detail']}")
-                                elif lm_sp.get('status') == 'STEAM_WARNING':
-                                    st.warning(f"**{lm_sp['badge']}:** {lm_sp['detail']}")
-                                else:
-                                    st.caption(f"**{lm_sp['badge']}:** {lm_sp['detail']}")
 
-                                # Two-sided comparison & Directional Verdict
-                                if lm_sp.get('market_flow_prob') is not None and lm_sp.get('status') != 'NO_DATA':
-                                    m_prob = lm_sp['market_flow_prob']
-                                    m_dir = lm_sp.get('market_flow_direction', '')
-                                    diff_val = lm_sp.get('diff', 0.0)
-                                    diff_str = f" *(แรงไหล {diff_val:+.1f} แต้ม)*" if abs(diff_val) >= 0.5 else ""
-                                
-                                    st.markdown(f"""
-                                    ⚖️ **เปรียบเทียบ 2 ฝั่ง:**
-                                    * 📊 **ฝั่งโมเดลสถิติ:** {rec_text} (`{win_p:.1%}`)
-                                    * 🌊 **ฝั่งกระแสเงินตลาด:** ดัน{m_dir} (`{m_prob:.1%}`){diff_str}
-                                    """)
-                                
-                                    v_title = lm_sp.get('verdict_title', '')
-                                    v_detail = lm_sp.get('verdict_detail', '')
-                                    if is_clash_sp or lm_sp.get('verdict') in ['CAPITAL_PRESERVATION', 'PASS']:
-                                        st.warning(f"🎯 **ฟันธง (Unified Verdict):** **ข้าม (PASS) / งดวางเงิน** — {v_detail or 'สัญญาณขัดแย้งรุนแรงหรือไม่มี Edge ที่คุ้มค่า แนะนำรักษาเงินทุน'}")
-                                    elif lm_sp.get('verdict') == 'CONFIRMED_ALIGNED':
-                                        st.success(f"🎯 **ฟันธง:** **{v_title}** — *{v_detail}*")
-                                    else:
-                                        st.info(f"🎯 **ฟันธง:** **{v_title}** — *{v_detail}*")
-                        
-                            # --- MARKET-ANCHORED PROJECTION INFO ---
-                            if sp_res.get('raw_projected_margin') is not None and sp_res.get('projected_margin') is not None:
-                                anchor_sp = sp_res.get('anchor_spread', sp_val) or 0.0
-                                st.caption(f"🎯 **Market-Anchored Margin:** `{sp_res['projected_margin']:+.1f}` PTS *(คำนวณจาก: แต้มต่อเปิด {anchor_sp:+.1f} × 65% + โมเดลดิบ {sp_res['raw_projected_margin']:+.1f} × 35%)*")
-                                if sp_res.get('ai_residual') is not None and sp_res.get('ai_residual') != 0.0:
-                                    st.caption(f"🤖 **AI Tuned (CatBoost):** `{sp_res['ai_residual']:+.1f}` PTS *(ปรับจูนความล้า / B2B / ฟอร์มทีม)*")
-                        
+                            # Render the modern, structured Spread Analysis Card
+                            render_html(_render_spread_analysis_card(
+                                home=home,
+                                away=away,
+                                sp_val=sp_val,
+                                open_spread=open_spread,
+                                sp_res=sp_res,
+                                rec_text=rec_text,
+                                c_edge=c_edge,
+                                win_p=win_p,
+                                is_clash_sp=is_clash_sp,
+                                is_live=is_live,
+                                live_proj=live_proj,
+                                lm_data=lm_data
+                            ))
+
                             # --- QUANTITATIVE VALUE & KELLY METRICS ---
                             if is_bet_live_sp:
                                 m_col1, m_col2 = st.columns(2)
@@ -762,10 +1927,10 @@ def render_game_slate(selected_date, is_live_refresh):
                                     st.info("💡 **คำแนะนำบริหารหน้าตัก (Kelly):** ลงทุน **0.0%** (ข้ามคู่ที่มีสัญญาณขัดแย้งกับตลาด)")
                                 elif q_kelly > 0:
                                     st.info(f"💡 **คำแนะนำบริหารหน้าตัก{'สด ' if live_eval_sp else ''}(Kelly):** ลงทุน **{q_kelly*100:.1f}%** ของพอร์ต (1/4 Kelly)")
-                        
+
                             if sp_res.get('is_anomaly'):
                                 st.warning("⚠️ **ระวังข้อมูลผันผวน:** แต้มต่อห่างจากโมเดลเกิน 6 แต้ม (ข้อมูลต้นฤดูกาลผันผวน)")
-                        
+
                             # --- LINE SHOPPING SPREAD ---
                             if odds_data and ('STRONG' in sp_res['recommendation'] or 'LEAN' in sp_res['recommendation']):
                                 is_home = 'HOME' in sp_res['recommendation'].upper()
@@ -793,7 +1958,7 @@ def render_game_slate(selected_date, is_live_refresh):
                         
                             with st.expander("อ่านเหตุผลประกอบ"):
                                 for f in sp_res['factors']:
-                                    icon = t_dir(f['direction'], 'sp')
+                                    icon = t_dir(f['direction'], 'spread')
                                     st.write(f"- {icon} **{f['name']}**: {f['value']}")
                         else:
                             st.write("ไม่สามารถวิเคราะห์ได้เนื่องจากไม่มีราคา")
@@ -1036,7 +2201,7 @@ def render_track_record_tab():
     )
 
 
-tab_live, tab_track = st.tabs(["🏀 โปรแกรม & วิเคราะห์สด", "🏆 สถิติความแม่นยำย้อนหลัง (Track Record)"])
+tab_live, tab_track = st.tabs(["🏀 วิเคราะห์สด (Live)", "🏆 สถิติย้อนหลัง (Track)"])
 
 with tab_live:
     render_game_slate(selected_date, auto_refresh and is_today)
