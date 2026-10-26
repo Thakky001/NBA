@@ -960,13 +960,19 @@ st.markdown("""
         text-overflow: ellipsis;
     }
 
-    /* 5. Modern Pill Tabs - Sticky & Docked to Quant Hero (better-layout) */
-    div[data-testid="stTabs"] {
+    /* 5. Modern Pill Tabs - Sticky & Docked to Quant Hero (Streamlit 1.40+ & React-Aria) */
+    div[data-testid="stTabs"],
+    div[data-testid="stTabs"] > div,
+    div.stTabs {
         overflow: visible !important;
     }
+    div[data-testid="stTabs"] [role="tablist"],
+    div[data-testid="stTabs"] div[class*="e1ac7blb3"],
+    div.stTabs [role="tablist"],
     div[data-baseweb="tab-list"] {
+        position: -webkit-sticky !important;
         position: sticky !important;
-        top: var(--quant-hero-height) !important;
+        top: calc(var(--quant-hero-height) - 1px) !important;
         z-index: 997 !important;
         display: flex !important;
         width: 100% !important;
@@ -974,27 +980,36 @@ st.markdown("""
         backdrop-filter: blur(14px) !important;
         -webkit-backdrop-filter: blur(14px) !important;
         border-radius: 0 0 12px 12px !important;
-        padding: 4px 6px !important;
+        padding: 5px 8px !important;
         border: 1px solid var(--quant-card-border) !important;
         border-top: 1px dashed rgba(255, 255, 255, 0.08) !important;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45) !important;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
         gap: 6px !important;
         margin-top: 0 !important;
         margin-bottom: 1rem !important;
     }
+    div[data-testid="stTabs"] [role="tab"],
+    div[data-testid="stTab"],
+    div[data-testid="stTabs"] div[class*="e1ac7blb4"],
+    div.stTabs [role="tab"],
     div[data-baseweb="tab"] {
         flex: 1 1 50% !important;
         justify-content: center !important;
         text-align: center !important;
         padding: 8px 12px !important;
         border-radius: 8px !important;
-        font-weight: 600 !important;
-        font-size: 0.9rem !important;
+        font-weight: 700 !important;
+        font-size: 0.90rem !important;
         color: #94A3B8 !important;
         border: none !important;
         background: transparent !important;
         transition: all 0.2s ease !important;
+        cursor: pointer !important;
     }
+    div[data-testid="stTabs"] [role="tab"][aria-selected="true"],
+    div[data-testid="stTab"][aria-selected="true"],
+    div[data-testid="stTabs"] div[class*="e1ac7blb4"][aria-selected="true"],
+    div.stTabs [role="tab"][aria-selected="true"],
     div[data-baseweb="tab"][aria-selected="true"] {
         background: rgba(37, 99, 235, 0.25) !important;
         border: 1px solid rgba(59, 130, 246, 0.5) !important;
@@ -1133,13 +1148,19 @@ st.markdown("""
             overflow: hidden !important;
             text-overflow: ellipsis !important;
         }
+        div[data-testid="stTabs"] [role="tablist"],
+        div[data-testid="stTabs"] div[class*="e1ac7blb3"],
+        div.stTabs [role="tablist"],
         div[data-baseweb="tab-list"] {
-            top: var(--quant-hero-height) !important;
-            padding: 3px !important;
+            top: calc(var(--quant-hero-height) - 1px) !important;
+            padding: 3px 6px !important;
             border-radius: 0 0 10px 10px !important;
             gap: 4px !important;
             margin-bottom: 0.75rem !important;
         }
+        div[data-testid="stTabs"] [role="tab"],
+        div[data-testid="stTab"],
+        div.stTabs [role="tab"],
         div[data-baseweb="tab"] {
             font-size: 0.80rem !important;
             padding: 6px 8px !important;
