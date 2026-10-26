@@ -462,8 +462,21 @@ st.markdown("""
     }
 
     /* 4.6 Modern Quantitative Analysis Cards (Spread & Over/Under) */
+    div[data-testid="stHorizontalBlock"] {
+        align-items: stretch !important;
+    }
+    div[data-testid="stHorizontalBlock"] > div[data-testid="column"] {
+        display: flex !important;
+        flex-direction: column !important;
+    }
+    div[data-testid="stHorizontalBlock"] > div[data-testid="column"] > div[data-testid="stVerticalBlock"] {
+        display: flex !important;
+        flex-direction: column !important;
+        flex: 1 1 auto !important;
+        height: 100% !important;
+    }
     .analysis-card {
-        background: rgba(255, 255, 255, 0.02);
+        background: rgba(255, 255, 255, 0.025);
         border: 1px solid var(--quant-card-border);
         border-radius: 12px;
         padding: 12px 14px;
@@ -471,28 +484,45 @@ st.markdown("""
         display: flex;
         flex-direction: column;
         gap: 10px;
+        height: 100% !important;
+        flex: 1 1 auto !important;
+    }
+    .starting5-card {
+        background: rgba(255, 255, 255, 0.025);
+        border: 1px solid var(--quant-card-border);
+        border-radius: 12px;
+        padding: 10px 12px;
+        margin-bottom: 0.65rem;
+        height: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        flex: 1 1 auto !important;
     }
     .analysis-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        flex-wrap: wrap;
-        gap: 6px;
+        flex-wrap: nowrap !important;
+        gap: 8px;
         border-bottom: 1px solid rgba(255, 255, 255, 0.06);
         padding-bottom: 6px;
+        min-height: 28px;
     }
     .analysis-title {
-        font-size: 0.94rem;
+        font-size: 0.90rem;
         font-weight: 700;
         color: #F8FAFC;
         display: flex;
         align-items: center;
         gap: 6px;
         white-space: nowrap;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     .market-line-pill {
         font-family: var(--quant-font-mono);
-        font-size: 0.76rem;
+        font-size: 0.74rem;
         font-weight: 700;
         padding: 2px 8px;
         border-radius: 6px;
@@ -500,6 +530,8 @@ st.markdown("""
         color: #38BDF8;
         border: 1px solid rgba(56, 189, 248, 0.25);
         white-space: nowrap;
+        flex-shrink: 0;
+        margin-left: auto;
     }
     .live-pace-banner {
         display: flex;
@@ -548,6 +580,12 @@ st.markdown("""
         border-radius: 4px;
         white-space: nowrap;
         flex-shrink: 0;
+        width: 80px;
+        min-width: 80px;
+        text-align: center;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
     }
     .role-pill.fav {
         background: rgba(239, 68, 68, 0.18);
@@ -897,14 +935,7 @@ st.markdown("""
         color: #FCA5A5;
     }
 
-    /* 4.5 Starting 5 Lineup Board (Position-ordered, No clutter) */
-    .starting5-card {
-        background: rgba(255, 255, 255, 0.02);
-        border: 1px solid var(--quant-card-border);
-        border-radius: 10px;
-        padding: 8px 12px;
-        margin-bottom: 0.65rem;
-    }
+    /* 4.5 Starting 5 Lineup Board */
     .starting5-header {
         display: flex;
         justify-content: space-between;
@@ -938,10 +969,14 @@ st.markdown("""
         font-size: 0.72rem;
         font-weight: 800;
         font-family: var(--quant-font-mono);
-        padding: 1px 6px;
+        padding: 2px 0;
         border-radius: 4px;
-        min-width: 28px;
+        width: 32px;
+        min-width: 32px;
         text-align: center;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         flex-shrink: 0;
     }
     .pos-badge.pos-pg { background: rgba(2, 132, 199, 0.2); color: #38BDF8; border: 1px solid rgba(2, 132, 199, 0.4); }
@@ -1371,7 +1406,7 @@ def _render_spread_analysis_card(home, away, sp_val, open_spread, sp_res, rec_te
         raw_val_str = f"{raw_margin:+.1f} PTS" if raw_margin is not None else "-"
         metrics_html = f'''<div class="model-metrics-grid"><div class="model-metric-item"><span class="model-metric-label">Market-Anchored</span><span class="model-metric-val pos">{proj_margin:+.1f} PTS</span><span class="model-metric-sub">เปิด {anchor_sp:+.1f}×65% + ดิบ×35%</span></div><div class="model-metric-item"><span class="model-metric-label">AI Tuned (CatBoost)</span><span class="model-metric-val">{ai_val_str}</span><span class="model-metric-sub">ปรับความล้า / B2B / ฟอร์ม</span></div><div class="model-metric-item"><span class="model-metric-label">Raw Model</span><span class="model-metric-val">{raw_val_str}</span><span class="model-metric-sub">โมเดลสถิติดั้งเดิม</span></div></div>'''
 
-    return f'''<div class="analysis-card"><div class="analysis-header"><span class="analysis-title">⚖️ วิเคราะห์ แต้มต่อ (Spread)</span><span class="market-line-pill">เรตตลาด: {sp_line_pill}</span></div>{live_banner_html}{roles_html}<div class="{box_class}"><div class="hero-pick-row"><span class="hero-pick-text">🎯 {clean_rec}</span><div class="hero-pick-badges">{conf_badge}{edge_chip}</div></div><div class="win-prob-wrapper"><div class="win-prob-header"><span>โอกาสชนะทางสถิติ (Win Prob)</span><strong>{prob_pct}</strong></div><div class="custom-prob-bar"><div class="{fill_class}" style="width: {min(100.0, max(0.0, win_p * 100)):.1f}%;"></div></div></div></div>{market_html}{metrics_html}</div>'''
+    return f'''<div class="analysis-card"><div class="analysis-header"><span class="analysis-title">⚖️ วิเคราะห์ แต้มต่อ</span><span class="market-line-pill">เรตตลาด: {sp_line_pill}</span></div>{live_banner_html}{roles_html}<div class="{box_class}"><div class="hero-pick-row"><span class="hero-pick-text">🎯 {clean_rec}</span><div class="hero-pick-badges">{conf_badge}{edge_chip}</div></div><div class="win-prob-wrapper"><div class="win-prob-header"><span>โอกาสชนะทางสถิติ (Win Prob)</span><strong>{prob_pct}</strong></div><div class="custom-prob-bar"><div class="{fill_class}" style="width: {min(100.0, max(0.0, win_p * 100)):.1f}%;"></div></div></div></div>{market_html}{metrics_html}</div>'''
 
 
 def _render_ou_analysis_card(ou_val, open_total, ou_res, rec_text, t_edge, win_p, is_clash_ou, is_live=False, live_proj=None, lm_data=None):
@@ -1401,7 +1436,7 @@ def _render_ou_analysis_card(ou_val, open_total, ou_res, rec_text, t_edge, win_p
             move_label = "คงที่"
             trend_text = f"{move_label} (0.0)"
 
-        roles_html = f'''<div class="matchup-roles-card"><div class="matchup-role-row"><div class="matchup-team-side"><span class="role-pill neutral">📌 ราคาเปิด</span><span class="matchup-sub-desc">เรตเปิดแรกของตลาด</span></div><span class="matchup-point-val open">{open_total:.1f}</span></div><div class="matchup-role-row"><div class="matchup-team-side"><span class="role-pill neutral">🎯 ปัจจุบัน</span><span class="trend-chip {trend_class}">{trend_text}</span></div><span class="matchup-point-val current">{ou_val:.1f}</span></div></div>'''
+        roles_html = f'''<div class="matchup-roles-card"><div class="matchup-role-row"><div class="matchup-team-side"><span class="role-pill neutral">📌 ราคาเปิด</span><span class="trend-chip flat">เรตแรกตลาด</span></div><span class="matchup-point-val open">{open_total:.1f}</span></div><div class="matchup-role-row"><div class="matchup-team-side"><span class="role-pill neutral">🎯 ปัจจุบัน</span><span class="trend-chip {trend_class}">{trend_text}</span></div><span class="matchup-point-val current">{ou_val:.1f}</span></div></div>'''
     elif ou_val is not None:
         roles_html = f'''<div class="matchup-roles-card"><div class="matchup-role-row"><div class="matchup-team-side"><span class="role-pill neutral">🎯 ปัจจุบัน</span><span class="matchup-sub-desc">Consensus Line</span></div><span class="matchup-point-val current">{ou_val:.1f}</span></div></div>'''
 
@@ -1475,7 +1510,7 @@ def _render_ou_analysis_card(ou_val, open_total, ou_res, rec_text, t_edge, win_p
         raw_val_str = f"{raw_total:.1f} PTS" if raw_total is not None else "-"
         metrics_html = f'''<div class="model-metrics-grid"><div class="model-metric-item"><span class="model-metric-label">Market-Anchored</span><span class="model-metric-val pos">{proj_total:.1f} PTS</span><span class="model-metric-sub">เปิด {anchor_used:.1f}×65% + ดิบ×35%</span></div><div class="model-metric-item"><span class="model-metric-label">AI Tuned (CatBoost)</span><span class="model-metric-val">{ai_val_str}</span><span class="model-metric-sub">ปรับความล้า / B2B / สปีด</span></div><div class="model-metric-item"><span class="model-metric-label">Raw Model</span><span class="model-metric-val">{raw_val_str}</span><span class="model-metric-sub">โมเดลสถิติดั้งเดิม</span></div></div>'''
 
-    return f'''<div class="analysis-card"><div class="analysis-header"><span class="analysis-title">📊 วิเคราะห์ สูง/ต่ำ (Over/Under)</span><span class="market-line-pill">เรตตลาด: {ou_line_pill}</span></div>{live_banner_html}{roles_html}<div class="{box_class}"><div class="hero-pick-row"><span class="hero-pick-text">🎯 {clean_rec}</span><div class="hero-pick-badges">{conf_badge}{edge_chip}</div></div><div class="win-prob-wrapper"><div class="win-prob-header"><span>โอกาสชนะทางสถิติ (Win Prob)</span><strong>{prob_pct}</strong></div><div class="custom-prob-bar"><div class="{fill_class}" style="width: {min(100.0, max(0.0, win_p * 100)):.1f}%;"></div></div></div></div>{market_html}{metrics_html}</div>'''
+    return f'''<div class="analysis-card"><div class="analysis-header"><span class="analysis-title">📊 วิเคราะห์ สูง/ต่ำ</span><span class="market-line-pill">เรตตลาด: {ou_line_pill}</span></div>{live_banner_html}{roles_html}<div class="{box_class}"><div class="hero-pick-row"><span class="hero-pick-text">🎯 {clean_rec}</span><div class="hero-pick-badges">{conf_badge}{edge_chip}</div></div><div class="win-prob-wrapper"><div class="win-prob-header"><span>โอกาสชนะทางสถิติ (Win Prob)</span><strong>{prob_pct}</strong></div><div class="custom-prob-bar"><div class="{fill_class}" style="width: {min(100.0, max(0.0, win_p * 100)):.1f}%;"></div></div></div></div>{market_html}{metrics_html}</div>'''
 
 
 
