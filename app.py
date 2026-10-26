@@ -149,9 +149,14 @@ from config import parse_spread, calculate_home_spread, resolve_team_info, norma
 
 def t_dir(direction, factor_type):
     if factor_type == 'ou':
-        return "📈" if direction == 'over' else "📉"
+        if direction == 'over':
+            return "📈"
+        elif direction == 'under':
+            return "📉"
+        else:
+            return "➖"
     else:
-        return "🏠" if direction == 'home' else "✈️" if direction == 'away' else "➖"
+        return "🏠" if direction == 'home' else "✈️" if direction == 'away' else "➖" 
 
 # Page config - Lock expanded sidebar for desktop view
 st.set_page_config(
@@ -900,21 +905,21 @@ st.markdown("""
     /* Factors Drawer embedded inside analysis cards */
     .factors-drawer {
         margin-top: auto; /* Snaps cleanly to the bottom edge of the card */
-        background: rgba(0, 0, 0, 0.22);
-        border: 1px solid rgba(255, 255, 255, 0.06);
+        background: rgba(0, 0, 0, 0.25);
+        border: 1px solid rgba(255, 255, 255, 0.07);
         border-radius: 8px;
         overflow: hidden;
         transition: background-color 0.2s ease, border-color 0.2s ease;
     }
     .factors-drawer[open] {
-        background: rgba(0, 0, 0, 0.38);
+        background: rgba(0, 0, 0, 0.40);
         border-color: rgba(56, 189, 248, 0.25);
     }
     .factors-drawer summary {
         font-size: 0.76rem;
         font-weight: 700;
         color: #94A3B8;
-        padding: 6px 10px;
+        padding: 7px 10px;
         cursor: pointer;
         user-select: none;
         list-style: none;
@@ -938,33 +943,85 @@ st.markdown("""
     .factors-drawer[open] summary .drawer-arrow {
         transform: rotate(90deg);
     }
+    .factors-count-pill {
+        font-size: 0.68rem;
+        font-weight: 600;
+        font-family: var(--quant-font-mono);
+        padding: 1px 6px;
+        border-radius: 4px;
+        background: rgba(255, 255, 255, 0.06);
+        color: #94A3B8;
+        margin-left: auto;
+    }
     .factors-drawer-content {
-        padding: 6px 10px 8px 10px;
-        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 6px 8px 8px 8px;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
         display: flex;
         flex-direction: column;
-        gap: 4px;
-        font-size: 0.75rem;
+        gap: 5px;
     }
     .factor-item {
         display: flex;
-        align-items: center;
-        gap: 6px;
-        color: #CBD5E1;
-        line-height: 1.4;
+        flex-direction: column;
+        gap: 3px;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        border-radius: 6px;
+        padding: 6px 8px;
+        transition: background-color 0.15s ease;
     }
-    .factor-icon {
-        font-size: 0.80rem;
+    .factor-item:hover {
+        background: rgba(255, 255, 255, 0.045);
+    }
+    .factor-header {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+    }
+    .factor-icon-badge {
+        font-size: 0.72rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 22px;
+        height: 22px;
+        border-radius: 5px;
         flex-shrink: 0;
+        background: rgba(255, 255, 255, 0.05);
+    }
+    .factor-icon-badge.dir-home {
+        background: rgba(245, 158, 11, 0.15);
+        border: 1px solid rgba(245, 158, 11, 0.28);
+    }
+    .factor-icon-badge.dir-away {
+        background: rgba(6, 182, 212, 0.15);
+        border: 1px solid rgba(6, 182, 212, 0.28);
+    }
+    .factor-icon-badge.dir-over {
+        background: rgba(244, 63, 94, 0.15);
+        border: 1px solid rgba(244, 63, 94, 0.28);
+    }
+    .factor-icon-badge.dir-under {
+        background: rgba(16, 185, 129, 0.15);
+        border: 1px solid rgba(16, 185, 129, 0.28);
+    }
+    .factor-icon-badge.dir-neutral {
+        background: rgba(148, 163, 184, 0.12);
+        border: 1px solid rgba(148, 163, 184, 0.22);
     }
     .factor-name {
-        font-weight: 600;
+        font-size: 0.80rem;
+        font-weight: 700;
         color: #F1F5F9;
-        white-space: nowrap;
+        line-height: 1.3;
     }
     .factor-val {
-        color: #94A3B8;
+        font-size: 0.73rem;
+        color: #CBD5E1;
+        line-height: 1.45;
+        padding-left: 29px;
         word-break: break-word;
+        font-family: var(--quant-font-mono);
     }
 
     .team-stat-badges {
@@ -1699,6 +1756,16 @@ st.markdown("""
         .factors-drawer {
             margin-top: 6px !important;
         }
+        .factor-item {
+            padding: 5px 7px !important;
+        }
+        .factor-name {
+            font-size: 0.77rem !important;
+        }
+        .factor-val {
+            font-size: 0.71rem !important;
+            padding-left: 27px !important;
+        }
         div[data-testid="stNotification"],
         div[data-testid="stAlert"] {
             padding: 6px 10px !important;
@@ -1920,13 +1987,16 @@ def _render_spread_analysis_card(home, away, sp_val, open_spread, sp_res, rec_te
     if factors:
         factor_items = []
         for f in factors:
-            d = f.get('direction', '')
+            d = f.get('direction', 'neutral')
             icon = t_dir(d, 'spread')
             n = f.get('name', '')
             v = f.get('value', '')
-            factor_items.append(f'''<div class="factor-item"><span class="factor-icon">{icon}</span><span class="factor-name">{n}:</span> <span class="factor-val">{v}</span></div>''')
+            badge_class = "dir-home" if d == 'home' else ("dir-away" if d == 'away' else "dir-neutral")
+            factor_items.append(
+                f'''<div class="factor-item"><div class="factor-header"><span class="factor-icon-badge {badge_class}">{icon}</span><span class="factor-name">{n}</span></div><div class="factor-val">{v}</div></div>'''
+            )
         drawer_content = "".join(factor_items)
-        factors_html = f'''<details class="factors-drawer"><summary><span class="drawer-arrow">▸</span> ปัจจัยทางสถิติประกอบ ({len(factors)} ปัจจัย)</summary><div class="factors-drawer-content">{drawer_content}</div></details>'''
+        factors_html = f'''<details class="factors-drawer"><summary><span class="drawer-arrow">▸</span> <span>ปัจจัยทางสถิติประกอบ</span> <span class="factors-count-pill">{len(factors)} ปัจจัย</span></summary><div class="factors-drawer-content">{drawer_content}</div></details>'''
 
     return f'''<div class="analysis-card"><div class="analysis-header"><span class="analysis-title">⚖️ วิเคราะห์ แต้มต่อ</span><span class="market-line-pill">เรตตลาด: {sp_line_pill}</span></div>{live_banner_html}{roles_html}<div class="{box_class}"><div class="hero-pick-row"><span class="hero-pick-text">🎯 {clean_rec}</span><div class="hero-pick-badges">{conf_badge}{edge_chip}</div></div><div class="win-prob-wrapper"><div class="win-prob-header"><span>โอกาสชนะทางสถิติ (Win Prob)</span><strong>{prob_pct}</strong></div><div class="custom-prob-bar"><div class="{fill_class}" style="width: {min(100.0, max(0.0, win_p * 100)):.1f}%;"></div></div></div></div>{market_html}{anomaly_html}{metrics_html}{factors_html}</div>'''
 
@@ -2043,13 +2113,16 @@ def _render_ou_analysis_card(ou_val, open_total, ou_res, rec_text, t_edge, win_p
     if factors:
         factor_items = []
         for f in factors:
-            d = f.get('direction', '')
+            d = f.get('direction', 'neutral')
             icon = t_dir(d, 'ou')
             n = f.get('name', '')
             v = f.get('value', '')
-            factor_items.append(f'''<div class="factor-item"><span class="factor-icon">{icon}</span><span class="factor-name">{n}:</span> <span class="factor-val">{v}</span></div>''')
+            badge_class = "dir-over" if d == 'over' else ("dir-under" if d == 'under' else "dir-neutral")
+            factor_items.append(
+                f'''<div class="factor-item"><div class="factor-header"><span class="factor-icon-badge {badge_class}">{icon}</span><span class="factor-name">{n}</span></div><div class="factor-val">{v}</div></div>'''
+            )
         drawer_content = "".join(factor_items)
-        factors_html = f'''<details class="factors-drawer"><summary><span class="drawer-arrow">▸</span> ปัจจัยทางสถิติประกอบ ({len(factors)} ปัจจัย)</summary><div class="factors-drawer-content">{drawer_content}</div></details>'''
+        factors_html = f'''<details class="factors-drawer"><summary><span class="drawer-arrow">▸</span> <span>ปัจจัยทางสถิติประกอบ</span> <span class="factors-count-pill">{len(factors)} ปัจจัย</span></summary><div class="factors-drawer-content">{drawer_content}</div></details>'''
 
     return f'''<div class="analysis-card"><div class="analysis-header"><span class="analysis-title">📊 วิเคราะห์ สูง/ต่ำ</span><span class="market-line-pill">เรตตลาด: {ou_line_pill}</span></div>{live_banner_html}{roles_html}<div class="{box_class}"><div class="hero-pick-row"><span class="hero-pick-text">🎯 {clean_rec}</span><div class="hero-pick-badges">{conf_badge}{edge_chip}</div></div><div class="win-prob-wrapper"><div class="win-prob-header"><span>โอกาสชนะทางสถิติ (Win Prob)</span><strong>{prob_pct}</strong></div><div class="custom-prob-bar"><div class="{fill_class}" style="width: {min(100.0, max(0.0, win_p * 100)):.1f}%;"></div></div></div></div>{market_html}{anomaly_html}{metrics_html}{factors_html}</div>'''
 
