@@ -46,7 +46,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 23:11:08"
+    "scraped_at": "2026-10-26 00:35:58"
   },
   "LAL": {
     "team": "Los Angeles Lakers",
@@ -95,7 +95,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 23:11:08"
+    "scraped_at": "2026-10-26 00:35:58"
   },
   "Utah Jazz": {
     "team": "Utah Jazz",
@@ -139,7 +139,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 23:11:08"
+    "scraped_at": "2026-10-26 00:35:58"
   },
   "UTA": {
     "team": "Utah Jazz",
@@ -183,7 +183,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 23:11:08"
+    "scraped_at": "2026-10-26 00:35:58"
   },
   "Indiana Pacers": {
     "team": "Indiana Pacers",
@@ -242,7 +242,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 23:11:08"
+    "scraped_at": "2026-10-26 00:35:58"
   },
   "IND": {
     "team": "Indiana Pacers",
@@ -301,7 +301,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 23:11:08"
+    "scraped_at": "2026-10-26 00:35:58"
   },
   "Brooklyn Nets": {
     "team": "Brooklyn Nets",
@@ -350,7 +350,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 23:11:08"
+    "scraped_at": "2026-10-26 00:35:58"
   },
   "BKN": {
     "team": "Brooklyn Nets",
@@ -399,7 +399,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 23:11:08"
+    "scraped_at": "2026-10-26 00:35:58"
   },
   "Toronto Raptors": {
     "team": "Toronto Raptors",
@@ -448,7 +448,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 23:11:08"
+    "scraped_at": "2026-10-26 00:35:58"
   },
   "TOR": {
     "team": "Toronto Raptors",
@@ -497,7 +497,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 23:11:08"
+    "scraped_at": "2026-10-26 00:35:58"
   },
   "Minnesota Timberwolves": {
     "team": "Minnesota Timberwolves",
@@ -541,7 +541,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 23:11:08"
+    "scraped_at": "2026-10-26 00:35:58"
   },
   "MIN": {
     "team": "Minnesota Timberwolves",
@@ -585,7 +585,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 23:11:08"
+    "scraped_at": "2026-10-26 00:35:58"
   },
   "Orlando Magic": {
     "team": "Orlando Magic",
@@ -644,7 +644,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 23:11:08"
+    "scraped_at": "2026-10-26 00:35:58"
   },
   "ORL": {
     "team": "Orlando Magic",
@@ -703,7 +703,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 23:11:08"
+    "scraped_at": "2026-10-26 00:35:58"
   },
   "New York Knicks": {
     "team": "New York Knicks",
@@ -747,7 +747,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 23:11:08"
+    "scraped_at": "2026-10-26 00:35:58"
   },
   "NYK": {
     "team": "New York Knicks",
@@ -791,7 +791,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 23:11:08"
+    "scraped_at": "2026-10-26 00:35:58"
   },
   "Los Angeles Clippers": {
     "team": "Los Angeles Clippers",
@@ -855,7 +855,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 23:11:08"
+    "scraped_at": "2026-10-26 00:35:58"
   },
   "LAC": {
     "team": "Los Angeles Clippers",
@@ -919,7 +919,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 23:11:08"
+    "scraped_at": "2026-10-26 00:35:58"
   },
   "Oklahoma City Thunder": {
     "team": "Oklahoma City Thunder",
@@ -958,6 +958,11 @@
     ],
     "injuries": [
       {
+        "name": "Cason Wallace",
+        "position": "G",
+        "status": "Very Likely To Play"
+      },
+      {
         "name": "Thomas Sorber",
         "position": "C",
         "status": "Very Unlikely To Play"
@@ -966,9 +971,14 @@
         "name": "Nikola Topic",
         "position": "G",
         "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Jaylin Williams",
+        "position": "C",
+        "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 23:11:08"
+    "scraped_at": "2026-10-26 00:35:58"
   },
   "OKC": {
     "team": "Oklahoma City Thunder",
@@ -1007,6 +1017,11 @@
     ],
     "injuries": [
       {
+        "name": "Cason Wallace",
+        "position": "G",
+        "status": "Very Likely To Play"
+      },
+      {
         "name": "Thomas Sorber",
         "position": "C",
         "status": "Very Unlikely To Play"
@@ -1015,9 +1030,14 @@
         "name": "Nikola Topic",
         "position": "G",
         "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Jaylin Williams",
+        "position": "C",
+        "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 23:11:08"
+    "scraped_at": "2026-10-26 00:35:58"
   },
   "Detroit Pistons": {
     "team": "Detroit Pistons",
@@ -1025,8 +1045,8 @@
     "opponent": "Philadelphia 76ers",
     "opponent_abbr": "PHI",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Cade Cunningham",
@@ -1034,12 +1054,12 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Duncan Robinson",
+        "name": "Daniss Jenkins",
         "position": "SG",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Isaiah Joe",
+        "name": "Duncan Robinson",
         "position": "SF",
         "status": "Very Likely To Play"
       },
@@ -1056,6 +1076,11 @@
     ],
     "injuries": [
       {
+        "name": "Isaiah Joe",
+        "position": "G",
+        "status": "Very Likely To Play"
+      },
+      {
         "name": "Jalen Duren",
         "position": "C",
         "status": "Very Unlikely To Play"
@@ -1066,7 +1091,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 23:11:08"
+    "scraped_at": "2026-10-26 00:35:58"
   },
   "DET": {
     "team": "Detroit Pistons",
@@ -1074,8 +1099,8 @@
     "opponent": "Philadelphia 76ers",
     "opponent_abbr": "PHI",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Cade Cunningham",
@@ -1083,12 +1108,12 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Duncan Robinson",
+        "name": "Daniss Jenkins",
         "position": "SG",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Isaiah Joe",
+        "name": "Duncan Robinson",
         "position": "SF",
         "status": "Very Likely To Play"
       },
@@ -1105,6 +1130,11 @@
     ],
     "injuries": [
       {
+        "name": "Isaiah Joe",
+        "position": "G",
+        "status": "Very Likely To Play"
+      },
+      {
         "name": "Jalen Duren",
         "position": "C",
         "status": "Very Unlikely To Play"
@@ -1115,7 +1145,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 23:11:08"
+    "scraped_at": "2026-10-26 00:35:58"
   },
   "Philadelphia 76ers": {
     "team": "Philadelphia 76ers",
@@ -1184,7 +1214,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 23:11:08"
+    "scraped_at": "2026-10-26 00:35:58"
   },
   "PHI": {
     "team": "Philadelphia 76ers",
@@ -1253,7 +1283,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 23:11:08"
+    "scraped_at": "2026-10-26 00:35:58"
   },
   "Memphis Grizzlies": {
     "team": "Memphis Grizzlies",
@@ -1292,22 +1322,17 @@
     ],
     "injuries": [
       {
-        "name": "Cedric Coward",
-        "position": "G",
-        "status": "Toss Up To Play"
+        "name": "Zach Edey",
+        "position": "C",
+        "status": "Very Unlikely To Play"
       },
       {
         "name": "Karim Lopez",
         "position": "F",
-        "status": "Toss Up To Play"
-      },
-      {
-        "name": "Zach Edey",
-        "position": "C",
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 23:11:08"
+    "scraped_at": "2026-10-26 00:35:58"
   },
   "MEM": {
     "team": "Memphis Grizzlies",
@@ -1346,22 +1371,17 @@
     ],
     "injuries": [
       {
-        "name": "Cedric Coward",
-        "position": "G",
-        "status": "Toss Up To Play"
+        "name": "Zach Edey",
+        "position": "C",
+        "status": "Very Unlikely To Play"
       },
       {
         "name": "Karim Lopez",
         "position": "F",
-        "status": "Toss Up To Play"
-      },
-      {
-        "name": "Zach Edey",
-        "position": "C",
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 23:11:08"
+    "scraped_at": "2026-10-26 00:35:58"
   },
   "Sacramento Kings": {
     "team": "Sacramento Kings",
@@ -1420,7 +1440,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 23:11:08"
+    "scraped_at": "2026-10-26 00:35:58"
   },
   "SAC": {
     "team": "Sacramento Kings",
@@ -1479,6 +1499,6 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-25 23:11:08"
+    "scraped_at": "2026-10-26 00:35:58"
   }
 }
