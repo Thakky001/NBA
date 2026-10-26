@@ -478,21 +478,21 @@ st.markdown("""
         text-overflow: ellipsis;
     }
 
-    /* 4.6 Modern Quantitative Analysis Cards (Spread & Over/Under) */
-    div[data-testid="stHorizontalBlock"] {
+    /* 4.6 Modern Quantitative Analysis Cards (Spread & Over/Under) - strictly scoped */
+    div[data-testid="stHorizontalBlock"]:has(.analysis-card) {
         align-items: stretch !important;
     }
-    div[data-testid="stHorizontalBlock"] > div[data-testid="stColumn"],
-    div[data-testid="stHorizontalBlock"] > div[data-testid="column"],
-    div[data-testid="stHorizontalBlock"] > div.stColumn {
+    div[data-testid="stHorizontalBlock"]:has(.analysis-card) > div[data-testid="stColumn"],
+    div[data-testid="stHorizontalBlock"]:has(.analysis-card) > div[data-testid="column"],
+    div[data-testid="stHorizontalBlock"]:has(.analysis-card) > div.stColumn {
         display: flex !important;
         flex-direction: column !important;
         flex: 1 1 0% !important;
         min-width: 0 !important;
     }
-    div[data-testid="stHorizontalBlock"] > div[data-testid="stColumn"] > div[data-testid="stVerticalBlock"],
-    div[data-testid="stHorizontalBlock"] > div[data-testid="column"] > div[data-testid="stVerticalBlock"],
-    div[data-testid="stHorizontalBlock"] > div.stColumn > div[data-testid="stVerticalBlock"] {
+    div[data-testid="stHorizontalBlock"]:has(.analysis-card) > div[data-testid="stColumn"] > div[data-testid="stVerticalBlock"],
+    div[data-testid="stHorizontalBlock"]:has(.analysis-card) > div[data-testid="column"] > div[data-testid="stVerticalBlock"],
+    div[data-testid="stHorizontalBlock"]:has(.analysis-card) > div.stColumn > div[data-testid="stVerticalBlock"] {
         display: flex !important;
         flex-direction: column !important;
         flex: 1 1 auto !important;
