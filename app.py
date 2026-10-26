@@ -182,6 +182,7 @@ st.markdown("""
 
     /* 2. Quant Typography & Tokens (frontend-design) */
     :root {
+        --quant-hero-height: 94px;
         --quant-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
         --quant-bg: #0B0F17;
         --quant-card-bg: #111827;
@@ -201,13 +202,35 @@ st.markdown("""
         letter-spacing: -0.02em;
     }
 
-    /* 3. Bespoke Quant Hero Component (frontend-design) */
+    /* Transparent Streamlit Header so sticky elements can reach top: 0 cleanly */
+    header[data-testid="stHeader"] {
+        background: transparent !important;
+        pointer-events: none !important;
+    }
+    header[data-testid="stHeader"] button,
+    header[data-testid="stHeader"] a {
+        pointer-events: auto !important;
+    }
+
+    /* 3. Bespoke Sticky Quant Hero Component (frontend-design) */
+    div[data-testid="stElementContainer"]:has(.quant-hero),
+    div[data-testid="element-container"]:has(.quant-hero) {
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 998 !important;
+    }
     .quant-hero {
-        background: linear-gradient(135deg, rgba(17, 24, 39, 0.95) 0%, rgba(15, 23, 42, 0.85) 100%);
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 998 !important;
+        background: rgba(11, 15, 23, 0.96) !important;
+        backdrop-filter: blur(14px) !important;
+        -webkit-backdrop-filter: blur(14px) !important;
         border: 1px solid var(--quant-card-border);
-        border-radius: 14px;
-        padding: 1rem 1.25rem;
-        margin-bottom: 1rem;
+        border-bottom: none !important;
+        border-radius: 14px 14px 0 0 !important;
+        padding: 0.75rem 1.15rem;
+        margin-bottom: 0 !important;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
         position: relative;
         overflow: hidden;
@@ -225,11 +248,11 @@ st.markdown("""
         border: 1px solid rgba(16, 185, 129, 0.3);
         border-radius: 9999px;
         padding: 2px 10px;
-        font-size: 0.72rem;
+        font-size: 0.70rem;
         font-weight: 700;
         color: #34D399;
         letter-spacing: 0.05em;
-        margin-bottom: 0.4rem;
+        margin-bottom: 0.25rem;
     }
     .quant-pulse-dot {
         display: inline-block;
@@ -241,17 +264,17 @@ st.markdown("""
         box-shadow: 0 0 8px #10B981;
     }
     .quant-hero-title {
-        font-size: 1.45rem;
+        font-size: 1.35rem;
         font-weight: 800;
         color: #F8FAFC;
         letter-spacing: -0.02em;
         line-height: 1.2;
-        margin-bottom: 0.3rem;
+        margin-bottom: 0.2rem;
     }
     .quant-hero-subtitle {
-        font-size: 0.82rem;
+        font-size: 0.78rem;
         color: #94A3B8;
-        line-height: 1.4;
+        line-height: 1.3;
     }
 
     /* 4. Matchday Status Bar */
@@ -937,15 +960,26 @@ st.markdown("""
         text-overflow: ellipsis;
     }
 
-    /* 5. Modern Pill Tabs (better-layout: 50/50 split, zero clipping) */
+    /* 5. Modern Pill Tabs - Sticky & Docked to Quant Hero (better-layout) */
+    div[data-testid="stTabs"] {
+        overflow: visible !important;
+    }
     div[data-baseweb="tab-list"] {
+        position: sticky !important;
+        top: var(--quant-hero-height) !important;
+        z-index: 997 !important;
         display: flex !important;
         width: 100% !important;
-        background: rgba(255, 255, 255, 0.04) !important;
-        border-radius: 12px !important;
-        padding: 4px !important;
+        background: rgba(11, 15, 23, 0.96) !important;
+        backdrop-filter: blur(14px) !important;
+        -webkit-backdrop-filter: blur(14px) !important;
+        border-radius: 0 0 12px 12px !important;
+        padding: 4px 6px !important;
         border: 1px solid var(--quant-card-border) !important;
+        border-top: 1px dashed rgba(255, 255, 255, 0.08) !important;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45) !important;
         gap: 6px !important;
+        margin-top: 0 !important;
         margin-bottom: 1rem !important;
     }
     div[data-baseweb="tab"] {
@@ -1075,14 +1109,40 @@ st.markdown("""
             font-size: 0.78rem !important;
             padding: 6px 8px !important;
         }
+        :root {
+            --quant-hero-height: 70px;
+        }
         .quant-hero {
-            padding: 0.85rem 1rem;
+            padding: 0.45rem 0.85rem !important;
+            border-radius: 10px 10px 0 0 !important;
+        }
+        .quant-hero-badge {
+            font-size: 0.65rem !important;
+            padding: 1px 6px !important;
+            margin-bottom: 1px !important;
         }
         .quant-hero-title {
-            font-size: 1.25rem;
+            font-size: 1.05rem !important;
+            line-height: 1.15 !important;
+            margin-bottom: 1px !important;
         }
         .quant-hero-subtitle {
-            font-size: 0.78rem;
+            font-size: 0.68rem !important;
+            line-height: 1.2 !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+        }
+        div[data-baseweb="tab-list"] {
+            top: var(--quant-hero-height) !important;
+            padding: 3px !important;
+            border-radius: 0 0 10px 10px !important;
+            gap: 4px !important;
+            margin-bottom: 0.75rem !important;
+        }
+        div[data-baseweb="tab"] {
+            font-size: 0.80rem !important;
+            padding: 6px 8px !important;
         }
 
         /* Enforce Touch Target >= 44px on interactive controls */
