@@ -1083,6 +1083,279 @@ st.markdown("""
         padding: 0.65rem 0.85rem !important;
     }
 
+    /* 7.1 Daily Track Record Recap (Spread & Over/Under Breakdown) */
+    .daily-recap-box {
+        background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.85));
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 14px;
+        padding: 14px 16px;
+        margin-bottom: 1.15rem;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    .daily-recap-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+        padding-bottom: 10px;
+    }
+    .daily-recap-title-area {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+    .daily-recap-title {
+        font-size: 1.02rem;
+        font-weight: 800;
+        color: #F8FAFC;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .daily-recap-title strong {
+        color: #38BDF8;
+        letter-spacing: 0.02em;
+    }
+    .daily-recap-meta {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+    .daily-meta-chip {
+        font-size: 0.72rem;
+        font-weight: 600;
+        color: #94A3B8;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 5px;
+        padding: 2px 7px;
+    }
+    .daily-meta-chip.success {
+        color: #6EE7B7;
+        background: rgba(16, 185, 129, 0.12);
+        border-color: rgba(16, 185, 129, 0.25);
+    }
+    .daily-meta-chip.pending {
+        color: #FCD34D;
+        background: rgba(245, 158, 11, 0.12);
+        border-color: rgba(245, 158, 11, 0.25);
+    }
+    .daily-overall-chip {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-family: var(--quant-font-mono);
+        white-space: nowrap;
+    }
+    .daily-overall-chip.pos {
+        background: rgba(16, 185, 129, 0.15);
+        border: 1px solid rgba(16, 185, 129, 0.35);
+        color: #6EE7B7;
+    }
+    .daily-overall-chip.neg {
+        background: rgba(239, 68, 68, 0.15);
+        border: 1px solid rgba(239, 68, 68, 0.35);
+        color: #FCA5A5;
+    }
+    .daily-overall-chip.neutral {
+        background: rgba(148, 163, 184, 0.12);
+        border: 1px solid rgba(148, 163, 184, 0.25);
+        color: #CBD5E1;
+    }
+    .daily-overall-label {
+        font-size: 0.74rem;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        opacity: 0.85;
+    }
+    .daily-overall-val {
+        font-size: 0.92rem;
+        font-weight: 800;
+    }
+    .daily-overall-sub {
+        font-size: 0.74rem;
+        opacity: 0.9;
+    }
+
+    /* 2 Columns Cards Grid */
+    .daily-recap-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+    .daily-market-card {
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 10px;
+        padding: 12px 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .daily-market-card.spread {
+        border: 1px solid rgba(56, 189, 248, 0.28);
+        background: linear-gradient(145deg, rgba(56, 189, 248, 0.04), rgba(0, 0, 0, 0.35));
+    }
+    .daily-market-card.ou {
+        border: 1px solid rgba(245, 158, 11, 0.28);
+        background: linear-gradient(145deg, rgba(245, 158, 11, 0.04), rgba(0, 0, 0, 0.35));
+    }
+    .daily-market-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 6px;
+    }
+    .daily-market-title {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.88rem;
+        font-weight: 700;
+        color: #F1F5F9;
+    }
+    .daily-market-badge {
+        font-size: 0.65rem;
+        font-weight: 800;
+        font-family: var(--quant-font-mono);
+        padding: 1px 6px;
+        border-radius: 4px;
+        letter-spacing: 0.04em;
+    }
+    .daily-market-badge.spread {
+        background: rgba(56, 189, 248, 0.2);
+        color: #38BDF8;
+        border: 1px solid rgba(56, 189, 248, 0.4);
+    }
+    .daily-market-badge.ou {
+        background: rgba(245, 158, 11, 0.2);
+        color: #FBBF24;
+        border: 1px solid rgba(245, 158, 11, 0.4);
+    }
+    .daily-wr-badge {
+        display: inline-flex;
+        align-items: baseline;
+        gap: 4px;
+        padding: 2px 8px;
+        border-radius: 5px;
+        font-family: var(--quant-font-mono);
+        font-weight: 800;
+        font-size: 0.86rem;
+    }
+    .daily-wr-badge.win {
+        background: rgba(16, 185, 129, 0.2);
+        color: #34D399;
+        border: 1px solid rgba(16, 185, 129, 0.4);
+    }
+    .daily-wr-badge.even {
+        background: rgba(245, 158, 11, 0.2);
+        color: #FCD34D;
+        border: 1px solid rgba(245, 158, 11, 0.4);
+    }
+    .daily-wr-badge.loss {
+        background: rgba(239, 68, 68, 0.2);
+        color: #F87171;
+        border: 1px solid rgba(239, 68, 68, 0.4);
+    }
+    .daily-wr-badge.empty {
+        background: rgba(148, 163, 184, 0.15);
+        color: #94A3B8;
+        border: 1px solid rgba(148, 163, 184, 0.3);
+    }
+    .daily-wr-label {
+        font-size: 0.62rem;
+        font-weight: 600;
+        opacity: 0.8;
+    }
+    .daily-stat-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+    }
+    .daily-stat-main {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+    .daily-wl-text {
+        font-family: var(--quant-font-mono);
+        font-size: 1.25rem;
+        font-weight: 800;
+        display: flex;
+        align-items: baseline;
+        gap: 4px;
+    }
+    .wl-w { color: #34D399; }
+    .wl-l { color: #F87171; }
+    .wl-p { color: #94A3B8; }
+    .wl-div { color: rgba(255, 255, 255, 0.25); font-weight: 400; font-size: 1rem; }
+    .daily-sub-text {
+        font-size: 0.72rem;
+        color: #94A3B8;
+        font-weight: 500;
+    }
+    .daily-unit-block {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 2px;
+        font-family: var(--quant-font-mono);
+    }
+    .daily-unit-val {
+        font-size: 1.05rem;
+        font-weight: 800;
+    }
+    .daily-unit-u {
+        font-size: 0.72rem;
+        font-weight: 500;
+        opacity: 0.8;
+    }
+    .daily-roi-val {
+        font-size: 0.74rem;
+        font-weight: 700;
+    }
+    .daily-unit-block.pos .daily-unit-val,
+    .daily-unit-block.pos .daily-roi-val {
+        color: #34D399;
+    }
+    .daily-unit-block.neg .daily-unit-val,
+    .daily-unit-block.neg .daily-roi-val {
+        color: #F87171;
+    }
+    .daily-unit-block.neutral .daily-unit-val,
+    .daily-unit-block.neutral .daily-roi-val {
+        color: #94A3B8;
+    }
+    .daily-prog-bar {
+        height: 5px;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 999px;
+        overflow: hidden;
+        margin-top: 2px;
+    }
+    .daily-prog-fill {
+        height: 100%;
+        border-radius: 999px;
+        transition: width 0.4s ease;
+    }
+    .daily-prog-fill.spread {
+        background: linear-gradient(90deg, #0284C7, #10B981);
+    }
+    .daily-prog-fill.ou {
+        background: linear-gradient(90deg, #F59E0B, #10B981);
+    }
+    .daily-prog-fill.loss {
+        background: #EF4444 !important;
+    }
+
     /* ========================================================
        DESKTOP: Lock sidebar permanently open (min-width: 992px)
        ======================================================== */
@@ -1210,6 +1483,35 @@ st.markdown("""
             width: 100% !important;
         }
 
+        /* Daily recap mobile responsive adjustment (better-layout) */
+        .daily-recap-box {
+            padding: 10px 12px !important;
+            margin-bottom: 0.75rem !important;
+        }
+        .daily-recap-header {
+            flex-direction: column !important;
+            align-items: stretch !important;
+            gap: 8px !important;
+            padding-bottom: 8px !important;
+        }
+        .daily-overall-chip {
+            justify-content: center !important;
+            width: 100% !important;
+            padding: 5px 8px !important;
+        }
+        .daily-recap-grid {
+            grid-template-columns: 1fr !important;
+            gap: 8px !important;
+        }
+        .daily-market-card {
+            padding: 10px 12px !important;
+        }
+        .daily-wl-text {
+            font-size: 1.15rem !important;
+        }
+        .daily-unit-val {
+            font-size: 0.98rem !important;
+        }
         /* Compact metric padding for mobile */
         div[data-testid="stMetric"] {
             padding: 0.45rem 0.6rem !important;
@@ -2081,6 +2383,168 @@ def render_game_slate(selected_date, is_live_refresh):
 
 
 
+def _render_daily_recap_card(filter_date: str, daily_ledger: pd.DataFrame, d_stats: Dict[str, Any]) -> str:
+    """Renders a beautiful, mobile-responsive recap card separating Spread and Over/Under performance for a date."""
+    total_games = len(daily_ledger)
+    graded_games = d_stats.get('graded_games', 0)
+    pending_games = d_stats.get('pending_games', 0)
+
+    # Spread metrics
+    sp = d_stats.get('spread', {})
+    sp_wins = sp.get('wins', 0)
+    sp_losses = sp.get('losses', 0)
+    sp_pushes = sp.get('pushes', 0)
+    sp_wr = sp.get('win_rate', 0.0)
+    sp_units = sp.get('net_units', 0.0)
+    sp_roi = sp.get('roi_pct', 0.0)
+    sp_bets = sp.get('bets', 0)
+
+    # O/U metrics
+    ou = d_stats.get('over_under', {})
+    ou_wins = ou.get('wins', 0)
+    ou_losses = ou.get('losses', 0)
+    ou_pushes = ou.get('pushes', 0)
+    ou_wr = ou.get('win_rate', 0.0)
+    ou_units = ou.get('net_units', 0.0)
+    ou_roi = ou.get('roi_pct', 0.0)
+    ou_bets = ou.get('bets', 0)
+
+    # Overall metrics
+    ov = d_stats.get('overall', {})
+    ov_wins = ov.get('wins', 0)
+    ov_losses = ov.get('losses', 0)
+    ov_pushes = ov.get('pushes', 0)
+    ov_wr = ov.get('win_rate', 0.0)
+    ov_units = ov.get('net_units', 0.0)
+    ov_roi = ov.get('roi_pct', 0.0)
+    ov_bets = ov.get('bets', 0)
+
+    # Subsets (Strong)
+    s_sp = d_stats.get('strong_spread', {})
+    s_ou = d_stats.get('strong_ou', {})
+
+    def _get_wr_class(wr: float, bets: int) -> str:
+        if bets == 0:
+            return 'empty'
+        if wr >= 52.4:
+            return 'win'
+        if wr >= 48.0:
+            return 'even'
+        return 'loss'
+
+    def _get_unit_class(units: float) -> str:
+        if units > 0.01:
+            return 'pos'
+        if units < -0.01:
+            return 'neg'
+        return 'neutral'
+
+    ov_cls = _get_unit_class(ov_units)
+    sp_wr_cls = _get_wr_class(sp_wr, sp_bets)
+    ou_wr_cls = _get_wr_class(ou_wr, ou_bets)
+    sp_u_cls = _get_unit_class(sp_units)
+    ou_u_cls = _get_unit_class(ou_units)
+
+    sp_strong_info = f' • เน้น: {s_sp.get("wins", 0)}W-{s_sp.get("losses", 0)}L' if s_sp.get('bets', 0) > 0 else ''
+    ou_strong_info = f' • เน้น: {s_ou.get("wins", 0)}W-{s_ou.get("losses", 0)}L' if s_ou.get('bets', 0) > 0 else ''
+
+    sp_push_html = f'<span class="wl-div">-</span><span class="wl-p">{sp_pushes}P</span>' if sp_pushes > 0 else ''
+    ou_push_html = f'<span class="wl-div">-</span><span class="wl-p">{ou_pushes}P</span>' if ou_pushes > 0 else ''
+    ov_push_str = f' - {ov_pushes}P' if ov_pushes > 0 else ''
+
+    pending_chip = f'<span class="daily-meta-chip pending">⏳ รอผล {pending_games} คู่</span>' if pending_games > 0 else ''
+
+    sp_bar_fill = min(100.0, max(0.0, sp_wr)) if sp_bets > 0 else 0.0
+    ou_bar_fill = min(100.0, max(0.0, ou_wr)) if ou_bets > 0 else 0.0
+    sp_bar_cls = 'spread' if sp_wr >= 50.0 else 'loss'
+    ou_bar_cls = 'ou' if ou_wr >= 50.0 else 'loss'
+
+    return f'''<div class="daily-recap-box">
+  <div class="daily-recap-header">
+    <div class="daily-recap-title-area">
+      <div class="daily-recap-title">
+        <span>📅 สรุปผลงานประจำวัน: <strong>{filter_date}</strong></span>
+      </div>
+      <div class="daily-recap-meta">
+        <span class="daily-meta-chip">🏀 แข่งขัน {total_games} คู่</span>
+        <span class="daily-meta-chip success">✅ จบแล้ว {graded_games} คู่</span>
+        {pending_chip}
+        <span class="daily-meta-chip">🎯 รวม {ov_bets} ไม้</span>
+      </div>
+    </div>
+    <div class="daily-overall-chip {ov_cls}">
+      <span class="daily-overall-label">ผลรวมทั้งวัน:</span>
+      <span class="daily-overall-val">{ov_wins}W - {ov_losses}L{ov_push_str}</span>
+      <span class="daily-overall-sub">({ov_wr:.1f}% WR | {ov_units:+.2f} U | {ov_roi:+.1f}%)</span>
+    </div>
+  </div>
+
+  <div class="daily-recap-grid">
+    <div class="daily-market-card spread">
+      <div class="daily-market-header">
+        <div class="daily-market-title">
+          <span class="daily-market-badge spread">SPREAD</span>
+          <span>⚖️ แต้มต่อ (Spread)</span>
+        </div>
+        <div class="daily-wr-badge {sp_wr_cls}">
+          <span>{sp_wr:.1f}%</span>
+          <span class="daily-wr-label">WIN RATE</span>
+        </div>
+      </div>
+      <div class="daily-stat-row">
+        <div class="daily-stat-main">
+          <div class="daily-wl-text">
+            <span class="wl-w">{sp_wins}W</span>
+            <span class="wl-div">-</span>
+            <span class="wl-l">{sp_losses}L</span>
+            {sp_push_html}
+          </div>
+          <div class="daily-sub-text">รวม {sp_bets} ไม้{sp_strong_info}</div>
+        </div>
+        <div class="daily-unit-block {sp_u_cls}">
+          <div class="daily-unit-val">{sp_units:+.2f} <span class="daily-unit-u">Units</span></div>
+          <div class="daily-roi-val">{sp_roi:+.1f}% ROI</div>
+        </div>
+      </div>
+      <div class="daily-prog-bar">
+        <div class="daily-prog-fill {sp_bar_cls}" style="width: {sp_bar_fill:.1f}%;"></div>
+      </div>
+    </div>
+
+    <div class="daily-market-card ou">
+      <div class="daily-market-header">
+        <div class="daily-market-title">
+          <span class="daily-market-badge ou">OVER / UNDER</span>
+          <span>📊 สูง / ต่ำ (Totals)</span>
+        </div>
+        <div class="daily-wr-badge {ou_wr_cls}">
+          <span>{ou_wr:.1f}%</span>
+          <span class="daily-wr-label">WIN RATE</span>
+        </div>
+      </div>
+      <div class="daily-stat-row">
+        <div class="daily-stat-main">
+          <div class="daily-wl-text">
+            <span class="wl-w">{ou_wins}W</span>
+            <span class="wl-div">-</span>
+            <span class="wl-l">{ou_losses}L</span>
+            {ou_push_html}
+          </div>
+          <div class="daily-sub-text">รวม {ou_bets} ไม้{ou_strong_info}</div>
+        </div>
+        <div class="daily-unit-block {ou_u_cls}">
+          <div class="daily-unit-val">{ou_units:+.2f} <span class="daily-unit-u">Units</span></div>
+          <div class="daily-roi-val">{ou_roi:+.1f}% ROI</div>
+        </div>
+      </div>
+      <div class="daily-prog-bar">
+        <div class="daily-prog-fill {ou_bar_cls}" style="width: {ou_bar_fill:.1f}%;"></div>
+      </div>
+    </div>
+  </div>
+</div>'''
+
+
 def render_track_record_tab():
     st.subheader("🏆 สถิติความแม่นยำและการตรวจสอบผลย้อนหลัง (Track Record)")
     st.caption("ระบบบันทึกราคาปิด (Closing Line) และคำทำนายก่อนเริ่มแข่งอัตโนมัติ พร้อมตรวจผลสกอร์จริงเมื่อจบการแข่งขัน (`WIN` / `LOSS` / `PUSH`)")
@@ -2209,25 +2673,11 @@ def render_track_record_tab():
             ]
         )
 
-    # Daily performance banner when a specific date is selected
+    # Daily performance recap banner when a specific date is selected (Spread & O/U separated)
     if filter_date != "ทั้งหมด (All Dates)":
         daily_ledger = ledger_df[ledger_df['date'] == filter_date]
         d_stats = calculate_track_record(daily_ledger)
-        d_total_games = len(daily_ledger)
-        d_graded_games = d_stats.get('graded_games', 0)
-        d_wins = d_stats['overall']['wins']
-        d_losses = d_stats['overall']['losses']
-        d_pushes = d_stats['overall']['pushes']
-        d_wr = d_stats['overall']['win_rate']
-        d_units = d_stats['overall']['net_units']
-        d_roi = d_stats['overall']['roi_pct']
-
-        st.info(
-            f"📅 **สรุปผลงานวันที่ {filter_date}:** แข่งขันทั้งหมด **{d_total_games} คู่** (จบแล้ว {d_graded_games} คู่) | "
-            f"ผลรวมคำทำนาย: ชนะ **{d_wins}W - {d_losses}L - {d_pushes}P** "
-            f"(`{d_wr:.1f}%` Win Rate) | "
-            f"ผลตอบแทนจำลอง **{d_units:+.2f} Units** (`{d_roi:+.1f}%` ROI)"
-        )
+        render_html(_render_daily_recap_card(filter_date, daily_ledger, d_stats))
 
     filtered_df = ledger_df.copy()
     if filter_date != "ทั้งหมด (All Dates)":
