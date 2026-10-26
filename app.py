@@ -1150,7 +1150,7 @@ st.markdown("""
     .pos-badge.pos-g  { background: rgba(56, 189, 248, 0.2); color: #BAE6FD; border: 1px solid rgba(56, 189, 248, 0.4); }
     .pos-badge.pos-f  { background: rgba(168, 85, 247, 0.2); color: #E9D5FF; border: 1px solid rgba(168, 85, 247, 0.4); }
     .starter-name {
-        font-size: 0.82rem;
+        font-size: 0.86rem;
         font-weight: 600;
         color: #F1F5F9;
         white-space: nowrap;
@@ -1159,36 +1159,19 @@ st.markdown("""
         flex: 1 1 auto;
         min-width: 0;
     }
-    .starter-meta {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        flex-shrink: 0;
-        margin-left: auto;
-    }
-    .starter-stat-chip {
-        font-size: 0.70rem;
-        font-family: var(--quant-font-mono);
-        font-weight: 600;
-        color: #94A3B8;
-        background: rgba(255, 255, 255, 0.04);
-        border: 1px solid rgba(255, 255, 255, 0.06);
-        padding: 1px 6px;
-        border-radius: 4px;
-        white-space: nowrap;
-        letter-spacing: -0.2px;
-    }
     .starter-status-badge {
         font-size: 0.68rem;
         font-weight: 700;
         font-family: var(--quant-font-mono);
-        padding: 1px 6px;
+        padding: 2px 7px;
         border-radius: 4px;
         white-space: nowrap;
         display: inline-flex;
         align-items: center;
         gap: 3px;
         letter-spacing: 0.2px;
+        flex-shrink: 0;
+        margin-left: auto;
     }
     .starter-status-badge.status-ok {
         background: rgba(16, 185, 129, 0.14);
@@ -1360,26 +1343,34 @@ st.markdown("""
     .daily-overall-chip {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 10px;
         padding: 6px 12px;
         border-radius: 8px;
         font-family: var(--quant-font-mono);
-        white-space: nowrap;
+        box-sizing: border-box !important;
+        max-width: 100%;
+        transition: background 0.15s ease;
     }
     .daily-overall-chip.pos {
-        background: rgba(16, 185, 129, 0.15);
-        border: 1px solid rgba(16, 185, 129, 0.35);
+        background: rgba(16, 185, 129, 0.12);
+        border: 1px solid rgba(16, 185, 129, 0.32);
         color: #6EE7B7;
     }
     .daily-overall-chip.neg {
-        background: rgba(239, 68, 68, 0.15);
-        border: 1px solid rgba(239, 68, 68, 0.35);
+        background: rgba(239, 68, 68, 0.12);
+        border: 1px solid rgba(239, 68, 68, 0.32);
         color: #FCA5A5;
     }
     .daily-overall-chip.neutral {
-        background: rgba(148, 163, 184, 0.12);
+        background: rgba(148, 163, 184, 0.10);
         border: 1px solid rgba(148, 163, 184, 0.25);
         color: #CBD5E1;
+    }
+    .daily-overall-left {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        white-space: nowrap;
     }
     .daily-overall-label {
         font-size: 0.74rem;
@@ -1388,12 +1379,27 @@ st.markdown("""
         opacity: 0.85;
     }
     .daily-overall-val {
-        font-size: 0.92rem;
+        font-size: 0.94rem;
         font-weight: 800;
+        letter-spacing: 0.02em;
     }
-    .daily-overall-sub {
+    .daily-overall-right {
+        display: flex;
+        align-items: center;
+        gap: 6px;
         font-size: 0.74rem;
-        opacity: 0.9;
+        white-space: nowrap;
+        opacity: 0.95;
+    }
+    .daily-overall-divider {
+        opacity: 0.35;
+        font-size: 0.70rem;
+    }
+    .daily-overall-metric {
+        font-weight: 500;
+    }
+    .daily-overall-metric strong {
+        font-weight: 800;
     }
 
     /* 2 Columns Cards Grid */
@@ -1739,18 +1745,44 @@ st.markdown("""
         .daily-recap-box {
             padding: 10px 12px !important;
             margin-bottom: 0.75rem !important;
-            gap: 8px !important;
+            gap: 10px !important;
+            box-sizing: border-box !important;
+            width: 100% !important;
+            max-width: 100% !important;
         }
         .daily-recap-header {
             flex-direction: column !important;
             align-items: stretch !important;
-            gap: 6px !important;
-            padding-bottom: 6px !important;
+            gap: 8px !important;
+            padding-bottom: 8px !important;
+            box-sizing: border-box !important;
+            width: 100% !important;
         }
         .daily-overall-chip {
-            justify-content: center !important;
+            box-sizing: border-box !important;
             width: 100% !important;
-            padding: 5px 8px !important;
+            max-width: 100% !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            flex-wrap: wrap !important;
+            gap: 6px 10px !important;
+            padding: 7px 12px !important;
+            margin: 0 !important;
+        }
+        .daily-overall-left {
+            gap: 6px !important;
+        }
+        .daily-overall-label {
+            font-size: 0.74rem !important;
+        }
+        .daily-overall-val {
+            font-size: 0.92rem !important;
+        }
+        .daily-overall-right {
+            font-size: 0.74rem !important;
+            gap: 5px !important;
+            margin-left: auto !important;
         }
         .daily-recap-grid {
             grid-template-columns: 1fr !important;
@@ -2740,25 +2772,12 @@ def render_game_slate(selected_date, is_live_refresh):
                             
 
                             rows_html = "".join(
-
                                 f'<div class="starter-row">'
-
                                 f'<span class="pos-badge pos-{s["position"].lower()}">{s["position"]}</span>'
-
-                                f'<span class="starter-name" title="{s["name"]}">{s["name"]}</span>'
-
-                                f'<div class="starter-meta">'
-
-                                + (f'<span class="starter-stat-chip">{s["stat_chip"]}</span>' if s.get("stat_chip") else "")
-
-                                + f'<span class="starter-status-badge {s["status_class"]}" title="{s.get("status_desc", s["status_code"])}">{s["status_icon"]} {s["status_code"]}</span>'
-
+                                f'<span class="starter-name" title="{s["name"]}' + (f' | {s["stat_chip"]}' if s.get("stat_chip") else "") + f'">{s["name"]}</span>'
+                                f'<span class="starter-status-badge {s["status_class"]}" title="{s.get("status_desc", s["status_code"])}">{s["status_icon"]} {s["status_code"]}</span>'
                                 f'</div>'
-
-                                f'</div>'
-
                                 for s in s_list
-
                             )
 
                             return f'<div class="starting5-card"><div class="starting5-header"><span>🏀 5 ตัวจริง {team_label}</span>{pill_html}</div><div class="starting5-list">{rows_html}</div></div>'
@@ -3076,9 +3095,17 @@ def _render_daily_recap_card(filter_date: str, daily_ledger: pd.DataFrame, d_sta
       </div>
     </div>
     <div class="daily-overall-chip {ov_cls}">
-      <span class="daily-overall-label">ผลรวมทั้งวัน:</span>
-      <span class="daily-overall-val">{ov_wins}W - {ov_losses}L{ov_push_str}</span>
-      <span class="daily-overall-sub">({ov_wr:.1f}% WR | {ov_units:+.2f} U | {ov_roi:+.1f}%)</span>
+      <div class="daily-overall-left">
+        <span class="daily-overall-label">ผลรวมทั้งวัน:</span>
+        <span class="daily-overall-val">{ov_wins}W - {ov_losses}L{ov_push_str}</span>
+      </div>
+      <div class="daily-overall-right">
+        <span class="daily-overall-metric"><strong>{ov_wr:.1f}%</strong> WR</span>
+        <span class="daily-overall-divider">|</span>
+        <span class="daily-overall-metric"><strong>{ov_units:+.2f}</strong> U</span>
+        <span class="daily-overall-divider">|</span>
+        <span class="daily-overall-metric"><strong>{ov_roi:+.1f}%</strong> ROI</span>
+      </div>
     </div>
   </div>
 
