@@ -1,17 +1,17 @@
 # Graph Report - NBA  (2026-10-26)
 
 ## Corpus Check
-- 366 files · ~238,516 words
+- 366 files · ~238,841 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 21 file(s) not represented in the graph (top: .csv 15, .parquet 3, .cbm 2)
 
 ## Summary
-- 3102 nodes · 5086 edges · 319 communities (183 shown, 136 thin omitted)
+- 3102 nodes · 5087 edges · 323 communities (183 shown, 140 thin omitted)
 - Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 199 edges (avg confidence: 0.88)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `f951da9c`
+- Built from commit: `bf59a333`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -320,6 +320,7 @@
 - middleware-heavy.mjs
 - observability-events-attribution.mjs
 - DailySlate
+- TestPonytailAuditFixes
 - large-static-asset.mjs
 - missing-cache-headers.mjs
 - Semaphore
@@ -356,7 +357,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (319 total, 136 thin omitted)
+## Communities (323 total, 140 thin omitted)
 
 ### Community 0 - "lib/render-report.mjs"
 Cohesion: 0.13
@@ -455,8 +456,8 @@ Cohesion: 0.67
 Nodes (3): extractColdStarts(), gate(), metadata
 
 ### Community 27 - "main.py"
-Cohesion: 0.15
-Nodes (11): ESPNCollector, ensure_dirs(), cmd_matchup(), cmd_refresh(), cmd_roster(), cmd_standings(), cmd_teams(), cmd_today() (+3 more)
+Cohesion: 0.16
+Nodes (9): ESPNCollector, ensure_dirs(), cmd_matchup(), cmd_refresh(), cmd_roster(), cmd_standings(), cmd_teams(), _load_game_history() (+1 more)
 
 ### Community 28 - "scripts/deep-dive.mjs"
 Cohesion: 0.16
@@ -1019,7 +1020,7 @@ Cohesion: 0.67
 Nodes (3): isApplicable(), metadata, scan()
 
 ### Community 294 - "DataMerger"
-Cohesion: 0.08
+Cohesion: 0.11
 Nodes (5): get_analyzer(), get_espn_collector(), get_odds_collector(), DataMerger, TestDataMerger
 
 ### Community 296 - "hard-gates.mjs"
@@ -1043,8 +1044,8 @@ Cohesion: 0.16
 Nodes (16): GATE_VERSION, gates, MAX_CODE_CANDIDATES, metadata, HERE, main(), REFS, renderCandidates() (+8 more)
 
 ### Community 303 - "NBA Data"
-Cohesion: 0.22
-Nodes (8): Choosing the Season, CRITICAL: Before Any Query, Error Handling, NBA Data, Quick Start, Setup, Shaping Long NBA Stats Results, Using ESPN and NBA Stats Together
+Cohesion: 0.11
+Nodes (11): Choosing the Season, Commands, CRITICAL: Before Any Query, Error Handling, Examples, NBA Data, Quick Start, Setup (+3 more)
 
 ### Community 304 - "calculate_home_spread"
 Cohesion: 0.25
@@ -1070,6 +1071,10 @@ Nodes (3): gate(), metadata, sumRows()
 Cohesion: 0.67
 Nodes (3): gate(), metadata, sumBilled()
 
+### Community 310 - "DailySlate"
+Cohesion: 0.19
+Nodes (3): cmd_today(), _load_advanced_stats(), DailySlate
+
 ### Community 312 - "large-static-asset.mjs"
 Cohesion: 0.36
 Nodes (7): formatBytes(), metadata, scan(), shouldSkip(), SKIP_EXTENSIONS, SKIP_PATH_PREFIXES, walk()
@@ -1086,23 +1091,19 @@ Nodes (6): classifyFrameworkSupport(), CORE_SUPPORTED_FRAMEWORKS, frameworkLabel
 Cohesion: 0.18
 Nodes (8): Betting Analysis — API Reference, Commands, Key Concepts, Odds Formats, Troubleshooting, convert_odds(), decimal_to_prob(), prob_to_american()
 
-### Community 321 - "DataFrame"
-Cohesion: 0.10
-Nodes (4): Commands, Examples, Troubleshooting, fetch_calendar()
-
 ## Knowledge Gaps
-- **136 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **140 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `TrendAnalyzer` connect `TrendAnalyzer` to `normalize_team_name`, `DataMerger`, `OverUnderResidualModel`, `betting_math.py`, `test_audit_fixes.py`, `run_alerts.py`, `pandas`, `app.py`, `analyze_line_movement`, `devig`, `main.py`?**
+- **Why does `TrendAnalyzer` connect `TrendAnalyzer` to `normalize_team_name`, `DataMerger`, `OverUnderResidualModel`, `betting_math.py`, `test_audit_fixes.py`, `run_alerts.py`, `pandas`, `DailySlate`, `app.py`, `devig`, `analyze_line_movement`, `main.py`?**
   _High betweenness centrality (0.017) - this node is a cross-community bridge._
 - **Are the 4 inferred relationships involving `ESPNCollector` (e.g. with `get_espn_collector()` and `DataMerger`) actually correct?**
   _`ESPNCollector` has 4 INFERRED edges - model-reasoned connections that need verification._
 - **Should `lib/render-report.mjs` be split into smaller, more focused modules?**
   _Cohesion score 0.12605042016806722 - nodes in this community are weakly interconnected._
-- **Why does `FeatureEngineer` connect `FeatureEngineer` to `normalize_team_name`, `PlayerRatingEngine`, `DataMerger`, `OverUnderResidualModel`, `test_audit_fixes.py`, `run_alerts.py`, `pandas`, `OddsCollector`, `app.py`, `main.py`?**
+- **Why does `FeatureEngineer` connect `FeatureEngineer` to `normalize_team_name`, `PlayerRatingEngine`, `DataMerger`, `OverUnderResidualModel`, `test_audit_fixes.py`, `run_alerts.py`, `pandas`, `DailySlate`, `app.py`, `main.py`, `TestPonytailAuditFixes`?**
   _High betweenness centrality (0.010) - this node is a cross-community bridge._
 - **Are the 5 inferred relationships involving `FeatureEngineer` (e.g. with `get_analyzer()` and `PlayerRatingEngine`) actually correct?**
   _`FeatureEngineer` has 5 INFERRED edges - model-reasoned connections that need verification._

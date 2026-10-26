@@ -310,12 +310,16 @@
   "308": "middleware-heavy.mjs",
   "309": "observability-events-attribution.mjs",
   "310": "DailySlate",
+  "311": "TestPonytailAuditFixes",
   "312": "large-static-asset.mjs",
   "313": "missing-cache-headers.mjs",
   "314": "Semaphore",
   "315": "team-ids.md",
   "316": "validate_params.sh",
+  "317": "._fetch_all_odds",
   "318": "framework-support.mjs",
+  "319": ".get_game_odds",
   "320": "convert_odds",
-  "321": "DataFrame"
+  "321": "DataFrame",
+  "322": ".normalize_team_name"
 }

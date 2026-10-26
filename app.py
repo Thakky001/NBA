@@ -880,6 +880,76 @@ st.markdown("""
         text-overflow: ellipsis;
     }
 
+    /* Factors Drawer embedded inside analysis cards */
+    .factors-drawer {
+        margin-top: auto; /* Snaps cleanly to the bottom edge of the card */
+        background: rgba(0, 0, 0, 0.22);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 8px;
+        overflow: hidden;
+        transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+    .factors-drawer[open] {
+        background: rgba(0, 0, 0, 0.38);
+        border-color: rgba(56, 189, 248, 0.25);
+    }
+    .factors-drawer summary {
+        font-size: 0.76rem;
+        font-weight: 700;
+        color: #94A3B8;
+        padding: 6px 10px;
+        cursor: pointer;
+        user-select: none;
+        list-style: none;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition: color 0.15s ease;
+    }
+    .factors-drawer summary::-webkit-details-marker {
+        display: none;
+    }
+    .factors-drawer summary:hover {
+        color: #38BDF8;
+    }
+    .factors-drawer summary .drawer-arrow {
+        display: inline-block;
+        transition: transform 0.2s ease;
+        font-size: 0.70rem;
+        color: #38BDF8;
+    }
+    .factors-drawer[open] summary .drawer-arrow {
+        transform: rotate(90deg);
+    }
+    .factors-drawer-content {
+        padding: 6px 10px 8px 10px;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        font-size: 0.75rem;
+    }
+    .factor-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: #CBD5E1;
+        line-height: 1.4;
+    }
+    .factor-icon {
+        font-size: 0.80rem;
+        flex-shrink: 0;
+    }
+    .factor-name {
+        font-weight: 600;
+        color: #F1F5F9;
+        white-space: nowrap;
+    }
+    .factor-val {
+        color: #94A3B8;
+        word-break: break-word;
+    }
+
     .team-stat-badges {
         display: flex;
         gap: 6px;
@@ -1583,6 +1653,10 @@ st.markdown("""
             margin-bottom: 0.4rem !important;
             height: auto !important;
             min-height: auto !important;
+            flex: none !important;
+        }
+        .factors-drawer {
+            margin-top: 6px !important;
         }
         div[data-testid="stNotification"],
         div[data-testid="stAlert"] {
@@ -1688,7 +1762,7 @@ def format_and_sort_starters(starters_list, pos_map):
     return formatted
 
 
-def _render_spread_analysis_card(home, away, sp_val, open_spread, sp_res, rec_text, c_edge, win_p, is_clash_sp, is_live=False, live_proj=None, lm_data=None):
+def _render_spread_analysis_card(home, away, sp_val, open_spread, sp_res, rec_text, c_edge, win_p, is_clash_sp, is_live=False, live_proj=None, lm_data=None, is_anomaly=False, anomaly_msg="", factors=None):
     lm_data = lm_data or {}
     
     # 1. Consensus line pill (Compact with team abbreviation)
@@ -1782,6 +1856,12 @@ def _render_spread_analysis_card(home, away, sp_val, open_spread, sp_res, rec_te
         callout_type = "warning" if (is_clash_sp or lm_sp.get('status') == 'STEAM_WARNING') else ("success" if lm_sp.get('status') == 'SHARP_CONFIRMATION' else "info")
         market_html = f'''<div class="market-callout {callout_type}"><div><strong>{badge_txt}:</strong> {detail_txt}</div>{compare_html}{verdict_html}</div>'''
 
+    # Anomaly Callout (embedded inside card)
+    anomaly_html = ""
+    if is_anomaly:
+        msg = anomaly_msg or "แต้มต่อห่างจากโมเดลเกิน 6 แต้ม (ข้อมูลต้นฤดูกาลผันผวน)"
+        anomaly_html = f'''<div class="market-callout warning"><div style="display:flex;align-items:flex-start;gap:6px;"><span>⚠️</span><div><strong style="color:#FBBF24;">ระวังข้อมูลผันผวน:</strong> {msg}</div></div></div>'''
+
     # 6. Model Deep-Dive Metrics
     proj_margin = sp_res.get('projected_margin')
     raw_margin = sp_res.get('raw_projected_margin')
@@ -1794,10 +1874,23 @@ def _render_spread_analysis_card(home, away, sp_val, open_spread, sp_res, rec_te
         raw_val_str = f"{raw_margin:+.1f} PTS" if raw_margin is not None else "-"
         metrics_html = f'''<div class="model-metrics-grid"><div class="model-metric-item"><span class="model-metric-label">Market-Anchored</span><span class="model-metric-val pos">{proj_margin:+.1f} PTS</span><span class="model-metric-sub">เปิด {anchor_sp:+.1f}×65% + ดิบ×35%</span></div><div class="model-metric-item"><span class="model-metric-label">AI Tuned (CatBoost)</span><span class="model-metric-val">{ai_val_str}</span><span class="model-metric-sub">ปรับความล้า / B2B / ฟอร์ม</span></div><div class="model-metric-item"><span class="model-metric-label">Raw Model</span><span class="model-metric-val">{raw_val_str}</span><span class="model-metric-sub">โมเดลสถิติดั้งเดิม</span></div></div>'''
 
-    return f'''<div class="analysis-card"><div class="analysis-header"><span class="analysis-title">⚖️ วิเคราะห์ แต้มต่อ</span><span class="market-line-pill">เรตตลาด: {sp_line_pill}</span></div>{live_banner_html}{roles_html}<div class="{box_class}"><div class="hero-pick-row"><span class="hero-pick-text">🎯 {clean_rec}</span><div class="hero-pick-badges">{conf_badge}{edge_chip}</div></div><div class="win-prob-wrapper"><div class="win-prob-header"><span>โอกาสชนะทางสถิติ (Win Prob)</span><strong>{prob_pct}</strong></div><div class="custom-prob-bar"><div class="{fill_class}" style="width: {min(100.0, max(0.0, win_p * 100)):.1f}%;"></div></div></div></div>{market_html}{metrics_html}</div>'''
+    # 7. Factors Drawer (embedded inside card)
+    factors_html = ""
+    if factors:
+        factor_items = []
+        for f in factors:
+            d = f.get('direction', '')
+            icon = t_dir(d, 'spread')
+            n = f.get('name', '')
+            v = f.get('value', '')
+            factor_items.append(f'''<div class="factor-item"><span class="factor-icon">{icon}</span><span class="factor-name">{n}:</span> <span class="factor-val">{v}</span></div>''')
+        drawer_content = "".join(factor_items)
+        factors_html = f'''<details class="factors-drawer"><summary><span class="drawer-arrow">▸</span> ปัจจัยทางสถิติประกอบ ({len(factors)} ปัจจัย)</summary><div class="factors-drawer-content">{drawer_content}</div></details>'''
+
+    return f'''<div class="analysis-card"><div class="analysis-header"><span class="analysis-title">⚖️ วิเคราะห์ แต้มต่อ</span><span class="market-line-pill">เรตตลาด: {sp_line_pill}</span></div>{live_banner_html}{roles_html}<div class="{box_class}"><div class="hero-pick-row"><span class="hero-pick-text">🎯 {clean_rec}</span><div class="hero-pick-badges">{conf_badge}{edge_chip}</div></div><div class="win-prob-wrapper"><div class="win-prob-header"><span>โอกาสชนะทางสถิติ (Win Prob)</span><strong>{prob_pct}</strong></div><div class="custom-prob-bar"><div class="{fill_class}" style="width: {min(100.0, max(0.0, win_p * 100)):.1f}%;"></div></div></div></div>{market_html}{anomaly_html}{metrics_html}{factors_html}</div>'''
 
 
-def _render_ou_analysis_card(ou_val, open_total, ou_res, rec_text, t_edge, win_p, is_clash_ou, is_live=False, live_proj=None, lm_data=None):
+def _render_ou_analysis_card(ou_val, open_total, ou_res, rec_text, t_edge, win_p, is_clash_ou, is_live=False, live_proj=None, lm_data=None, is_anomaly=False, anomaly_msg="", factors=None):
     lm_data = lm_data or {}
     
     # 1. Consensus line pill
@@ -1886,6 +1979,12 @@ def _render_ou_analysis_card(ou_val, open_total, ou_res, rec_text, t_edge, win_p
         callout_type = "warning" if (is_clash_ou or lm_ou.get('status') == 'STEAM_WARNING') else ("success" if lm_ou.get('status') == 'SHARP_CONFIRMATION' else "info")
         market_html = f'''<div class="market-callout {callout_type}"><div><strong>{badge_txt}:</strong> {detail_txt}</div>{compare_html}{verdict_html}</div>'''
 
+    # Anomaly Callout (embedded inside card)
+    anomaly_html = ""
+    if is_anomaly:
+        msg = anomaly_msg or "ส่วนต่างแต้มห่างจากราคาเปิดเกิน 8 แต้ม (ข้อมูลต้นฤดูกาลผันผวน)"
+        anomaly_html = f'''<div class="market-callout warning"><div style="display:flex;align-items:flex-start;gap:6px;"><span>⚠️</span><div><strong style="color:#FBBF24;">ระวังข้อมูลผันผวน:</strong> {msg}</div></div></div>'''
+
     # 6. Model Deep-Dive Metrics
     proj_total = ou_res.get('projected_total')
     raw_total = ou_res.get('raw_projected_total')
@@ -1898,7 +1997,20 @@ def _render_ou_analysis_card(ou_val, open_total, ou_res, rec_text, t_edge, win_p
         raw_val_str = f"{raw_total:.1f} PTS" if raw_total is not None else "-"
         metrics_html = f'''<div class="model-metrics-grid"><div class="model-metric-item"><span class="model-metric-label">Market-Anchored</span><span class="model-metric-val pos">{proj_total:.1f} PTS</span><span class="model-metric-sub">เปิด {anchor_used:.1f}×65% + ดิบ×35%</span></div><div class="model-metric-item"><span class="model-metric-label">AI Tuned (CatBoost)</span><span class="model-metric-val">{ai_val_str}</span><span class="model-metric-sub">ปรับความล้า / B2B / สปีด</span></div><div class="model-metric-item"><span class="model-metric-label">Raw Model</span><span class="model-metric-val">{raw_val_str}</span><span class="model-metric-sub">โมเดลสถิติดั้งเดิม</span></div></div>'''
 
-    return f'''<div class="analysis-card"><div class="analysis-header"><span class="analysis-title">📊 วิเคราะห์ สูง/ต่ำ</span><span class="market-line-pill">เรตตลาด: {ou_line_pill}</span></div>{live_banner_html}{roles_html}<div class="{box_class}"><div class="hero-pick-row"><span class="hero-pick-text">🎯 {clean_rec}</span><div class="hero-pick-badges">{conf_badge}{edge_chip}</div></div><div class="win-prob-wrapper"><div class="win-prob-header"><span>โอกาสชนะทางสถิติ (Win Prob)</span><strong>{prob_pct}</strong></div><div class="custom-prob-bar"><div class="{fill_class}" style="width: {min(100.0, max(0.0, win_p * 100)):.1f}%;"></div></div></div></div>{market_html}{metrics_html}</div>'''
+    # 7. Factors Drawer (embedded inside card)
+    factors_html = ""
+    if factors:
+        factor_items = []
+        for f in factors:
+            d = f.get('direction', '')
+            icon = t_dir(d, 'ou')
+            n = f.get('name', '')
+            v = f.get('value', '')
+            factor_items.append(f'''<div class="factor-item"><span class="factor-icon">{icon}</span><span class="factor-name">{n}:</span> <span class="factor-val">{v}</span></div>''')
+        drawer_content = "".join(factor_items)
+        factors_html = f'''<details class="factors-drawer"><summary><span class="drawer-arrow">▸</span> ปัจจัยทางสถิติประกอบ ({len(factors)} ปัจจัย)</summary><div class="factors-drawer-content">{drawer_content}</div></details>'''
+
+    return f'''<div class="analysis-card"><div class="analysis-header"><span class="analysis-title">📊 วิเคราะห์ สูง/ต่ำ</span><span class="market-line-pill">เรตตลาด: {ou_line_pill}</span></div>{live_banner_html}{roles_html}<div class="{box_class}"><div class="hero-pick-row"><span class="hero-pick-text">🎯 {clean_rec}</span><div class="hero-pick-badges">{conf_badge}{edge_chip}</div></div><div class="win-prob-wrapper"><div class="win-prob-header"><span>โอกาสชนะทางสถิติ (Win Prob)</span><strong>{prob_pct}</strong></div><div class="custom-prob-bar"><div class="{fill_class}" style="width: {min(100.0, max(0.0, win_p * 100)):.1f}%;"></div></div></div></div>{market_html}{anomaly_html}{metrics_html}{factors_html}</div>'''
 
 
 
@@ -2397,7 +2509,10 @@ def render_game_slate(selected_date, is_live_refresh):
                                 is_clash_sp=is_clash_sp,
                                 is_live=is_live,
                                 live_proj=live_proj,
-                                lm_data=lm_data
+                                lm_data=lm_data,
+                                is_anomaly=bool(sp_res.get('is_anomaly')),
+                                anomaly_msg="แต้มต่อห่างจากโมเดลเกิน 6 แต้ม (ข้อมูลต้นฤดูกาลผันผวน)",
+                                factors=sp_res.get('factors')
                             ))
 
                             # --- QUANTITATIVE VALUE & KELLY METRICS ---
@@ -2412,9 +2527,6 @@ def render_game_slate(selected_date, is_live_refresh):
                                     st.info("💡 **คำแนะนำบริหารหน้าตัก (Kelly):** ลงทุน **0.0%** (ข้ามคู่ที่มีสัญญาณขัดแย้งกับตลาด)")
                                 elif q_kelly > 0:
                                     st.info(f"💡 **คำแนะนำบริหารหน้าตัก{'สด ' if live_eval_sp else ''}(Kelly):** ลงทุน **{q_kelly*100:.1f}%** ของพอร์ต (1/4 Kelly)")
-
-                            if sp_res.get('is_anomaly'):
-                                st.warning("⚠️ **ระวังข้อมูลผันผวน:** แต้มต่อห่างจากโมเดลเกิน 6 แต้ม (ข้อมูลต้นฤดูกาลผันผวน)")
 
                             # --- LINE SHOPPING SPREAD ---
                             if odds_data and ('STRONG' in sp_res['recommendation'] or 'LEAN' in sp_res['recommendation']):
@@ -2440,11 +2552,6 @@ def render_game_slate(selected_date, is_live_refresh):
                                         st.caption(f"🛒 **Line Watch:** ราคาตลาดดีที่สุดขณะนี้คือ {pick_team} {b_val} ที่ {b_book.upper()} — เฝ้าระวัง")
                                     else:
                                         st.success(f"🛒 **Line Shopping:** ควรแทง {pick_team} {b_val} ที่ **{b_book.upper()}** (ค่าน้ำ {b_price})")
-                        
-                            with st.expander("อ่านเหตุผลประกอบ"):
-                                for f in sp_res['factors']:
-                                    icon = t_dir(f['direction'], 'spread')
-                                    st.write(f"- {icon} **{f['name']}**: {f['value']}")
                         else:
                             st.write("ไม่สามารถวิเคราะห์ได้เนื่องจากไม่มีราคา")
                     # O/U Column (Secondary)
@@ -2499,7 +2606,10 @@ def render_game_slate(selected_date, is_live_refresh):
                                 is_clash_ou=is_clash_ou,
                                 is_live=is_live,
                                 live_proj=live_proj,
-                                lm_data=lm_data
+                                lm_data=lm_data,
+                                is_anomaly=bool(ou_res.get('is_anomaly')),
+                                anomaly_msg="ส่วนต่างแต้มห่างจากราคาเปิดเกิน 8 แต้ม (ข้อมูลต้นฤดูกาลผันผวน)",
+                                factors=ou_res.get('factors')
                             ))
 
                             # --- QUANTITATIVE VALUE & KELLY METRICS ---
@@ -2514,9 +2624,6 @@ def render_game_slate(selected_date, is_live_refresh):
                                     st.info("💡 **คำแนะนำบริหารหน้าตัก (Kelly):** ลงทุน **0.0%** (ข้ามคู่ที่มีสัญญาณขัดแย้งกับตลาด)")
                                 elif q_kelly > 0:
                                     st.info(f"💡 **คำแนะนำบริหารหน้าตัก{'สด ' if live_eval_ou else ''}(Kelly):** ลงทุน **{q_kelly*100:.1f}%** ของพอร์ต (1/4 Kelly)")
-
-                            if ou_res.get('is_anomaly'):
-                                st.warning("⚠️ **ระวังข้อมูลผันผวน:** ส่วนต่างแต้มห่างจากราคาเปิดเกิน 8 แต้ม (ข้อมูลต้นฤดูกาลผันผวน)")
 
                             # --- LINE SHOPPING O/U ---
                             if odds_data and ('STRONG' in ou_res['recommendation'] or 'LEAN' in ou_res['recommendation']):
@@ -2538,11 +2645,6 @@ def render_game_slate(selected_date, is_live_refresh):
                                         st.caption(f"🛒 **Line Watch:** ราคาตลาดดีที่สุดขณะนี้คือ {b_book.upper()} ({b_val}) — เฝ้าระวัง")
                                     else:
                                         st.success(f"🛒 **Line Shopping:** ควรแทง {'สูง' if is_over else 'ต่ำ'} {b_val} ที่ **{b_book.upper()}** (ค่าน้ำ {b_price})")
-
-                            with st.expander("อ่านเหตุผลประกอบ"):
-                                for f in ou_res['factors']:
-                                    icon = t_dir(f['direction'], 'ou')
-                                    st.write(f"- {icon} **{f['name']}**: {f['value']}")
                         else:
                             st.write("ไม่สามารถวิเคราะห์ได้เนื่องจากไม่มีราคา")
                     
