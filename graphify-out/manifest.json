@@ -600,9 +600,9 @@
     "semantic_hash": ""
   },
   "app.py": {
-    "mtime": 1793028252.4331734,
-    "seen": 1793028346.9663138,
-    "ast_hash": "5733f136982d15f8172aa2982f2c8e49",
+    "mtime": 1793029508.1412563,
+    "seen": 1793029614.483117,
+    "ast_hash": "7b5a37432eeedded0cc112af580cb7d0",
     "semantic_hash": ""
   },
   "collectors/__init__.py": {
@@ -2178,9 +2178,9 @@
     "semantic_hash": ""
   },
   "data/raw/rotowire_lineups.json": {
-    "mtime": 1793027957.2587702,
-    "seen": 1793028346.9663336,
-    "ast_hash": "f9fa958a1548454b36503d5a8dec20ce",
+    "mtime": 1793029573.3428888,
+    "seen": 1793029614.4831338,
+    "ast_hash": "74ec80ed4e843716c9f8c79a082c89fb",
     "semantic_hash": ""
   },
   "tests/test_rotowire_collector.py": {
@@ -2217,6 +2217,12 @@
     "mtime": 1793002299.3384469,
     "seen": 1793002338.6224084,
     "ast_hash": "7d6df6b2e98e38f8b86046325dc6afd0",
+    "semantic_hash": ""
+  },
+  "tests/test_starter_lineups.py": {
+    "mtime": 1793029551.235074,
+    "seen": 1793029614.4831848,
+    "ast_hash": "89df0cceaab1f20201a9a1bb954b65e9",
     "semantic_hash": ""
   }
 }

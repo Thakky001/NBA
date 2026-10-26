@@ -36,15 +36,17 @@ try:
     from collectors.odds_collector import OddsCollector
     from processing.feature_engineering import FeatureEngineer
     from analysis.trend_analyzer import TrendAnalyzer
+    from processing.player_rating import normalize_name
 except (ImportError, KeyError, AttributeError):
     for mod in ['collectors', 'collectors.espn_collector', 'collectors.odds_collector',
-                'processing', 'processing.feature_engineering',
+                'processing', 'processing.feature_engineering', 'processing.player_rating',
                 'analysis', 'analysis.trend_analyzer']:
         sys.modules.pop(mod, None)
     from collectors.espn_collector import ESPNCollector
     from collectors.odds_collector import OddsCollector
     from processing.feature_engineering import FeatureEngineer
     from analysis.trend_analyzer import TrendAnalyzer
+    from processing.player_rating import normalize_name
 
 try:
     from analysis.betting_math import calculate_live_pace_projection, evaluate_live_pick
@@ -1148,12 +1150,60 @@ st.markdown("""
     .pos-badge.pos-g  { background: rgba(56, 189, 248, 0.2); color: #BAE6FD; border: 1px solid rgba(56, 189, 248, 0.4); }
     .pos-badge.pos-f  { background: rgba(168, 85, 247, 0.2); color: #E9D5FF; border: 1px solid rgba(168, 85, 247, 0.4); }
     .starter-name {
-        font-size: 0.84rem;
+        font-size: 0.82rem;
         font-weight: 600;
         color: #F1F5F9;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+    .starter-meta {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        flex-shrink: 0;
+        margin-left: auto;
+    }
+    .starter-stat-chip {
+        font-size: 0.70rem;
+        font-family: var(--quant-font-mono);
+        font-weight: 600;
+        color: #94A3B8;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        padding: 1px 6px;
+        border-radius: 4px;
+        white-space: nowrap;
+        letter-spacing: -0.2px;
+    }
+    .starter-status-badge {
+        font-size: 0.68rem;
+        font-weight: 700;
+        font-family: var(--quant-font-mono);
+        padding: 1px 6px;
+        border-radius: 4px;
+        white-space: nowrap;
+        display: inline-flex;
+        align-items: center;
+        gap: 3px;
+        letter-spacing: 0.2px;
+    }
+    .starter-status-badge.status-ok {
+        background: rgba(16, 185, 129, 0.14);
+        color: #34D399;
+        border: 1px solid rgba(16, 185, 129, 0.32);
+    }
+    .starter-status-badge.status-gtd {
+        background: rgba(245, 158, 11, 0.14);
+        color: #FBBF24;
+        border: 1px solid rgba(245, 158, 11, 0.35);
+    }
+    .starter-status-badge.status-out {
+        background: rgba(239, 68, 68, 0.14);
+        color: #F87171;
+        border: 1px solid rgba(239, 68, 68, 0.32);
     }
 
     /* 5. Modern Pill Tabs - Sticky & Docked to Quant Hero (Streamlit 1.40+ & React-Aria) */
@@ -1575,6 +1625,30 @@ st.markdown("""
             padding-left: 0 !important;
             padding-right: 0 !important;
         }
+        /* Starting 5 Lineup Board full width stacking on mobile */
+        div[data-testid="stHorizontalBlock"]:has(.starting5-card) {
+            flex-direction: column !important;
+            gap: 8px !important;
+            width: 100% !important;
+        }
+        div[data-testid="stHorizontalBlock"]:has(.starting5-card) > div[data-testid="stColumn"],
+        div[data-testid="stHorizontalBlock"]:has(.starting5-card) > div[data-testid="column"],
+        div[data-testid="stHorizontalBlock"]:has(.starting5-card) > div.stColumn {
+            width: 100% !important;
+            min-width: 100% !important;
+            max-width: 100% !important;
+            flex: 1 1 100% !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
+        .starter-stat-chip {
+            font-size: 0.65rem !important;
+            padding: 1px 4px !important;
+        }
+        .starter-status-badge {
+            font-size: 0.65rem !important;
+            padding: 1px 4px !important;
+        }
         .analysis-card {
             padding: 10px 10px !important;
             margin-bottom: 8px !important;
@@ -1842,9 +1916,60 @@ def get_espn_position_map():
             pass
     return pos_map
 
+@st.cache_data(ttl=3600)
+def get_player_stats_and_injuries_map():
+    stats_map = {}
+    injuries_map = {}
+    data_dir = globals().get('DATA_DIR') or os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
+
+    # 1. Injuries from ESPN
+    inj_path = os.path.join(data_dir, 'raw', 'espn_injuries.csv')
+    if os.path.exists(inj_path):
+        try:
+            inj_df = pd.read_csv(inj_path)
+            for _, r in inj_df.iterrows():
+                p_name = r.get('player_name')
+                if p_name and pd.notna(p_name):
+                    norm = normalize_name(p_name)
+                    st_val = str(r.get('status', '')).strip()
+                    itype = str(r.get('type', '')).strip() if pd.notna(r.get('type')) else ''
+                    injuries_map[norm] = {'status': st_val, 'type': itype}
+        except Exception:
+            pass
+
+    # 2. Player season stats from NBA API
+    p_path = os.path.join(data_dir, 'raw', 'nba_api_players.csv')
+    if os.path.exists(p_path):
+        try:
+            p_df = pd.read_csv(p_path)
+            for _, r in p_df.iterrows():
+                p_name = r.get('PLAYER_NAME')
+                if p_name and pd.notna(p_name):
+                    norm = normalize_name(p_name)
+                    gp = float(r.get('GP', 0))
+                    pts = round(float(r.get('PTS', 0)) / max(gp, 1), 1) if gp > 0 else 0.0
+                    reb = round(float(r.get('REB', 0)) / max(gp, 1), 1) if gp > 0 else 0.0
+                    ast = round(float(r.get('AST', 0)) / max(gp, 1), 1) if gp > 0 else 0.0
+                    eff = round(float(r.get('EFF_PG', 0)), 1)
+                    stats_map[norm] = {'pts': pts, 'reb': reb, 'ast': ast, 'eff': eff}
+        except Exception:
+            pass
+
+    return stats_map, injuries_map
+
+
 POS_ORDER = {'PG': 1, 'SG': 2, 'G': 2.5, 'SF': 3, 'F': 3.5, 'PF': 4, 'C': 5}
 
-def format_and_sort_starters(starters_list, pos_map):
+def format_and_sort_starters(starters_list, pos_map, stats_map=None, injuries_map=None):
+    if stats_map is None or injuries_map is None:
+        try:
+            s_map, i_map = get_player_stats_and_injuries_map()
+            stats_map = stats_map or s_map
+            injuries_map = injuries_map or i_map
+        except Exception:
+            stats_map = stats_map or {}
+            injuries_map = injuries_map or {}
+
     formatted = []
     default_positions = ['PG', 'SG', 'SF', 'PF', 'C']
     for idx, s in enumerate(starters_list[:5]):
@@ -1865,7 +1990,65 @@ def format_and_sort_starters(starters_list, pos_map):
             elif 'FORWARD' in raw_pos or raw_pos == 'F': pos = 'SF' if idx <= 2 else 'PF'
             else:
                 pos = default_positions[idx] if idx < len(default_positions) else 'G'
-        formatted.append({'name': name, 'position': pos})
+
+        norm = normalize_name(name)
+        st_info = injuries_map.get(norm)
+        st_stats = stats_map.get(norm)
+
+        # Fallback to starters dict attributes if available
+        s_dict_status = str(s.get('status', '')) if isinstance(s, dict) else ''
+        s_dict_inj = str(s.get('injury_status', '')) if isinstance(s, dict) else ''
+
+        # Determine status code, icon, class, and tooltip
+        status_code = 'OK'
+        status_icon = '🟢'
+        status_class = 'status-ok'
+        status_desc = 'พร้อมลงสนาม (Active)'
+
+        if st_info:
+            st_val = st_info['status'].lower()
+            desc = f"{st_info['status']} ({st_info['type']})" if st_info['type'] else st_info['status']
+            if 'out' in st_val:
+                status_code, status_icon, status_class, status_desc = 'OUT', '🔴', 'status-out', desc
+            elif any(k in st_val for k in ['day-to-day', 'gtd', 'questionable', 'doubtful']):
+                status_code, status_icon, status_class, status_desc = 'GTD', '🟡', 'status-gtd', desc
+        elif s_dict_inj:
+            inj_lower = s_dict_inj.lower()
+            if 'out' in inj_lower:
+                status_code, status_icon, status_class, status_desc = 'OUT', '🔴', 'status-out', s_dict_inj
+            elif any(k in inj_lower for k in ['gtd', 'qst', 'questionable', 'doubtful', 'day-to-day']):
+                status_code, status_icon, status_class, status_desc = 'GTD', '🟡', 'status-gtd', s_dict_inj
+        elif s_dict_status:
+            stat_lower = s_dict_status.lower()
+            if 'out' in stat_lower or 'unlikely' in stat_lower:
+                status_code, status_icon, status_class, status_desc = 'OUT', '🔴', 'status-out', s_dict_status
+            elif any(k in stat_lower for k in ['toss up', 'gtd', 'questionable', 'doubtful']):
+                status_code, status_icon, status_class, status_desc = 'GTD', '🟡', 'status-gtd', s_dict_status
+            else:
+                status_code, status_icon, status_class, status_desc = 'OK', '🟢', 'status-ok', s_dict_status
+
+        # Format stats chip (PTS, AST/REB, EFF)
+        stat_chip = ''
+        if st_stats:
+            p_str = f"{st_stats['pts']:.1f}p"
+            sec_str = f"{st_stats['ast']:.1f}a" if pos in ['PG', 'SG', 'G'] else f"{st_stats['reb']:.1f}r"
+            eff_val = st_stats['eff']
+            stat_chip = f"{p_str} {sec_str} | EFF {eff_val:.1f}"
+        elif isinstance(s, dict) and s.get('eff_pg'):
+            eff_val = float(s['eff_pg'])
+            stat_chip = f"EFF {eff_val:.1f}"
+
+        item = {
+            'name': name,
+            'position': pos,
+            'status_code': status_code,
+            'status_icon': status_icon,
+            'status_class': status_class,
+            'status_desc': status_desc,
+            'stat_chip': stat_chip
+        }
+        formatted.append(item)
+
     formatted.sort(key=lambda x: POS_ORDER.get(x['position'], 9))
     return formatted
 
@@ -2262,6 +2445,7 @@ def get_analyzer(cache_version: str = "v11_rotowire_lineups"):
     from processing.data_merger import DataMerger
     from processing.feature_engineering import FeatureEngineer
     from analysis.trend_analyzer import TrendAnalyzer
+    from processing.player_rating import normalize_name
 
     merger = DataMerger()
     game_history = merger.load_all_games()
@@ -2535,19 +2719,48 @@ def render_game_slate(selected_date, is_live_refresh):
                     a_starters = feat.get('away_starters', [])
                     if h_starters or a_starters:
                         pos_map = get_espn_position_map()
-                        sorted_a = format_and_sort_starters(a_starters, pos_map) if a_starters else []
-                        sorted_h = format_and_sort_starters(h_starters, pos_map) if h_starters else []
+
+                        stats_map, injuries_map = get_player_stats_and_injuries_map()
+
+                        sorted_a = format_and_sort_starters(a_starters, pos_map, stats_map, injuries_map) if a_starters else []
+
+                        sorted_h = format_and_sort_starters(h_starters, pos_map, stats_map, injuries_map) if h_starters else []
+
 
                         def _render_starter_card(team_label, s_list, l_status):
+
                             if not s_list: return ""
+
                             pill_color = "rgba(16, 185, 129, 0.2)" if l_status == 'Confirmed' else "rgba(245, 158, 11, 0.2)"
+
                             pill_text_color = "#34D399" if l_status == 'Confirmed' else "#FBBF24"
+
                             pill_html = f'<span style="font-size:0.7rem; padding:1px 6px; border-radius:4px; background:{pill_color}; color:{pill_text_color}; font-weight:700;">{l_status}</span>'
+
                             
+
                             rows_html = "".join(
-                                f'<div class="starter-row"><span class="pos-badge pos-{s["position"].lower()}">{s["position"]}</span><span class="starter-name">{s["name"]}</span></div>'
+
+                                f'<div class="starter-row">'
+
+                                f'<span class="pos-badge pos-{s["position"].lower()}">{s["position"]}</span>'
+
+                                f'<span class="starter-name" title="{s["name"]}">{s["name"]}</span>'
+
+                                f'<div class="starter-meta">'
+
+                                + (f'<span class="starter-stat-chip">{s["stat_chip"]}</span>' if s.get("stat_chip") else "")
+
+                                + f'<span class="starter-status-badge {s["status_class"]}" title="{s.get("status_desc", s["status_code"])}">{s["status_icon"]} {s["status_code"]}</span>'
+
+                                f'</div>'
+
+                                f'</div>'
+
                                 for s in s_list
+
                             )
+
                             return f'<div class="starting5-card"><div class="starting5-header"><span>🏀 5 ตัวจริง {team_label}</span>{pill_html}</div><div class="starting5-list">{rows_html}</div></div>'
 
                         sc_col1, sc_col2 = st.columns(2)
