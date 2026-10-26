@@ -41,7 +41,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-26 22:36:12"
+    "scraped_at": "2026-10-26 23:11:10"
   },
   "MIN": {
     "team": "Minnesota Timberwolves",
@@ -85,7 +85,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-26 22:36:12"
+    "scraped_at": "2026-10-26 23:11:10"
   },
   "Cleveland Cavaliers": {
     "team": "Cleveland Cavaliers",
@@ -134,7 +134,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-26 22:36:12"
+    "scraped_at": "2026-10-26 23:11:10"
   },
   "CLE": {
     "team": "Cleveland Cavaliers",
@@ -183,7 +183,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-26 22:36:12"
+    "scraped_at": "2026-10-26 23:11:10"
   },
   "Washington Wizards": {
     "team": "Washington Wizards",
@@ -237,7 +237,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-26 22:36:12"
+    "scraped_at": "2026-10-26 23:11:10"
   },
   "WAS": {
     "team": "Washington Wizards",
@@ -291,7 +291,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-26 22:36:12"
+    "scraped_at": "2026-10-26 23:11:10"
   },
   "Charlotte Hornets": {
     "team": "Charlotte Hornets",
@@ -299,8 +299,8 @@
     "opponent": "Washington Wizards",
     "opponent_abbr": "WAS",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Dennis Schroder",
@@ -345,7 +345,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-26 22:36:12"
+    "scraped_at": "2026-10-26 23:11:10"
   },
   "CHA": {
     "team": "Charlotte Hornets",
@@ -353,8 +353,8 @@
     "opponent": "Washington Wizards",
     "opponent_abbr": "WAS",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Dennis Schroder",
@@ -399,7 +399,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-26 22:36:12"
+    "scraped_at": "2026-10-26 23:11:10"
   },
   "Chicago Bulls": {
     "team": "Chicago Bulls",
@@ -407,8 +407,8 @@
     "opponent": "Boston Celtics",
     "opponent_abbr": "BOS",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Josh Giddey",
@@ -448,7 +448,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-26 22:36:12"
+    "scraped_at": "2026-10-26 23:11:10"
   },
   "CHI": {
     "team": "Chicago Bulls",
@@ -456,8 +456,8 @@
     "opponent": "Boston Celtics",
     "opponent_abbr": "BOS",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Josh Giddey",
@@ -497,7 +497,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-26 22:36:12"
+    "scraped_at": "2026-10-26 23:11:10"
   },
   "Boston Celtics": {
     "team": "Boston Celtics",
@@ -505,8 +505,8 @@
     "opponent": "Chicago Bulls",
     "opponent_abbr": "CHI",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Derrick White",
@@ -541,7 +541,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-26 22:36:12"
+    "scraped_at": "2026-10-26 23:11:10"
   },
   "BOS": {
     "team": "Boston Celtics",
@@ -549,8 +549,8 @@
     "opponent": "Chicago Bulls",
     "opponent_abbr": "CHI",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Derrick White",
@@ -585,7 +585,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-26 22:36:12"
+    "scraped_at": "2026-10-26 23:11:10"
   },
   "Dallas Mavericks": {
     "team": "Dallas Mavericks",
@@ -593,8 +593,8 @@
     "opponent": "Miami Heat",
     "opponent_abbr": "MIA",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Kyrie Irving",
@@ -609,7 +609,7 @@
       {
         "name": "Cooper Flagg",
         "position": "SF",
-        "status": "Likely To Play"
+        "status": "Very Likely To Play"
       },
       {
         "name": "P.J. Washington",
@@ -623,11 +623,6 @@
       }
     ],
     "injuries": [
-      {
-        "name": "Cooper Flagg",
-        "position": "F",
-        "status": "Likely To Play"
-      },
       {
         "name": "Santi Aldama",
         "position": "F",
@@ -654,7 +649,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-26 22:36:12"
+    "scraped_at": "2026-10-26 23:11:10"
   },
   "DAL": {
     "team": "Dallas Mavericks",
@@ -662,8 +657,8 @@
     "opponent": "Miami Heat",
     "opponent_abbr": "MIA",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Kyrie Irving",
@@ -678,7 +673,7 @@
       {
         "name": "Cooper Flagg",
         "position": "SF",
-        "status": "Likely To Play"
+        "status": "Very Likely To Play"
       },
       {
         "name": "P.J. Washington",
@@ -692,11 +687,6 @@
       }
     ],
     "injuries": [
-      {
-        "name": "Cooper Flagg",
-        "position": "F",
-        "status": "Likely To Play"
-      },
       {
         "name": "Santi Aldama",
         "position": "F",
@@ -723,7 +713,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-26 22:36:12"
+    "scraped_at": "2026-10-26 23:11:10"
   },
   "Miami Heat": {
     "team": "Miami Heat",
@@ -731,8 +721,8 @@
     "opponent": "Dallas Mavericks",
     "opponent_abbr": "DAL",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Davion Mitchell",
@@ -761,7 +751,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-10-26 22:36:12"
+    "scraped_at": "2026-10-26 23:11:10"
   },
   "MIA": {
     "team": "Miami Heat",
@@ -769,8 +759,8 @@
     "opponent": "Dallas Mavericks",
     "opponent_abbr": "DAL",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Davion Mitchell",
@@ -799,7 +789,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-10-26 22:36:12"
+    "scraped_at": "2026-10-26 23:11:10"
   },
   "Indiana Pacers": {
     "team": "Indiana Pacers",
@@ -816,14 +806,14 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Andrew Nembhard",
+        "name": "Kelly Oubre",
         "position": "SG",
-        "status": "Likely To Play"
+        "status": "Very Likely To Play"
       },
       {
         "name": "Aaron Nesmith",
         "position": "SF",
-        "status": "Likely To Play"
+        "status": "Very Likely To Play"
       },
       {
         "name": "Pascal Siakam",
@@ -838,22 +828,17 @@
     ],
     "injuries": [
       {
-        "name": "Andrew Nembhard",
-        "position": "G",
-        "status": "Likely To Play"
-      },
-      {
-        "name": "Aaron Nesmith",
-        "position": "F",
-        "status": "Likely To Play"
-      },
-      {
         "name": "Johnny Furphy",
         "position": "G",
         "status": "Very Unlikely To Play"
       },
       {
         "name": "T.J. McConnell",
+        "position": "G",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Andrew Nembhard",
         "position": "G",
         "status": "Very Unlikely To Play"
       },
@@ -868,7 +853,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-26 22:36:12"
+    "scraped_at": "2026-10-26 23:11:10"
   },
   "IND": {
     "team": "Indiana Pacers",
@@ -885,14 +870,14 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Andrew Nembhard",
+        "name": "Kelly Oubre",
         "position": "SG",
-        "status": "Likely To Play"
+        "status": "Very Likely To Play"
       },
       {
         "name": "Aaron Nesmith",
         "position": "SF",
-        "status": "Likely To Play"
+        "status": "Very Likely To Play"
       },
       {
         "name": "Pascal Siakam",
@@ -907,22 +892,17 @@
     ],
     "injuries": [
       {
-        "name": "Andrew Nembhard",
-        "position": "G",
-        "status": "Likely To Play"
-      },
-      {
-        "name": "Aaron Nesmith",
-        "position": "F",
-        "status": "Likely To Play"
-      },
-      {
         "name": "Johnny Furphy",
         "position": "G",
         "status": "Very Unlikely To Play"
       },
       {
         "name": "T.J. McConnell",
+        "position": "G",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Andrew Nembhard",
         "position": "G",
         "status": "Very Unlikely To Play"
       },
@@ -937,7 +917,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-26 22:36:12"
+    "scraped_at": "2026-10-26 23:11:10"
   },
   "Milwaukee Bucks": {
     "team": "Milwaukee Bucks",
@@ -975,7 +955,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-10-26 22:36:12"
+    "scraped_at": "2026-10-26 23:11:10"
   },
   "MIL": {
     "team": "Milwaukee Bucks",
@@ -1013,7 +993,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-10-26 22:36:12"
+    "scraped_at": "2026-10-26 23:11:10"
   },
   "Phoenix Suns": {
     "team": "Phoenix Suns",
@@ -1062,7 +1042,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-26 22:36:12"
+    "scraped_at": "2026-10-26 23:11:10"
   },
   "PHX": {
     "team": "Phoenix Suns",
@@ -1111,7 +1091,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-26 22:36:12"
+    "scraped_at": "2026-10-26 23:11:10"
   },
   "Oklahoma City Thunder": {
     "team": "Oklahoma City Thunder",
@@ -1175,7 +1155,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-26 22:36:12"
+    "scraped_at": "2026-10-26 23:11:10"
   },
   "OKC": {
     "team": "Oklahoma City Thunder",
@@ -1239,7 +1219,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-26 22:36:12"
+    "scraped_at": "2026-10-26 23:11:10"
   },
   "Atlanta Hawks": {
     "team": "Atlanta Hawks",
@@ -1288,7 +1268,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-26 22:36:12"
+    "scraped_at": "2026-10-26 23:11:10"
   },
   "ATL": {
     "team": "Atlanta Hawks",
@@ -1337,7 +1317,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-26 22:36:12"
+    "scraped_at": "2026-10-26 23:11:10"
   },
   "Houston Rockets": {
     "team": "Houston Rockets",
@@ -1386,7 +1366,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-26 22:36:12"
+    "scraped_at": "2026-10-26 23:11:10"
   },
   "HOU": {
     "team": "Houston Rockets",
@@ -1435,7 +1415,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-26 22:36:12"
+    "scraped_at": "2026-10-26 23:11:10"
   },
   "Memphis Grizzlies": {
     "team": "Memphis Grizzlies",
@@ -1484,7 +1464,7 @@
         "status": "Toss Up To Play"
       }
     ],
-    "scraped_at": "2026-10-26 22:36:12"
+    "scraped_at": "2026-10-26 23:11:10"
   },
   "MEM": {
     "team": "Memphis Grizzlies",
@@ -1533,7 +1513,7 @@
         "status": "Toss Up To Play"
       }
     ],
-    "scraped_at": "2026-10-26 22:36:12"
+    "scraped_at": "2026-10-26 23:11:10"
   },
   "Utah Jazz": {
     "team": "Utah Jazz",
@@ -1582,7 +1562,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-26 22:36:12"
+    "scraped_at": "2026-10-26 23:11:10"
   },
   "UTA": {
     "team": "Utah Jazz",
@@ -1631,7 +1611,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-26 22:36:12"
+    "scraped_at": "2026-10-26 23:11:10"
   },
   "Golden State Warriors": {
     "team": "Golden State Warriors",
@@ -1700,7 +1680,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-26 22:36:12"
+    "scraped_at": "2026-10-26 23:11:10"
   },
   "GSW": {
     "team": "Golden State Warriors",
@@ -1769,7 +1749,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-26 22:36:12"
+    "scraped_at": "2026-10-26 23:11:10"
   },
   "Denver Nuggets": {
     "team": "Denver Nuggets",
@@ -1828,7 +1808,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-26 22:36:12"
+    "scraped_at": "2026-10-26 23:11:10"
   },
   "DEN": {
     "team": "Denver Nuggets",
@@ -1887,6 +1867,6 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-26 22:36:12"
+    "scraped_at": "2026-10-26 23:11:10"
   }
 }
