@@ -1228,6 +1228,11 @@ st.markdown("""
         padding: 1px 6px;
         border-radius: 4px;
         letter-spacing: 0.04em;
+        white-space: nowrap !important;
+        flex-shrink: 0;
+    }
+    .daily-market-title span {
+        white-space: nowrap !important;
     }
     .daily-market-badge.spread {
         background: rgba(56, 189, 248, 0.2);
@@ -1241,13 +1246,15 @@ st.markdown("""
     }
     .daily-wr-badge {
         display: inline-flex;
-        align-items: baseline;
+        align-items: center;
         gap: 4px;
         padding: 2px 8px;
         border-radius: 5px;
         font-family: var(--quant-font-mono);
         font-weight: 800;
-        font-size: 0.86rem;
+        font-size: 0.82rem;
+        white-space: nowrap !important;
+        flex-shrink: 0;
     }
     .daily-wr-badge.win {
         background: rgba(16, 185, 129, 0.2);
@@ -1335,25 +1342,29 @@ st.markdown("""
         color: #94A3B8;
     }
     .daily-prog-bar {
-        height: 5px;
+        height: 6px;
         background: rgba(255, 255, 255, 0.08);
         border-radius: 999px;
         overflow: hidden;
-        margin-top: 2px;
+        margin-top: 5px;
+        display: flex;
+        width: 100%;
     }
-    .daily-prog-fill {
+    .daily-prog-seg {
         height: 100%;
-        border-radius: 999px;
         transition: width 0.4s ease;
     }
-    .daily-prog-fill.spread {
+    .daily-prog-seg.spread {
         background: linear-gradient(90deg, #0284C7, #10B981);
     }
-    .daily-prog-fill.ou {
+    .daily-prog-seg.ou {
         background: linear-gradient(90deg, #F59E0B, #10B981);
     }
-    .daily-prog-fill.loss {
-        background: #EF4444 !important;
+    .daily-prog-seg.loss {
+        background: rgba(239, 68, 68, 0.75);
+    }
+    .daily-prog-seg.empty {
+        background: rgba(148, 163, 184, 0.25);
     }
 
     /* ========================================================
@@ -1487,12 +1498,13 @@ st.markdown("""
         .daily-recap-box {
             padding: 10px 12px !important;
             margin-bottom: 0.75rem !important;
+            gap: 8px !important;
         }
         .daily-recap-header {
             flex-direction: column !important;
             align-items: stretch !important;
-            gap: 8px !important;
-            padding-bottom: 8px !important;
+            gap: 6px !important;
+            padding-bottom: 6px !important;
         }
         .daily-overall-chip {
             justify-content: center !important;
@@ -1505,12 +1517,69 @@ st.markdown("""
         }
         .daily-market-card {
             padding: 10px 12px !important;
+            gap: 8px !important;
+        }
+        .daily-market-header {
+            gap: 4px !important;
+        }
+        .daily-market-title {
+            font-size: 0.84rem !important;
+            gap: 5px !important;
+            white-space: nowrap !important;
+        }
+        .daily-market-badge {
+            font-size: 0.62rem !important;
+            padding: 1px 5px !important;
+            white-space: nowrap !important;
+        }
+        .daily-wr-badge {
+            font-size: 0.78rem !important;
+            padding: 2px 6px !important;
+            white-space: nowrap !important;
         }
         .daily-wl-text {
-            font-size: 1.15rem !important;
+            font-size: 1.12rem !important;
         }
         .daily-unit-val {
-            font-size: 0.98rem !important;
+            font-size: 0.95rem !important;
+        }
+        .daily-sub-text {
+            font-size: 0.70rem !important;
+        }
+        .daily-roi-val {
+            font-size: 0.72rem !important;
+        }
+
+        /* Matchup Analysis Cards on mobile (equal height & compact alert/expander) */
+        div[data-testid="stHorizontalBlock"]:has(.analysis-card) {
+            flex-direction: column !important;
+            gap: 10px !important;
+        }
+        div[data-testid="stHorizontalBlock"]:has(.analysis-card) > div[data-testid="column"] {
+            width: 100% !important;
+            min-width: 100% !important;
+            flex: 1 1 100% !important;
+            margin-bottom: 0.35rem !important;
+        }
+        .analysis-card {
+            padding: 10px 12px !important;
+            margin-bottom: 0.4rem !important;
+            height: auto !important;
+            min-height: auto !important;
+        }
+        div[data-testid="stNotification"],
+        div[data-testid="stAlert"] {
+            padding: 6px 10px !important;
+            border-radius: 8px !important;
+            margin: 4px 0 !important;
+            font-size: 0.80rem !important;
+        }
+        div[data-testid="stColumn"] div[data-testid="stExpander"] {
+            margin-bottom: 0.4rem !important;
+        }
+        div[data-testid="stColumn"] div[data-testid="stExpander"] summary {
+            font-size: 0.82rem !important;
+            padding: 0.45rem 0.75rem !important;
         }
         /* Compact metric padding for mobile */
         div[data-testid="stMetric"] {
@@ -2175,107 +2244,8 @@ def render_game_slate(selected_date, is_live_refresh):
                 
                     col1, col2 = st.columns(2)
                 
-                    # O/U Column
+                    # Spread Column (Primary on mobile & desktop)
                     with col1:
-                        ou_res = analysis.get('over_under')
-                        if ou_res:
-                            # In-play Live Evaluation: compare live projected final vs current live line
-                            live_eval_ou = None
-                            if is_live and live_proj and evaluate_live_pick:
-                                live_t = lm_data.get('live_total')
-                                effective_ou_line = live_t if live_t is not None else ou_val
-                                rem_mins = live_proj.get('rem_mins', max(0.0, live_proj.get('target_mins', 48.0) - live_proj.get('elapsed_mins', 0.0)))
-                                if effective_ou_line is not None:
-                                    live_eval_ou = evaluate_live_pick(
-                                        live_proj['proj_total'],
-                                        current_line=effective_ou_line,
-                                        bet_type='total',
-                                        rem_mins=rem_mins
-                                    )
-
-                            if live_eval_ou:
-                                rec_text = live_eval_ou['rec_text']
-                                t_edge = live_eval_ou['edge']
-                                win_p = live_eval_ou['win_prob']
-                                ev_val = live_eval_ou['ev']
-                                edge_pct_val = live_eval_ou['edge_pct']
-                                q_kelly = live_eval_ou['quarter_kelly']
-                                fair_p = live_eval_ou['fair_prob']
-                                is_bet_live = live_eval_ou['is_bet']
-                                rec_tag = " (Live In-Play)"
-                            else:
-                                rec_text = t_rec(ou_res['recommendation'])
-                                t_edge = ou_res.get('total_edge', 0.0)
-                                win_p = ou_res.get('win_prob', 0.5)
-                                ev_val = ou_res.get('ev', 0.0)
-                                edge_pct_val = ou_res.get('edge_pct', 0.0)
-                                q_kelly = ou_res.get('kelly_quarter', 0.0)
-                                fair_p = ou_res.get('fair_prob', 0.5)
-                                is_bet_live = ou_res.get('recommendation') != 'NEUTRAL' and ev_val is not None
-                                rec_tag = ""
-
-                            is_clash_ou = ou_res.get('is_market_clash', False) and not is_live
-
-                            # Render the modern, structured Over/Under Analysis Card
-                            render_html(_render_ou_analysis_card(
-                                ou_val=ou_val,
-                                open_total=open_total,
-                                ou_res=ou_res,
-                                rec_text=rec_text,
-                                t_edge=t_edge,
-                                win_p=win_p,
-                                is_clash_ou=is_clash_ou,
-                                is_live=is_live,
-                                live_proj=live_proj,
-                                lm_data=lm_data
-                            ))
-
-                            # --- QUANTITATIVE VALUE & KELLY METRICS ---
-                            if is_bet_live:
-                                m_col1, m_col2 = st.columns(2)
-                                with m_col1:
-                                    ev_delta_color = "normal" if ev_val >= 0 else "inverse"
-                                    st.metric("Expected Value (+EV)", f"{ev_val:+.1%}", delta=f"{edge_pct_val:+.1f}% Edge", delta_color=ev_delta_color)
-                                with m_col2:
-                                    st.metric("Market Fair Prob", f"{fair_p:.1%}", help="คำนวณผ่าน De-vigging ถอดค่าน้ำของตลาดออก (ราคาที่ตลาดมองว่ายุติธรรม)")
-                                if is_clash_ou:
-                                    st.info("💡 **คำแนะนำบริหารหน้าตัก (Kelly):** ลงทุน **0.0%** (ข้ามคู่ที่มีสัญญาณขัดแย้งกับตลาด)")
-                                elif q_kelly > 0:
-                                    st.info(f"💡 **คำแนะนำบริหารหน้าตัก{'สด ' if live_eval_ou else ''}(Kelly):** ลงทุน **{q_kelly*100:.1f}%** ของพอร์ต (1/4 Kelly)")
-
-                            if ou_res.get('is_anomaly'):
-                                st.warning("⚠️ **ระวังข้อมูลผันผวน:** ส่วนต่างแต้มห่างจากราคาเปิดเกิน 8 แต้ม (ข้อมูลต้นฤดูกาลผันผวน)")
-
-                            # --- LINE SHOPPING O/U ---
-                            if odds_data and ('STRONG' in ou_res['recommendation'] or 'LEAN' in ou_res['recommendation']):
-                                is_over = 'OVER' in ou_res['recommendation'].upper()
-                                b_book = "N/A"
-                                b_val = -999 if is_over else 999
-                                b_price = ""
-                                for bookie, totals in odds_data.get('totals', {}).items():
-                                    if is_over and 'over' in totals:
-                                        o_val = totals['over']
-                                        if o_val is not None and (b_val == -999 or o_val < b_val):
-                                            b_val, b_book, b_price = o_val, bookie, totals.get('over_price', '')
-                                    elif not is_over and 'under' in totals:
-                                        u_val = totals['under']
-                                        if u_val is not None and (b_val == 999 or u_val > b_val):
-                                            b_val, b_book, b_price = u_val, bookie, totals.get('under_price', '')
-                                if b_book != "N/A":
-                                    if is_clash_ou:
-                                        st.caption(f"🛒 **Line Watch:** ราคาตลาดดีที่สุดขณะนี้คือ {b_book.upper()} ({b_val}) — เฝ้าระวัง")
-                                    else:
-                                        st.success(f"🛒 **Line Shopping:** ควรแทง {'สูง' if is_over else 'ต่ำ'} {b_val} ที่ **{b_book.upper()}** (ค่าน้ำ {b_price})")
-
-                            with st.expander("อ่านเหตุผลประกอบ"):
-                                for f in ou_res['factors']:
-                                    icon = t_dir(f['direction'], 'ou')
-                                    st.write(f"- {icon} **{f['name']}**: {f['value']}")
-                        else:
-                            st.write("ไม่สามารถวิเคราะห์ได้เนื่องจากไม่มีราคา")
-                    
-                    # Spread Column
-                    with col2:
                         sp_res = analysis.get('spread')
                         if sp_res:
                             # In-play Live Evaluation: compare live projected margin vs current live spread
@@ -2380,6 +2350,105 @@ def render_game_slate(selected_date, is_live_refresh):
                                     st.write(f"- {icon} **{f['name']}**: {f['value']}")
                         else:
                             st.write("ไม่สามารถวิเคราะห์ได้เนื่องจากไม่มีราคา")
+                    # O/U Column (Secondary)
+                    with col2:
+                        ou_res = analysis.get('over_under')
+                        if ou_res:
+                            # In-play Live Evaluation: compare live projected final vs current live line
+                            live_eval_ou = None
+                            if is_live and live_proj and evaluate_live_pick:
+                                live_t = lm_data.get('live_total')
+                                effective_ou_line = live_t if live_t is not None else ou_val
+                                rem_mins = live_proj.get('rem_mins', max(0.0, live_proj.get('target_mins', 48.0) - live_proj.get('elapsed_mins', 0.0)))
+                                if effective_ou_line is not None:
+                                    live_eval_ou = evaluate_live_pick(
+                                        live_proj['proj_total'],
+                                        current_line=effective_ou_line,
+                                        bet_type='total',
+                                        rem_mins=rem_mins
+                                    )
+
+                            if live_eval_ou:
+                                rec_text = live_eval_ou['rec_text']
+                                t_edge = live_eval_ou['edge']
+                                win_p = live_eval_ou['win_prob']
+                                ev_val = live_eval_ou['ev']
+                                edge_pct_val = live_eval_ou['edge_pct']
+                                q_kelly = live_eval_ou['quarter_kelly']
+                                fair_p = live_eval_ou['fair_prob']
+                                is_bet_live = live_eval_ou['is_bet']
+                                rec_tag = " (Live In-Play)"
+                            else:
+                                rec_text = t_rec(ou_res['recommendation'])
+                                t_edge = ou_res.get('total_edge', 0.0)
+                                win_p = ou_res.get('win_prob', 0.5)
+                                ev_val = ou_res.get('ev', 0.0)
+                                edge_pct_val = ou_res.get('edge_pct', 0.0)
+                                q_kelly = ou_res.get('kelly_quarter', 0.0)
+                                fair_p = ou_res.get('fair_prob', 0.5)
+                                is_bet_live = ou_res.get('recommendation') != 'NEUTRAL' and ev_val is not None
+                                rec_tag = ""
+
+                            is_clash_ou = ou_res.get('is_market_clash', False) and not is_live
+
+                            # Render the modern, structured Over/Under Analysis Card
+                            render_html(_render_ou_analysis_card(
+                                ou_val=ou_val,
+                                open_total=open_total,
+                                ou_res=ou_res,
+                                rec_text=rec_text,
+                                t_edge=t_edge,
+                                win_p=win_p,
+                                is_clash_ou=is_clash_ou,
+                                is_live=is_live,
+                                live_proj=live_proj,
+                                lm_data=lm_data
+                            ))
+
+                            # --- QUANTITATIVE VALUE & KELLY METRICS ---
+                            if is_bet_live:
+                                m_col1, m_col2 = st.columns(2)
+                                with m_col1:
+                                    ev_delta_color = "normal" if ev_val >= 0 else "inverse"
+                                    st.metric("Expected Value (+EV)", f"{ev_val:+.1%}", delta=f"{edge_pct_val:+.1f}% Edge", delta_color=ev_delta_color)
+                                with m_col2:
+                                    st.metric("Market Fair Prob", f"{fair_p:.1%}", help="คำนวณผ่าน De-vigging ถอดค่าน้ำของตลาดออก (ราคาที่ตลาดมองว่ายุติธรรม)")
+                                if is_clash_ou:
+                                    st.info("💡 **คำแนะนำบริหารหน้าตัก (Kelly):** ลงทุน **0.0%** (ข้ามคู่ที่มีสัญญาณขัดแย้งกับตลาด)")
+                                elif q_kelly > 0:
+                                    st.info(f"💡 **คำแนะนำบริหารหน้าตัก{'สด ' if live_eval_ou else ''}(Kelly):** ลงทุน **{q_kelly*100:.1f}%** ของพอร์ต (1/4 Kelly)")
+
+                            if ou_res.get('is_anomaly'):
+                                st.warning("⚠️ **ระวังข้อมูลผันผวน:** ส่วนต่างแต้มห่างจากราคาเปิดเกิน 8 แต้ม (ข้อมูลต้นฤดูกาลผันผวน)")
+
+                            # --- LINE SHOPPING O/U ---
+                            if odds_data and ('STRONG' in ou_res['recommendation'] or 'LEAN' in ou_res['recommendation']):
+                                is_over = 'OVER' in ou_res['recommendation'].upper()
+                                b_book = "N/A"
+                                b_val = -999 if is_over else 999
+                                b_price = ""
+                                for bookie, totals in odds_data.get('totals', {}).items():
+                                    if is_over and 'over' in totals:
+                                        o_val = totals['over']
+                                        if o_val is not None and (b_val == -999 or o_val < b_val):
+                                            b_val, b_book, b_price = o_val, bookie, totals.get('over_price', '')
+                                    elif not is_over and 'under' in totals:
+                                        u_val = totals['under']
+                                        if u_val is not None and (b_val == 999 or u_val > b_val):
+                                            b_val, b_book, b_price = u_val, bookie, totals.get('under_price', '')
+                                if b_book != "N/A":
+                                    if is_clash_ou:
+                                        st.caption(f"🛒 **Line Watch:** ราคาตลาดดีที่สุดขณะนี้คือ {b_book.upper()} ({b_val}) — เฝ้าระวัง")
+                                    else:
+                                        st.success(f"🛒 **Line Shopping:** ควรแทง {'สูง' if is_over else 'ต่ำ'} {b_val} ที่ **{b_book.upper()}** (ค่าน้ำ {b_price})")
+
+                            with st.expander("อ่านเหตุผลประกอบ"):
+                                for f in ou_res['factors']:
+                                    icon = t_dir(f['direction'], 'ou')
+                                    st.write(f"- {icon} **{f['name']}**: {f['value']}")
+                        else:
+                            st.write("ไม่สามารถวิเคราะห์ได้เนื่องจากไม่มีราคา")
+                    
 
 
 
@@ -2454,10 +2523,18 @@ def _render_daily_recap_card(filter_date: str, daily_ledger: pd.DataFrame, d_sta
 
     pending_chip = f'<span class="daily-meta-chip pending">⏳ รอผล {pending_games} คู่</span>' if pending_games > 0 else ''
 
-    sp_bar_fill = min(100.0, max(0.0, sp_wr)) if sp_bets > 0 else 0.0
-    ou_bar_fill = min(100.0, max(0.0, ou_wr)) if ou_bets > 0 else 0.0
-    sp_bar_cls = 'spread' if sp_wr >= 50.0 else 'loss'
-    ou_bar_cls = 'ou' if ou_wr >= 50.0 else 'loss'
+    def _render_bar(wr: float, bets: int, is_spread: bool) -> str:
+        if bets == 0:
+            return '<div class="daily-prog-bar"><div class="daily-prog-seg empty" style="width: 100%;"></div></div>'
+        win_w = min(100.0, max(0.0, wr))
+        loss_w = 100.0 - win_w
+        win_cls = 'spread' if is_spread else 'ou'
+        win_html = f'<div class="daily-prog-seg {win_cls}" style="width: {win_w:.1f}%;"></div>' if win_w > 0 else ''
+        loss_html = f'<div class="daily-prog-seg loss" style="width: {loss_w:.1f}%;"></div>' if loss_w > 0 else ''
+        return f'<div class="daily-prog-bar">{win_html}{loss_html}</div>'
+
+    sp_bar_html = _render_bar(sp_wr, sp_bets, True)
+    ou_bar_html = _render_bar(ou_wr, ou_bets, False)
 
     return f'''<div class="daily-recap-box">
   <div class="daily-recap-header">
@@ -2484,11 +2561,10 @@ def _render_daily_recap_card(filter_date: str, daily_ledger: pd.DataFrame, d_sta
       <div class="daily-market-header">
         <div class="daily-market-title">
           <span class="daily-market-badge spread">SPREAD</span>
-          <span>⚖️ แต้มต่อ (Spread)</span>
+          <span>⚖️ แต้มต่อ</span>
         </div>
         <div class="daily-wr-badge {sp_wr_cls}">
-          <span>{sp_wr:.1f}%</span>
-          <span class="daily-wr-label">WIN RATE</span>
+          <span>{sp_wr:.1f}% WR</span>
         </div>
       </div>
       <div class="daily-stat-row">
@@ -2506,20 +2582,17 @@ def _render_daily_recap_card(filter_date: str, daily_ledger: pd.DataFrame, d_sta
           <div class="daily-roi-val">{sp_roi:+.1f}% ROI</div>
         </div>
       </div>
-      <div class="daily-prog-bar">
-        <div class="daily-prog-fill {sp_bar_cls}" style="width: {sp_bar_fill:.1f}%;"></div>
-      </div>
+      {sp_bar_html}
     </div>
 
     <div class="daily-market-card ou">
       <div class="daily-market-header">
         <div class="daily-market-title">
-          <span class="daily-market-badge ou">OVER / UNDER</span>
-          <span>📊 สูง / ต่ำ (Totals)</span>
+          <span class="daily-market-badge ou">O/U</span>
+          <span>📊 สูง / ต่ำ</span>
         </div>
         <div class="daily-wr-badge {ou_wr_cls}">
-          <span>{ou_wr:.1f}%</span>
-          <span class="daily-wr-label">WIN RATE</span>
+          <span>{ou_wr:.1f}% WR</span>
         </div>
       </div>
       <div class="daily-stat-row">
@@ -2537,9 +2610,7 @@ def _render_daily_recap_card(filter_date: str, daily_ledger: pd.DataFrame, d_sta
           <div class="daily-roi-val">{ou_roi:+.1f}% ROI</div>
         </div>
       </div>
-      <div class="daily-prog-bar">
-        <div class="daily-prog-fill {ou_bar_cls}" style="width: {ou_bar_fill:.1f}%;"></div>
-      </div>
+      {ou_bar_html}
     </div>
   </div>
 </div>'''
