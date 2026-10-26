@@ -6,6 +6,7 @@ import os
 import re
 import logging
 import warnings
+import time
 
 # Suppress framework deprecation warnings to keep logs clean
 warnings.filterwarnings("ignore", category=DeprecationWarning)

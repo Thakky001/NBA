@@ -1,17 +1,17 @@
 # Graph Report - NBA  (2026-10-26)
 
 ## Corpus Check
-- 366 files · ~239,360 words
+- 366 files · ~238,516 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 21 file(s) not represented in the graph (top: .csv 15, .parquet 3, .cbm 2)
 
 ## Summary
-- 3102 nodes · 5085 edges · 317 communities (181 shown, 136 thin omitted)
+- 3102 nodes · 5086 edges · 319 communities (183 shown, 136 thin omitted)
 - Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 199 edges (avg confidence: 0.88)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `b250d089`
+- Built from commit: `f951da9c`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -313,6 +313,7 @@
 - platform-fluid-compute.mjs
 - build-docs.mjs
 - NBA Data
+- calculate_home_spread
 - middleware-broad-matcher.mjs
 - build-minutes-fanout.mjs
 - isr-overrevalidation.mjs
@@ -355,7 +356,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (317 total, 136 thin omitted)
+## Communities (319 total, 136 thin omitted)
 
 ### Community 0 - "lib/render-report.mjs"
 Cohesion: 0.13
@@ -411,7 +412,7 @@ Nodes (31): Accessibility, Animation Triggers, Availability, Choosing Animation 
 
 ### Community 14 - "run_alerts.py"
 Cohesion: 0.07
-Nodes (9): TelegramNotifier, format_game_card(), is_game_already_alerted(), load_alerted_ledger(), main(), mark_games_alerted(), run_alert_cycle(), save_alerted_ledger() (+1 more)
+Nodes (8): TelegramNotifier, format_game_card(), is_game_already_alerted(), load_alerted_ledger(), main(), mark_games_alerted(), save_alerted_ledger(), TestTelegramAlerts
 
 ### Community 15 - "vercel.mjs"
 Cohesion: 0.11
@@ -427,7 +428,7 @@ Nodes (3): Commands that DO NOT exist — never call these, AdvancedStatsCollect
 
 ### Community 18 - "pandas"
 Cohesion: 0.10
-Nodes (11): backfill_season_history(), calculate_track_record(), get_available_ledger_dates(), grade_finished_games(), grade_over_under_pick(), grade_spread_pick(), grade_verdict_pick(), load_ledger() (+3 more)
+Nodes (11): backfill_season_history(), get_available_ledger_dates(), grade_finished_games(), grade_over_under_pick(), grade_spread_pick(), grade_verdict_pick(), load_ledger(), record_slate_predictions() (+3 more)
 
 ### Community 20 - "collect-signals.mjs"
 Cohesion: 0.18
@@ -454,8 +455,8 @@ Cohesion: 0.67
 Nodes (3): extractColdStarts(), gate(), metadata
 
 ### Community 27 - "main.py"
-Cohesion: 0.16
-Nodes (9): ESPNCollector, ensure_dirs(), cmd_matchup(), cmd_refresh(), cmd_roster(), cmd_standings(), cmd_teams(), _load_game_history() (+1 more)
+Cohesion: 0.15
+Nodes (11): ESPNCollector, ensure_dirs(), cmd_matchup(), cmd_refresh(), cmd_roster(), cmd_standings(), cmd_teams(), cmd_today() (+3 more)
 
 ### Community 28 - "scripts/deep-dive.mjs"
 Cohesion: 0.16
@@ -606,8 +607,8 @@ Cohesion: 0.27
 Nodes (4): Install, Procedure, Requirements, vercel-optimize
 
 ### Community 67 - "PlayerRatingEngine"
-Cohesion: 0.07
-Nodes (8): is_team_match(), match_team(), normalize_team_name(), resolve_team_info(), translate_recommendation(), _load_cached_draft_history(), PlayerRatingEngine, TestPlayerRating
+Cohesion: 0.08
+Nodes (6): match_team(), normalize_team_name(), resolve_team_info(), _load_cached_draft_history(), PlayerRatingEngine, TestPlayerRating
 
 ### Community 68 - "count-correct.mjs"
 Cohesion: 0.27
@@ -674,8 +675,8 @@ Cohesion: 0.25
 Nodes (8): Implementation Workflow, Step 1: Audit the App, Step 2: Add CSS Recipes, Step 3: Isolate Persistent Elements, Step 4: Add Directional Page Transitions, Step 5: Add Suspense Reveals, Step 6: Add Shared Element Transitions, Step 7: Verify Each Navigation Path
 
 ### Community 86 - "app.py"
-Cohesion: 0.06
-Nodes (24): calculate_live_pace_projection(), calculate_track_record(), check_slate_status(), format_and_sort_starters(), get_analyzer(), get_available_ledger_dates(), get_cached_analysis(), get_cached_line_movement() (+16 more)
+Cohesion: 0.07
+Nodes (21): calculate_track_record(), calculate_live_pace_projection(), calculate_track_record(), check_slate_status(), format_and_sort_starters(), get_available_ledger_dates(), get_cached_analysis(), get_cached_line_movement() (+13 more)
 
 ### Community 87 - "renderRecDetail"
 Cohesion: 0.26
@@ -1017,6 +1018,10 @@ Nodes (3): 8.1 Destructure Functions Early in Render (React Compiler), 8.2 Use .
 Cohesion: 0.67
 Nodes (3): isApplicable(), metadata, scan()
 
+### Community 294 - "DataMerger"
+Cohesion: 0.08
+Nodes (5): get_analyzer(), get_espn_collector(), get_odds_collector(), DataMerger, TestDataMerger
+
 ### Community 296 - "hard-gates.mjs"
 Cohesion: 0.33
 Nodes (9): applyHardGates(), FLAGS_ENDPOINT, flagsEndpointReason(), isFlagsEndpointCandidate(), isWorkflowRuntimeEndpointCandidate(), normalizeRoute(), VERCEL_FLAGS_PACKAGES, WORKFLOW_ENDPOINT_PREFIXES (+1 more)
@@ -1038,8 +1043,12 @@ Cohesion: 0.16
 Nodes (16): GATE_VERSION, gates, MAX_CODE_CANDIDATES, metadata, HERE, main(), REFS, renderCandidates() (+8 more)
 
 ### Community 303 - "NBA Data"
-Cohesion: 0.11
-Nodes (11): Choosing the Season, Commands, CRITICAL: Before Any Query, Error Handling, Examples, NBA Data, Quick Start, Setup (+3 more)
+Cohesion: 0.22
+Nodes (8): Choosing the Season, CRITICAL: Before Any Query, Error Handling, NBA Data, Quick Start, Setup, Shaping Long NBA Stats Results, Using ESPN and NBA Stats Together
+
+### Community 304 - "calculate_home_spread"
+Cohesion: 0.25
+Nodes (4): calculate_home_spread(), parse_spread(), translate_recommendation(), _parse_spread()
 
 ### Community 305 - "middleware-broad-matcher.mjs"
 Cohesion: 0.67
@@ -1061,10 +1070,6 @@ Nodes (3): gate(), metadata, sumRows()
 Cohesion: 0.67
 Nodes (3): gate(), metadata, sumBilled()
 
-### Community 310 - "DailySlate"
-Cohesion: 0.19
-Nodes (3): cmd_today(), _load_advanced_stats(), DailySlate
-
 ### Community 312 - "large-static-asset.mjs"
 Cohesion: 0.36
 Nodes (7): formatBytes(), metadata, scan(), shouldSkip(), SKIP_EXTENSIONS, SKIP_PATH_PREFIXES, walk()
@@ -1081,19 +1086,23 @@ Nodes (6): classifyFrameworkSupport(), CORE_SUPPORTED_FRAMEWORKS, frameworkLabel
 Cohesion: 0.18
 Nodes (8): Betting Analysis — API Reference, Commands, Key Concepts, Odds Formats, Troubleshooting, convert_odds(), decimal_to_prob(), prob_to_american()
 
+### Community 321 - "DataFrame"
+Cohesion: 0.10
+Nodes (4): Commands, Examples, Troubleshooting, fetch_calendar()
+
 ## Knowledge Gaps
 - **136 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `TrendAnalyzer` connect `TrendAnalyzer` to `normalize_team_name`, `OverUnderResidualModel`, `betting_math.py`, `run_alerts.py`, `DailySlate`, `app.py`, `devig`, `analyze_line_movement`, `main.py`?**
+- **Why does `TrendAnalyzer` connect `TrendAnalyzer` to `normalize_team_name`, `DataMerger`, `OverUnderResidualModel`, `betting_math.py`, `test_audit_fixes.py`, `run_alerts.py`, `pandas`, `app.py`, `analyze_line_movement`, `devig`, `main.py`?**
   _High betweenness centrality (0.017) - this node is a cross-community bridge._
 - **Are the 4 inferred relationships involving `ESPNCollector` (e.g. with `get_espn_collector()` and `DataMerger`) actually correct?**
   _`ESPNCollector` has 4 INFERRED edges - model-reasoned connections that need verification._
 - **Should `lib/render-report.mjs` be split into smaller, more focused modules?**
   _Cohesion score 0.12605042016806722 - nodes in this community are weakly interconnected._
-- **Why does `FeatureEngineer` connect `FeatureEngineer` to `normalize_team_name`, `PlayerRatingEngine`, `OverUnderResidualModel`, `run_alerts.py`, `OddsCollector`, `DailySlate`, `app.py`, `main.py`?**
+- **Why does `FeatureEngineer` connect `FeatureEngineer` to `normalize_team_name`, `PlayerRatingEngine`, `DataMerger`, `OverUnderResidualModel`, `test_audit_fixes.py`, `run_alerts.py`, `pandas`, `OddsCollector`, `app.py`, `main.py`?**
   _High betweenness centrality (0.010) - this node is a cross-community bridge._
 - **Are the 5 inferred relationships involving `FeatureEngineer` (e.g. with `get_analyzer()` and `PlayerRatingEngine`) actually correct?**
   _`FeatureEngineer` has 5 INFERRED edges - model-reasoned connections that need verification._
