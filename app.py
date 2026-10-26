@@ -302,6 +302,22 @@ st.markdown("""
         padding: 2px 8px;
         border-radius: 6px;
     }
+    .matchday-sync.final {
+        color: #94A3B8;
+        background: rgba(148, 163, 184, 0.12);
+        border: 1px solid rgba(148, 163, 184, 0.25);
+    }
+    .matchday-sync.live {
+        color: #F87171;
+        background: rgba(239, 68, 68, 0.15);
+        border: 1px solid rgba(239, 68, 68, 0.35);
+        animation: pulse-glow 1.5s infinite;
+    }
+    .matchday-sync.history {
+        color: #A78BFA;
+        background: rgba(167, 139, 250, 0.12);
+        border: 1px solid rgba(167, 139, 250, 0.25);
+    }
 
     /* 4.1 Match Meta Strip (Time & Venue) */
     .match-meta-strip {
@@ -1889,12 +1905,80 @@ def _render_ou_analysis_card(ou_val, open_total, ou_res, rec_text, t_edge, win_p
 st.sidebar.header("📅 ตั้งค่าการค้นหา")
 today_thai = datetime.now(THAI_TZ).date()
 selected_date = st.sidebar.date_input("เลือกวันที่แข่งขัน (เวลาไทย)", today_thai)
+is_today = (selected_date == today_thai)
+
+def check_slate_status(df: pd.DataFrame):
+    """Checks if there are active in-progress games and whether all games are finished."""
+    if df is None or df.empty or 'status' not in df.columns:
+        return False, True
+    statuses = [str(s).upper() for s in df['status'].tolist()]
+    has_live = any(any(k in s for k in ['PROGRESS', 'LIVE', 'HALFTIME', 'IN_PLAY']) for s in statuses)
+    all_final = len(statuses) > 0 and all('FINAL' in s for s in statuses)
+    return has_live, all_final
+
+def get_smart_scoreboard(date_val, force: bool = False) -> pd.DataFrame:
+    """Intelligently caches scoreboard in session_state to prevent redundant network calls and UI freezing.
+    - If date is in the past: permanent session cache (past scores never change).
+    - If all games are FINAL: cached (no more live games today).
+    - If no live games (upcoming): cached for 5 minutes.
+    - If active live games: refreshed only every 8 seconds.
+    """
+    if 'scoreboard_cache' not in st.session_state:
+        st.session_state['scoreboard_cache'] = {}
+
+    d_str = date_val.strftime('%Y-%m-%d') if hasattr(date_val, 'strftime') else str(date_val)
+    now_ts = time.time()
+    cache_entry = st.session_state['scoreboard_cache'].get(d_str)
+
+    if not force and cache_entry is not None:
+        cached_df = cache_entry['df']
+        cached_ts = cache_entry['ts']
+        has_live = cache_entry['has_live']
+        all_final = cache_entry['all_final']
+
+        # Past date: never re-fetch once loaded
+        if date_val < today_thai:
+            return cached_df
+
+        # All games today are finished: do not re-fetch for at least 1 hour
+        if all_final and (now_ts - cached_ts < 3600):
+            return cached_df
+
+        # No live games (e.g. upcoming): do not re-fetch for at least 5 minutes
+        if not has_live and (now_ts - cached_ts < 300):
+            return cached_df
+
+        # Active live games: refresh if older than 8 seconds
+        if has_live and (now_ts - cached_ts < 8):
+            return cached_df
+
+    # Fetch from ESPN collector
+    df = espn.get_scoreboard_by_thai_date(date_val)
+    has_live, all_final = check_slate_status(df)
+
+    st.session_state['scoreboard_cache'][d_str] = {
+        'df': df,
+        'ts': now_ts,
+        'has_live': has_live,
+        'all_final': all_final
+    }
+    return df
+
+# Inspect initial slate status to disable auto-refresh if no live games
+initial_slate = get_smart_scoreboard(selected_date)
+has_live_games, all_games_final = check_slate_status(initial_slate)
 
 auto_refresh = st.sidebar.toggle(
     "🔄 Live Auto-refresh (10s)",
     value=True,
-    help="อัปเดตสกอร์สดและราคาต่อรองอัตโนมัติทุกๆ 10 วินาที"
+    help="อัปเดตสกอร์สดและราคาต่อรองอัตโนมัติเฉพาะช่วงที่มีการแข่งขันสด"
 )
+if is_today and all_games_final:
+    st.sidebar.caption("🏁 เกมวันนี้แข่งจบครบทุกคู่แล้ว (ระบบปิด Live Sync อัตโนมัติ)")
+elif not is_today:
+    st.sidebar.caption("📅 ดูข้อมูลย้อนหลัง (ไม่มีการดึงข้อมูลสด)")
+elif not has_live_games:
+    st.sidebar.caption("⏳ ยังไม่มีคู่ที่กำลังแข่งสด (ระบบพักการรีเฟรช)")
 
 st.sidebar.markdown("---")
 if st.sidebar.button("🔄 อัปเดตฐานข้อมูลสถิติ (Refresh)"):
@@ -1936,6 +2020,8 @@ if st.sidebar.button("🔄 อัปเดตฐานข้อมูลสถ�
         progress.progress(90, text="5/5 กำลังล้างแคชและประมวลผลโมเดลใหม่...")
         st.cache_data.clear()
         st.cache_resource.clear()
+        if 'scoreboard_cache' in st.session_state:
+            st.session_state['scoreboard_cache'].clear()
         
         progress.progress(100, text="อัปเดตข้อมูลสำเร็จเรียบร้อย!")
         st.sidebar.success("อัปเดตข้อมูลสำเร็จ!")
@@ -1992,12 +2078,22 @@ except Exception as e:
     st.warning("⚠️ ไม่พบฐานข้อมูลสถิติ กรุณากด 'อัปเดตฐานข้อมูลสถิติ' ที่แถบด้านซ้ายก่อนใช้งานครับ")
     st.stop()
 
-is_today = (selected_date == today_thai)
-refresh_interval = 10 if (auto_refresh and is_today) else None
+# Only auto-refresh if it is today AND there are ACTUAL LIVE GAMES currently in progress!
+# If all games are final or there are no live games, DO NOT poll every 10 seconds!
+should_auto_refresh = auto_refresh and is_today and has_live_games
+refresh_interval = 10 if should_auto_refresh else None
 
 @st.fragment(run_every=refresh_interval)
 def render_game_slate(selected_date, is_live_refresh):
-    now_badge = f'<div class="matchday-sync">⚡ Live Sync: {datetime.now(THAI_TZ).strftime("%H:%M:%S")} น.</div>' if is_live_refresh else ''
+    if is_today and has_live_games:
+        now_badge = f'<div class="matchday-sync live">⚡ Live In-Play: {datetime.now(THAI_TZ).strftime("%H:%M:%S")} น.</div>'
+    elif is_today and all_games_final:
+        now_badge = '<div class="matchday-sync final">🏁 ทุกคู่แข่งจบแล้ว (ไม่มีเกมสด)</div>'
+    elif not is_today:
+        now_badge = '<div class="matchday-sync history">📅 ประวัติการแข่งขันย้อนหลัง</div>'
+    else:
+        now_badge = ''
+
     st.markdown(f"""
     <div class="matchday-bar">
         <div class="matchday-title">📅 โปรแกรมการแข่งขันวันที่ {selected_date.strftime('%d/%m/%Y')} (เวลาไทย)</div>
@@ -2007,7 +2103,7 @@ def render_game_slate(selected_date, is_live_refresh):
 
 
     with st.spinner("กำลังประมวลผลการวิเคราะห์..."):
-        scoreboard = espn.get_scoreboard_by_thai_date(selected_date)
+        scoreboard = get_smart_scoreboard(selected_date)
         if scoreboard.empty:
             st.info(f"ไม่มีโปรแกรมแข่งขันในวันที่ {selected_date.strftime('%d/%m/%Y')} (เวลาไทย) ครับ")
         else:
@@ -2841,7 +2937,7 @@ def render_track_record_tab():
 tab_live, tab_track = st.tabs(["🏀 วิเคราะห์สด (Live)", "🏆 สถิติย้อนหลัง (Track)"])
 
 with tab_live:
-    render_game_slate(selected_date, auto_refresh and is_today)
+    render_game_slate(selected_date, should_auto_refresh)
 
 with tab_track:
     render_track_record_tab()

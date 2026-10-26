@@ -21,6 +21,7 @@ class ESPNCollector:
         self.retry_delay = retry_delay
         self.backoff_factor = backoff_factor
         self._summary_cache = {}
+        self._circuit_breaker_until = 0.0
         self.session = requests.Session()
         self.session.headers.update({
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
@@ -75,11 +76,20 @@ class ESPNCollector:
         return pd.DataFrame(columns=expected_cols if expected_cols else None)
 
     def _get(self, url: str, params: dict = None) -> Optional[dict]:
-        """Make GET request with retry backoff and error handling."""
+        """Make GET request with retry backoff, fast timeout, and circuit breaker."""
+        now_ts = time.time()
+        if now_ts < getattr(self, '_circuit_breaker_until', 0.0):
+            logger.info(
+                f"ESPN circuit breaker active ({getattr(self, '_circuit_breaker_until', 0.0) - now_ts:.0f}s left); "
+                f"activating fast fallback without blocking."
+            )
+            return None
+
         last_error = None
         for attempt in range(self.max_retries):
             try:
-                response = self.session.get(url, params=params, timeout=10)
+                # Fast timeout: 3.05s connect, 5.0s read to prevent application freeze
+                response = self.session.get(url, params=params, timeout=(3.05, 5.0))
                 if response.status_code in [429, 500, 502, 503, 504]:
                     raise requests.exceptions.HTTPError(
                         f"HTTP {response.status_code}: {response.text[:200]}",
@@ -87,6 +97,14 @@ class ESPNCollector:
                     )
                 response.raise_for_status()
                 return response.json()
+            except requests.exceptions.Timeout as e:
+                last_error = e
+                # Trip 60s circuit breaker on timeout; fail fast without waiting through 3 slow retries
+                self._circuit_breaker_until = time.time() + 60.0
+                logger.warning(
+                    f"ESPN request timed out for {url}: {e}. Activating 60s circuit breaker to prevent UI freeze."
+                )
+                break
             except Exception as e:
                 last_error = e
                 logger.warning(
