@@ -482,15 +482,29 @@ st.markdown("""
     div[data-testid="stHorizontalBlock"] {
         align-items: stretch !important;
     }
-    div[data-testid="stHorizontalBlock"] > div[data-testid="column"] {
+    div[data-testid="stHorizontalBlock"] > div[data-testid="stColumn"],
+    div[data-testid="stHorizontalBlock"] > div[data-testid="column"],
+    div[data-testid="stHorizontalBlock"] > div.stColumn {
         display: flex !important;
         flex-direction: column !important;
+        flex: 1 1 0% !important;
+        min-width: 0 !important;
     }
-    div[data-testid="stHorizontalBlock"] > div[data-testid="column"] > div[data-testid="stVerticalBlock"] {
+    div[data-testid="stHorizontalBlock"] > div[data-testid="stColumn"] > div[data-testid="stVerticalBlock"],
+    div[data-testid="stHorizontalBlock"] > div[data-testid="column"] > div[data-testid="stVerticalBlock"],
+    div[data-testid="stHorizontalBlock"] > div.stColumn > div[data-testid="stVerticalBlock"] {
         display: flex !important;
         flex-direction: column !important;
         flex: 1 1 auto !important;
         height: 100% !important;
+        width: 100% !important;
+    }
+    div[data-testid="stElementContainer"]:has(.analysis-card),
+    div.element-container:has(.analysis-card),
+    div[data-testid="stHtml"]:has(.analysis-card),
+    div.stHtml:has(.analysis-card) {
+        width: 100% !important;
+        max-width: 100% !important;
     }
     .analysis-card {
         background: rgba(255, 255, 255, 0.025);
@@ -503,6 +517,9 @@ st.markdown("""
         gap: 10px;
         height: 100% !important;
         flex: 1 1 auto !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
     }
     .starting5-card {
         background: rgba(255, 255, 255, 0.025);
@@ -1488,12 +1505,18 @@ st.markdown("""
         /* In game card analysis, stack Spread and Over/Under into full-width cards on mobile */
         div[data-testid="stHorizontalBlock"]:has(.analysis-card) {
             flex-direction: column !important;
-            gap: 12px !important;
+            gap: 10px !important;
+            width: 100% !important;
         }
-        div[data-testid="stHorizontalBlock"]:has(.analysis-card) > div[data-testid="column"] {
+        div[data-testid="stHorizontalBlock"]:has(.analysis-card) > div[data-testid="stColumn"],
+        div[data-testid="stHorizontalBlock"]:has(.analysis-card) > div[data-testid="column"],
+        div[data-testid="stHorizontalBlock"]:has(.analysis-card) > div.stColumn {
             width: 100% !important;
             min-width: 100% !important;
+            max-width: 100% !important;
             flex: 1 1 100% !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
         }
         .analysis-card {
             padding: 10px 10px !important;
@@ -1637,18 +1660,36 @@ st.markdown("""
             font-size: 0.72rem !important;
         }
 
-        /* Matchup Analysis Cards on mobile (equal height & compact alert/expander) */
+        /* Matchup Analysis Cards on mobile (stretch flush to container borders) */
         div[data-testid="stHorizontalBlock"]:has(.analysis-card) {
             flex-direction: column !important;
             gap: 10px !important;
+            width: 100% !important;
         }
-        div[data-testid="stHorizontalBlock"]:has(.analysis-card) > div[data-testid="column"] {
+        div[data-testid="stHorizontalBlock"]:has(.analysis-card) > div[data-testid="stColumn"],
+        div[data-testid="stHorizontalBlock"]:has(.analysis-card) > div[data-testid="column"],
+        div[data-testid="stHorizontalBlock"]:has(.analysis-card) > div.stColumn {
             width: 100% !important;
             min-width: 100% !important;
+            max-width: 100% !important;
             flex: 1 1 100% !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
             margin-bottom: 0.35rem !important;
         }
+        div[data-testid="stHorizontalBlock"]:has(.analysis-card) div[data-testid="stVerticalBlock"],
+        div[data-testid="stHorizontalBlock"]:has(.analysis-card) div[data-testid="stElementContainer"],
+        div[data-testid="stHorizontalBlock"]:has(.analysis-card) div.element-container,
+        div[data-testid="stHorizontalBlock"]:has(.analysis-card) div[data-testid="stHtml"],
+        div[data-testid="stHorizontalBlock"]:has(.analysis-card) div.stHtml {
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+        }
         .analysis-card {
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
             padding: 10px 12px !important;
             margin-bottom: 0.4rem !important;
             height: auto !important;
