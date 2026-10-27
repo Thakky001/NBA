@@ -10,6 +10,7 @@ Charlotte Hornets,Grant Williams,Out,,Right,Hamstring,2026-10-31
 Charlotte Hornets,Kylan Boswell,Out,Surgery,Right,Knee,2026-11-02
 Chicago Bulls,Nic Claxton,Out,,Not Specified,Hamstring,2026-11-04
 Chicago Bulls,Patrick Williams,Out,Soreness,Right,Groin,2026-10-28
+Dallas Mavericks,Sergio de Larrea,Day-To-Day,Not Specified,Not Specified,Ankle,2026-10-26
 Dallas Mavericks,Caleb Martin,Out,Sprain,Right,Thumb,2026-11-02
 Dallas Mavericks,Naji Marshall,Out,,,Illness,2026-10-28
 Dallas Mavericks,Tarik Biberovic,Out,Inflammation,Right,Heel,2026-11-02
@@ -24,7 +25,7 @@ Detroit Pistons,Ausar Thompson,Day-To-Day,Sprain,Right,Ankle,2026-10-27
 Detroit Pistons,Jalen Duren,Out,Strain,Right,Hamstring,2026-11-09
 Golden State Warriors,Gui Santos,Day-To-Day,Tendinitis,Left,Knee,2026-10-26
 Golden State Warriors,Brandon Williams,Day-To-Day,Soreness,,Back,2026-10-26
-Golden State Warriors,Charles Bassey,Day-To-Day,,Right,Knee,2026-10-26
+Golden State Warriors,Charles Bassey,Day-To-Day,,,,
 Golden State Warriors,Kristaps Porzingis,Out,,,Illness,2026-12-01
 Golden State Warriors,Moses Moody,Out,Surgery,Left,Knee,2026-12-01
 Golden State Warriors,Jimmy Butler III,Out,Surgery,Right,Knee,2027-01-02
@@ -42,7 +43,6 @@ LA Clippers,Brandon Ingram,Out,Surgery,Right,Achilles,2026-11-08
 LA Clippers,Jordan Miller,Out,Surgery,Left,Shoulder,2027-03-02
 Los Angeles Lakers,Adou Thiero,Out,Inflammation,Left,Knee,2026-10-28
 Los Angeles Lakers,Cameron Carr,Out,Strain,Right,Oblique,2026-10-27
-Memphis Grizzlies,Isaiah Stewart,Day-To-Day,,Left,Ankle,2026-10-26
 Memphis Grizzlies,Karim Lopez,Day-To-Day,Bruise,Right,Knee,2026-10-26
 Minnesota Timberwolves,Donte DiVincenzo,Out,Surgery,Right,Achilles,2027-04-02
 New Orleans Pelicans,Yves Missi,Out,Bruise,Left,Knee,2026-11-02
@@ -78,7 +78,7 @@ San Antonio Spurs,Tobias Harris,Out,Strain,Left,Calf,2026-10-28
 San Antonio Spurs,Jayden Quaintance,Out,Surgery,Right,Knee,2026-12-03
 Toronto Raptors,Kawhi Leonard,Day-To-Day,Inflammation,Left,Knee,2026-10-28
 Toronto Raptors,Nate Bittle,Out,Fracture,Right,Foot,2026-10-28
-Utah Jazz,Jaxson Hayes,Day-To-Day,Soreness,Right,Shoulder,2026-10-26
+Utah Jazz,Jaxson Hayes,Out,Soreness,Right,Shoulder,2026-10-28
 Utah Jazz,Trey Alexander,Out,Bruise,Left,Knee,2026-10-28
 Utah Jazz,Jusuf Nurkic,Out,Strain,Right,Foot,2026-11-04
 Washington Wizards,Justin Champagnie,Day-To-Day,Not Specified,Right,Foot,2026-10-28

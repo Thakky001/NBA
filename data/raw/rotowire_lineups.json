@@ -41,7 +41,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 00:11:17"
+    "scraped_at": "2026-10-27 00:36:07"
   },
   "MIN": {
     "team": "Minnesota Timberwolves",
@@ -85,7 +85,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 00:11:17"
+    "scraped_at": "2026-10-27 00:36:07"
   },
   "Cleveland Cavaliers": {
     "team": "Cleveland Cavaliers",
@@ -134,7 +134,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 00:11:17"
+    "scraped_at": "2026-10-27 00:36:07"
   },
   "CLE": {
     "team": "Cleveland Cavaliers",
@@ -183,7 +183,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 00:11:17"
+    "scraped_at": "2026-10-27 00:36:07"
   },
   "Washington Wizards": {
     "team": "Washington Wizards",
@@ -242,7 +242,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 00:11:17"
+    "scraped_at": "2026-10-27 00:36:07"
   },
   "WAS": {
     "team": "Washington Wizards",
@@ -301,7 +301,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 00:11:17"
+    "scraped_at": "2026-10-27 00:36:07"
   },
   "Charlotte Hornets": {
     "team": "Charlotte Hornets",
@@ -355,7 +355,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 00:11:17"
+    "scraped_at": "2026-10-27 00:36:07"
   },
   "CHA": {
     "team": "Charlotte Hornets",
@@ -409,7 +409,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 00:11:17"
+    "scraped_at": "2026-10-27 00:36:07"
   },
   "Chicago Bulls": {
     "team": "Chicago Bulls",
@@ -458,7 +458,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 00:11:17"
+    "scraped_at": "2026-10-27 00:36:07"
   },
   "CHI": {
     "team": "Chicago Bulls",
@@ -507,7 +507,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 00:11:17"
+    "scraped_at": "2026-10-27 00:36:07"
   },
   "Boston Celtics": {
     "team": "Boston Celtics",
@@ -551,7 +551,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 00:11:17"
+    "scraped_at": "2026-10-27 00:36:07"
   },
   "BOS": {
     "team": "Boston Celtics",
@@ -595,7 +595,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 00:11:17"
+    "scraped_at": "2026-10-27 00:36:07"
   },
   "Dallas Mavericks": {
     "team": "Dallas Mavericks",
@@ -634,6 +634,11 @@
     ],
     "injuries": [
       {
+        "name": "Sergio de Larrea",
+        "position": "G",
+        "status": "Very Likely To Play"
+      },
+      {
         "name": "Santi Aldama",
         "position": "F",
         "status": "Very Unlikely To Play"
@@ -659,7 +664,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 00:11:17"
+    "scraped_at": "2026-10-27 00:36:07"
   },
   "DAL": {
     "team": "Dallas Mavericks",
@@ -698,6 +703,11 @@
     ],
     "injuries": [
       {
+        "name": "Sergio de Larrea",
+        "position": "G",
+        "status": "Very Likely To Play"
+      },
+      {
         "name": "Santi Aldama",
         "position": "F",
         "status": "Very Unlikely To Play"
@@ -723,7 +733,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 00:11:17"
+    "scraped_at": "2026-10-27 00:36:07"
   },
   "Miami Heat": {
     "team": "Miami Heat",
@@ -761,7 +771,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-10-27 00:11:17"
+    "scraped_at": "2026-10-27 00:36:07"
   },
   "MIA": {
     "team": "Miami Heat",
@@ -799,7 +809,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-10-27 00:11:17"
+    "scraped_at": "2026-10-27 00:36:07"
   },
   "Indiana Pacers": {
     "team": "Indiana Pacers",
@@ -863,7 +873,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 00:11:17"
+    "scraped_at": "2026-10-27 00:36:07"
   },
   "IND": {
     "team": "Indiana Pacers",
@@ -927,7 +937,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 00:11:17"
+    "scraped_at": "2026-10-27 00:36:07"
   },
   "Milwaukee Bucks": {
     "team": "Milwaukee Bucks",
@@ -965,7 +975,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-10-27 00:11:17"
+    "scraped_at": "2026-10-27 00:36:07"
   },
   "MIL": {
     "team": "Milwaukee Bucks",
@@ -1003,7 +1013,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-10-27 00:11:17"
+    "scraped_at": "2026-10-27 00:36:07"
   },
   "Phoenix Suns": {
     "team": "Phoenix Suns",
@@ -1052,7 +1062,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 00:11:17"
+    "scraped_at": "2026-10-27 00:36:07"
   },
   "PHX": {
     "team": "Phoenix Suns",
@@ -1101,7 +1111,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 00:11:17"
+    "scraped_at": "2026-10-27 00:36:07"
   },
   "Oklahoma City Thunder": {
     "team": "Oklahoma City Thunder",
@@ -1165,7 +1175,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 00:11:17"
+    "scraped_at": "2026-10-27 00:36:07"
   },
   "OKC": {
     "team": "Oklahoma City Thunder",
@@ -1229,7 +1239,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 00:11:17"
+    "scraped_at": "2026-10-27 00:36:07"
   },
   "Atlanta Hawks": {
     "team": "Atlanta Hawks",
@@ -1278,7 +1288,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 00:11:17"
+    "scraped_at": "2026-10-27 00:36:07"
   },
   "ATL": {
     "team": "Atlanta Hawks",
@@ -1327,7 +1337,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 00:11:17"
+    "scraped_at": "2026-10-27 00:36:07"
   },
   "Houston Rockets": {
     "team": "Houston Rockets",
@@ -1376,7 +1386,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 00:11:17"
+    "scraped_at": "2026-10-27 00:36:07"
   },
   "HOU": {
     "team": "Houston Rockets",
@@ -1425,7 +1435,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 00:11:17"
+    "scraped_at": "2026-10-27 00:36:07"
   },
   "Memphis Grizzlies": {
     "team": "Memphis Grizzlies",
@@ -1462,19 +1472,8 @@
         "status": "Very Likely To Play"
       }
     ],
-    "injuries": [
-      {
-        "name": "Karim Lopez",
-        "position": "F",
-        "status": "Toss Up To Play"
-      },
-      {
-        "name": "Isaiah Stewart",
-        "position": "C",
-        "status": "Toss Up To Play"
-      }
-    ],
-    "scraped_at": "2026-10-27 00:11:17"
+    "injuries": [],
+    "scraped_at": "2026-10-27 00:36:07"
   },
   "MEM": {
     "team": "Memphis Grizzlies",
@@ -1511,19 +1510,8 @@
         "status": "Very Likely To Play"
       }
     ],
-    "injuries": [
-      {
-        "name": "Karim Lopez",
-        "position": "F",
-        "status": "Toss Up To Play"
-      },
-      {
-        "name": "Isaiah Stewart",
-        "position": "C",
-        "status": "Toss Up To Play"
-      }
-    ],
-    "scraped_at": "2026-10-27 00:11:17"
+    "injuries": [],
+    "scraped_at": "2026-10-27 00:36:07"
   },
   "Utah Jazz": {
     "team": "Utah Jazz",
@@ -1564,7 +1552,7 @@
       {
         "name": "Jaxson Hayes",
         "position": "C",
-        "status": "Very Likely To Play"
+        "status": "Very Unlikely To Play"
       },
       {
         "name": "Jusuf Nurkic",
@@ -1572,7 +1560,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 00:11:17"
+    "scraped_at": "2026-10-27 00:36:07"
   },
   "UTA": {
     "team": "Utah Jazz",
@@ -1613,7 +1601,7 @@
       {
         "name": "Jaxson Hayes",
         "position": "C",
-        "status": "Very Likely To Play"
+        "status": "Very Unlikely To Play"
       },
       {
         "name": "Jusuf Nurkic",
@@ -1621,7 +1609,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 00:11:17"
+    "scraped_at": "2026-10-27 00:36:07"
   },
   "Golden State Warriors": {
     "team": "Golden State Warriors",
@@ -1648,32 +1636,17 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Gui Santos",
+        "name": "Draymond Green",
         "position": "PF",
-        "status": "Toss Up To Play"
+        "status": "Very Likely To Play"
       },
       {
-        "name": "Draymond Green",
+        "name": "Graham Ike",
         "position": "C",
         "status": "Very Likely To Play"
       }
     ],
     "injuries": [
-      {
-        "name": "Charles Bassey",
-        "position": "C",
-        "status": "Likely To Play"
-      },
-      {
-        "name": "Brandon Williams",
-        "position": "G",
-        "status": "Likely To Play"
-      },
-      {
-        "name": "Gui Santos",
-        "position": "F",
-        "status": "Toss Up To Play"
-      },
       {
         "name": "Jimmy Butler",
         "position": "F",
@@ -1690,7 +1663,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 00:11:17"
+    "scraped_at": "2026-10-27 00:36:07"
   },
   "GSW": {
     "team": "Golden State Warriors",
@@ -1717,32 +1690,17 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Gui Santos",
+        "name": "Draymond Green",
         "position": "PF",
-        "status": "Toss Up To Play"
+        "status": "Very Likely To Play"
       },
       {
-        "name": "Draymond Green",
+        "name": "Graham Ike",
         "position": "C",
         "status": "Very Likely To Play"
       }
     ],
     "injuries": [
-      {
-        "name": "Charles Bassey",
-        "position": "C",
-        "status": "Likely To Play"
-      },
-      {
-        "name": "Brandon Williams",
-        "position": "G",
-        "status": "Likely To Play"
-      },
-      {
-        "name": "Gui Santos",
-        "position": "F",
-        "status": "Toss Up To Play"
-      },
       {
         "name": "Jimmy Butler",
         "position": "F",
@@ -1759,7 +1717,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 00:11:17"
+    "scraped_at": "2026-10-27 00:36:07"
   },
   "Denver Nuggets": {
     "team": "Denver Nuggets",
@@ -1818,7 +1776,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 00:11:17"
+    "scraped_at": "2026-10-27 00:36:07"
   },
   "DEN": {
     "team": "Denver Nuggets",
@@ -1877,6 +1835,6 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 00:11:17"
+    "scraped_at": "2026-10-27 00:36:07"
   }
 }
