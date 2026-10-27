@@ -35,7 +35,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-10-27 23:11:11"
+    "scraped_at": "2026-10-27 23:36:06"
   },
   "BKN": {
     "team": "Brooklyn Nets",
@@ -73,7 +73,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-10-27 23:11:11"
+    "scraped_at": "2026-10-27 23:36:06"
   },
   "Boston Celtics": {
     "team": "Boston Celtics",
@@ -117,7 +117,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 23:11:11"
+    "scraped_at": "2026-10-27 23:36:06"
   },
   "BOS": {
     "team": "Boston Celtics",
@@ -161,7 +161,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 23:11:11"
+    "scraped_at": "2026-10-27 23:36:06"
   },
   "Detroit Pistons": {
     "team": "Detroit Pistons",
@@ -169,8 +169,8 @@
     "opponent": "New York Knicks",
     "opponent_abbr": "NYK",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Cade Cunningham",
@@ -185,7 +185,7 @@
       {
         "name": "Ausar Thompson",
         "position": "SF",
-        "status": "Toss Up To Play"
+        "status": "Very Likely To Play"
       },
       {
         "name": "John Collins",
@@ -200,22 +200,17 @@
     ],
     "injuries": [
       {
-        "name": "Isaiah Joe",
-        "position": "G",
-        "status": "Toss Up To Play"
-      },
-      {
-        "name": "Ausar Thompson",
-        "position": "F",
-        "status": "Toss Up To Play"
-      },
-      {
         "name": "Jalen Duren",
         "position": "C",
         "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Isaiah Joe",
+        "position": "G",
+        "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 23:11:11"
+    "scraped_at": "2026-10-27 23:36:06"
   },
   "DET": {
     "team": "Detroit Pistons",
@@ -223,8 +218,8 @@
     "opponent": "New York Knicks",
     "opponent_abbr": "NYK",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Cade Cunningham",
@@ -239,7 +234,7 @@
       {
         "name": "Ausar Thompson",
         "position": "SF",
-        "status": "Toss Up To Play"
+        "status": "Very Likely To Play"
       },
       {
         "name": "John Collins",
@@ -254,22 +249,17 @@
     ],
     "injuries": [
       {
-        "name": "Isaiah Joe",
-        "position": "G",
-        "status": "Toss Up To Play"
-      },
-      {
-        "name": "Ausar Thompson",
-        "position": "F",
-        "status": "Toss Up To Play"
-      },
-      {
         "name": "Jalen Duren",
         "position": "C",
         "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Isaiah Joe",
+        "position": "G",
+        "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 23:11:11"
+    "scraped_at": "2026-10-27 23:36:06"
   },
   "New York Knicks": {
     "team": "New York Knicks",
@@ -277,8 +267,8 @@
     "opponent": "Detroit Pistons",
     "opponent_abbr": "DET",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Jalen Brunson",
@@ -313,7 +303,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 23:11:11"
+    "scraped_at": "2026-10-27 23:36:06"
   },
   "NYK": {
     "team": "New York Knicks",
@@ -321,8 +311,8 @@
     "opponent": "Detroit Pistons",
     "opponent_abbr": "DET",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Jalen Brunson",
@@ -357,7 +347,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 23:11:11"
+    "scraped_at": "2026-10-27 23:36:06"
   },
   "Sacramento Kings": {
     "team": "Sacramento Kings",
@@ -416,7 +406,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 23:11:11"
+    "scraped_at": "2026-10-27 23:36:06"
   },
   "SAC": {
     "team": "Sacramento Kings",
@@ -475,7 +465,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 23:11:11"
+    "scraped_at": "2026-10-27 23:36:06"
   },
   "San Antonio Spurs": {
     "team": "San Antonio Spurs",
@@ -524,7 +514,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 23:11:11"
+    "scraped_at": "2026-10-27 23:36:06"
   },
   "SAS": {
     "team": "San Antonio Spurs",
@@ -573,7 +563,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 23:11:11"
+    "scraped_at": "2026-10-27 23:36:06"
   },
   "Portland Trail Blazers": {
     "team": "Portland Trail Blazers",
@@ -622,7 +612,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 23:11:11"
+    "scraped_at": "2026-10-27 23:36:06"
   },
   "POR": {
     "team": "Portland Trail Blazers",
@@ -671,7 +661,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 23:11:11"
+    "scraped_at": "2026-10-27 23:36:06"
   },
   "Los Angeles Lakers": {
     "team": "Los Angeles Lakers",
@@ -715,7 +705,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 23:11:11"
+    "scraped_at": "2026-10-27 23:36:06"
   },
   "LAL": {
     "team": "Los Angeles Lakers",
@@ -759,6 +749,6 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 23:11:11"
+    "scraped_at": "2026-10-27 23:36:06"
   }
 }
