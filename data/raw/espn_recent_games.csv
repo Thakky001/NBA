@@ -1,7 +1,4 @@
 game_id,date,status,period,clock,clock_detail,season_type,home_team,home_id,home_score,away_team,away_id,away_score,spread,over_under,home_ml,away_ml,venue
-401869416,2026-04-29T23:00Z,STATUS_FINAL,4,12:00,Final,3,Detroit Pistons,8,116,Orlando Magic,19,109,,,,,Little Caesars Arena
-401869380,2026-04-29T23:30Z,STATUS_FINAL,4,0.0,Final,3,Cleveland Cavaliers,5,125,Toronto Raptors,28,120,,,,,Rocket Arena
-401869407,2026-04-30T02:00Z,STATUS_FINAL,4,0.0,Final,3,Los Angeles Lakers,13,93,Houston Rockets,10,99,,,,,crypto.com Arena
 401869393,2026-04-30T23:00Z,STATUS_FINAL,4,12:00,Final,3,Atlanta Hawks,1,89,New York Knicks,18,140,,,,,State Farm Arena
 401869410,2026-05-01T00:00Z,STATUS_FINAL,4,12:00,Final,3,Philadelphia 76ers,20,106,Boston Celtics,2,93,,,,,Xfinity Mobile Arena
 401869402,2026-05-01T01:30Z,STATUS_FINAL,4,12:00,Final,3,Minnesota Timberwolves,16,110,Denver Nuggets,7,98,,,,,Target Center
@@ -158,12 +155,16 @@ game_id,date,status,period,clock,clock_detail,season_type,home_team,home_id,home
 401909865,2026-10-25T23:00Z,STATUS_FINAL,4,12:00,Final,2,Oklahoma City Thunder,25,108,LA Clippers,12,101,,,,,Paycom Center
 401909866,2026-10-25T23:30Z,STATUS_FINAL,4,12:00,Final,2,Philadelphia 76ers,20,93,Detroit Pistons,8,106,,,,,Xfinity Mobile Arena
 401909867,2026-10-26T01:00Z,STATUS_FINAL,4,12:00,Final,2,Sacramento Kings,23,112,Memphis Grizzlies,29,123,,,,,Golden 1 Center
-401909868,2026-10-26T23:00Z,STATUS_SCHEDULED,0,0.0,"Mon, October 26th at 7:00 PM EDT",2,Charlotte Hornets,30,0,Washington Wizards,27,0,CHA -2.5,228.5,,,Spectrum Center
-401909869,2026-10-26T23:00Z,STATUS_SCHEDULED,0,0.0,"Mon, October 26th at 7:00 PM EDT",2,Cleveland Cavaliers,5,0,Minnesota Timberwolves,16,0,CLE -4.5,233.5,,,Rocket Arena
-401909870,2026-10-26T23:30Z,STATUS_SCHEDULED,0,0.0,"Mon, October 26th at 7:30 PM EDT",2,Boston Celtics,2,0,Chicago Bulls,4,0,BOS -14.5,232.5,,,TD Garden
-401909871,2026-10-26T23:30Z,STATUS_SCHEDULED,0,0.0,"Mon, October 26th at 7:30 PM EDT",2,Miami Heat,14,0,Dallas Mavericks,6,0,MIA -8.5,239.5,,,Kaseya Center
-401909872,2026-10-27T00:00Z,STATUS_SCHEDULED,0,0.0,"Mon, October 26th at 8:00 PM EDT",2,Milwaukee Bucks,15,0,Indiana Pacers,11,0,IND -4.5,240.5,,,Fiserv Forum
-401909873,2026-10-27T00:00Z,STATUS_SCHEDULED,0,0.0,"Mon, October 26th at 8:00 PM EDT",2,Oklahoma City Thunder,25,0,Phoenix Suns,21,0,OKC -10.5,220.5,,,Paycom Center
-401909874,2026-10-27T00:30Z,STATUS_SCHEDULED,0,0.0,"Mon, October 26th at 8:30 PM EDT",2,Houston Rockets,10,0,Atlanta Hawks,1,0,HOU -5.5,229.5,,,Toyota Center (Houston)
-401909875,2026-10-27T01:00Z,STATUS_SCHEDULED,0,0.0,"Mon, October 26th at 9:00 PM EDT",2,Utah Jazz,26,0,Memphis Grizzlies,29,0,UTAH -1.5,237.5,,,Delta Center
+401909868,2026-10-26T23:00Z,STATUS_FINAL,4,0.0,Final,2,Charlotte Hornets,30,110,Washington Wizards,27,103,,,,,Spectrum Center
+401909869,2026-10-26T23:00Z,STATUS_IN_PROGRESS,5,1:59,1:59 - OT,2,Cleveland Cavaliers,5,119,Minnesota Timberwolves,16,118,,,,,Rocket Arena
+401909870,2026-10-26T23:30Z,STATUS_IN_PROGRESS,4,4:53,4:53 - 4th Quarter,2,Boston Celtics,2,123,Chicago Bulls,4,87,,,,,TD Garden
+401909871,2026-10-26T23:30Z,STATUS_IN_PROGRESS,4,5:50,5:50 - 4th Quarter,2,Miami Heat,14,96,Dallas Mavericks,6,99,,,,,Kaseya Center
+401909872,2026-10-27T00:00Z,STATUS_IN_PROGRESS,3,1:09,1:09 - 3rd Quarter,2,Milwaukee Bucks,15,79,Indiana Pacers,11,82,,,,,Fiserv Forum
+401909873,2026-10-27T00:00Z,STATUS_IN_PROGRESS,3,2:11,2:11 - 3rd Quarter,2,Oklahoma City Thunder,25,89,Phoenix Suns,21,76,,,,,Paycom Center
+401909874,2026-10-27T00:30Z,STATUS_HALFTIME,2,0.0,Halftime,2,Houston Rockets,10,63,Atlanta Hawks,1,66,,,,,Toyota Center (Houston)
+401909875,2026-10-27T01:00Z,STATUS_IN_PROGRESS,2,11:34,11:34 - 2nd Quarter,2,Utah Jazz,26,24,Memphis Grizzlies,29,32,,,,,Delta Center
 401909876,2026-10-27T02:00Z,STATUS_SCHEDULED,0,0.0,"Mon, October 26th at 10:00 PM EDT",2,Denver Nuggets,7,0,Golden State Warriors,9,0,DEN -7.5,236.5,,,Ball Arena
+401909877,2026-10-27T23:30Z,STATUS_SCHEDULED,0,0.0,"Tue, October 27th at 7:30 PM EDT",2,Boston Celtics,2,0,Brooklyn Nets,17,0,,,,,TD Garden
+401909878,2026-10-28T00:00Z,STATUS_SCHEDULED,0,0.0,"Tue, October 27th at 8:00 PM EDT",2,New York Knicks,18,0,Detroit Pistons,8,0,,,,,Madison Square Garden
+401909879,2026-10-28T00:00Z,STATUS_SCHEDULED,0,0.0,"Tue, October 27th at 8:00 PM EDT",2,San Antonio Spurs,24,0,Sacramento Kings,23,0,,,,,Frost Bank Center
+401909880,2026-10-28T03:00Z,STATUS_SCHEDULED,0,0.0,"Tue, October 27th at 11:00 PM EDT",2,Los Angeles Lakers,13,0,Portland Trail Blazers,22,0,,,,,crypto.com Arena
