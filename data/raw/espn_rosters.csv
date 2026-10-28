@@ -183,7 +183,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 4711272,Reed Sheppard,15,Guard,"6' 2""",185 lbs,22,3,Kentucky,10,Houston Rockets
 2990992,Marcus Smart,36,Guard,"6' 3""",220 lbs,32,13,Oklahoma State,10,Houston Rockets
 4432639,Jabari Smith Jr.,10,Forward,"6' 11""",220 lbs,23,5,Auburn,10,Houston Rockets
-3136777,Jae'Sean Tate,8,Forward,"6' 4""",230 lbs,30,7,Ohio State,10,Houston Rockets
+3136777,Jae'Sean Tate,8,Forward,"6' 4""",230 lbs,31,7,Ohio State,10,Houston Rockets
 4684740,Amen Thompson,1,Guard,"6' 7""",200 lbs,23,4,,10,Houston Rockets
 5105837,Bruce Thornton,2,Guard,"6' 0""",223 lbs,23,0,Ohio State,10,Houston Rockets
 4432827,Oscar Tshiebwe,9,Center,"6' 8""",255 lbs,26,4,Kentucky,10,Houston Rockets
@@ -301,6 +301,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 4397002,Ayo Dosunmu,13,Guard,"6' 4""",200 lbs,26,6,Illinois,16,Minnesota Timberwolves
 4594268,Anthony Edwards,5,Guard,"6' 4""",225 lbs,25,7,Georgia,16,Minnesota Timberwolves
 5061585,Isaiah Evans,33,Forward,"6' 6""",186 lbs,20,0,Duke,16,Minnesota Timberwolves
+4592699,Enrique Freeman,25,Forward,"6' 9""",220 lbs,26,3,Akron,16,Minnesota Timberwolves
 3032976,Rudy Gobert,27,Center,"7' 1""",258 lbs,34,14,,16,Minnesota Timberwolves
 4592492,Bones Hyland,8,Guard,"6' 2""",169 lbs,26,6,VCU,16,Minnesota Timberwolves
 4433247,Jonathan Kuminga,24,Forward,"6' 7""",225 lbs,24,6,,16,Minnesota Timberwolves
