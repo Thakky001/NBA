@@ -34,8 +34,14 @@
         "status": "Very Likely To Play"
       }
     ],
-    "injuries": [],
-    "scraped_at": "2026-10-27 23:36:06"
+    "injuries": [
+      {
+        "name": "Egor Demin",
+        "position": "G",
+        "status": "Very Likely To Play"
+      }
+    ],
+    "scraped_at": "2026-10-28 02:36:08"
   },
   "BKN": {
     "team": "Brooklyn Nets",
@@ -72,8 +78,14 @@
         "status": "Very Likely To Play"
       }
     ],
-    "injuries": [],
-    "scraped_at": "2026-10-27 23:36:06"
+    "injuries": [
+      {
+        "name": "Egor Demin",
+        "position": "G",
+        "status": "Very Likely To Play"
+      }
+    ],
+    "scraped_at": "2026-10-28 02:36:08"
   },
   "Boston Celtics": {
     "team": "Boston Celtics",
@@ -117,7 +129,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 23:36:06"
+    "scraped_at": "2026-10-28 02:36:08"
   },
   "BOS": {
     "team": "Boston Celtics",
@@ -161,7 +173,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 23:36:06"
+    "scraped_at": "2026-10-28 02:36:08"
   },
   "Detroit Pistons": {
     "team": "Detroit Pistons",
@@ -210,7 +222,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 23:36:06"
+    "scraped_at": "2026-10-28 02:36:08"
   },
   "DET": {
     "team": "Detroit Pistons",
@@ -259,7 +271,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 23:36:06"
+    "scraped_at": "2026-10-28 02:36:08"
   },
   "New York Knicks": {
     "team": "New York Knicks",
@@ -303,7 +315,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 23:36:06"
+    "scraped_at": "2026-10-28 02:36:08"
   },
   "NYK": {
     "team": "New York Knicks",
@@ -347,7 +359,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 23:36:06"
+    "scraped_at": "2026-10-28 02:36:08"
   },
   "Sacramento Kings": {
     "team": "Sacramento Kings",
@@ -355,8 +367,8 @@
     "opponent": "San Antonio Spurs",
     "opponent_abbr": "SAS",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Darius Acuff",
@@ -406,7 +418,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 23:36:06"
+    "scraped_at": "2026-10-28 02:36:08"
   },
   "SAC": {
     "team": "Sacramento Kings",
@@ -414,8 +426,8 @@
     "opponent": "San Antonio Spurs",
     "opponent_abbr": "SAS",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Darius Acuff",
@@ -465,7 +477,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 23:36:06"
+    "scraped_at": "2026-10-28 02:36:08"
   },
   "San Antonio Spurs": {
     "team": "San Antonio Spurs",
@@ -473,8 +485,8 @@
     "opponent": "Sacramento Kings",
     "opponent_abbr": "SAC",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "De'Aaron Fox",
@@ -514,7 +526,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 23:36:06"
+    "scraped_at": "2026-10-28 02:36:08"
   },
   "SAS": {
     "team": "San Antonio Spurs",
@@ -522,8 +534,8 @@
     "opponent": "Sacramento Kings",
     "opponent_abbr": "SAC",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "De'Aaron Fox",
@@ -563,7 +575,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 23:36:06"
+    "scraped_at": "2026-10-28 02:36:08"
   },
   "Portland Trail Blazers": {
     "team": "Portland Trail Blazers",
@@ -602,17 +614,12 @@
     ],
     "injuries": [
       {
-        "name": "Scoot Henderson",
-        "position": "G",
-        "status": "Toss Up To Play"
-      },
-      {
         "name": "Shaedon Sharpe",
         "position": "G",
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 23:36:06"
+    "scraped_at": "2026-10-28 02:36:08"
   },
   "POR": {
     "team": "Portland Trail Blazers",
@@ -651,17 +658,12 @@
     ],
     "injuries": [
       {
-        "name": "Scoot Henderson",
-        "position": "G",
-        "status": "Toss Up To Play"
-      },
-      {
         "name": "Shaedon Sharpe",
         "position": "G",
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 23:36:06"
+    "scraped_at": "2026-10-28 02:36:08"
   },
   "Los Angeles Lakers": {
     "team": "Los Angeles Lakers",
@@ -700,12 +702,17 @@
     ],
     "injuries": [
       {
+        "name": "Cameron Carr",
+        "position": "G",
+        "status": "Very Unlikely To Play"
+      },
+      {
         "name": "Adou Thiero",
         "position": "F",
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 23:36:06"
+    "scraped_at": "2026-10-28 02:36:08"
   },
   "LAL": {
     "team": "Los Angeles Lakers",
@@ -744,11 +751,16 @@
     ],
     "injuries": [
       {
+        "name": "Cameron Carr",
+        "position": "G",
+        "status": "Very Unlikely To Play"
+      },
+      {
         "name": "Adou Thiero",
         "position": "F",
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-27 23:36:06"
+    "scraped_at": "2026-10-28 02:36:08"
   }
 }
