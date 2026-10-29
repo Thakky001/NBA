@@ -153,7 +153,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 3157465,Duncan Robinson,55,Forward,"6' 7""",215 lbs,32,9,Michigan,8,Detroit Pistons
 4397882,Tolu Smith,35,Forward,"6' 11""",250 lbs,26,3,Mississippi State,8,Detroit Pistons
 4684742,Ausar Thompson,9,Guard,"6' 7""",205 lbs,23,4,,8,Detroit Pistons
-4397886,Charles Bassey,28,Center,"6' 10""",230 lbs,25,6,Western Kentucky,9,Golden State Warriors
+4397886,Charles Bassey,28,Center,"6' 10""",230 lbs,26,6,Western Kentucky,9,Golden State Warriors
 6430,Jimmy Butler III,10,Forward,"6' 6""",230 lbs,37,16,Marquette,9,Golden State Warriors
 4433149,LJ Cryer,18,Guard,"6' 0""",200 lbs,25,2,Houston,9,Golden State Warriors
 3975,Stephen Curry,30,Guard,"6' 2""",185 lbs,38,18,Davidson,9,Golden State Warriors
@@ -356,7 +356,6 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 5174983,Aday Mara,15,Center,"7' 3""",262 lbs,21,0,Michigan,25,Oklahoma City Thunder
 4683778,Jared McCain,3,Guard,"6' 3""",195 lbs,22,3,Duke,25,Oklahoma City Thunder
 4900671,Ajay Mitchell,25,Guard,"6' 4""",190 lbs,24,3,UC Santa Barbara,25,Oklahoma City Thunder
-5106270,Otega Oweh,13,Guard,"6' 4""",217 lbs,23,0,Kentucky,25,Oklahoma City Thunder
 4432185,Micah Peavy,,Guard,"6' 7""",220 lbs,25,2,Georgetown,25,Oklahoma City Thunder
 5061603,Thomas Sorber,12,Center,"6' 9""",250 lbs,20,0,Georgetown,25,Oklahoma City Thunder
 5241364,Bennett Stirtz,14,Guard,"6' 4""",190 lbs,23,0,Iowa,25,Oklahoma City Thunder
