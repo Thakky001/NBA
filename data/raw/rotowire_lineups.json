@@ -46,7 +46,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-29 23:36:01"
+    "scraped_at": "2026-10-30 01:36:09"
   },
   "CLE": {
     "team": "Cleveland Cavaliers",
@@ -95,7 +95,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-29 23:36:01"
+    "scraped_at": "2026-10-30 01:36:09"
   },
   "Atlanta Hawks": {
     "team": "Atlanta Hawks",
@@ -144,7 +144,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-29 23:36:01"
+    "scraped_at": "2026-10-30 01:36:09"
   },
   "ATL": {
     "team": "Atlanta Hawks",
@@ -193,7 +193,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-29 23:36:01"
+    "scraped_at": "2026-10-30 01:36:09"
   },
   "Sacramento Kings": {
     "team": "Sacramento Kings",
@@ -201,8 +201,8 @@
     "opponent": "New Orleans Pelicans",
     "opponent_abbr": "NOP",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Darius Acuff",
@@ -252,7 +252,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-29 23:36:01"
+    "scraped_at": "2026-10-30 01:36:09"
   },
   "SAC": {
     "team": "Sacramento Kings",
@@ -260,8 +260,8 @@
     "opponent": "New Orleans Pelicans",
     "opponent_abbr": "NOP",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Darius Acuff",
@@ -311,7 +311,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-29 23:36:01"
+    "scraped_at": "2026-10-30 01:36:09"
   },
   "New Orleans Pelicans": {
     "team": "New Orleans Pelicans",
@@ -319,8 +319,8 @@
     "opponent": "Sacramento Kings",
     "opponent_abbr": "SAC",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Jeremiah Fears",
@@ -343,7 +343,7 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "DeAndre Jordan",
+        "name": "Karlo Matkovic",
         "position": "C",
         "status": "Very Likely To Play"
       }
@@ -365,7 +365,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-29 23:36:01"
+    "scraped_at": "2026-10-30 01:36:09"
   },
   "NOP": {
     "team": "New Orleans Pelicans",
@@ -373,8 +373,8 @@
     "opponent": "Sacramento Kings",
     "opponent_abbr": "SAC",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Jeremiah Fears",
@@ -397,7 +397,7 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "DeAndre Jordan",
+        "name": "Karlo Matkovic",
         "position": "C",
         "status": "Very Likely To Play"
       }
@@ -419,7 +419,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-29 23:36:01"
+    "scraped_at": "2026-10-30 01:36:09"
   },
   "Memphis Grizzlies": {
     "team": "Memphis Grizzlies",
@@ -457,7 +457,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-10-29 23:36:01"
+    "scraped_at": "2026-10-30 01:36:09"
   },
   "MEM": {
     "team": "Memphis Grizzlies",
@@ -495,7 +495,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-10-29 23:36:01"
+    "scraped_at": "2026-10-30 01:36:09"
   },
   "Portland Trail Blazers": {
     "team": "Portland Trail Blazers",
@@ -534,17 +534,17 @@
     ],
     "injuries": [
       {
-        "name": "Robert Williams",
-        "position": "C",
-        "status": "Unlikely To Play"
-      },
-      {
         "name": "Shaedon Sharpe",
         "position": "G",
         "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Robert Williams",
+        "position": "C",
+        "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-29 23:36:01"
+    "scraped_at": "2026-10-30 01:36:09"
   },
   "POR": {
     "team": "Portland Trail Blazers",
@@ -583,16 +583,16 @@
     ],
     "injuries": [
       {
-        "name": "Robert Williams",
-        "position": "C",
-        "status": "Unlikely To Play"
-      },
-      {
         "name": "Shaedon Sharpe",
         "position": "G",
         "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Robert Williams",
+        "position": "C",
+        "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-29 23:36:01"
+    "scraped_at": "2026-10-30 01:36:09"
   }
 }
