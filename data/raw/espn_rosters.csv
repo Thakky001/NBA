@@ -224,6 +224,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 4702352,Kobe Sanders,4,Guard,"6' 8""",207 lbs,24,2,Nevada,12,LA Clippers
 4065778,Max Strus,31,Guard,"6' 5""",215 lbs,30,8,DePaul,12,LA Clippers
 5254165,Keaton Wagler,1,Guard,"6' 5""",188 lbs,19,0,Illinois,12,LA Clippers
+4683935,Blake Wesley,20,Guard,"6' 4""",190 lbs,23,5,Notre Dame,12,LA Clippers
 5113969,Cameron Carr,43,Guard,"6' 5""",184 lbs,21,0,Baylor,13,Los Angeles Lakers
 3945274,Luka Doncic,77,Guard,"6' 8""",230 lbs,27,9,,13,Los Angeles Lakers
 4397014,Quentin Grimes,5,Guard,"6' 4""",210 lbs,26,6,Houston,13,Los Angeles Lakers
@@ -441,7 +442,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 4065732,De'Andre Hunter,15,Forward,"6' 7""",221 lbs,28,8,Virginia,23,Sacramento Kings
 4917149,Alex Karaban,33,Forward,"6' 7""",225 lbs,23,0,UConn,23,Sacramento Kings
 3064440,Zach LaVine,8,Guard,"6' 5""",200 lbs,31,13,UCLA,23,Sacramento Kings
-5107897,Jonathan Mogbo,22,Forward,"6' 9""",225 lbs,24,3,San Francisco,23,Sacramento Kings
+5107897,Jonathan Mogbo,22,Forward,"6' 9""",225 lbs,25,3,San Francisco,23,Sacramento Kings
 4066262,Malik Monk,0,Guard,"6' 3""",200 lbs,28,10,Kentucky,23,Sacramento Kings
 4594327,Keegan Murray,13,Forward,"6' 8""",225 lbs,26,5,Iowa,23,Sacramento Kings
 4709131,Sean Pedulla,3,Guard,"6' 1""",195 lbs,24,2,Ole Miss,23,Sacramento Kings
@@ -500,7 +501,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 3102530,Jusuf Nurkic,30,Center,"6' 11""",290 lbs,32,13,,26,Utah Jazz
 4065663,Josh Okogie,21,Guard,"6' 4""",213 lbs,28,9,Georgia Tech,26,Utah Jazz
 5041955,Darryn Peterson,22,Guard,"6' 5""",199 lbs,19,0,Kansas,26,Utah Jazz
-5105839,Brice Sensabaugh,28,Forward,"6' 6""",235 lbs,22,4,Ohio State,26,Utah Jazz
+5105839,Brice Sensabaugh,28,Forward,"6' 6""",235 lbs,23,4,Ohio State,26,Utah Jazz
 4278129,Deandre Ayton,8,Center,"7' 0""",252 lbs,28,9,Arizona,27,Washington Wizards
 4432187,Reece Beekman,26,Guard,"6' 3""",190 lbs,25,2,Virginia,27,Washington Wizards
 4845374,Bub Carrington,7,Guard,"6' 4""",190 lbs,21,3,Pittsburgh,27,Washington Wizards

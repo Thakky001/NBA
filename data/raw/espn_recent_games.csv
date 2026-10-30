@@ -148,15 +148,11 @@ game_id,date,status,period,clock,clock_detail,season_type,home_team,home_id,home
 401909865,2026-10-25T23:00Z,STATUS_FINAL,4,12:00,Final,2,Oklahoma City Thunder,25,108,LA Clippers,12,101,,,,,Paycom Center
 401909866,2026-10-25T23:30Z,STATUS_FINAL,4,12:00,Final,2,Philadelphia 76ers,20,93,Detroit Pistons,8,106,,,,,Xfinity Mobile Arena
 401909867,2026-10-26T01:00Z,STATUS_FINAL,4,12:00,Final,2,Sacramento Kings,23,112,Memphis Grizzlies,29,123,,,,,Golden 1 Center
+401909867,2026-10-26T01:00Z,STATUS_FINAL,4,12:00,Final,2,Sacramento Kings,23,112,Memphis Grizzlies,29,123,,,,,Golden 1 Center
 401909868,2026-10-26T23:00Z,STATUS_FINAL,4,0.0,Final,2,Charlotte Hornets,30,110,Washington Wizards,27,103,,,,,Spectrum Center
 401909869,2026-10-26T23:00Z,STATUS_FINAL,5,0.0,Final/OT,2,Cleveland Cavaliers,5,127,Minnesota Timberwolves,16,125,,,,,Rocket Arena
 401909870,2026-10-26T23:30Z,STATUS_FINAL,4,0.0,Final,2,Boston Celtics,2,134,Chicago Bulls,4,99,,,,,TD Garden
 401909871,2026-10-26T23:30Z,STATUS_FINAL,4,0.0,Final,2,Miami Heat,14,109,Dallas Mavericks,6,113,,,,,Kaseya Center
-401909872,2026-10-27T00:00Z,STATUS_FINAL,4,0.0,Final,2,Milwaukee Bucks,15,110,Indiana Pacers,11,102,,,,,Fiserv Forum
-401909873,2026-10-27T00:00Z,STATUS_FINAL,4,12:00,Final,2,Oklahoma City Thunder,25,125,Phoenix Suns,21,114,,,,,Paycom Center
-401909874,2026-10-27T00:30Z,STATUS_FINAL,4,12:00,Final,2,Houston Rockets,10,120,Atlanta Hawks,1,110,,,,,Toyota Center (Houston)
-401909875,2026-10-27T01:00Z,STATUS_FINAL,4,0.0,Final,2,Utah Jazz,26,105,Memphis Grizzlies,29,110,,,,,Delta Center
-401909876,2026-10-27T02:00Z,STATUS_FINAL,4,12:00,Final,2,Denver Nuggets,7,114,Golden State Warriors,9,134,,,,,Ball Arena
 401909872,2026-10-27T00:00Z,STATUS_FINAL,4,0.0,Final,2,Milwaukee Bucks,15,110,Indiana Pacers,11,102,,,,,Fiserv Forum
 401909873,2026-10-27T00:00Z,STATUS_FINAL,4,12:00,Final,2,Oklahoma City Thunder,25,125,Phoenix Suns,21,114,,,,,Paycom Center
 401909874,2026-10-27T00:30Z,STATUS_FINAL,4,12:00,Final,2,Houston Rockets,10,120,Atlanta Hawks,1,110,,,,,Toyota Center (Houston)
@@ -175,16 +171,16 @@ game_id,date,status,period,clock,clock_detail,season_type,home_team,home_id,home
 401909890,2026-10-29T01:00Z,STATUS_FINAL,5,5:00,Final/OT,2,Utah Jazz,26,111,San Antonio Spurs,24,117,,,,,Delta Center
 401909891,2026-10-29T01:30Z,STATUS_FINAL,4,0.0,Final,2,Dallas Mavericks,6,120,Oklahoma City Thunder,25,96,,,,,American Airlines Center
 401909892,2026-10-29T02:30Z,STATUS_FINAL,4,0.0,Final,2,LA Clippers,12,87,Los Angeles Lakers,13,103,,,,,Intuit Dome
-401909893,2026-10-30T00:00Z,STATUS_IN_PROGRESS,4,1:45,1:45 - 4th Quarter,2,Atlanta Hawks,1,108,Cleveland Cavaliers,5,103,,,,,State Farm Arena
-401909894,2026-10-30T00:00Z,STATUS_IN_PROGRESS,4,2:24,2:24 - 4th Quarter,2,New Orleans Pelicans,3,125,Sacramento Kings,23,115,,,,,Smoothie King Center
-401909895,2026-10-30T02:00Z,STATUS_IN_PROGRESS,1,8:50,8:50 - 1st Quarter,2,Portland Trail Blazers,22,10,Memphis Grizzlies,29,4,,,,,Moda Center
-401909277,2026-10-30T23:00Z,STATUS_SCHEDULED,0,0.0,"Fri, October 30th at 7:00 PM EDT",2,Washington Wizards,27,0,Charlotte Hornets,30,0,WSH -1.5,222.5,,,Capital One Arena
+401909893,2026-10-30T00:00Z,STATUS_FINAL,4,12:00,Final,2,Atlanta Hawks,1,114,Cleveland Cavaliers,5,111,,,,,State Farm Arena
+401909894,2026-10-30T00:00Z,STATUS_FINAL,4,12:00,Final,2,New Orleans Pelicans,3,132,Sacramento Kings,23,120,,,,,Smoothie King Center
+401909895,2026-10-30T02:00Z,STATUS_FINAL,4,12:00,Final,2,Portland Trail Blazers,22,103,Memphis Grizzlies,29,124,,,,,Moda Center
+401909277,2026-10-30T23:00Z,STATUS_SCHEDULED,0,0.0,"Fri, October 30th at 7:00 PM EDT",2,Washington Wizards,27,0,Charlotte Hornets,30,0,WSH -1.5,219.5,,,Capital One Arena
 401909278,2026-10-30T23:30Z,STATUS_SCHEDULED,0,0.0,"Fri, October 30th at 7:30 PM EDT",2,Boston Celtics,2,0,Chicago Bulls,4,0,BOS -15.5,235.5,,,TD Garden
-401909279,2026-10-30T23:30Z,STATUS_SCHEDULED,0,0.0,"Fri, October 30th at 7:30 PM EDT",2,Brooklyn Nets,17,0,Detroit Pistons,8,0,DET -7.5,221.5,,,Barclays Center
-401909280,2026-10-30T23:30Z,STATUS_SCHEDULED,0,0.0,"Fri, October 30th at 7:30 PM EDT",2,Philadelphia 76ers,20,0,New York Knicks,18,0,NY -1.5,228.5,,,Xfinity Mobile Arena
-401909281,2026-10-30T23:30Z,STATUS_SCHEDULED,0,0.0,"Fri, October 30th at 7:30 PM EDT",2,Toronto Raptors,28,0,Orlando Magic,19,0,TOR -5.5,225.5,,,Scotiabank Arena
-401909282,2026-10-31T00:00Z,STATUS_SCHEDULED,0,0.0,"Fri, October 30th at 8:00 PM EDT",2,Miami Heat,14,0,Indiana Pacers,11,0,MIA -7.5,238.5,,,Kaseya Center
-401909283,2026-10-31T00:00Z,STATUS_SCHEDULED,0,0.0,"Fri, October 30th at 8:00 PM EDT",2,Dallas Mavericks,6,0,Houston Rockets,10,0,HOU -5.5,227.5,,,American Airlines Center
-401909284,2026-10-31T00:00Z,STATUS_SCHEDULED,0,0.0,"Fri, October 30th at 8:00 PM EDT",2,Minnesota Timberwolves,16,0,LA Clippers,12,0,MIN -7.5,222.5,,,Target Center
-401909285,2026-10-31T02:00Z,STATUS_SCHEDULED,0,0.0,"Fri, October 30th at 10:00 PM EDT",2,Golden State Warriors,9,0,Los Angeles Lakers,13,0,LAL -1.5,234.5,,,Chase Center
+401909279,2026-10-30T23:30Z,STATUS_SCHEDULED,0,0.0,"Fri, October 30th at 7:30 PM EDT",2,Brooklyn Nets,17,0,Detroit Pistons,8,0,DET -8.5,223.5,,,Barclays Center
+401909280,2026-10-30T23:30Z,STATUS_SCHEDULED,0,0.0,"Fri, October 30th at 7:30 PM EDT",2,Philadelphia 76ers,20,0,New York Knicks,18,0,NY -1.5,227.5,,,Xfinity Mobile Arena
+401909281,2026-10-30T23:30Z,STATUS_SCHEDULED,0,0.0,"Fri, October 30th at 7:30 PM EDT",2,Toronto Raptors,28,0,Orlando Magic,19,0,TOR -5.5,226.5,,,Scotiabank Arena
+401909282,2026-10-31T00:00Z,STATUS_SCHEDULED,0,0.0,"Fri, October 30th at 8:00 PM EDT",2,Miami Heat,14,0,Indiana Pacers,11,0,MIA -8.5,237.5,,,Kaseya Center
+401909283,2026-10-31T00:00Z,STATUS_SCHEDULED,0,0.0,"Fri, October 30th at 8:00 PM EDT",2,Dallas Mavericks,6,0,Houston Rockets,10,0,HOU -6.5,224.5,,,American Airlines Center
+401909284,2026-10-31T00:00Z,STATUS_SCHEDULED,0,0.0,"Fri, October 30th at 8:00 PM EDT",2,Minnesota Timberwolves,16,0,LA Clippers,12,0,MIN -7.5,223.5,,,Target Center
+401909285,2026-10-31T02:00Z,STATUS_SCHEDULED,0,0.0,"Fri, October 30th at 10:00 PM EDT",2,Golden State Warriors,9,0,Los Angeles Lakers,13,0,LAL -2.5,234.5,,,Chase Center
 401909286,2026-10-31T02:00Z,STATUS_SCHEDULED,0,0.0,"Fri, October 30th at 10:00 PM EDT",2,Phoenix Suns,21,0,Denver Nuggets,7,0,DEN -4.5,231.5,,,Mortgage Matchup Center
