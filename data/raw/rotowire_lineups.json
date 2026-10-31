@@ -46,7 +46,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 18:36:04"
+    "scraped_at": "2026-10-31 21:27:01"
   },
   "POR": {
     "team": "Portland Trail Blazers",
@@ -95,7 +95,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 18:36:04"
+    "scraped_at": "2026-10-31 21:27:01"
   },
   "Utah Jazz": {
     "team": "Utah Jazz",
@@ -103,8 +103,8 @@
     "opponent": "Portland Trail Blazers",
     "opponent_abbr": "POR",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Keyonte George",
@@ -144,7 +144,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 18:36:04"
+    "scraped_at": "2026-10-31 21:27:01"
   },
   "UTA": {
     "team": "Utah Jazz",
@@ -152,8 +152,8 @@
     "opponent": "Portland Trail Blazers",
     "opponent_abbr": "POR",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Keyonte George",
@@ -193,7 +193,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 18:36:04"
+    "scraped_at": "2026-10-31 21:27:01"
   },
   "Philadelphia 76ers": {
     "team": "Philadelphia 76ers",
@@ -217,7 +217,7 @@
       {
         "name": "Jaylen Brown",
         "position": "SF",
-        "status": "Toss Up To Play"
+        "status": "Very Likely To Play"
       },
       {
         "name": "Dean Wade",
@@ -235,11 +235,6 @@
         "name": "Ariel Hukporti",
         "position": "C",
         "status": "Very Likely To Play"
-      },
-      {
-        "name": "Jaylen Brown",
-        "position": "F",
-        "status": "Toss Up To Play"
       },
       {
         "name": "Tacko Fall",
@@ -267,7 +262,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 18:36:04"
+    "scraped_at": "2026-10-31 21:27:01"
   },
   "PHI": {
     "team": "Philadelphia 76ers",
@@ -291,7 +286,7 @@
       {
         "name": "Jaylen Brown",
         "position": "SF",
-        "status": "Toss Up To Play"
+        "status": "Very Likely To Play"
       },
       {
         "name": "Dean Wade",
@@ -309,11 +304,6 @@
         "name": "Ariel Hukporti",
         "position": "C",
         "status": "Very Likely To Play"
-      },
-      {
-        "name": "Jaylen Brown",
-        "position": "F",
-        "status": "Toss Up To Play"
       },
       {
         "name": "Tacko Fall",
@@ -341,7 +331,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 18:36:04"
+    "scraped_at": "2026-10-31 21:27:01"
   },
   "Charlotte Hornets": {
     "team": "Charlotte Hornets",
@@ -400,7 +390,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 18:36:04"
+    "scraped_at": "2026-10-31 21:27:01"
   },
   "CHA": {
     "team": "Charlotte Hornets",
@@ -459,7 +449,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 18:36:04"
+    "scraped_at": "2026-10-31 21:27:01"
   },
   "Atlanta Hawks": {
     "team": "Atlanta Hawks",
@@ -508,7 +498,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 18:36:04"
+    "scraped_at": "2026-10-31 21:27:01"
   },
   "ATL": {
     "team": "Atlanta Hawks",
@@ -557,7 +547,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 18:36:04"
+    "scraped_at": "2026-10-31 21:27:01"
   },
   "New Orleans Pelicans": {
     "team": "New Orleans Pelicans",
@@ -569,17 +559,17 @@
     "is_confirmed": false,
     "starters": [
       {
-        "name": "Dejounte Murray",
+        "name": "Jeremiah Fears",
         "position": "PG",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Jeremiah Fears",
+        "name": "Trey Murphy",
         "position": "SG",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Trey Murphy",
+        "name": "Herbert Jones",
         "position": "SF",
         "status": "Very Likely To Play"
       },
@@ -601,12 +591,17 @@
         "status": "Very Unlikely To Play"
       },
       {
+        "name": "Dejounte Murray",
+        "position": "G",
+        "status": "Very Unlikely To Play"
+      },
+      {
         "name": "Jordan Poole",
         "position": "G",
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 18:36:04"
+    "scraped_at": "2026-10-31 21:27:01"
   },
   "NOP": {
     "team": "New Orleans Pelicans",
@@ -618,17 +613,17 @@
     "is_confirmed": false,
     "starters": [
       {
-        "name": "Dejounte Murray",
+        "name": "Jeremiah Fears",
         "position": "PG",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Jeremiah Fears",
+        "name": "Trey Murphy",
         "position": "SG",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Trey Murphy",
+        "name": "Herbert Jones",
         "position": "SF",
         "status": "Very Likely To Play"
       },
@@ -650,12 +645,17 @@
         "status": "Very Unlikely To Play"
       },
       {
+        "name": "Dejounte Murray",
+        "position": "G",
+        "status": "Very Unlikely To Play"
+      },
+      {
         "name": "Jordan Poole",
         "position": "G",
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 18:36:04"
+    "scraped_at": "2026-10-31 21:27:01"
   },
   "Cleveland Cavaliers": {
     "team": "Cleveland Cavaliers",
@@ -709,7 +709,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 18:36:04"
+    "scraped_at": "2026-10-31 21:27:01"
   },
   "CLE": {
     "team": "Cleveland Cavaliers",
@@ -763,7 +763,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 18:36:04"
+    "scraped_at": "2026-10-31 21:27:01"
   },
   "Milwaukee Bucks": {
     "team": "Milwaukee Bucks",
@@ -801,7 +801,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-10-31 18:36:04"
+    "scraped_at": "2026-10-31 21:27:01"
   },
   "MIL": {
     "team": "Milwaukee Bucks",
@@ -839,7 +839,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-10-31 18:36:04"
+    "scraped_at": "2026-10-31 21:27:01"
   },
   "Minnesota Timberwolves": {
     "team": "Minnesota Timberwolves",
@@ -893,7 +893,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 18:36:04"
+    "scraped_at": "2026-10-31 21:27:01"
   },
   "MIN": {
     "team": "Minnesota Timberwolves",
@@ -947,7 +947,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 18:36:04"
+    "scraped_at": "2026-10-31 21:27:01"
   },
   "San Antonio Spurs": {
     "team": "San Antonio Spurs",
@@ -966,7 +966,7 @@
       {
         "name": "Stephon Castle",
         "position": "SG",
-        "status": "Very Likely To Play"
+        "status": "Toss Up To Play"
       },
       {
         "name": "Dylan Harper",
@@ -986,6 +986,11 @@
     ],
     "injuries": [
       {
+        "name": "Stephon Castle",
+        "position": "G",
+        "status": "Toss Up To Play"
+      },
+      {
         "name": "Tobias Harris",
         "position": "F",
         "status": "Very Unlikely To Play"
@@ -996,7 +1001,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 18:36:04"
+    "scraped_at": "2026-10-31 21:27:01"
   },
   "SAS": {
     "team": "San Antonio Spurs",
@@ -1015,7 +1020,7 @@
       {
         "name": "Stephon Castle",
         "position": "SG",
-        "status": "Very Likely To Play"
+        "status": "Toss Up To Play"
       },
       {
         "name": "Dylan Harper",
@@ -1035,6 +1040,11 @@
     ],
     "injuries": [
       {
+        "name": "Stephon Castle",
+        "position": "G",
+        "status": "Toss Up To Play"
+      },
+      {
         "name": "Tobias Harris",
         "position": "F",
         "status": "Very Unlikely To Play"
@@ -1045,7 +1055,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 18:36:04"
+    "scraped_at": "2026-10-31 21:27:01"
   },
   "Sacramento Kings": {
     "team": "Sacramento Kings",
@@ -1104,7 +1114,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 18:36:04"
+    "scraped_at": "2026-10-31 21:27:01"
   },
   "SAC": {
     "team": "Sacramento Kings",
@@ -1163,7 +1173,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 18:36:04"
+    "scraped_at": "2026-10-31 21:27:01"
   },
   "Memphis Grizzlies": {
     "team": "Memphis Grizzlies",
@@ -1217,7 +1227,7 @@
         "status": "Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 18:36:04"
+    "scraped_at": "2026-10-31 21:27:01"
   },
   "MEM": {
     "team": "Memphis Grizzlies",
@@ -1271,7 +1281,7 @@
         "status": "Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 18:36:04"
+    "scraped_at": "2026-10-31 21:27:01"
   },
   "Oklahoma City Thunder": {
     "team": "Oklahoma City Thunder",
@@ -1340,7 +1350,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 18:36:04"
+    "scraped_at": "2026-10-31 21:27:01"
   },
   "OKC": {
     "team": "Oklahoma City Thunder",
@@ -1409,7 +1419,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 18:36:04"
+    "scraped_at": "2026-10-31 21:27:01"
   },
   "Houston Rockets": {
     "team": "Houston Rockets",
@@ -1463,7 +1473,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 18:36:04"
+    "scraped_at": "2026-10-31 21:27:01"
   },
   "HOU": {
     "team": "Houston Rockets",
@@ -1517,6 +1527,6 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 18:36:04"
+    "scraped_at": "2026-10-31 21:27:01"
   }
 }
