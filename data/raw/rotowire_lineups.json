@@ -46,7 +46,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 21:27:01"
+    "scraped_at": "2026-10-31 22:35:56"
   },
   "POR": {
     "team": "Portland Trail Blazers",
@@ -95,7 +95,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 21:27:01"
+    "scraped_at": "2026-10-31 22:35:56"
   },
   "Utah Jazz": {
     "team": "Utah Jazz",
@@ -144,7 +144,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 21:27:01"
+    "scraped_at": "2026-10-31 22:35:56"
   },
   "UTA": {
     "team": "Utah Jazz",
@@ -193,7 +193,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 21:27:01"
+    "scraped_at": "2026-10-31 22:35:56"
   },
   "Philadelphia 76ers": {
     "team": "Philadelphia 76ers",
@@ -201,8 +201,8 @@
     "opponent": "Charlotte Hornets",
     "opponent_abbr": "CHA",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Tyrese Maxey",
@@ -237,16 +237,6 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Tacko Fall",
-        "position": "C",
-        "status": "Toss Up To Play"
-      },
-      {
-        "name": "Jabari Walker",
-        "position": "F",
-        "status": "Toss Up To Play"
-      },
-      {
         "name": "Dominick Barlow",
         "position": "C",
         "status": "Very Unlikely To Play"
@@ -262,7 +252,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 21:27:01"
+    "scraped_at": "2026-10-31 22:35:56"
   },
   "PHI": {
     "team": "Philadelphia 76ers",
@@ -270,8 +260,8 @@
     "opponent": "Charlotte Hornets",
     "opponent_abbr": "CHA",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Tyrese Maxey",
@@ -306,16 +296,6 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Tacko Fall",
-        "position": "C",
-        "status": "Toss Up To Play"
-      },
-      {
-        "name": "Jabari Walker",
-        "position": "F",
-        "status": "Toss Up To Play"
-      },
-      {
         "name": "Dominick Barlow",
         "position": "C",
         "status": "Very Unlikely To Play"
@@ -331,7 +311,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 21:27:01"
+    "scraped_at": "2026-10-31 22:35:56"
   },
   "Charlotte Hornets": {
     "team": "Charlotte Hornets",
@@ -339,8 +319,8 @@
     "opponent": "Philadelphia 76ers",
     "opponent_abbr": "PHI",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Dennis Schroder",
@@ -390,7 +370,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 21:27:01"
+    "scraped_at": "2026-10-31 22:35:56"
   },
   "CHA": {
     "team": "Charlotte Hornets",
@@ -398,8 +378,8 @@
     "opponent": "Philadelphia 76ers",
     "opponent_abbr": "PHI",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Dennis Schroder",
@@ -449,7 +429,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 21:27:01"
+    "scraped_at": "2026-10-31 22:35:56"
   },
   "Atlanta Hawks": {
     "team": "Atlanta Hawks",
@@ -498,7 +478,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 21:27:01"
+    "scraped_at": "2026-10-31 22:35:56"
   },
   "ATL": {
     "team": "Atlanta Hawks",
@@ -547,7 +527,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 21:27:01"
+    "scraped_at": "2026-10-31 22:35:56"
   },
   "New Orleans Pelicans": {
     "team": "New Orleans Pelicans",
@@ -601,7 +581,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 21:27:01"
+    "scraped_at": "2026-10-31 22:35:56"
   },
   "NOP": {
     "team": "New Orleans Pelicans",
@@ -655,7 +635,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 21:27:01"
+    "scraped_at": "2026-10-31 22:35:56"
   },
   "Cleveland Cavaliers": {
     "team": "Cleveland Cavaliers",
@@ -709,7 +689,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 21:27:01"
+    "scraped_at": "2026-10-31 22:35:56"
   },
   "CLE": {
     "team": "Cleveland Cavaliers",
@@ -763,7 +743,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 21:27:01"
+    "scraped_at": "2026-10-31 22:35:56"
   },
   "Milwaukee Bucks": {
     "team": "Milwaukee Bucks",
@@ -801,7 +781,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-10-31 21:27:01"
+    "scraped_at": "2026-10-31 22:35:56"
   },
   "MIL": {
     "team": "Milwaukee Bucks",
@@ -839,7 +819,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-10-31 21:27:01"
+    "scraped_at": "2026-10-31 22:35:56"
   },
   "Minnesota Timberwolves": {
     "team": "Minnesota Timberwolves",
@@ -871,17 +851,12 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Rudy Gobert",
+        "name": "Joan Beringer",
         "position": "C",
-        "status": "Toss Up To Play"
+        "status": "Very Likely To Play"
       }
     ],
     "injuries": [
-      {
-        "name": "Rudy Gobert",
-        "position": "C",
-        "status": "Toss Up To Play"
-      },
       {
         "name": "Donte DiVincenzo",
         "position": "G",
@@ -891,9 +866,14 @@
         "name": "Anthony Edwards",
         "position": "G",
         "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Rudy Gobert",
+        "position": "C",
+        "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 21:27:01"
+    "scraped_at": "2026-10-31 22:35:56"
   },
   "MIN": {
     "team": "Minnesota Timberwolves",
@@ -925,17 +905,12 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Rudy Gobert",
+        "name": "Joan Beringer",
         "position": "C",
-        "status": "Toss Up To Play"
+        "status": "Very Likely To Play"
       }
     ],
     "injuries": [
-      {
-        "name": "Rudy Gobert",
-        "position": "C",
-        "status": "Toss Up To Play"
-      },
       {
         "name": "Donte DiVincenzo",
         "position": "G",
@@ -945,9 +920,14 @@
         "name": "Anthony Edwards",
         "position": "G",
         "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Rudy Gobert",
+        "position": "C",
+        "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 21:27:01"
+    "scraped_at": "2026-10-31 22:35:56"
   },
   "San Antonio Spurs": {
     "team": "San Antonio Spurs",
@@ -1001,7 +981,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 21:27:01"
+    "scraped_at": "2026-10-31 22:35:56"
   },
   "SAS": {
     "team": "San Antonio Spurs",
@@ -1055,7 +1035,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 21:27:01"
+    "scraped_at": "2026-10-31 22:35:56"
   },
   "Sacramento Kings": {
     "team": "Sacramento Kings",
@@ -1114,7 +1094,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 21:27:01"
+    "scraped_at": "2026-10-31 22:35:56"
   },
   "SAC": {
     "team": "Sacramento Kings",
@@ -1173,7 +1153,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 21:27:01"
+    "scraped_at": "2026-10-31 22:35:56"
   },
   "Memphis Grizzlies": {
     "team": "Memphis Grizzlies",
@@ -1227,7 +1207,7 @@
         "status": "Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 21:27:01"
+    "scraped_at": "2026-10-31 22:35:56"
   },
   "MEM": {
     "team": "Memphis Grizzlies",
@@ -1281,7 +1261,7 @@
         "status": "Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 21:27:01"
+    "scraped_at": "2026-10-31 22:35:56"
   },
   "Oklahoma City Thunder": {
     "team": "Oklahoma City Thunder",
@@ -1350,7 +1330,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 21:27:01"
+    "scraped_at": "2026-10-31 22:35:56"
   },
   "OKC": {
     "team": "Oklahoma City Thunder",
@@ -1419,7 +1399,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 21:27:01"
+    "scraped_at": "2026-10-31 22:35:56"
   },
   "Houston Rockets": {
     "team": "Houston Rockets",
@@ -1473,7 +1453,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 21:27:01"
+    "scraped_at": "2026-10-31 22:35:56"
   },
   "HOU": {
     "team": "Houston Rockets",
@@ -1527,6 +1507,6 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 21:27:01"
+    "scraped_at": "2026-10-31 22:35:56"
   }
 }
