@@ -46,7 +46,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 22:35:56"
+    "scraped_at": "2026-10-31 23:35:49"
   },
   "POR": {
     "team": "Portland Trail Blazers",
@@ -95,7 +95,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 22:35:56"
+    "scraped_at": "2026-10-31 23:35:49"
   },
   "Utah Jazz": {
     "team": "Utah Jazz",
@@ -144,7 +144,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 22:35:56"
+    "scraped_at": "2026-10-31 23:35:49"
   },
   "UTA": {
     "team": "Utah Jazz",
@@ -193,7 +193,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 22:35:56"
+    "scraped_at": "2026-10-31 23:35:49"
   },
   "Philadelphia 76ers": {
     "team": "Philadelphia 76ers",
@@ -252,7 +252,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 22:35:56"
+    "scraped_at": "2026-10-31 23:35:49"
   },
   "PHI": {
     "team": "Philadelphia 76ers",
@@ -311,7 +311,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 22:35:56"
+    "scraped_at": "2026-10-31 23:35:49"
   },
   "Charlotte Hornets": {
     "team": "Charlotte Hornets",
@@ -370,7 +370,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 22:35:56"
+    "scraped_at": "2026-10-31 23:35:49"
   },
   "CHA": {
     "team": "Charlotte Hornets",
@@ -429,7 +429,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 22:35:56"
+    "scraped_at": "2026-10-31 23:35:49"
   },
   "Atlanta Hawks": {
     "team": "Atlanta Hawks",
@@ -437,8 +437,8 @@
     "opponent": "New Orleans Pelicans",
     "opponent_abbr": "NOP",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "CJ McCollum",
@@ -478,7 +478,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 22:35:56"
+    "scraped_at": "2026-10-31 23:35:49"
   },
   "ATL": {
     "team": "Atlanta Hawks",
@@ -486,8 +486,8 @@
     "opponent": "New Orleans Pelicans",
     "opponent_abbr": "NOP",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "CJ McCollum",
@@ -527,7 +527,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 22:35:56"
+    "scraped_at": "2026-10-31 23:35:49"
   },
   "New Orleans Pelicans": {
     "team": "New Orleans Pelicans",
@@ -535,8 +535,8 @@
     "opponent": "Atlanta Hawks",
     "opponent_abbr": "ATL",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Jeremiah Fears",
@@ -581,7 +581,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 22:35:56"
+    "scraped_at": "2026-10-31 23:35:49"
   },
   "NOP": {
     "team": "New Orleans Pelicans",
@@ -589,8 +589,8 @@
     "opponent": "Atlanta Hawks",
     "opponent_abbr": "ATL",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Jeremiah Fears",
@@ -635,7 +635,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 22:35:56"
+    "scraped_at": "2026-10-31 23:35:49"
   },
   "Cleveland Cavaliers": {
     "team": "Cleveland Cavaliers",
@@ -643,8 +643,8 @@
     "opponent": "Milwaukee Bucks",
     "opponent_abbr": "MIL",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "James Harden",
@@ -674,11 +674,6 @@
     ],
     "injuries": [
       {
-        "name": "Meleek Thomas",
-        "position": "G",
-        "status": "Likely To Play"
-      },
-      {
         "name": "Nae'Qwan Tomlin",
         "position": "F",
         "status": "Very Unlikely To Play"
@@ -689,7 +684,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 22:35:56"
+    "scraped_at": "2026-10-31 23:35:49"
   },
   "CLE": {
     "team": "Cleveland Cavaliers",
@@ -697,8 +692,8 @@
     "opponent": "Milwaukee Bucks",
     "opponent_abbr": "MIL",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "James Harden",
@@ -728,11 +723,6 @@
     ],
     "injuries": [
       {
-        "name": "Meleek Thomas",
-        "position": "G",
-        "status": "Likely To Play"
-      },
-      {
         "name": "Nae'Qwan Tomlin",
         "position": "F",
         "status": "Very Unlikely To Play"
@@ -743,7 +733,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 22:35:56"
+    "scraped_at": "2026-10-31 23:35:49"
   },
   "Milwaukee Bucks": {
     "team": "Milwaukee Bucks",
@@ -781,7 +771,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-10-31 22:35:56"
+    "scraped_at": "2026-10-31 23:35:49"
   },
   "MIL": {
     "team": "Milwaukee Bucks",
@@ -819,7 +809,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-10-31 22:35:56"
+    "scraped_at": "2026-10-31 23:35:49"
   },
   "Minnesota Timberwolves": {
     "team": "Minnesota Timberwolves",
@@ -827,8 +817,8 @@
     "opponent": "San Antonio Spurs",
     "opponent_abbr": "SAS",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "LaMelo Ball",
@@ -873,7 +863,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 22:35:56"
+    "scraped_at": "2026-10-31 23:35:49"
   },
   "MIN": {
     "team": "Minnesota Timberwolves",
@@ -881,8 +871,8 @@
     "opponent": "San Antonio Spurs",
     "opponent_abbr": "SAS",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "LaMelo Ball",
@@ -927,7 +917,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 22:35:56"
+    "scraped_at": "2026-10-31 23:35:49"
   },
   "San Antonio Spurs": {
     "team": "San Antonio Spurs",
@@ -946,7 +936,7 @@
       {
         "name": "Stephon Castle",
         "position": "SG",
-        "status": "Toss Up To Play"
+        "status": "Very Likely To Play"
       },
       {
         "name": "Dylan Harper",
@@ -966,11 +956,6 @@
     ],
     "injuries": [
       {
-        "name": "Stephon Castle",
-        "position": "G",
-        "status": "Toss Up To Play"
-      },
-      {
         "name": "Tobias Harris",
         "position": "F",
         "status": "Very Unlikely To Play"
@@ -981,7 +966,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 22:35:56"
+    "scraped_at": "2026-10-31 23:35:49"
   },
   "SAS": {
     "team": "San Antonio Spurs",
@@ -1000,7 +985,7 @@
       {
         "name": "Stephon Castle",
         "position": "SG",
-        "status": "Toss Up To Play"
+        "status": "Very Likely To Play"
       },
       {
         "name": "Dylan Harper",
@@ -1020,11 +1005,6 @@
     ],
     "injuries": [
       {
-        "name": "Stephon Castle",
-        "position": "G",
-        "status": "Toss Up To Play"
-      },
-      {
         "name": "Tobias Harris",
         "position": "F",
         "status": "Very Unlikely To Play"
@@ -1035,7 +1015,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 22:35:56"
+    "scraped_at": "2026-10-31 23:35:49"
   },
   "Sacramento Kings": {
     "team": "Sacramento Kings",
@@ -1043,8 +1023,8 @@
     "opponent": "Memphis Grizzlies",
     "opponent_abbr": "MEM",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Darius Acuff",
@@ -1094,7 +1074,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 22:35:56"
+    "scraped_at": "2026-10-31 23:35:49"
   },
   "SAC": {
     "team": "Sacramento Kings",
@@ -1102,8 +1082,8 @@
     "opponent": "Memphis Grizzlies",
     "opponent_abbr": "MEM",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Darius Acuff",
@@ -1153,7 +1133,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 22:35:56"
+    "scraped_at": "2026-10-31 23:35:49"
   },
   "Memphis Grizzlies": {
     "team": "Memphis Grizzlies",
@@ -1161,13 +1141,13 @@
     "opponent": "Sacramento Kings",
     "opponent_abbr": "SAC",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
-        "name": "Ty Jerome",
+        "name": "Cam Spencer",
         "position": "PG",
-        "status": "Toss Up To Play"
+        "status": "Very Likely To Play"
       },
       {
         "name": "Cedric Coward",
@@ -1194,20 +1174,20 @@
       {
         "name": "Ty Jerome",
         "position": "G",
-        "status": "Toss Up To Play"
+        "status": "Very Unlikely To Play"
       },
       {
         "name": "Scotty Pippen",
         "position": "G",
-        "status": "Toss Up To Play"
+        "status": "Very Unlikely To Play"
       },
       {
         "name": "Quinten Post",
         "position": "C",
-        "status": "Unlikely To Play"
+        "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 22:35:56"
+    "scraped_at": "2026-10-31 23:35:49"
   },
   "MEM": {
     "team": "Memphis Grizzlies",
@@ -1215,13 +1195,13 @@
     "opponent": "Sacramento Kings",
     "opponent_abbr": "SAC",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
-        "name": "Ty Jerome",
+        "name": "Cam Spencer",
         "position": "PG",
-        "status": "Toss Up To Play"
+        "status": "Very Likely To Play"
       },
       {
         "name": "Cedric Coward",
@@ -1248,20 +1228,20 @@
       {
         "name": "Ty Jerome",
         "position": "G",
-        "status": "Toss Up To Play"
+        "status": "Very Unlikely To Play"
       },
       {
         "name": "Scotty Pippen",
         "position": "G",
-        "status": "Toss Up To Play"
+        "status": "Very Unlikely To Play"
       },
       {
         "name": "Quinten Post",
         "position": "C",
-        "status": "Unlikely To Play"
+        "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 22:35:56"
+    "scraped_at": "2026-10-31 23:35:49"
   },
   "Oklahoma City Thunder": {
     "team": "Oklahoma City Thunder",
@@ -1330,7 +1310,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 22:35:56"
+    "scraped_at": "2026-10-31 23:35:49"
   },
   "OKC": {
     "team": "Oklahoma City Thunder",
@@ -1399,7 +1379,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 22:35:56"
+    "scraped_at": "2026-10-31 23:35:49"
   },
   "Houston Rockets": {
     "team": "Houston Rockets",
@@ -1407,8 +1387,8 @@
     "opponent": "Oklahoma City Thunder",
     "opponent_abbr": "OKC",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Marcus Smart",
@@ -1453,7 +1433,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 22:35:56"
+    "scraped_at": "2026-10-31 23:35:49"
   },
   "HOU": {
     "team": "Houston Rockets",
@@ -1461,8 +1441,8 @@
     "opponent": "Oklahoma City Thunder",
     "opponent_abbr": "OKC",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Marcus Smart",
@@ -1507,6 +1487,6 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 22:35:56"
+    "scraped_at": "2026-10-31 23:35:49"
   }
 }
