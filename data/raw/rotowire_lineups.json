@@ -46,7 +46,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 23:35:49"
+    "scraped_at": "2026-11-01 00:11:07"
   },
   "POR": {
     "team": "Portland Trail Blazers",
@@ -95,7 +95,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 23:35:49"
+    "scraped_at": "2026-11-01 00:11:07"
   },
   "Utah Jazz": {
     "team": "Utah Jazz",
@@ -144,7 +144,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 23:35:49"
+    "scraped_at": "2026-11-01 00:11:07"
   },
   "UTA": {
     "team": "Utah Jazz",
@@ -193,7 +193,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 23:35:49"
+    "scraped_at": "2026-11-01 00:11:07"
   },
   "Philadelphia 76ers": {
     "team": "Philadelphia 76ers",
@@ -252,7 +252,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 23:35:49"
+    "scraped_at": "2026-11-01 00:11:07"
   },
   "PHI": {
     "team": "Philadelphia 76ers",
@@ -311,7 +311,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 23:35:49"
+    "scraped_at": "2026-11-01 00:11:07"
   },
   "Charlotte Hornets": {
     "team": "Charlotte Hornets",
@@ -370,7 +370,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 23:35:49"
+    "scraped_at": "2026-11-01 00:11:07"
   },
   "CHA": {
     "team": "Charlotte Hornets",
@@ -429,7 +429,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 23:35:49"
+    "scraped_at": "2026-11-01 00:11:07"
   },
   "Atlanta Hawks": {
     "team": "Atlanta Hawks",
@@ -476,9 +476,14 @@
         "name": "Mouhamed Gueye",
         "position": "F",
         "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Jock Landale",
+        "position": "C",
+        "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 23:35:49"
+    "scraped_at": "2026-11-01 00:11:07"
   },
   "ATL": {
     "team": "Atlanta Hawks",
@@ -525,9 +530,14 @@
         "name": "Mouhamed Gueye",
         "position": "F",
         "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Jock Landale",
+        "position": "C",
+        "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 23:35:49"
+    "scraped_at": "2026-11-01 00:11:07"
   },
   "New Orleans Pelicans": {
     "team": "New Orleans Pelicans",
@@ -581,7 +591,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 23:35:49"
+    "scraped_at": "2026-11-01 00:11:07"
   },
   "NOP": {
     "team": "New Orleans Pelicans",
@@ -635,7 +645,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 23:35:49"
+    "scraped_at": "2026-11-01 00:11:07"
   },
   "Cleveland Cavaliers": {
     "team": "Cleveland Cavaliers",
@@ -684,7 +694,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 23:35:49"
+    "scraped_at": "2026-11-01 00:11:07"
   },
   "CLE": {
     "team": "Cleveland Cavaliers",
@@ -733,7 +743,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 23:35:49"
+    "scraped_at": "2026-11-01 00:11:07"
   },
   "Milwaukee Bucks": {
     "team": "Milwaukee Bucks",
@@ -741,8 +751,8 @@
     "opponent": "Cleveland Cavaliers",
     "opponent_abbr": "CLE",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Ryan Rollins",
@@ -771,7 +781,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-10-31 23:35:49"
+    "scraped_at": "2026-11-01 00:11:07"
   },
   "MIL": {
     "team": "Milwaukee Bucks",
@@ -779,8 +789,8 @@
     "opponent": "Cleveland Cavaliers",
     "opponent_abbr": "CLE",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Ryan Rollins",
@@ -809,7 +819,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-10-31 23:35:49"
+    "scraped_at": "2026-11-01 00:11:07"
   },
   "Minnesota Timberwolves": {
     "team": "Minnesota Timberwolves",
@@ -863,7 +873,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 23:35:49"
+    "scraped_at": "2026-11-01 00:11:07"
   },
   "MIN": {
     "team": "Minnesota Timberwolves",
@@ -917,7 +927,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 23:35:49"
+    "scraped_at": "2026-11-01 00:11:07"
   },
   "San Antonio Spurs": {
     "team": "San Antonio Spurs",
@@ -925,8 +935,8 @@
     "opponent": "Minnesota Timberwolves",
     "opponent_abbr": "MIN",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "De'Aaron Fox",
@@ -966,7 +976,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 23:35:49"
+    "scraped_at": "2026-11-01 00:11:07"
   },
   "SAS": {
     "team": "San Antonio Spurs",
@@ -974,8 +984,8 @@
     "opponent": "Minnesota Timberwolves",
     "opponent_abbr": "MIN",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "De'Aaron Fox",
@@ -1015,7 +1025,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 23:35:49"
+    "scraped_at": "2026-11-01 00:11:07"
   },
   "Sacramento Kings": {
     "team": "Sacramento Kings",
@@ -1074,7 +1084,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 23:35:49"
+    "scraped_at": "2026-11-01 00:11:07"
   },
   "SAC": {
     "team": "Sacramento Kings",
@@ -1133,7 +1143,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 23:35:49"
+    "scraped_at": "2026-11-01 00:11:07"
   },
   "Memphis Grizzlies": {
     "team": "Memphis Grizzlies",
@@ -1187,7 +1197,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 23:35:49"
+    "scraped_at": "2026-11-01 00:11:07"
   },
   "MEM": {
     "team": "Memphis Grizzlies",
@@ -1241,7 +1251,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 23:35:49"
+    "scraped_at": "2026-11-01 00:11:07"
   },
   "Oklahoma City Thunder": {
     "team": "Oklahoma City Thunder",
@@ -1249,8 +1259,8 @@
     "opponent": "Houston Rockets",
     "opponent_abbr": "HOU",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Shai Gilgeous-Alexander",
@@ -1310,7 +1320,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 23:35:49"
+    "scraped_at": "2026-11-01 00:11:07"
   },
   "OKC": {
     "team": "Oklahoma City Thunder",
@@ -1318,8 +1328,8 @@
     "opponent": "Houston Rockets",
     "opponent_abbr": "HOU",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Shai Gilgeous-Alexander",
@@ -1379,7 +1389,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 23:35:49"
+    "scraped_at": "2026-11-01 00:11:07"
   },
   "Houston Rockets": {
     "team": "Houston Rockets",
@@ -1433,7 +1443,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 23:35:49"
+    "scraped_at": "2026-11-01 00:11:07"
   },
   "HOU": {
     "team": "Houston Rockets",
@@ -1487,6 +1497,6 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-10-31 23:35:49"
+    "scraped_at": "2026-11-01 00:11:07"
   }
 }

@@ -1,4 +1,5 @@
 team_name,player_name,status,detail,side,type,return_date
+Atlanta Hawks,Jock Landale,Out,,Left,Hip,2026-11-02
 Atlanta Hawks,Mouhamed Gueye,Out,Fracture,Left,Foot,2026-11-20
 Atlanta Hawks,Henri Veesaar,Out,,Right,Knee,2027-07-01
 Boston Celtics,Mitchell Robinson,Day-To-Day,,,Rest,2026-11-01
@@ -12,7 +13,6 @@ Charlotte Hornets,Grant Williams,Out,,Right,Hamstring,2026-11-02
 Charlotte Hornets,Kylan Boswell,Out,Surgery,Right,Knee,2026-11-02
 Chicago Bulls,Dailyn Swain,Day-To-Day,Soreness,,Back,2026-11-02
 Chicago Bulls,Nic Claxton,Out,,Not Specified,Hamstring,2026-11-04
-Cleveland Cavaliers,Meleek Thomas,Day-To-Day,,,Foot,2026-10-31
 Cleveland Cavaliers,Jaylon Tyson,Out,Sprain,Right,Ankle,2026-11-02
 Dallas Mavericks,Sergio de Larrea,Out,Strain,Right,Knee,2026-11-04
 Dallas Mavericks,Santi Aldama,Out,Surgery,Right,Knee,2026-11-02
@@ -46,9 +46,9 @@ LA Clippers,Bradley Beal,Out,Inflammation,Right,Knee,2026-11-08
 LA Clippers,Jordan Miller,Out,Surgery,Left,Shoulder,2027-03-02
 Los Angeles Lakers,Ziaire Williams,Day-To-Day,,Left,Foot,2026-11-01
 Los Angeles Lakers,Adou Thiero,Out,Inflammation,Left,Knee,2026-11-01
-Memphis Grizzlies,Scotty Pippen Jr.,Day-To-Day,Soreness,,Back,2026-11-02
-Memphis Grizzlies,Ty Jerome,Day-To-Day,Soreness,,Back,2026-11-02
-Memphis Grizzlies,Quinten Post,Day-To-Day,Not Specified,Right,Ankle,2026-11-02
+Memphis Grizzlies,Ty Jerome,Out,Soreness,,Back,2026-11-02
+Memphis Grizzlies,Scotty Pippen Jr.,Out,Soreness,,Back,2026-11-02
+Memphis Grizzlies,Quinten Post,Out,Not Specified,Right,Ankle,2026-11-02
 Minnesota Timberwolves,Rudy Gobert,Out,Spasms,,Back,2026-11-02
 Minnesota Timberwolves,Anthony Edwards,Out,Surgery,Right,Knee,2026-12-21
 Minnesota Timberwolves,Donte DiVincenzo,Out,Surgery,Right,Achilles,2027-04-02
