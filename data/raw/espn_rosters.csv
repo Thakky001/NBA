@@ -349,7 +349,6 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 3914044,Landry Shamet,44,Guard,"6' 5""",190 lbs,29,9,Wichita State,18,New York Knicks
 3136195,Karl-Anthony Towns,32,Center,"7' 0""",248 lbs,30,12,Kentucky,18,New York Knicks
 4432808,James Wiseman,35,Center,"6' 11""",240 lbs,25,7,Memphis,18,New York Knicks
-4397018,Ochai Agbaji,30,Guard,"6' 5""",215 lbs,26,5,Kansas,25,Oklahoma City Thunder
 4684208,Brooks Barnhizer,23,Forward,"6' 6""",226 lbs,24,2,Northwestern,25,Oklahoma City Thunder
 2991350,Alex Caruso,9,Guard,"6' 5""",186 lbs,32,10,Texas A&M,25,Oklahoma City Thunder
 5105800,Josh Dix,21,Guard,"6' 5""",206 lbs,22,0,Creighton,25,Oklahoma City Thunder
@@ -489,12 +488,12 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 4873138,Ace Bailey,19,Guard,"6' 9""",200 lbs,20,2,Rutgers,26,Utah Jazz
 4277919,Mo Bamba,44,Center,"7' 0""",231 lbs,28,9,Texas,26,Utah Jazz
 4065673,Tony Bradley,13,Center,"6' 10""",248 lbs,28,9,North Carolina,26,Utah Jazz
+4683736,Kobe Bufkin,4,Guard,"6' 4""",195 lbs,23,4,Michigan,26,Utah Jazz
 4683766,Isaiah Collier,8,Guard,"6' 4""",210 lbs,22,3,USC,26,Utah Jazz
 4684793,Kyle Filipowski,2,Forward,"6' 11""",250 lbs,22,3,Duke,26,Utah Jazz
 4433627,Keyonte George,3,Guard,"6' 4""",185 lbs,22,4,Baylor,26,Utah Jazz
 4432811,Josh Green,5,Guard,"6' 6""",200 lbs,25,7,Arizona,26,Utah Jazz
 4397077,Jaxson Hayes,11,Center,"7' 0""",220 lbs,26,8,Texas,26,Utah Jazz
-4396963,Blake Hinson,25,Forward,"6' 8""",230 lbs,26,2,Pittsburgh,26,Utah Jazz
 4433618,Harrison Ingram,00,Forward,"6' 5""",230 lbs,23,3,North Carolina,26,Utah Jazz
 4277961,Jaren Jackson Jr.,20,Forward,"6' 10""",242 lbs,27,9,Michigan State,26,Utah Jazz
 4066336,Lauri Markkanen,23,Forward,"7' 1""",240 lbs,29,10,Arizona,26,Utah Jazz
