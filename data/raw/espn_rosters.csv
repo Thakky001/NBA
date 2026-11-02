@@ -176,7 +176,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 3037789,Bogdan Bogdanovic,31,Guard,"6' 5""",225 lbs,34,10,,10,Houston Rockets
 3102529,Clint Capela,30,Center,"6' 10""",256 lbs,32,13,,10,Houston Rockets
 4683860,Quadir Copeland,25,Guard,"6' 6""",220 lbs,23,0,NC State,10,Houston Rockets
-4592857,Isaiah Crawford,27,Forward,"6' 6""",220 lbs,24,3,Louisiana Tech,10,Houston Rockets
+4592857,Isaiah Crawford,27,Forward,"6' 6""",220 lbs,25,3,Louisiana Tech,10,Houston Rockets
 3202,Kevin Durant,7,Forward,"6' 11""",240 lbs,38,20,Texas,10,Houston Rockets
 4433192,Tari Eason,17,Forward,"6' 8""",215 lbs,25,5,LSU,10,Houston Rockets
 5105553,Julian Phillips,3,Forward,"6' 6""",198 lbs,22,4,Tennessee,10,Houston Rockets
@@ -454,7 +454,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 6578,Harrison Barnes,40,Forward,"6' 8""",225 lbs,34,15,North Carolina,24,San Antonio Spurs
 5105337,Maliq Brown,15,Forward,"6' 9""",235 lbs,22,0,Duke,24,San Antonio Spurs
 5061568,Carter Bryant,11,Forward,"6' 7""",230 lbs,20,2,Arizona,24,San Antonio Spurs
-4845367,Stephon Castle,5,Guard,"6' 6""",220 lbs,21,3,UConn,24,San Antonio Spurs
+4845367,Stephon Castle,5,Guard,"6' 6""",220 lbs,22,3,UConn,24,San Antonio Spurs
 4592479,Julian Champagnie,30,Forward,"6' 7""",215 lbs,25,5,St. John's,24,San Antonio Spurs
 4066259,De'Aaron Fox,4,Guard,"6' 3""",190 lbs,28,10,Kentucky,24,San Antonio Spurs
 5107968,Ja'Kobi Gillespie,17,Guard,"6' 1""",180 lbs,22,0,Tennessee,24,San Antonio Spurs
