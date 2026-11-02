@@ -46,7 +46,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-01 21:36:03"
+    "scraped_at": "2026-11-02 01:11:07"
   },
   "BOS": {
     "team": "Boston Celtics",
@@ -95,7 +95,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-01 21:36:03"
+    "scraped_at": "2026-11-02 01:11:07"
   },
   "Orlando Magic": {
     "team": "Orlando Magic",
@@ -159,7 +159,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-01 21:36:03"
+    "scraped_at": "2026-11-02 01:11:07"
   },
   "ORL": {
     "team": "Orlando Magic",
@@ -223,7 +223,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-01 21:36:03"
+    "scraped_at": "2026-11-02 01:11:07"
   },
   "Brooklyn Nets": {
     "team": "Brooklyn Nets",
@@ -231,8 +231,8 @@
     "opponent": "Indiana Pacers",
     "opponent_abbr": "IND",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Chaney Johnson",
@@ -272,7 +272,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-01 21:36:03"
+    "scraped_at": "2026-11-02 01:11:07"
   },
   "BKN": {
     "team": "Brooklyn Nets",
@@ -280,8 +280,8 @@
     "opponent": "Indiana Pacers",
     "opponent_abbr": "IND",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Chaney Johnson",
@@ -321,7 +321,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-01 21:36:03"
+    "scraped_at": "2026-11-02 01:11:07"
   },
   "Indiana Pacers": {
     "team": "Indiana Pacers",
@@ -329,8 +329,8 @@
     "opponent": "Brooklyn Nets",
     "opponent_abbr": "BKN",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Andrew Nembhard",
@@ -390,7 +390,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-01 21:36:03"
+    "scraped_at": "2026-11-02 01:11:07"
   },
   "IND": {
     "team": "Indiana Pacers",
@@ -398,8 +398,8 @@
     "opponent": "Brooklyn Nets",
     "opponent_abbr": "BKN",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Andrew Nembhard",
@@ -459,7 +459,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-01 21:36:03"
+    "scraped_at": "2026-11-02 01:11:07"
   },
   "Los Angeles Clippers": {
     "team": "Los Angeles Clippers",
@@ -467,8 +467,8 @@
     "opponent": "Golden State Warriors",
     "opponent_abbr": "GSW",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Darius Garland",
@@ -523,7 +523,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-01 21:36:03"
+    "scraped_at": "2026-11-02 01:11:07"
   },
   "LAC": {
     "team": "Los Angeles Clippers",
@@ -531,8 +531,8 @@
     "opponent": "Golden State Warriors",
     "opponent_abbr": "GSW",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Darius Garland",
@@ -587,7 +587,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-01 21:36:03"
+    "scraped_at": "2026-11-02 01:11:07"
   },
   "Golden State Warriors": {
     "team": "Golden State Warriors",
@@ -595,8 +595,8 @@
     "opponent": "Los Angeles Clippers",
     "opponent_abbr": "LAC",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "De'Anthony Melton",
@@ -614,22 +614,17 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Gui Santos",
+        "name": "Georges Niang",
         "position": "PF",
-        "status": "Likely To Play"
+        "status": "Very Likely To Play"
       },
       {
-        "name": "Graham Ike",
+        "name": "Charles Bassey",
         "position": "C",
         "status": "Very Likely To Play"
       }
     ],
     "injuries": [
-      {
-        "name": "Gui Santos",
-        "position": "F",
-        "status": "Likely To Play"
-      },
       {
         "name": "Jimmy Butler",
         "position": "F",
@@ -656,7 +651,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-01 21:36:03"
+    "scraped_at": "2026-11-02 01:11:07"
   },
   "GSW": {
     "team": "Golden State Warriors",
@@ -664,8 +659,8 @@
     "opponent": "Los Angeles Clippers",
     "opponent_abbr": "LAC",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "De'Anthony Melton",
@@ -683,22 +678,17 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Gui Santos",
+        "name": "Georges Niang",
         "position": "PF",
-        "status": "Likely To Play"
+        "status": "Very Likely To Play"
       },
       {
-        "name": "Graham Ike",
+        "name": "Charles Bassey",
         "position": "C",
         "status": "Very Likely To Play"
       }
     ],
     "injuries": [
-      {
-        "name": "Gui Santos",
-        "position": "F",
-        "status": "Likely To Play"
-      },
       {
         "name": "Jimmy Butler",
         "position": "F",
@@ -725,7 +715,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-01 21:36:03"
+    "scraped_at": "2026-11-02 01:11:07"
   },
   "Toronto Raptors": {
     "team": "Toronto Raptors",
@@ -774,7 +764,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-01 21:36:03"
+    "scraped_at": "2026-11-02 01:11:07"
   },
   "TOR": {
     "team": "Toronto Raptors",
@@ -823,7 +813,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-01 21:36:03"
+    "scraped_at": "2026-11-02 01:11:07"
   },
   "Los Angeles Lakers": {
     "team": "Los Angeles Lakers",
@@ -872,7 +862,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-01 21:36:03"
+    "scraped_at": "2026-11-02 01:11:07"
   },
   "LAL": {
     "team": "Los Angeles Lakers",
@@ -921,6 +911,6 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-01 21:36:03"
+    "scraped_at": "2026-11-02 01:11:07"
   }
 }
