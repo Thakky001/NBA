@@ -195,12 +195,12 @@ game_id,date,status,period,clock,clock_detail,season_type,home_team,home_id,home
 401909910,2026-11-03T00:30Z,STATUS_FINAL,4,0.0,Final,2,New York Knicks,18,103,Brooklyn Nets,17,90,,,,,Madison Square Garden
 401909911,2026-11-03T00:30Z,STATUS_FINAL,4,0.0,Final,2,Orlando Magic,19,94,Washington Wizards,27,103,,,,,Kia Center
 401909912,2026-11-03T00:30Z,STATUS_FINAL,4,0.0,Final,2,Philadelphia 76ers,20,126,Chicago Bulls,4,107,,,,,Xfinity Mobile Arena
-401909913,2026-11-03T01:00Z,STATUS_FINAL,4,0.0,Final,2,Dallas Mavericks,6,100,Sacramento Kings,23,115,,,,,American Airlines Center
+401909913,2026-11-03T01:00Z,STATUS_FINAL,4,12:00,Final,2,Dallas Mavericks,6,100,Sacramento Kings,23,115,,,,,American Airlines Center
 401909914,2026-11-03T01:00Z,STATUS_FINAL,5,0.0,Final/OT,2,Memphis Grizzlies,29,134,New Orleans Pelicans,3,135,,,,,FedExForum
-401909915,2026-11-03T01:00Z,STATUS_FINAL,4,0.0,Final,2,Minnesota Timberwolves,16,112,Milwaukee Bucks,15,100,,,,,Target Center
-401909916,2026-11-03T01:30Z,STATUS_IN_PROGRESS,4,5:30,5:30 - 4th Quarter,2,Houston Rockets,10,100,Boston Celtics,2,82,,,,,Toyota Center (Houston)
-401909917,2026-11-03T01:30Z,STATUS_IN_PROGRESS,4,6:45,6:45 - 4th Quarter,2,San Antonio Spurs,24,104,Utah Jazz,26,78,,,,,Frost Bank Center
-401909918,2026-11-03T02:00Z,STATUS_IN_PROGRESS,3,3:55,3:55 - 3rd Quarter,2,Denver Nuggets,7,80,Portland Trail Blazers,22,80,,,,,Ball Arena
-401909919,2026-11-03T03:00Z,STATUS_IN_PROGRESS,2,0.0,0.0 - 2nd Quarter,2,Golden State Warriors,9,27,Phoenix Suns,21,44,,,,,Chase Center
-401909920,2026-11-03T03:00Z,STATUS_IN_PROGRESS,2,8:19,8:19 - 2nd Quarter,2,LA Clippers,12,42,Toronto Raptors,28,31,,,,,Intuit Dome
-401909921,2026-11-03T03:00Z,STATUS_IN_PROGRESS,2,9:40,9:40 - 2nd Quarter,2,Los Angeles Lakers,13,40,Miami Heat,14,36,,,,,crypto.com Arena
+401909915,2026-11-03T01:00Z,STATUS_FINAL,4,12:00,Final,2,Minnesota Timberwolves,16,112,Milwaukee Bucks,15,100,,,,,Target Center
+401909916,2026-11-03T01:30Z,STATUS_FINAL,4,0.0,Final,2,Houston Rockets,10,109,Boston Celtics,2,93,,,,,Toyota Center (Houston)
+401909917,2026-11-03T01:30Z,STATUS_FINAL,4,12:00,Final,2,San Antonio Spurs,24,119,Utah Jazz,26,97,,,,,Frost Bank Center
+401909918,2026-11-03T02:00Z,STATUS_FINAL,4,12:00,Final,2,Denver Nuggets,7,110,Portland Trail Blazers,22,118,,,,,Ball Arena
+401909919,2026-11-03T03:00Z,STATUS_FINAL,4,12:00,Final,2,Golden State Warriors,9,116,Phoenix Suns,21,113,,,,,Chase Center
+401909920,2026-11-03T03:00Z,STATUS_FINAL,4,12:00,Final,2,LA Clippers,12,118,Toronto Raptors,28,125,,,,,Intuit Dome
+401909921,2026-11-03T03:00Z,STATUS_FINAL,4,12:00,Final,2,Los Angeles Lakers,13,138,Miami Heat,14,117,,,,,crypto.com Arena
