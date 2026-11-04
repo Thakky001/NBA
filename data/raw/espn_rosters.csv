@@ -232,7 +232,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 4683774,Bronny James,9,Guard,"6' 2""",210 lbs,22,3,USC,13,Los Angeles Lakers
 4433599,Arthur Kaluma,47,Forward,"6' 6""",223 lbs,24,2,Texas,13,Los Angeles Lakers
 4433136,Walker Kessler,14,Center,"7' 2""",245 lbs,25,5,Auburn,13,Los Angeles Lakers
-4592691,Jake LaRavia,12,Forward,"6' 7""",235 lbs,24,5,Wake Forest,13,Los Angeles Lakers
+4592691,Jake LaRavia,12,Forward,"6' 7""",235 lbs,25,5,Wake Forest,13,Los Angeles Lakers
 3155535,Kevon Looney,55,Forward,"6' 9""",222 lbs,30,12,UCLA,13,Los Angeles Lakers
 4596528,Lawson Lovering,,Center,"7' 1""",233 lbs,23,0,Utah,13,Los Angeles Lakers
 4278580,Sandro Mamukelashvili,54,Forward,"6' 9""",240 lbs,27,6,Seton Hall,13,Los Angeles Lakers
@@ -304,7 +304,6 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 4397002,Ayo Dosunmu,13,Guard,"6' 4""",200 lbs,26,6,Illinois,16,Minnesota Timberwolves
 4594268,Anthony Edwards,5,Guard,"6' 4""",225 lbs,25,7,Georgia,16,Minnesota Timberwolves
 5061585,Isaiah Evans,33,Forward,"6' 6""",186 lbs,20,0,Duke,16,Minnesota Timberwolves
-4592699,Enrique Freeman,25,Forward,"6' 9""",220 lbs,26,3,Akron,16,Minnesota Timberwolves
 3032976,Rudy Gobert,27,Center,"7' 1""",258 lbs,34,14,,16,Minnesota Timberwolves
 4592492,Bones Hyland,8,Guard,"6' 2""",169 lbs,26,6,VCU,16,Minnesota Timberwolves
 4433247,Jonathan Kuminga,24,Forward,"6' 7""",225 lbs,24,6,,16,Minnesota Timberwolves
