@@ -1,4 +1,5 @@
 team_name,player_name,status,detail,side,type,return_date
+Atlanta Hawks,Asa Newell,Day-To-Day,,Left,Toe,2026-11-06
 Atlanta Hawks,Jalen Johnson,Out,,Left,Ankle,2026-11-06
 Atlanta Hawks,Jock Landale,Out,,Left,Hip,2026-11-06
 Atlanta Hawks,Mouhamed Gueye,Out,Fracture,Left,Foot,2026-11-20
@@ -9,6 +10,7 @@ Brooklyn Nets,Egor Demin,Out,Bruise,Right,Leg,2026-11-07
 Brooklyn Nets,Tyler Bilodeau,Out,Sprain,Right,Shoulder,2026-11-06
 Charlotte Hornets,Kon Knueppel,Out,,Left,Hamstring,2026-11-04
 Charlotte Hornets,Grant Williams,Out,,Right,Hamstring,2026-11-09
+Chicago Bulls,Jalen Smith,Day-To-Day,,Left,Finger,2026-11-04
 Chicago Bulls,Nic Claxton,Out,Strain,Left,Hamstring,2026-11-08
 Cleveland Cavaliers,Jaylon Tyson,Out,Sprain,Right,Ankle,2026-11-06
 Cleveland Cavaliers,Peyton Watson,Out,Soreness,Right,Hamstring,2026-11-06
@@ -17,8 +19,6 @@ Dallas Mavericks,Max Christie,Out,Not Specified,Right,Hip,2026-11-06
 Dallas Mavericks,Tarik Biberovic,Out,Inflammation,Right,Heel,2026-11-12
 Dallas Mavericks,Dereck Lively II,Out,Surgery,Right,Foot,2026-11-12
 Dallas Mavericks,Sergio de Larrea,Out,Strain,Right,Knee,2026-11-06
-Denver Nuggets,Cameron Johnson,Day-To-Day,,,Lower Body,2026-11-04
-Denver Nuggets,Alpha Diallo,Day-To-Day,,Right,Wrist,2026-11-04
 Denver Nuggets,Spencer Jones,Out,Not Specified,Not Specified,Hamstring,2026-11-11
 Denver Nuggets,Julian Strawther,Out,Sprain,Left,Knee,2026-11-29
 Detroit Pistons,Isaiah Joe,Out,Bruise,Right,Hip,2026-11-08
@@ -62,8 +62,8 @@ Orlando Magic,Noah Penda,Out,Strain,Right,Hamstring,2026-11-18
 Orlando Magic,Izaiyah Nelson,Out,Surgery,Left,Ankle,2026-11-18
 Philadelphia 76ers,Dominick Barlow,Out,Fracture,Not Specified,Back,2026-11-18
 Philadelphia 76ers,Ariel Hukporti,Out,Surgery,Right,Achilles,2027-10-01
+Phoenix Suns,Jordan Goodwin,Out,Not Specified,Left,Calf,2026-11-05
 Phoenix Suns,Rasheer Fleming,Out,Sprain,Left,Ankle,2026-11-05
-Phoenix Suns,Jordan Goodwin,Day-To-Day,Not Specified,Left,Calf,2026-11-05
 Phoenix Suns,Mark Williams,Out,Surgery,Left,Shoulder,2027-02-03
 Portland Trail Blazers,Ja Morant,Out,Not Specified,Left,Hamstring,2026-12-01
 Portland Trail Blazers,Shaedon Sharpe,Out,Surgery,Right,Knee,2027-03-02
@@ -74,7 +74,6 @@ Sacramento Kings,Ben Simmons,Out,Surgery,Right,Achilles,2027-10-01
 San Antonio Spurs,Tobias Harris,Out,Strain,Left,Calf,2026-11-09
 San Antonio Spurs,Jayden Quaintance,Out,Surgery,Right,Knee,2026-12-03
 Toronto Raptors,Kawhi Leonard,Out,Inflammation,Left,Knee,2026-11-23
-Toronto Raptors,Jakob Poeltl,Day-To-Day,Inflammation,Left,Shoulder,2026-11-04
 Toronto Raptors,Nate Bittle,Out,Fracture,Right,Foot,2026-11-09
 Utah Jazz,Jusuf Nurkic,Out,Strain,Right,Foot,2026-11-13
 Utah Jazz,Jaren Jackson Jr.,Out,Not Specified,Right,Knee,2026-12-14
