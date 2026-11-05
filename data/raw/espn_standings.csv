@@ -1,31 +1,31 @@
 team,conference,wins,losses,win_pct,games_behind,streak,home_record,away_record,points_for,points_against,point_diff
+Chicago Bulls,Eastern Conference,1.0,7.0,0.125,6.5,-6.0,0-0,0-0,893.0,1037.0,-144.0
 Milwaukee Bucks,Eastern Conference,1.0,7.0,0.125,6.5,-4.0,0-0,0-0,880.0,978.0,-98.0
-Brooklyn Nets,Eastern Conference,1.0,6.0,0.14285715,6.0,-1.0,0-0,0-0,739.0,799.0,-60.0
-Chicago Bulls,Eastern Conference,1.0,6.0,0.14285715,6.0,-5.0,0-0,0-0,788.0,902.0,-114.0
-Indiana Pacers,Eastern Conference,2.0,6.0,0.25,5.5,-5.0,0-0,0-0,894.0,925.0,-31.0
-Miami Heat,Eastern Conference,2.0,5.0,0.2857143,5.0,-1.0,0-0,0-0,827.0,867.0,-40.0
+Brooklyn Nets,Eastern Conference,2.0,6.0,0.25,5.5,1.0,0-0,0-0,853.0,903.0,-50.0
+Charlotte Hornets,Eastern Conference,3.0,6.0,0.33333334,5.0,-5.0,0-0,0-0,883.0,983.0,-100.0
+Indiana Pacers,Eastern Conference,3.0,6.0,0.33333334,5.0,1.0,0-0,0-0,1001.0,1028.0,-27.0
 Orlando Magic,Eastern Conference,2.0,5.0,0.2857143,5.0,-2.0,0-0,0-0,740.0,803.0,-63.0
-Charlotte Hornets,Eastern Conference,3.0,5.0,0.375,4.5,-4.0,0-0,0-0,779.0,869.0,-90.0
-New York Knicks,Eastern Conference,3.0,4.0,0.42857143,4.0,1.0,0-0,0-0,745.0,736.0,9.0
+Miami Heat,Eastern Conference,3.0,5.0,0.375,4.5,1.0,0-0,0-0,944.0,983.0,-39.0
+Toronto Raptors,Eastern Conference,4.0,4.0,0.5,3.5,-1.0,0-0,0-0,943.0,908.0,35.0
+Cleveland Cavaliers,Eastern Conference,4.0,4.0,0.5,3.5,-2.0,0-0,0-0,954.0,937.0,17.0
+New York Knicks,Eastern Conference,4.0,4.0,0.5,3.5,2.0,0-0,0-0,880.0,841.0,39.0
 Washington Wizards,Eastern Conference,4.0,4.0,0.5,3.5,-1.0,0-0,0-0,871.0,872.0,-1.0
-Toronto Raptors,Eastern Conference,4.0,3.0,0.5714286,3.0,1.0,0-0,0-0,834.0,780.0,54.0
-Cleveland Cavaliers,Eastern Conference,4.0,3.0,0.5714286,3.0,-1.0,0-0,0-0,838.0,813.0,25.0
 Atlanta Hawks,Eastern Conference,5.0,4.0,0.5555556,3.0,2.0,0-0,0-0,1042.0,1017.0,25.0
 Detroit Pistons,Eastern Conference,6.0,2.0,0.75,1.5,-1.0,0-0,0-0,889.0,814.0,75.0
 Boston Celtics,Eastern Conference,6.0,2.0,0.75,1.5,1.0,0-0,0-0,914.0,866.0,48.0
 Philadelphia 76ers,Eastern Conference,8.0,1.0,0.8888889,0.0,5.0,0-0,0-0,999.0,947.0,52.0
-LA Clippers,Western Conference,1.0,6.0,0.14285715,5.5,-6.0,0-0,0-0,757.0,808.0,-51.0
-Utah Jazz,Western Conference,1.0,6.0,0.14285715,5.5,-5.0,0-0,0-0,749.0,832.0,-83.0
-Sacramento Kings,Western Conference,1.0,6.0,0.14285715,5.5,1.0,0-0,0-0,771.0,870.0,-99.0
-Phoenix Suns,Western Conference,1.0,4.0,0.2,4.5,-3.0,0-0,0-0,561.0,614.0,-53.0
-New Orleans Pelicans,Western Conference,3.0,4.0,0.42857143,3.5,3.0,0-0,0-0,853.0,841.0,12.0
-Denver Nuggets,Western Conference,3.0,3.0,0.5,3.0,-1.0,0-0,0-0,680.0,694.0,-14.0
-Dallas Mavericks,Western Conference,4.0,3.0,0.5714286,2.5,-1.0,0-0,0-0,786.0,786.0,0.0
-Golden State Warriors,Western Conference,5.0,3.0,0.625,2.0,5.0,0-0,0-0,940.0,917.0,23.0
-Minnesota Timberwolves,Western Conference,5.0,3.0,0.625,2.0,1.0,0-0,0-0,952.0,861.0,91.0
-Oklahoma City Thunder,Western Conference,5.0,2.0,0.71428573,1.5,1.0,0-0,0-0,756.0,754.0,2.0
-San Antonio Spurs,Western Conference,5.0,2.0,0.71428573,1.5,5.0,0-0,0-0,823.0,758.0,65.0
-Portland Trail Blazers,Western Conference,5.0,1.0,0.8333333,1.0,2.0,0-0,0-0,721.0,656.0,65.0
-Los Angeles Lakers,Western Conference,6.0,2.0,0.75,1.0,2.0,0-0,0-0,980.0,922.0,58.0
-Memphis Grizzlies,Western Conference,6.0,1.0,0.85714287,0.5,-1.0,0-0,0-0,861.0,771.0,90.0
-Houston Rockets,Western Conference,7.0,1.0,0.875,0.0,2.0,0-0,0-0,954.0,851.0,103.0
+LA Clippers,Western Conference,1.0,7.0,0.125,5.5,-7.0,0-0,0-0,873.0,925.0,-52.0
+Utah Jazz,Western Conference,1.0,7.0,0.125,5.5,-6.0,0-0,0-0,862.0,952.0,-90.0
+Sacramento Kings,Western Conference,1.0,7.0,0.125,5.5,-1.0,0-0,0-0,874.0,986.0,-112.0
+Phoenix Suns,Western Conference,1.0,5.0,0.16666667,4.5,-4.0,0-0,0-0,680.0,746.0,-66.0
+New Orleans Pelicans,Western Conference,4.0,4.0,0.5,2.5,4.0,0-0,0-0,973.0,954.0,19.0
+Dallas Mavericks,Western Conference,4.0,4.0,0.5,2.5,-2.0,0-0,0-0,897.0,898.0,-1.0
+Denver Nuggets,Western Conference,4.0,3.0,0.5714286,2.0,1.0,0-0,0-0,808.0,803.0,5.0
+Golden State Warriors,Western Conference,5.0,3.0,0.625,1.5,5.0,0-0,0-0,940.0,917.0,23.0
+Minnesota Timberwolves,Western Conference,6.0,3.0,0.6666667,1.0,2.0,0-0,0-0,1069.0,968.0,101.0
+Oklahoma City Thunder,Western Conference,6.0,2.0,0.75,0.5,2.0,0-0,0-0,880.0,870.0,10.0
+San Antonio Spurs,Western Conference,6.0,2.0,0.75,0.5,6.0,0-0,0-0,935.0,869.0,66.0
+Memphis Grizzlies,Western Conference,6.0,2.0,0.75,0.5,-2.0,0-0,0-0,964.0,878.0,86.0
+Portland Trail Blazers,Western Conference,6.0,1.0,0.85714287,0.0,3.0,0-0,0-0,853.0,775.0,78.0
+Los Angeles Lakers,Western Conference,7.0,2.0,0.7777778,0.0,3.0,0-0,0-0,1096.0,1025.0,71.0
+Houston Rockets,Western Conference,7.0,2.0,0.7777778,0.0,-1.0,0-0,0-0,1061.0,968.0,93.0

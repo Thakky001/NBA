@@ -16,7 +16,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 4431680,Onyeka Okongwu,17,Forward,"6' 10""",240 lbs,25,7,USC,1,Atlanta Hawks
 5105571,Henri Veesaar,13,Center,"7' 0""",227 lbs,22,0,North Carolina,1,Atlanta Hawks
 4397183,Aaron Wiggins,2,Guard,"6' 5""",190 lbs,27,6,Maryland,1,Atlanta Hawks
-4431714,Jalen Wilson,22,Forward,"6' 6""",220 lbs,25,4,Kansas,1,Atlanta Hawks
+4431714,Jalen Wilson,22,Forward,"6' 6""",220 lbs,26,4,Kansas,1,Atlanta Hawks
 4433188,Devin Carter,99,Guard,"6' 2""",188 lbs,24,3,Providence,2,Boston Celtics
 5142621,Chris Cenac Jr.,12,Forward,"6' 11""",240 lbs,19,0,Houston,2,Boston Celtics
 3195,Mike Conley,45,Guard,"6' 1""",175 lbs,39,20,Ohio State,2,Boston Celtics
@@ -179,7 +179,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 4592857,Isaiah Crawford,27,Forward,"6' 6""",220 lbs,25,3,Louisiana Tech,10,Houston Rockets
 3202,Kevin Durant,7,Forward,"6' 11""",240 lbs,38,20,Texas,10,Houston Rockets
 4433192,Tari Eason,17,Forward,"6' 8""",215 lbs,25,5,LSU,10,Houston Rockets
-5105553,Julian Phillips,3,Forward,"6' 6""",198 lbs,22,4,Tennessee,10,Houston Rockets
+5105553,Julian Phillips,3,Forward,"6' 6""",198 lbs,23,4,Tennessee,10,Houston Rockets
 4871144,Alperen Sengun,28,Center,"6' 11""",243 lbs,24,6,,10,Houston Rockets
 4711272,Reed Sheppard,15,Guard,"6' 2""",185 lbs,22,3,Kentucky,10,Houston Rockets
 2990992,Marcus Smart,36,Guard,"6' 3""",220 lbs,32,13,Oklahoma State,10,Houston Rockets
@@ -307,7 +307,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 3032976,Rudy Gobert,27,Center,"7' 1""",258 lbs,34,14,,16,Minnesota Timberwolves
 4592492,Bones Hyland,8,Guard,"6' 2""",169 lbs,26,6,VCU,16,Minnesota Timberwolves
 4433247,Jonathan Kuminga,24,Forward,"6' 7""",225 lbs,24,6,,16,Minnesota Timberwolves
-3136196,Trey Lyles,41,Forward,"6' 9""",234 lbs,30,11,Kentucky,16,Minnesota Timberwolves
+3136196,Trey Lyles,41,Forward,"6' 9""",234 lbs,31,11,Kentucky,16,Minnesota Timberwolves
 4431671,Jaden McDaniels,3,Forward,"6' 9""",185 lbs,26,7,Washington,16,Minnesota Timberwolves
 4592979,Zyon Pullin,15,Guard,"6' 4""",206 lbs,25,3,Florida,16,Minnesota Timberwolves
 4432847,Terrence Shannon Jr.,4,Guard,"6' 6""",215 lbs,26,3,Illinois,16,Minnesota Timberwolves
@@ -394,7 +394,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 4871141,Ariel Hukporti,55,Center,"7' 0""",258 lbs,24,3,,20,Philadelphia 76ers
 1966,LeBron James,23,Forward,"6' 9""",250 lbs,41,24,,20,Philadelphia 76ers
 4433144,Caleb Love,8,Guard,"6' 3""",214 lbs,25,2,Arizona,20,Philadelphia 76ers
-4431678,Tyrese Maxey,0,Guard,"6' 2""",204 lbs,25,7,Kentucky,20,Philadelphia 76ers
+4431678,Tyrese Maxey,0,Guard,"6' 2""",204 lbs,26,7,Kentucky,20,Philadelphia 76ers
 4873090,Labaron Philon Jr.,00,Guard,"6' 3""",179 lbs,20,0,Alabama,20,Philadelphia 76ers
 5099752,Rayan Rupert,12,Guard,"6' 7""",207 lbs,22,4,,20,Philadelphia 76ers
 4351851,Anfernee Simons,5,Guard,"6' 4""",206 lbs,27,9,,20,Philadelphia 76ers
