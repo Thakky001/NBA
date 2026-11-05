@@ -198,11 +198,21 @@ class TrendAnalyzer:
         # Anchor line for tracking line movement
         anchor_line = open_line if (open_line is not None and open_line > 0) else over_under_line
 
-        # Check early season status
-        home_games = features.get('home_games_played', 0)
-        away_games = features.get('away_games_played', 0)
-        min_games = min(home_games, away_games)
-        is_early_season = min_games < 10
+        # Check early season status (expanded to 20 games)
+        home_games = features.get('home_games_played')
+        away_games = features.get('away_games_played')
+        if home_games is not None and away_games is not None:
+            min_games = min(home_games, away_games)
+            is_early_season = min_games < 20
+        else:
+            min_games = 20
+            is_early_season = False
+
+        # Early-season shrinkage: empirical data shows actual scoring runs -3.06 pts below market line
+        # Smoothly deflate projected total by up to -2.5 pts when min_games < 20
+        if is_early_season:
+            early_season_total_shrinkage = 2.5 * max(0.0, (20.0 - min_games) / 20.0)
+            raw_projected_total = raw_projected_total - early_season_total_shrinkage
 
         effective_market_weight = max(0.0, min(1.0, float(market_weight)))
 
@@ -247,15 +257,25 @@ class TrendAnalyzer:
             # Candidate EV against standard -110 bookmaker line (breakeven 52.38%)
             cand_ev = calculate_ev_with_push(cand_prob, market_odds[0 if cand_dir == 'OVER' else 1], push_prob=push_prob) if market_odds else None
 
-            # Dual Conviction Gate:
-            # STRONG: |total_edge| >= 2.0 pts AND cand_prob >= 56.5% AND cand_ev >= +5.0%
-            # LEAN: |total_edge| >= 1.0 pts AND cand_prob >= 53.8% AND cand_ev >= +1.5% (Only mid-season min_games >= 10)
-            if abs(total_edge) >= 2.0 and cand_prob >= 0.565 and (cand_ev is None or cand_ev >= 0.05):
-                recommendation = f"STRONG {cand_dir}"
-            elif not is_early_season and abs(total_edge) >= 1.0 and cand_prob >= 0.538 and (cand_ev is None or cand_ev >= 0.015):
-                recommendation = f"LEAN {cand_dir}"
+            # Asymmetric Conviction Gate:
+            # OVER: Higher threshold (edge >= 5.0 pts) to filter out high-loss 3.0-5.0 edge trap; no LEAN OVER in early season
+            # UNDER: Preserves high-performing baseline (edge <= -2.0 pts for STRONG, edge <= -1.0 pts for LEAN mid-season)
+            if cand_dir == 'OVER':
+                if total_edge >= 5.0 and cand_prob >= 0.565 and (cand_ev is None or cand_ev >= 0.05):
+                    recommendation = "STRONG OVER"
+                elif not is_early_season and total_edge >= 3.0 and cand_prob >= 0.538 and (cand_ev is None or cand_ev >= 0.015):
+                    recommendation = "LEAN OVER"
+                else:
+                    recommendation = "NEUTRAL"
+            elif cand_dir == 'UNDER':
+                if abs(total_edge) >= 2.0 and cand_prob >= 0.565 and (cand_ev is None or cand_ev >= 0.05):
+                    recommendation = "STRONG UNDER"
+                elif not is_early_season and abs(total_edge) >= 1.0 and cand_prob >= 0.538 and (cand_ev is None or cand_ev >= 0.015):
+                    recommendation = "LEAN UNDER"
+                else:
+                    recommendation = "NEUTRAL"
             else:
-                recommendation = 'NEUTRAL'
+                recommendation = "NEUTRAL"
 
             win_prob = win_prob_over
             win_prob_under = total_probs['loss']

@@ -239,7 +239,7 @@ class TestTrendAnalyzer(unittest.TestCase):
 
     def test_early_season_conviction_filter_ou_and_spread(self):
         """Verify early season (min_games < 10) suppresses LEAN picks to NEUTRAL/PASS, while keeping STRONG picks."""
-        # These fixtures now use the unshrunk model edge; no arbitrary early-season market blend.
+        # 1. Early season O/U with moderate edge (+2.75 pts) -> suppressed to NEUTRAL under asymmetric threshold (requires >= 5.0)
         self.mock_fe.compute_matchup_features.return_value = {
             'home_games_played': 2,
             'away_games_played': 2,
@@ -248,10 +248,10 @@ class TestTrendAnalyzer(unittest.TestCase):
             'combined_avg_season': 225.0
         }
         res_ou_lean = self.analyzer.analyze_over_under('BOS', 'MIA', over_under_line=220.0, open_line=220.0, market_weight=0.0)
-        self.assertEqual(res_ou_lean['recommendation'], 'STRONG OVER')
+        self.assertEqual(res_ou_lean['recommendation'], 'NEUTRAL')
         self.assertEqual(res_ou_lean['kelly_quarter'], 0.0)
 
-        # 2. Early season O/U with strong edge (3.0 pts) -> fires STRONG OVER
+        # 2. Early season O/U with strong edge (>= 5.0 pts after shrinkage) -> fires STRONG OVER
         self.mock_fe.compute_matchup_features.return_value = {
             'home_games_played': 2,
             'away_games_played': 2,
@@ -264,7 +264,7 @@ class TestTrendAnalyzer(unittest.TestCase):
         self.assertEqual(res_ou_strong['kelly_quarter'], 0.0)
         self.assertIsNone(res_ou_strong['ev'])
 
-        # 3. Mid-season O/U with small edge (1.5 pts) -> allows LEAN OVER
+        # 3. Mid-season O/U with moderate edge (>= 3.0 pts) -> allows LEAN OVER
         self.mock_fe.compute_matchup_features.return_value = {
             'home_games_played': 20,
             'away_games_played': 20,

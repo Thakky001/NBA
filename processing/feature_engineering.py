@@ -373,14 +373,20 @@ class FeatureEngineer:
         
         h2h = self.get_head_to_head(home_team, away_team, before_date=game_date)
         
-        comb_5 = home_form_5['avg_points_scored'] + away_form_5['avg_points_scored']
-        comb_10 = home_form_10['avg_points_scored'] + away_form_10['avg_points_scored']
+        # Defensive Form weighting: combine 50% offensive scoring power and 50% defensive containment power
+        # Expected Home = 0.5 * (home_scored + away_allowed)
+        # Expected Away = 0.5 * (away_scored + home_allowed)
+        # Combined = Expected Home + Expected Away
+        comb_5 = 0.5 * (home_form_5['avg_points_scored'] + away_form_5['avg_points_scored']) + \
+                 0.5 * (home_form_5['avg_points_allowed'] + away_form_5['avg_points_allowed'])
+        comb_10 = 0.5 * (home_form_10['avg_points_scored'] + away_form_10['avg_points_scored']) + \
+                  0.5 * (home_form_10['avg_points_allowed'] + away_form_10['avg_points_allowed'])
         
-        # Season avg (we approximate using all past games available in form)
-        # For a full implementation, you'd calculate season-to-date average here.
+        # Season avg (approximate using all past games available in form with offense + defense balance)
         home_all = self.get_team_recent_form(home_team, 100, before_date=game_date)
         away_all = self.get_team_recent_form(away_team, 100, before_date=game_date)
-        comb_season = home_all['avg_points_scored'] + away_all['avg_points_scored']
+        comb_season = 0.5 * (home_all['avg_points_scored'] + away_all['avg_points_scored']) + \
+                      0.5 * (home_all['avg_points_allowed'] + away_all['avg_points_allowed'])
         
         if comb_5 > comb_10 > comb_season:
             trend = 'UP'
@@ -564,11 +570,46 @@ class FeatureEngineer:
         result['matchup_pace_style'] = style
         result['fatigue_flag'] = fatigue
         
-        # Add early season indicators
-        home_form_all = self.get_team_recent_form(home_team, 100)
-        away_form_all = self.get_team_recent_form(away_team, 100)
-        result['home_games_played'] = home_form_all.get('wins', 0) + home_form_all.get('losses', 0)
-        result['away_games_played'] = away_form_all.get('wins', 0) + away_form_all.get('losses', 0)
+        # Add early season indicators (pass before_date to avoid counting future/unplayed games)
+        home_form_all = self.get_team_recent_form(home_team, 100, before_date=game_date)
+        away_form_all = self.get_team_recent_form(away_team, 100, before_date=game_date)
+        
+        # If game_date is provided, strictly count current regular season games
+        if game_date:
+            g_dt = pd.to_datetime(game_date)
+            season_year = g_dt.year if g_dt.month >= 10 else g_dt.year - 1
+            season_start = pd.Timestamp(year=season_year, month=10, day=1)
+            
+            h_games = self._get_team_games(home_team, before_date=g_dt)
+            if not h_games.empty:
+                h_dates = pd.to_datetime(h_games['date'])
+                if hasattr(h_dates.dt, 'tz') and h_dates.dt.tz is not None:
+                    h_dates = h_dates.dt.tz_localize(None)
+                h_mask = (h_dates >= season_start)
+                if 'season_type' in h_games.columns:
+                    h_mask = h_mask & ((h_games['season_type'] == 2) | (h_games['season_type'].isna()))
+                if 'home_score' in h_games.columns:
+                    h_mask = h_mask & (h_games['home_score'].notna()) & (h_games['home_score'] > 0)
+                result['home_games_played'] = int(h_mask.sum())
+            else:
+                result['home_games_played'] = home_form_all.get('wins', 0) + home_form_all.get('losses', 0)
+                
+            a_games = self._get_team_games(away_team, before_date=g_dt)
+            if not a_games.empty:
+                a_dates = pd.to_datetime(a_games['date'])
+                if hasattr(a_dates.dt, 'tz') and a_dates.dt.tz is not None:
+                    a_dates = a_dates.dt.tz_localize(None)
+                a_mask = (a_dates >= season_start)
+                if 'season_type' in a_games.columns:
+                    a_mask = a_mask & ((a_games['season_type'] == 2) | (a_games['season_type'].isna()))
+                if 'home_score' in a_games.columns:
+                    a_mask = a_mask & (a_games['home_score'].notna()) & (a_games['home_score'] > 0)
+                result['away_games_played'] = int(a_mask.sum())
+            else:
+                result['away_games_played'] = away_form_all.get('wins', 0) + away_form_all.get('losses', 0)
+        else:
+            result['home_games_played'] = home_form_all.get('wins', 0) + home_form_all.get('losses', 0)
+            result['away_games_played'] = away_form_all.get('wins', 0) + away_form_all.get('losses', 0)
         
         # Add Player-Based Valuation (Roster Ratings)
         roster_data = self.get_roster_ratings(home_team, away_team)

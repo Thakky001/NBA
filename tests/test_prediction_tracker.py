@@ -160,8 +160,9 @@ class TestPredictionTracker(unittest.TestCase):
             'over_under': 220.0
         }])
 
-        # Future date: 2026-10-30
-        count = record_slate_predictions('2026-10-30', mock_scoreboard, mock_analyzer)
+        # Dynamic future date (2 days ahead) to ensure test robustness over calendar time
+        future_date = (datetime.now(timezone.utc) + timedelta(days=2)).strftime('%Y-%m-%d')
+        count = record_slate_predictions(future_date, mock_scoreboard, mock_analyzer)
         self.assertEqual(count, 0, "Must not record predictions for future dates")
         mock_analyzer.full_matchup_analysis.assert_not_called()
 
