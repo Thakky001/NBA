@@ -1,6 +1,4 @@
 game_id,date,status,period,clock,clock_detail,season_type,home_team,home_id,home_score,away_team,away_id,away_score,spread,over_under,home_ml,away_ml,venue
-401871161,2026-05-08T23:00Z,STATUS_FINAL,4,12:00,Final,3,Philadelphia 76ers,20,94,New York Knicks,18,108,,,,,Xfinity Mobile Arena
-401871154,2026-05-09T01:30Z,STATUS_FINAL,4,12:00,Final,3,Minnesota Timberwolves,16,108,San Antonio Spurs,24,115,,,,,Target Center
 401871335,2026-05-09T19:00Z,STATUS_FINAL,4,12:00,Final,3,Cleveland Cavaliers,5,116,Detroit Pistons,8,109,,,,,Rocket Arena
 401871328,2026-05-10T00:30Z,STATUS_FINAL,4,0.0,Final,3,Los Angeles Lakers,13,108,Oklahoma City Thunder,25,131,,,,,crypto.com Arena
 401871162,2026-05-10T19:30Z,STATUS_FINAL,4,12:00,Final,3,Philadelphia 76ers,20,114,New York Knicks,18,144,,,,,Xfinity Mobile Arena
@@ -202,17 +200,19 @@ game_id,date,status,period,clock,clock_detail,season_type,home_team,home_id,home
 401909919,2026-11-03T03:00Z,STATUS_FINAL,4,12:00,Final,2,Golden State Warriors,9,116,Phoenix Suns,21,113,,,,,Chase Center
 401909920,2026-11-03T03:00Z,STATUS_FINAL,4,12:00,Final,2,LA Clippers,12,118,Toronto Raptors,28,125,,,,,Intuit Dome
 401909921,2026-11-03T03:00Z,STATUS_FINAL,4,12:00,Final,2,Los Angeles Lakers,13,138,Miami Heat,14,117,,,,,crypto.com Arena
-401909922,2026-11-05T00:00Z,STATUS_SCHEDULED,0,0.0,"Wed, November 4th at 7:00 PM EST",2,Detroit Pistons,8,0,Philadelphia 76ers,20,0,DET -2.5,219.5,,,Little Caesars Arena
-401909923,2026-11-05T00:00Z,STATUS_SCHEDULED,0,0.0,"Wed, November 4th at 7:00 PM EST",2,Washington Wizards,27,0,Atlanta Hawks,1,0,ATL -2.5,232.5,,,Capital One Arena
-401909924,2026-11-05T00:30Z,STATUS_SCHEDULED,0,0.0,"Wed, November 4th at 7:30 PM EST",2,Boston Celtics,2,0,Milwaukee Bucks,15,0,BOS -11.5,223.5,,,TD Garden
-401909925,2026-11-05T00:30Z,STATUS_SCHEDULED,0,0.0,"Wed, November 4th at 7:30 PM EST",2,Brooklyn Nets,17,0,Charlotte Hornets,30,0,CHA -3.5,213.5,,,Barclays Center
-401909926,2026-11-05T00:30Z,STATUS_SCHEDULED,0,0.0,"Wed, November 4th at 7:30 PM EST",2,New York Knicks,18,0,Chicago Bulls,4,0,NY -11.5,233.5,,,Madison Square Garden
-401909927,2026-11-05T01:00Z,STATUS_SCHEDULED,0,0.0,"Wed, November 4th at 8:00 PM EST",2,Memphis Grizzlies,29,0,Indiana Pacers,11,0,MEM -6.5,228.5,,,FedExForum
-401909928,2026-11-05T01:00Z,STATUS_SCHEDULED,0,0.0,"Wed, November 4th at 8:00 PM EST",2,New Orleans Pelicans,3,0,Utah Jazz,26,0,NO -5.5,233.5,,,Smoothie King Center
-401909929,2026-11-05T01:00Z,STATUS_SCHEDULED,0,0.0,"Wed, November 4th at 8:00 PM EST",2,Oklahoma City Thunder,25,0,Cleveland Cavaliers,5,0,OKC -3.5,227.5,,,Paycom Center
-401909930,2026-11-05T01:30Z,STATUS_SCHEDULED,0,0.0,"Wed, November 4th at 8:30 PM EST",2,Houston Rockets,10,0,Minnesota Timberwolves,16,0,HOU -7.5,220.5,,,Toyota Center (Houston)
-401909931,2026-11-05T02:00Z,STATUS_SCHEDULED,0,0.0,"Wed, November 4th at 9:00 PM EST",2,Denver Nuggets,7,0,Toronto Raptors,28,0,DEN -4.5,230.5,,,Ball Arena
-401909932,2026-11-05T02:00Z,STATUS_SCHEDULED,0,0.0,"Wed, November 4th at 9:00 PM EST",2,Phoenix Suns,21,0,Portland Trail Blazers,22,0,POR -3.5,227.5,,,Mortgage Matchup Center
-401909933,2026-11-05T02:30Z,STATUS_SCHEDULED,0,0.0,"Wed, November 4th at 9:30 PM EST",2,San Antonio Spurs,24,0,Dallas Mavericks,6,0,SA -11.5,226.5,,,Frost Bank Center
-401909934,2026-11-05T03:00Z,STATUS_SCHEDULED,0,0.0,"Wed, November 4th at 10:00 PM EST",2,Sacramento Kings,23,0,Los Angeles Lakers,13,0,LAL -11.5,234.5,,,Golden 1 Center
-401909935,2026-11-05T03:30Z,STATUS_SCHEDULED,0,0.0,"Wed, November 4th at 10:30 PM EST",2,LA Clippers,12,0,Miami Heat,14,0,MIA -4.5,233.5,,,Intuit Dome
+401909922,2026-11-05T00:00Z,STATUS_FINAL,4,0.0,Final,2,Detroit Pistons,8,106,Philadelphia 76ers,20,112,,,,,Little Caesars Arena
+401909923,2026-11-05T00:00Z,STATUS_FINAL,4,0.0,Final,2,Washington Wizards,27,105,Atlanta Hawks,1,120,,,,,Capital One Arena
+401909924,2026-11-05T00:30Z,STATUS_FINAL,4,0.0,Final,2,Boston Celtics,2,109,Milwaukee Bucks,15,102,,,,,TD Garden
+401909925,2026-11-05T00:30Z,STATUS_IN_PROGRESS,4,6:54,6:54 - 4th Quarter,2,Brooklyn Nets,17,99,Charlotte Hornets,30,92,,,,,Barclays Center
+401909926,2026-11-05T00:30Z,STATUS_IN_PROGRESS,4,1:31,1:31 - 4th Quarter,2,New York Knicks,18,131,Chicago Bulls,4,100,,,,,Madison Square Garden
+401909927,2026-11-05T01:00Z,STATUS_IN_PROGRESS,4,8:14,8:14 - 4th Quarter,2,Memphis Grizzlies,29,84,Indiana Pacers,11,84,,,,,FedExForum
+401909928,2026-11-05T01:00Z,STATUS_IN_PROGRESS,3,1:14,1:14 - 3rd Quarter,2,New Orleans Pelicans,3,66,Utah Jazz,26,76,,,,,Smoothie King Center
+401909929,2026-11-05T01:00Z,STATUS_IN_PROGRESS,4,8:48,8:48 - 4th Quarter,2,Oklahoma City Thunder,25,98,Cleveland Cavaliers,5,82,,,,,Paycom Center
+401909930,2026-11-05T01:30Z,STATUS_IN_PROGRESS,3,10:53,10:53 - 3rd Quarter,2,Houston Rockets,10,59,Minnesota Timberwolves,16,61,,,,,Toyota Center (Houston)
+401909931,2026-11-05T02:00Z,STATUS_IN_PROGRESS,2,2:21,2:21 - 2nd Quarter,2,Denver Nuggets,7,57,Toronto Raptors,28,63,,,,,Ball Arena
+401909932,2026-11-05T02:00Z,STATUS_IN_PROGRESS,2,4:47,4:47 - 2nd Quarter,2,Phoenix Suns,21,47,Portland Trail Blazers,22,60,,,,,Mortgage Matchup Center
+401909933,2026-11-05T02:30Z,STATUS_IN_PROGRESS,1,6:29,6:29 - 1st Quarter,2,San Antonio Spurs,24,14,Dallas Mavericks,6,10,,,,,Frost Bank Center
+401909934,2026-11-05T03:00Z,STATUS_SCHEDULED,0,0.0,"Wed, November 4th at 10:00 PM EST",2,Sacramento Kings,23,0,Los Angeles Lakers,13,0,LAL -12.5,233.5,,,Golden 1 Center
+401909935,2026-11-05T03:30Z,STATUS_SCHEDULED,0,0.0,"Wed, November 4th at 10:30 PM EST",2,LA Clippers,12,0,Miami Heat,14,0,MIA -6.5,233.5,,,Intuit Dome
+401909936,2026-11-06T02:00Z,STATUS_SCHEDULED,0,0.0,"Thu, November 5th at 9:00 PM EST",2,Phoenix Suns,21,0,Orlando Magic,19,0,,,,,Mortgage Matchup Center
+401909937,2026-11-06T03:00Z,STATUS_SCHEDULED,0,0.0,"Thu, November 5th at 10:00 PM EST",2,Golden State Warriors,9,0,Miami Heat,14,0,,,,,Chase Center
