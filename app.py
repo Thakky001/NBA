@@ -234,19 +234,31 @@ st.markdown("""
         background: transparent !important;
         pointer-events: none !important;
     }
-    header[data-testid="stHeader"] button,
-    header[data-testid="stHeader"] a {
-        pointer-events: none !important;
-        display: none !important;
-    }
-    /* Keep sidebar collapse / expand toggle accessible */
+
+    /* Ensure sidebar toggle button (Desktop & Mobile) is ALWAYS visible and clickable */
     [data-testid="stSidebarCollapseButton"],
     [data-testid="collapsedControl"],
+    [data-testid="stSidebarCollapsedControl"],
     header[data-testid="stHeader"] [data-testid="collapsedControl"],
-    header[data-testid="stHeader"] [data-testid="collapsedControl"] button {
+    header[data-testid="stHeader"] [data-testid="stSidebarCollapsedControl"],
+    header[data-testid="stHeader"] [data-testid="stSidebarCollapseButton"] {
         pointer-events: auto !important;
-        display: block !important;
+        display: flex !important;
         visibility: visible !important;
+        opacity: 1 !important;
+        z-index: 999999 !important;
+    }
+
+    [data-testid="stSidebarCollapseButton"] button,
+    [data-testid="collapsedControl"] button,
+    [data-testid="stSidebarCollapsedControl"] button,
+    header[data-testid="stHeader"] [data-testid="collapsedControl"] button,
+    header[data-testid="stHeader"] [data-testid="stSidebarCollapsedControl"] button,
+    header[data-testid="stHeader"] [data-testid="stSidebarCollapseButton"] button {
+        pointer-events: auto !important;
+        display: inline-flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
     }
 
     /* 3. Bespoke Sticky Quant Hero Component (frontend-design) */
