@@ -1,432 +1,1940 @@
 {
-  "Orlando Magic": {
-    "team": "Orlando Magic",
-    "abbreviation": "ORL",
-    "opponent": "Phoenix Suns",
-    "opponent_abbr": "PHX",
+  "Washington Wizards": {
+    "team": "Washington Wizards",
+    "abbreviation": "WAS",
+    "opponent": "Atlanta Hawks",
+    "opponent_abbr": "ATL",
     "is_home": false,
     "lineup_status": "Confirmed",
     "is_confirmed": true,
     "starters": [
       {
-        "name": "Jase Richardson",
+        "name": "Trae Young",
         "position": "PG",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Anthony Black",
+        "name": "Kyshawn George",
         "position": "SG",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Desmond Bane",
+        "name": "AJ Dybantsa",
         "position": "SF",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Franz Wagner",
+        "name": "Alex Sarr",
         "position": "PF",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Wendell Carter",
+        "name": "Deandre Ayton",
         "position": "C",
         "status": "Very Likely To Play"
       }
     ],
     "injuries": [
       {
-        "name": "Paolo Banchero",
+        "name": "Reece Beekman",
+        "position": "G",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Justin Champagnie",
         "position": "F",
         "status": "Very Unlikely To Play"
       },
       {
-        "name": "Jonathan Isaac",
-        "position": "F",
-        "status": "Very Unlikely To Play"
-      },
-      {
-        "name": "Izaiyah Nelson",
+        "name": "Anthony Davis",
         "position": "C",
         "status": "Very Unlikely To Play"
       },
       {
-        "name": "Noah Penda",
-        "position": "F",
+        "name": "Tristan Vukcevic",
+        "position": "C",
         "status": "Very Unlikely To Play"
       },
       {
-        "name": "Jalen Suggs",
-        "position": "G",
+        "name": "Jamir Watkins",
+        "position": "F",
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-06 02:36:13"
+    "scraped_at": "2026-11-06 23:36:04"
   },
-  "ORL": {
-    "team": "Orlando Magic",
-    "abbreviation": "ORL",
-    "opponent": "Phoenix Suns",
-    "opponent_abbr": "PHX",
+  "WAS": {
+    "team": "Washington Wizards",
+    "abbreviation": "WAS",
+    "opponent": "Atlanta Hawks",
+    "opponent_abbr": "ATL",
     "is_home": false,
     "lineup_status": "Confirmed",
     "is_confirmed": true,
     "starters": [
       {
-        "name": "Jase Richardson",
+        "name": "Trae Young",
         "position": "PG",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Anthony Black",
+        "name": "Kyshawn George",
         "position": "SG",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Desmond Bane",
+        "name": "AJ Dybantsa",
         "position": "SF",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Franz Wagner",
+        "name": "Alex Sarr",
         "position": "PF",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Wendell Carter",
+        "name": "Deandre Ayton",
         "position": "C",
         "status": "Very Likely To Play"
       }
     ],
     "injuries": [
       {
-        "name": "Paolo Banchero",
+        "name": "Reece Beekman",
+        "position": "G",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Justin Champagnie",
         "position": "F",
         "status": "Very Unlikely To Play"
       },
       {
-        "name": "Jonathan Isaac",
-        "position": "F",
-        "status": "Very Unlikely To Play"
-      },
-      {
-        "name": "Izaiyah Nelson",
+        "name": "Anthony Davis",
         "position": "C",
         "status": "Very Unlikely To Play"
       },
       {
-        "name": "Noah Penda",
-        "position": "F",
+        "name": "Tristan Vukcevic",
+        "position": "C",
         "status": "Very Unlikely To Play"
       },
       {
-        "name": "Jalen Suggs",
-        "position": "G",
+        "name": "Jamir Watkins",
+        "position": "F",
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-06 02:36:13"
+    "scraped_at": "2026-11-06 23:36:04"
   },
-  "Phoenix Suns": {
-    "team": "Phoenix Suns",
-    "abbreviation": "PHX",
-    "opponent": "Orlando Magic",
-    "opponent_abbr": "ORL",
+  "Atlanta Hawks": {
+    "team": "Atlanta Hawks",
+    "abbreviation": "ATL",
+    "opponent": "Washington Wizards",
+    "opponent_abbr": "WAS",
     "is_home": true,
-    "lineup_status": "Confirmed",
-    "is_confirmed": true,
+    "lineup_status": "Expected",
+    "is_confirmed": false,
     "starters": [
       {
-        "name": "Devin Booker",
+        "name": "Kingston Flemings",
         "position": "PG",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Jalen Green",
+        "name": "Nickeil Alexander-Walker",
         "position": "SG",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Dillon Brooks",
+        "name": "Dyson Daniels",
         "position": "SF",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Miles Bridges",
+        "name": "Luguentz Dort",
         "position": "PF",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Oso Ighodaro",
+        "name": "Onyeka Okongwu",
         "position": "C",
         "status": "Very Likely To Play"
       }
     ],
     "injuries": [
       {
-        "name": "Rasheer Fleming",
-        "position": "F",
-        "status": "Very Unlikely To Play"
+        "name": "Henri Veesaar",
+        "position": "C",
+        "status": "Very Likely To Play"
       },
       {
-        "name": "Jordan Goodwin",
+        "name": "Keshon Gilbert",
         "position": "G",
         "status": "Very Unlikely To Play"
       },
       {
-        "name": "Mark Williams",
+        "name": "Mouhamed Gueye",
+        "position": "F",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Jalen Johnson",
+        "position": "F",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Jock Landale",
         "position": "C",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Asa Newell",
+        "position": "F",
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-06 02:36:13"
+    "scraped_at": "2026-11-06 23:36:04"
   },
-  "PHX": {
-    "team": "Phoenix Suns",
-    "abbreviation": "PHX",
-    "opponent": "Orlando Magic",
-    "opponent_abbr": "ORL",
+  "ATL": {
+    "team": "Atlanta Hawks",
+    "abbreviation": "ATL",
+    "opponent": "Washington Wizards",
+    "opponent_abbr": "WAS",
     "is_home": true,
-    "lineup_status": "Confirmed",
-    "is_confirmed": true,
+    "lineup_status": "Expected",
+    "is_confirmed": false,
     "starters": [
       {
-        "name": "Devin Booker",
+        "name": "Kingston Flemings",
         "position": "PG",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Jalen Green",
+        "name": "Nickeil Alexander-Walker",
         "position": "SG",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Dillon Brooks",
+        "name": "Dyson Daniels",
         "position": "SF",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Miles Bridges",
+        "name": "Luguentz Dort",
         "position": "PF",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Oso Ighodaro",
+        "name": "Onyeka Okongwu",
         "position": "C",
         "status": "Very Likely To Play"
       }
     ],
     "injuries": [
       {
-        "name": "Rasheer Fleming",
-        "position": "F",
-        "status": "Very Unlikely To Play"
+        "name": "Henri Veesaar",
+        "position": "C",
+        "status": "Very Likely To Play"
       },
       {
-        "name": "Jordan Goodwin",
+        "name": "Keshon Gilbert",
         "position": "G",
         "status": "Very Unlikely To Play"
       },
       {
-        "name": "Mark Williams",
+        "name": "Mouhamed Gueye",
+        "position": "F",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Jalen Johnson",
+        "position": "F",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Jock Landale",
         "position": "C",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Asa Newell",
+        "position": "F",
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-06 02:36:13"
+    "scraped_at": "2026-11-06 23:36:04"
   },
-  "Miami Heat": {
-    "team": "Miami Heat",
-    "abbreviation": "MIA",
-    "opponent": "Golden State Warriors",
-    "opponent_abbr": "GSW",
+  "Boston Celtics": {
+    "team": "Boston Celtics",
+    "abbreviation": "BOS",
+    "opponent": "Charlotte Hornets",
+    "opponent_abbr": "CHA",
     "is_home": false,
-    "lineup_status": "Confirmed",
-    "is_confirmed": true,
+    "lineup_status": "Expected",
+    "is_confirmed": false,
     "starters": [
       {
-        "name": "Davion Mitchell",
+        "name": "Derrick White",
         "position": "PG",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Klay Thompson",
+        "name": "Hugo Gonzalez",
         "position": "SG",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Andrew Wiggins",
+        "name": "Paul George",
         "position": "SF",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Giannis Antetokounmpo",
+        "name": "Jayson Tatum",
         "position": "PF",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Bam Adebayo",
+        "name": "Neemias Queta",
         "position": "C",
         "status": "Very Likely To Play"
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-11-06 02:36:13"
+    "scraped_at": "2026-11-06 23:36:04"
   },
-  "MIA": {
-    "team": "Miami Heat",
-    "abbreviation": "MIA",
-    "opponent": "Golden State Warriors",
-    "opponent_abbr": "GSW",
+  "BOS": {
+    "team": "Boston Celtics",
+    "abbreviation": "BOS",
+    "opponent": "Charlotte Hornets",
+    "opponent_abbr": "CHA",
     "is_home": false,
-    "lineup_status": "Confirmed",
-    "is_confirmed": true,
+    "lineup_status": "Expected",
+    "is_confirmed": false,
     "starters": [
       {
-        "name": "Davion Mitchell",
+        "name": "Derrick White",
         "position": "PG",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Klay Thompson",
+        "name": "Hugo Gonzalez",
         "position": "SG",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Andrew Wiggins",
+        "name": "Paul George",
         "position": "SF",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Giannis Antetokounmpo",
+        "name": "Jayson Tatum",
         "position": "PF",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Bam Adebayo",
+        "name": "Neemias Queta",
         "position": "C",
         "status": "Very Likely To Play"
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-11-06 02:36:13"
+    "scraped_at": "2026-11-06 23:36:04"
   },
-  "Golden State Warriors": {
-    "team": "Golden State Warriors",
-    "abbreviation": "GSW",
-    "opponent": "Miami Heat",
-    "opponent_abbr": "MIA",
+  "Charlotte Hornets": {
+    "team": "Charlotte Hornets",
+    "abbreviation": "CHA",
+    "opponent": "Boston Celtics",
+    "opponent_abbr": "BOS",
     "is_home": true,
     "lineup_status": "Confirmed",
     "is_confirmed": true,
     "starters": [
       {
-        "name": "Stephen Curry",
+        "name": "Coby White",
         "position": "PG",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Brandin Podziemski",
+        "name": "Grayson Allen",
         "position": "SG",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Will Richard",
+        "name": "Brandon Miller",
         "position": "SF",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Yaxel Lendeborg",
+        "name": "Naz Reid",
         "position": "PF",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Draymond Green",
+        "name": "Ryan Kalkbrenner",
         "position": "C",
         "status": "Very Likely To Play"
       }
     ],
     "injuries": [
       {
-        "name": "Jimmy Butler",
-        "position": "F",
-        "status": "Very Unlikely To Play"
-      },
-      {
-        "name": "Moses Moody",
-        "position": "F",
-        "status": "Very Unlikely To Play"
-      },
-      {
-        "name": "Kristaps Porzingis",
+        "name": "Moussa Diabate",
         "position": "C",
         "status": "Very Unlikely To Play"
       },
       {
-        "name": "Gui Santos",
+        "name": "Kon Knueppel",
+        "position": "F",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Dennis Schroder",
+        "position": "G",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Grant Williams",
         "position": "F",
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-06 02:36:13"
+    "scraped_at": "2026-11-06 23:36:04"
   },
-  "GSW": {
-    "team": "Golden State Warriors",
-    "abbreviation": "GSW",
-    "opponent": "Miami Heat",
-    "opponent_abbr": "MIA",
+  "CHA": {
+    "team": "Charlotte Hornets",
+    "abbreviation": "CHA",
+    "opponent": "Boston Celtics",
+    "opponent_abbr": "BOS",
     "is_home": true,
     "lineup_status": "Confirmed",
     "is_confirmed": true,
     "starters": [
       {
-        "name": "Stephen Curry",
+        "name": "Coby White",
         "position": "PG",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Brandin Podziemski",
+        "name": "Grayson Allen",
         "position": "SG",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Will Richard",
+        "name": "Brandon Miller",
         "position": "SF",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Yaxel Lendeborg",
+        "name": "Naz Reid",
         "position": "PF",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Draymond Green",
+        "name": "Ryan Kalkbrenner",
         "position": "C",
         "status": "Very Likely To Play"
       }
     ],
     "injuries": [
       {
-        "name": "Jimmy Butler",
-        "position": "F",
-        "status": "Very Unlikely To Play"
-      },
-      {
-        "name": "Moses Moody",
-        "position": "F",
-        "status": "Very Unlikely To Play"
-      },
-      {
-        "name": "Kristaps Porzingis",
+        "name": "Moussa Diabate",
         "position": "C",
         "status": "Very Unlikely To Play"
       },
       {
-        "name": "Gui Santos",
+        "name": "Kon Knueppel",
+        "position": "F",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Dennis Schroder",
+        "position": "G",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Grant Williams",
         "position": "F",
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-06 02:36:13"
+    "scraped_at": "2026-11-06 23:36:04"
+  },
+  "Philadelphia 76ers": {
+    "team": "Philadelphia 76ers",
+    "abbreviation": "PHI",
+    "opponent": "Cleveland Cavaliers",
+    "opponent_abbr": "CLE",
+    "is_home": false,
+    "lineup_status": "Expected",
+    "is_confirmed": false,
+    "starters": [
+      {
+        "name": "Tyrese Maxey",
+        "position": "PG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "VJ Edgecombe",
+        "position": "SG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Jaylen Brown",
+        "position": "SF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "LeBron James",
+        "position": "PF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Joel Embiid",
+        "position": "C",
+        "status": "Very Likely To Play"
+      }
+    ],
+    "injuries": [
+      {
+        "name": "Ariel Hukporti",
+        "position": "C",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Dominick Barlow",
+        "position": "C",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Adem Bona",
+        "position": "C",
+        "status": "Very Unlikely To Play"
+      }
+    ],
+    "scraped_at": "2026-11-06 23:36:04"
+  },
+  "PHI": {
+    "team": "Philadelphia 76ers",
+    "abbreviation": "PHI",
+    "opponent": "Cleveland Cavaliers",
+    "opponent_abbr": "CLE",
+    "is_home": false,
+    "lineup_status": "Expected",
+    "is_confirmed": false,
+    "starters": [
+      {
+        "name": "Tyrese Maxey",
+        "position": "PG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "VJ Edgecombe",
+        "position": "SG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Jaylen Brown",
+        "position": "SF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "LeBron James",
+        "position": "PF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Joel Embiid",
+        "position": "C",
+        "status": "Very Likely To Play"
+      }
+    ],
+    "injuries": [
+      {
+        "name": "Ariel Hukporti",
+        "position": "C",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Dominick Barlow",
+        "position": "C",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Adem Bona",
+        "position": "C",
+        "status": "Very Unlikely To Play"
+      }
+    ],
+    "scraped_at": "2026-11-06 23:36:04"
+  },
+  "Cleveland Cavaliers": {
+    "team": "Cleveland Cavaliers",
+    "abbreviation": "CLE",
+    "opponent": "Philadelphia 76ers",
+    "opponent_abbr": "PHI",
+    "is_home": true,
+    "lineup_status": "Expected",
+    "is_confirmed": false,
+    "starters": [
+      {
+        "name": "James Harden",
+        "position": "PG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Donovan Mitchell",
+        "position": "SG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Peyton Watson",
+        "position": "SF",
+        "status": "Toss Up To Play"
+      },
+      {
+        "name": "Evan Mobley",
+        "position": "PF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Jarrett Allen",
+        "position": "C",
+        "status": "Toss Up To Play"
+      }
+    ],
+    "injuries": [
+      {
+        "name": "Jarrett Allen",
+        "position": "C",
+        "status": "Toss Up To Play"
+      },
+      {
+        "name": "Peyton Watson",
+        "position": "F",
+        "status": "Toss Up To Play"
+      },
+      {
+        "name": "Nae'Qwan Tomlin",
+        "position": "F",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Jaylon Tyson",
+        "position": "F",
+        "status": "Very Unlikely To Play"
+      }
+    ],
+    "scraped_at": "2026-11-06 23:36:04"
+  },
+  "CLE": {
+    "team": "Cleveland Cavaliers",
+    "abbreviation": "CLE",
+    "opponent": "Philadelphia 76ers",
+    "opponent_abbr": "PHI",
+    "is_home": true,
+    "lineup_status": "Expected",
+    "is_confirmed": false,
+    "starters": [
+      {
+        "name": "James Harden",
+        "position": "PG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Donovan Mitchell",
+        "position": "SG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Peyton Watson",
+        "position": "SF",
+        "status": "Toss Up To Play"
+      },
+      {
+        "name": "Evan Mobley",
+        "position": "PF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Jarrett Allen",
+        "position": "C",
+        "status": "Toss Up To Play"
+      }
+    ],
+    "injuries": [
+      {
+        "name": "Jarrett Allen",
+        "position": "C",
+        "status": "Toss Up To Play"
+      },
+      {
+        "name": "Peyton Watson",
+        "position": "F",
+        "status": "Toss Up To Play"
+      },
+      {
+        "name": "Nae'Qwan Tomlin",
+        "position": "F",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Jaylon Tyson",
+        "position": "F",
+        "status": "Very Unlikely To Play"
+      }
+    ],
+    "scraped_at": "2026-11-06 23:36:04"
+  },
+  "Minnesota Timberwolves": {
+    "team": "Minnesota Timberwolves",
+    "abbreviation": "MIN",
+    "opponent": "New Orleans Pelicans",
+    "opponent_abbr": "NOP",
+    "is_home": false,
+    "lineup_status": "Expected",
+    "is_confirmed": false,
+    "starters": [
+      {
+        "name": "LaMelo Ball",
+        "position": "PG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Ayo Dosunmu",
+        "position": "SG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Jonathan Kuminga",
+        "position": "SF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Jaden McDaniels",
+        "position": "PF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Rudy Gobert",
+        "position": "C",
+        "status": "Very Likely To Play"
+      }
+    ],
+    "injuries": [
+      {
+        "name": "Donte DiVincenzo",
+        "position": "G",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Anthony Edwards",
+        "position": "G",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Terrence Shannon",
+        "position": "F",
+        "status": "Very Unlikely To Play"
+      }
+    ],
+    "scraped_at": "2026-11-06 23:36:04"
+  },
+  "MIN": {
+    "team": "Minnesota Timberwolves",
+    "abbreviation": "MIN",
+    "opponent": "New Orleans Pelicans",
+    "opponent_abbr": "NOP",
+    "is_home": false,
+    "lineup_status": "Expected",
+    "is_confirmed": false,
+    "starters": [
+      {
+        "name": "LaMelo Ball",
+        "position": "PG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Ayo Dosunmu",
+        "position": "SG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Jonathan Kuminga",
+        "position": "SF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Jaden McDaniels",
+        "position": "PF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Rudy Gobert",
+        "position": "C",
+        "status": "Very Likely To Play"
+      }
+    ],
+    "injuries": [
+      {
+        "name": "Donte DiVincenzo",
+        "position": "G",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Anthony Edwards",
+        "position": "G",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Terrence Shannon",
+        "position": "F",
+        "status": "Very Unlikely To Play"
+      }
+    ],
+    "scraped_at": "2026-11-06 23:36:04"
+  },
+  "New Orleans Pelicans": {
+    "team": "New Orleans Pelicans",
+    "abbreviation": "NOP",
+    "opponent": "Minnesota Timberwolves",
+    "opponent_abbr": "MIN",
+    "is_home": true,
+    "lineup_status": "Expected",
+    "is_confirmed": false,
+    "starters": [
+      {
+        "name": "Dejounte Murray",
+        "position": "PG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Jeremiah Fears",
+        "position": "SG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Trey Murphy",
+        "position": "SF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Zion Williamson",
+        "position": "PF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Karlo Matkovic",
+        "position": "C",
+        "status": "Very Likely To Play"
+      }
+    ],
+    "injuries": [
+      {
+        "name": "Yves Missi",
+        "position": "C",
+        "status": "Very Unlikely To Play"
+      }
+    ],
+    "scraped_at": "2026-11-06 23:36:04"
+  },
+  "NOP": {
+    "team": "New Orleans Pelicans",
+    "abbreviation": "NOP",
+    "opponent": "Minnesota Timberwolves",
+    "opponent_abbr": "MIN",
+    "is_home": true,
+    "lineup_status": "Expected",
+    "is_confirmed": false,
+    "starters": [
+      {
+        "name": "Dejounte Murray",
+        "position": "PG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Jeremiah Fears",
+        "position": "SG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Trey Murphy",
+        "position": "SF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Zion Williamson",
+        "position": "PF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Karlo Matkovic",
+        "position": "C",
+        "status": "Very Likely To Play"
+      }
+    ],
+    "injuries": [
+      {
+        "name": "Yves Missi",
+        "position": "C",
+        "status": "Very Unlikely To Play"
+      }
+    ],
+    "scraped_at": "2026-11-06 23:36:04"
+  },
+  "Utah Jazz": {
+    "team": "Utah Jazz",
+    "abbreviation": "UTA",
+    "opponent": "Dallas Mavericks",
+    "opponent_abbr": "DAL",
+    "is_home": false,
+    "lineup_status": "Expected",
+    "is_confirmed": false,
+    "starters": [
+      {
+        "name": "Keyonte George",
+        "position": "PG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Darryn Peterson",
+        "position": "SG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Ace Bailey",
+        "position": "SF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Lauri Markkanen",
+        "position": "PF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Jaxson Hayes",
+        "position": "C",
+        "status": "Very Likely To Play"
+      }
+    ],
+    "injuries": [
+      {
+        "name": "Jaren Jackson",
+        "position": "F",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Jusuf Nurkic",
+        "position": "C",
+        "status": "Very Unlikely To Play"
+      }
+    ],
+    "scraped_at": "2026-11-06 23:36:04"
+  },
+  "UTA": {
+    "team": "Utah Jazz",
+    "abbreviation": "UTA",
+    "opponent": "Dallas Mavericks",
+    "opponent_abbr": "DAL",
+    "is_home": false,
+    "lineup_status": "Expected",
+    "is_confirmed": false,
+    "starters": [
+      {
+        "name": "Keyonte George",
+        "position": "PG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Darryn Peterson",
+        "position": "SG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Ace Bailey",
+        "position": "SF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Lauri Markkanen",
+        "position": "PF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Jaxson Hayes",
+        "position": "C",
+        "status": "Very Likely To Play"
+      }
+    ],
+    "injuries": [
+      {
+        "name": "Jaren Jackson",
+        "position": "F",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Jusuf Nurkic",
+        "position": "C",
+        "status": "Very Unlikely To Play"
+      }
+    ],
+    "scraped_at": "2026-11-06 23:36:04"
+  },
+  "Dallas Mavericks": {
+    "team": "Dallas Mavericks",
+    "abbreviation": "DAL",
+    "opponent": "Utah Jazz",
+    "opponent_abbr": "UTA",
+    "is_home": true,
+    "lineup_status": "Expected",
+    "is_confirmed": false,
+    "starters": [
+      {
+        "name": "Kyrie Irving",
+        "position": "PG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Max Christie",
+        "position": "SG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Cooper Flagg",
+        "position": "SF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "P.J. Washington",
+        "position": "PF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Daniel Gafford",
+        "position": "C",
+        "status": "Very Likely To Play"
+      }
+    ],
+    "injuries": [
+      {
+        "name": "Tarik Biberovic",
+        "position": "F",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Sergio de Larrea",
+        "position": "G",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Dereck Lively",
+        "position": "C",
+        "status": "Very Unlikely To Play"
+      }
+    ],
+    "scraped_at": "2026-11-06 23:36:04"
+  },
+  "DAL": {
+    "team": "Dallas Mavericks",
+    "abbreviation": "DAL",
+    "opponent": "Utah Jazz",
+    "opponent_abbr": "UTA",
+    "is_home": true,
+    "lineup_status": "Expected",
+    "is_confirmed": false,
+    "starters": [
+      {
+        "name": "Kyrie Irving",
+        "position": "PG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Max Christie",
+        "position": "SG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Cooper Flagg",
+        "position": "SF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "P.J. Washington",
+        "position": "PF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Daniel Gafford",
+        "position": "C",
+        "status": "Very Likely To Play"
+      }
+    ],
+    "injuries": [
+      {
+        "name": "Tarik Biberovic",
+        "position": "F",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Sergio de Larrea",
+        "position": "G",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Dereck Lively",
+        "position": "C",
+        "status": "Very Unlikely To Play"
+      }
+    ],
+    "scraped_at": "2026-11-06 23:36:04"
+  },
+  "Toronto Raptors": {
+    "team": "Toronto Raptors",
+    "abbreviation": "TOR",
+    "opponent": "Milwaukee Bucks",
+    "opponent_abbr": "MIL",
+    "is_home": false,
+    "lineup_status": "Expected",
+    "is_confirmed": false,
+    "starters": [
+      {
+        "name": "Immanuel Quickley",
+        "position": "PG",
+        "status": "Toss Up To Play"
+      },
+      {
+        "name": "RJ Barrett",
+        "position": "SG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Ja'Kobe Walter",
+        "position": "SF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Scottie Barnes",
+        "position": "PF",
+        "status": "Toss Up To Play"
+      },
+      {
+        "name": "Jakob Poeltl",
+        "position": "C",
+        "status": "Likely To Play"
+      }
+    ],
+    "injuries": [
+      {
+        "name": "Jakob Poeltl",
+        "position": "C",
+        "status": "Likely To Play"
+      },
+      {
+        "name": "Kyle Anderson",
+        "position": "F",
+        "status": "Toss Up To Play"
+      },
+      {
+        "name": "Scottie Barnes",
+        "position": "F",
+        "status": "Toss Up To Play"
+      },
+      {
+        "name": "Immanuel Quickley",
+        "position": "G",
+        "status": "Toss Up To Play"
+      },
+      {
+        "name": "Nate Bittle",
+        "position": "C",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Kawhi Leonard",
+        "position": "F",
+        "status": "Very Unlikely To Play"
+      }
+    ],
+    "scraped_at": "2026-11-06 23:36:04"
+  },
+  "TOR": {
+    "team": "Toronto Raptors",
+    "abbreviation": "TOR",
+    "opponent": "Milwaukee Bucks",
+    "opponent_abbr": "MIL",
+    "is_home": false,
+    "lineup_status": "Expected",
+    "is_confirmed": false,
+    "starters": [
+      {
+        "name": "Immanuel Quickley",
+        "position": "PG",
+        "status": "Toss Up To Play"
+      },
+      {
+        "name": "RJ Barrett",
+        "position": "SG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Ja'Kobe Walter",
+        "position": "SF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Scottie Barnes",
+        "position": "PF",
+        "status": "Toss Up To Play"
+      },
+      {
+        "name": "Jakob Poeltl",
+        "position": "C",
+        "status": "Likely To Play"
+      }
+    ],
+    "injuries": [
+      {
+        "name": "Jakob Poeltl",
+        "position": "C",
+        "status": "Likely To Play"
+      },
+      {
+        "name": "Kyle Anderson",
+        "position": "F",
+        "status": "Toss Up To Play"
+      },
+      {
+        "name": "Scottie Barnes",
+        "position": "F",
+        "status": "Toss Up To Play"
+      },
+      {
+        "name": "Immanuel Quickley",
+        "position": "G",
+        "status": "Toss Up To Play"
+      },
+      {
+        "name": "Nate Bittle",
+        "position": "C",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Kawhi Leonard",
+        "position": "F",
+        "status": "Very Unlikely To Play"
+      }
+    ],
+    "scraped_at": "2026-11-06 23:36:04"
+  },
+  "Milwaukee Bucks": {
+    "team": "Milwaukee Bucks",
+    "abbreviation": "MIL",
+    "opponent": "Toronto Raptors",
+    "opponent_abbr": "TOR",
+    "is_home": true,
+    "lineup_status": "Expected",
+    "is_confirmed": false,
+    "starters": [
+      {
+        "name": "Brayden Burries",
+        "position": "PG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Tyler Herro",
+        "position": "SG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Jaime Jaquez",
+        "position": "SF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Kyle Kuzma",
+        "position": "PF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Myles Turner",
+        "position": "C",
+        "status": "Very Likely To Play"
+      }
+    ],
+    "injuries": [],
+    "scraped_at": "2026-11-06 23:36:04"
+  },
+  "MIL": {
+    "team": "Milwaukee Bucks",
+    "abbreviation": "MIL",
+    "opponent": "Toronto Raptors",
+    "opponent_abbr": "TOR",
+    "is_home": true,
+    "lineup_status": "Expected",
+    "is_confirmed": false,
+    "starters": [
+      {
+        "name": "Brayden Burries",
+        "position": "PG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Tyler Herro",
+        "position": "SG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Jaime Jaquez",
+        "position": "SF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Kyle Kuzma",
+        "position": "PF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Myles Turner",
+        "position": "C",
+        "status": "Very Likely To Play"
+      }
+    ],
+    "injuries": [],
+    "scraped_at": "2026-11-06 23:36:04"
+  },
+  "Oklahoma City Thunder": {
+    "team": "Oklahoma City Thunder",
+    "abbreviation": "OKC",
+    "opponent": "Memphis Grizzlies",
+    "opponent_abbr": "MEM",
+    "is_home": false,
+    "lineup_status": "Expected",
+    "is_confirmed": false,
+    "starters": [
+      {
+        "name": "Shai Gilgeous-Alexander",
+        "position": "PG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Ajay Mitchell",
+        "position": "SG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Alex Caruso",
+        "position": "SF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Kenrich Williams",
+        "position": "PF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Isaiah Hartenstein",
+        "position": "C",
+        "status": "Very Likely To Play"
+      }
+    ],
+    "injuries": [
+      {
+        "name": "Chet Holmgren",
+        "position": "C",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Thomas Sorber",
+        "position": "C",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Nikola Topic",
+        "position": "G",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Cason Wallace",
+        "position": "G",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Jalen Williams",
+        "position": "F",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Jaylin Williams",
+        "position": "C",
+        "status": "Very Unlikely To Play"
+      }
+    ],
+    "scraped_at": "2026-11-06 23:36:04"
+  },
+  "OKC": {
+    "team": "Oklahoma City Thunder",
+    "abbreviation": "OKC",
+    "opponent": "Memphis Grizzlies",
+    "opponent_abbr": "MEM",
+    "is_home": false,
+    "lineup_status": "Expected",
+    "is_confirmed": false,
+    "starters": [
+      {
+        "name": "Shai Gilgeous-Alexander",
+        "position": "PG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Ajay Mitchell",
+        "position": "SG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Alex Caruso",
+        "position": "SF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Kenrich Williams",
+        "position": "PF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Isaiah Hartenstein",
+        "position": "C",
+        "status": "Very Likely To Play"
+      }
+    ],
+    "injuries": [
+      {
+        "name": "Chet Holmgren",
+        "position": "C",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Thomas Sorber",
+        "position": "C",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Nikola Topic",
+        "position": "G",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Cason Wallace",
+        "position": "G",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Jalen Williams",
+        "position": "F",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Jaylin Williams",
+        "position": "C",
+        "status": "Very Unlikely To Play"
+      }
+    ],
+    "scraped_at": "2026-11-06 23:36:04"
+  },
+  "Memphis Grizzlies": {
+    "team": "Memphis Grizzlies",
+    "abbreviation": "MEM",
+    "opponent": "Oklahoma City Thunder",
+    "opponent_abbr": "OKC",
+    "is_home": true,
+    "lineup_status": "Expected",
+    "is_confirmed": false,
+    "starters": [
+      {
+        "name": "Ty Jerome",
+        "position": "PG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Cedric Coward",
+        "position": "SG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Jaylen Wells",
+        "position": "SF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Cameron Boozer",
+        "position": "PF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Zach Edey",
+        "position": "C",
+        "status": "Very Likely To Play"
+      }
+    ],
+    "injuries": [
+      {
+        "name": "Scotty Pippen",
+        "position": "G",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Isaiah Stewart",
+        "position": "C",
+        "status": "Very Unlikely To Play"
+      }
+    ],
+    "scraped_at": "2026-11-06 23:36:04"
+  },
+  "MEM": {
+    "team": "Memphis Grizzlies",
+    "abbreviation": "MEM",
+    "opponent": "Oklahoma City Thunder",
+    "opponent_abbr": "OKC",
+    "is_home": true,
+    "lineup_status": "Expected",
+    "is_confirmed": false,
+    "starters": [
+      {
+        "name": "Ty Jerome",
+        "position": "PG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Cedric Coward",
+        "position": "SG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Jaylen Wells",
+        "position": "SF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Cameron Boozer",
+        "position": "PF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Zach Edey",
+        "position": "C",
+        "status": "Very Likely To Play"
+      }
+    ],
+    "injuries": [
+      {
+        "name": "Scotty Pippen",
+        "position": "G",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Isaiah Stewart",
+        "position": "C",
+        "status": "Very Unlikely To Play"
+      }
+    ],
+    "scraped_at": "2026-11-06 23:36:04"
+  },
+  "Portland Trail Blazers": {
+    "team": "Portland Trail Blazers",
+    "abbreviation": "POR",
+    "opponent": "Los Angeles Lakers",
+    "opponent_abbr": "LAL",
+    "is_home": false,
+    "lineup_status": "Expected",
+    "is_confirmed": false,
+    "starters": [
+      {
+        "name": "Damian Lillard",
+        "position": "PG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Scoot Henderson",
+        "position": "SG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Toumani Camara",
+        "position": "SF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Deni Avdija",
+        "position": "PF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Donovan Clingan",
+        "position": "C",
+        "status": "Very Likely To Play"
+      }
+    ],
+    "injuries": [
+      {
+        "name": "Vit Krejci",
+        "position": "G",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Ja Morant",
+        "position": "G",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Shaedon Sharpe",
+        "position": "G",
+        "status": "Very Unlikely To Play"
+      }
+    ],
+    "scraped_at": "2026-11-06 23:36:04"
+  },
+  "POR": {
+    "team": "Portland Trail Blazers",
+    "abbreviation": "POR",
+    "opponent": "Los Angeles Lakers",
+    "opponent_abbr": "LAL",
+    "is_home": false,
+    "lineup_status": "Expected",
+    "is_confirmed": false,
+    "starters": [
+      {
+        "name": "Damian Lillard",
+        "position": "PG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Scoot Henderson",
+        "position": "SG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Toumani Camara",
+        "position": "SF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Deni Avdija",
+        "position": "PF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Donovan Clingan",
+        "position": "C",
+        "status": "Very Likely To Play"
+      }
+    ],
+    "injuries": [
+      {
+        "name": "Vit Krejci",
+        "position": "G",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Ja Morant",
+        "position": "G",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Shaedon Sharpe",
+        "position": "G",
+        "status": "Very Unlikely To Play"
+      }
+    ],
+    "scraped_at": "2026-11-06 23:36:04"
+  },
+  "Los Angeles Lakers": {
+    "team": "Los Angeles Lakers",
+    "abbreviation": "LAL",
+    "opponent": "Portland Trail Blazers",
+    "opponent_abbr": "POR",
+    "is_home": true,
+    "lineup_status": "Expected",
+    "is_confirmed": false,
+    "starters": [
+      {
+        "name": "Luka Doncic",
+        "position": "PG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Austin Reaves",
+        "position": "SG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Ziaire Williams",
+        "position": "SF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Matisse Thybulle",
+        "position": "PF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Walker Kessler",
+        "position": "C",
+        "status": "Very Likely To Play"
+      }
+    ],
+    "injuries": [],
+    "scraped_at": "2026-11-06 23:36:04"
+  },
+  "LAL": {
+    "team": "Los Angeles Lakers",
+    "abbreviation": "LAL",
+    "opponent": "Portland Trail Blazers",
+    "opponent_abbr": "POR",
+    "is_home": true,
+    "lineup_status": "Expected",
+    "is_confirmed": false,
+    "starters": [
+      {
+        "name": "Luka Doncic",
+        "position": "PG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Austin Reaves",
+        "position": "SG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Ziaire Williams",
+        "position": "SF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Matisse Thybulle",
+        "position": "PF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Walker Kessler",
+        "position": "C",
+        "status": "Very Likely To Play"
+      }
+    ],
+    "injuries": [],
+    "scraped_at": "2026-11-06 23:36:04"
+  },
+  "San Antonio Spurs": {
+    "team": "San Antonio Spurs",
+    "abbreviation": "SAS",
+    "opponent": "Sacramento Kings",
+    "opponent_abbr": "SAC",
+    "is_home": false,
+    "lineup_status": "Expected",
+    "is_confirmed": false,
+    "starters": [
+      {
+        "name": "De'Aaron Fox",
+        "position": "PG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Stephon Castle",
+        "position": "SG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Dylan Harper",
+        "position": "SF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Devin Vassell",
+        "position": "PF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Victor Wembanyama",
+        "position": "C",
+        "status": "Very Likely To Play"
+      }
+    ],
+    "injuries": [
+      {
+        "name": "Tobias Harris",
+        "position": "F",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Jayden Quaintance",
+        "position": "C",
+        "status": "Very Unlikely To Play"
+      }
+    ],
+    "scraped_at": "2026-11-06 23:36:04"
+  },
+  "SAS": {
+    "team": "San Antonio Spurs",
+    "abbreviation": "SAS",
+    "opponent": "Sacramento Kings",
+    "opponent_abbr": "SAC",
+    "is_home": false,
+    "lineup_status": "Expected",
+    "is_confirmed": false,
+    "starters": [
+      {
+        "name": "De'Aaron Fox",
+        "position": "PG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Stephon Castle",
+        "position": "SG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Dylan Harper",
+        "position": "SF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Devin Vassell",
+        "position": "PF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Victor Wembanyama",
+        "position": "C",
+        "status": "Very Likely To Play"
+      }
+    ],
+    "injuries": [
+      {
+        "name": "Tobias Harris",
+        "position": "F",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Jayden Quaintance",
+        "position": "C",
+        "status": "Very Unlikely To Play"
+      }
+    ],
+    "scraped_at": "2026-11-06 23:36:04"
+  },
+  "Sacramento Kings": {
+    "team": "Sacramento Kings",
+    "abbreviation": "SAC",
+    "opponent": "San Antonio Spurs",
+    "opponent_abbr": "SAS",
+    "is_home": true,
+    "lineup_status": "Expected",
+    "is_confirmed": false,
+    "starters": [
+      {
+        "name": "Darius Acuff",
+        "position": "PG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Zach LaVine",
+        "position": "SG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "De'Andre Hunter",
+        "position": "SF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Precious Achiuwa",
+        "position": "PF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Domantas Sabonis",
+        "position": "C",
+        "status": "Very Likely To Play"
+      }
+    ],
+    "injuries": [
+      {
+        "name": "De'Andre Hunter",
+        "position": "F",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Ben Simmons",
+        "position": "F",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Keegan Murray",
+        "position": "F",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Maxime Raynaud",
+        "position": "C",
+        "status": "Very Unlikely To Play"
+      }
+    ],
+    "scraped_at": "2026-11-06 23:36:04"
+  },
+  "SAC": {
+    "team": "Sacramento Kings",
+    "abbreviation": "SAC",
+    "opponent": "San Antonio Spurs",
+    "opponent_abbr": "SAS",
+    "is_home": true,
+    "lineup_status": "Expected",
+    "is_confirmed": false,
+    "starters": [
+      {
+        "name": "Darius Acuff",
+        "position": "PG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Zach LaVine",
+        "position": "SG",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "De'Andre Hunter",
+        "position": "SF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Precious Achiuwa",
+        "position": "PF",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Domantas Sabonis",
+        "position": "C",
+        "status": "Very Likely To Play"
+      }
+    ],
+    "injuries": [
+      {
+        "name": "De'Andre Hunter",
+        "position": "F",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Ben Simmons",
+        "position": "F",
+        "status": "Very Likely To Play"
+      },
+      {
+        "name": "Keegan Murray",
+        "position": "F",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Maxime Raynaud",
+        "position": "C",
+        "status": "Very Unlikely To Play"
+      }
+    ],
+    "scraped_at": "2026-11-06 23:36:04"
   }
 }
