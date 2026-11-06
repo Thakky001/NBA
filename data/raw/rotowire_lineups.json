@@ -61,7 +61,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-06 01:35:50"
+    "scraped_at": "2026-11-06 02:36:13"
   },
   "ORL": {
     "team": "Orlando Magic",
@@ -125,7 +125,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-06 01:35:50"
+    "scraped_at": "2026-11-06 02:36:13"
   },
   "Phoenix Suns": {
     "team": "Phoenix Suns",
@@ -179,7 +179,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-06 01:35:50"
+    "scraped_at": "2026-11-06 02:36:13"
   },
   "PHX": {
     "team": "Phoenix Suns",
@@ -233,7 +233,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-06 01:35:50"
+    "scraped_at": "2026-11-06 02:36:13"
   },
   "Miami Heat": {
     "team": "Miami Heat",
@@ -241,8 +241,8 @@
     "opponent": "Golden State Warriors",
     "opponent_abbr": "GSW",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Davion Mitchell",
@@ -271,7 +271,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-11-06 01:35:50"
+    "scraped_at": "2026-11-06 02:36:13"
   },
   "MIA": {
     "team": "Miami Heat",
@@ -279,8 +279,8 @@
     "opponent": "Golden State Warriors",
     "opponent_abbr": "GSW",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Davion Mitchell",
@@ -309,7 +309,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-11-06 01:35:50"
+    "scraped_at": "2026-11-06 02:36:13"
   },
   "Golden State Warriors": {
     "team": "Golden State Warriors",
@@ -317,8 +317,8 @@
     "opponent": "Miami Heat",
     "opponent_abbr": "MIA",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Stephen Curry",
@@ -368,7 +368,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-06 01:35:50"
+    "scraped_at": "2026-11-06 02:36:13"
   },
   "GSW": {
     "team": "Golden State Warriors",
@@ -376,8 +376,8 @@
     "opponent": "Miami Heat",
     "opponent_abbr": "MIA",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Stephen Curry",
@@ -427,6 +427,6 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-06 01:35:50"
+    "scraped_at": "2026-11-06 02:36:13"
   }
 }
