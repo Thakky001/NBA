@@ -172,12 +172,19 @@ st.set_page_config(
 st.markdown("""
     <style>
     /* 1. Global Reset, Clean UI & Streamlit Chrome Removal */
-    #MainMenu { visibility: hidden !important; display: none !important; }
-    footer { visibility: hidden !important; display: none !important; }
-    .stAppDeployButton { display: none !important; }
-    [data-testid="stToolbar"] { visibility: hidden !important; display: none !important; }
-    .stAppToolbar { visibility: hidden !important; display: none !important; }
-    [data-testid="stDecoration"] { visibility: hidden !important; display: none !important; }
+    /* Hide ONLY right-side toolbar actions (Share, Star, GitHub, Edit), Deploy, 3-Dots Menu, and Decoration */
+    #MainMenu,
+    [data-testid="stMainMenu"],
+    [data-testid="stToolbarActions"],
+    .stToolbarActions,
+    .stAppDeployButton,
+    [data-testid="stDecoration"],
+    footer,
+    [data-testid="stFooter"] {
+        display: none !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+    }
 
     /* Hide Streamlit Community Cloud Manage app / Viewer Badge */
     [data-testid="stStatusWidget"],
@@ -191,6 +198,7 @@ st.markdown("""
     button[data-testid="manage-app-button"] {
         display: none !important;
         visibility: hidden !important;
+        pointer-events: none !important;
     }
     html, body {
         overflow-x: hidden;
@@ -229,19 +237,24 @@ st.markdown("""
         letter-spacing: -0.02em;
     }
 
-    /* Transparent Streamlit Header so sticky elements can reach top: 0 cleanly */
-    header[data-testid="stHeader"] {
+    /* Keep header & toolbar transparent and non-blocking */
+    header[data-testid="stHeader"],
+    [data-testid="stToolbar"],
+    .stAppToolbar {
         background: transparent !important;
         pointer-events: none !important;
     }
 
-    /* Ensure sidebar toggle button (Desktop & Mobile) is ALWAYS visible and clickable */
+    /* Ensure the Expand / Collapse Sidebar Toggle button (Desktop & Mobile) is ALWAYS visible and clickable */
+    [data-testid="stExpandSidebarButton"],
+    button[data-testid="stExpandSidebarButton"],
     [data-testid="stSidebarCollapseButton"],
+    button[data-testid="stSidebarCollapseButton"],
     [data-testid="collapsedControl"],
     [data-testid="stSidebarCollapsedControl"],
+    header[data-testid="stHeader"] [data-testid="stExpandSidebarButton"],
     header[data-testid="stHeader"] [data-testid="collapsedControl"],
-    header[data-testid="stHeader"] [data-testid="stSidebarCollapsedControl"],
-    header[data-testid="stHeader"] [data-testid="stSidebarCollapseButton"] {
+    header[data-testid="stHeader"] [data-testid="stSidebarCollapsedControl"] {
         pointer-events: auto !important;
         display: flex !important;
         visibility: visible !important;
@@ -249,16 +262,32 @@ st.markdown("""
         z-index: 999999 !important;
     }
 
+    [data-testid="stExpandSidebarButton"] button,
     [data-testid="stSidebarCollapseButton"] button,
     [data-testid="collapsedControl"] button,
     [data-testid="stSidebarCollapsedControl"] button,
-    header[data-testid="stHeader"] [data-testid="collapsedControl"] button,
-    header[data-testid="stHeader"] [data-testid="stSidebarCollapsedControl"] button,
-    header[data-testid="stHeader"] [data-testid="stSidebarCollapseButton"] button {
+    header[data-testid="stHeader"] [data-testid="stExpandSidebarButton"] button,
+    header[data-testid="stHeader"] [data-testid="collapsedControl"] button {
         pointer-events: auto !important;
         display: inline-flex !important;
         visibility: visible !important;
         opacity: 1 !important;
+    }
+
+    /* Style sidebar toggle button as a high-contrast touchable icon */
+    [data-testid="stExpandSidebarButton"],
+    header[data-testid="stHeader"] [data-testid="stExpandSidebarButton"] {
+        background: rgba(17, 24, 39, 0.85) !important;
+        border: 1px solid rgba(59, 130, 246, 0.4) !important;
+        border-radius: 8px !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5) !important;
+        padding: 4px 6px !important;
+        margin: 6px !important;
+    }
+    [data-testid="stExpandSidebarButton"] svg,
+    [data-testid="stSidebarCollapseButton"] svg {
+        fill: #3B82F6 !important;
+        color: #3B82F6 !important;
     }
 
     /* 3. Bespoke Sticky Quant Hero Component (frontend-design) */
