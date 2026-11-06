@@ -171,8 +171,27 @@ st.set_page_config(
 # Design System & Responsive Architecture (frontend-design + better-layout)
 st.markdown("""
     <style>
-    /* 1. Global Reset & Layout Constraints */
+    /* 1. Global Reset, Clean UI & Streamlit Chrome Removal */
+    #MainMenu { visibility: hidden !important; display: none !important; }
+    footer { visibility: hidden !important; display: none !important; }
     .stAppDeployButton { display: none !important; }
+    [data-testid="stToolbar"] { visibility: hidden !important; display: none !important; }
+    .stAppToolbar { visibility: hidden !important; display: none !important; }
+    [data-testid="stDecoration"] { visibility: hidden !important; display: none !important; }
+
+    /* Hide Streamlit Community Cloud Manage app / Viewer Badge */
+    [data-testid="stStatusWidget"],
+    [data-testid="stViewerBadge"],
+    div[class*="viewerBadge"],
+    div[class*="styles_viewerBadge"],
+    .viewerBadge_container__1QSob,
+    .viewerBadge_link__1S137,
+    .viewerBadge_text__1JaDK,
+    div[class*="manageApp"],
+    button[data-testid="manage-app-button"] {
+        display: none !important;
+        visibility: hidden !important;
+    }
     html, body {
         overflow-x: hidden;
         scroll-behavior: smooth;
@@ -217,7 +236,17 @@ st.markdown("""
     }
     header[data-testid="stHeader"] button,
     header[data-testid="stHeader"] a {
+        pointer-events: none !important;
+        display: none !important;
+    }
+    /* Keep sidebar collapse / expand toggle accessible */
+    [data-testid="stSidebarCollapseButton"],
+    [data-testid="collapsedControl"],
+    header[data-testid="stHeader"] [data-testid="collapsedControl"],
+    header[data-testid="stHeader"] [data-testid="collapsedControl"] button {
         pointer-events: auto !important;
+        display: block !important;
+        visibility: visible !important;
     }
 
     /* 3. Bespoke Sticky Quant Hero Component (frontend-design) */
