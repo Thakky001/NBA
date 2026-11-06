@@ -394,16 +394,24 @@ class PlayerRatingEngine:
                 if norm_s in candidates_map:
                     matched_player = candidates_map[norm_s]
                 else:
-                    # Try matching first initial + last name (e.g. "D. Mitchell" -> "Davion Mitchell")
+                    # Enhanced name matching:
+                    # 1. First name prefix match with same last name (e.g. "Herb" -> "Herbert", "Nic" -> "Nicolas", "Cam" -> "Cameron")
+                    # 2. First initial + last name match (e.g. "D. Mitchell" -> "Davion Mitchell")
                     s_parts = norm_s.replace('.', ' ').split()
                     if len(s_parts) >= 2:
-                        s_init = s_parts[0][0]
+                        s_first = s_parts[0]
+                        s_init = s_first[0]
                         s_last = s_parts[-1]
                         for c_norm, c_obj in candidates_map.items():
                             c_parts = c_norm.split()
-                            if len(c_parts) >= 2 and c_parts[-1] == s_last and c_parts[0][0] == s_init:
-                                matched_player = c_obj
-                                break
+                            if len(c_parts) >= 2 and c_parts[-1] == s_last:
+                                c_first = c_parts[0]
+                                if len(s_first) >= 3 and len(c_first) >= 3 and (c_first.startswith(s_first) or s_first.startswith(c_first)):
+                                    matched_player = c_obj
+                                    break
+                                elif len(s_first) == 1 and c_first[0] == s_init:
+                                    matched_player = c_obj
+                                    break
 
                 if matched_player and id(matched_player) not in starter_ids:
                     sp_copy = dict(matched_player)
@@ -415,57 +423,96 @@ class PlayerRatingEngine:
                         'name': s_name,
                         'clean_name': s_name,
                         'position': s_pos,
-                        'eff_pg': 4.5,
-                        'active_eff': 4.5,
-                        'off_eff': 3.0,
-                        'def_eff': 1.5,
-                        'gp': 0,
-                        'injury_status': None
+                        'is_unmatched': True
                     }
                     starter_players.append(dummy_starter)
                     starter_ids.add(id(dummy_starter))
 
-        # Bench players = remaining players not in starters sorted by active_eff
+            # Dynamic Starter Baseline for unmatched starters (prevents flat 4.5 dummy trap)
+            matched_effs = [s['eff_pg'] for s in starter_players if not s.get('is_unmatched') and s.get('eff_pg', 0) > 0]
+            starter_baseline = round(sum(matched_effs) / len(matched_effs), 1) if matched_effs else 11.5
+
+            for s in starter_players:
+                if s.get('is_unmatched'):
+                    s['eff_pg'] = starter_baseline
+                    s['active_eff'] = starter_baseline
+                    s['off_eff'] = round(starter_baseline * 0.65, 1)
+                    s['def_eff'] = round(starter_baseline * 0.35, 1)
+                    s['gp'] = 0
+                    s['injury_status'] = None
+                    del s['is_unmatched']
+
+        # Bench candidates from active roster excluding original starters
         bench_candidates = [p for p in matched_ratings if id(p) not in starter_ids]
-        bench_top_3 = sorted(bench_candidates, key=lambda x: x['active_eff'], reverse=True)[:3]
         bench_full_top_3 = sorted(bench_candidates, key=lambda x: x['eff_pg'], reverse=True)[:3]
 
         if not matched_ratings:
             return result
 
+        # Next-Man-Up Replacement Logic for Starters:
+        # If a starter is confirmed OUT or DOUBTFUL, promote top healthy bench player
+        full_starter_players = list(starter_players)
+        active_starter_players = []
+
+        available_bench = sorted(
+            [p for p in bench_candidates if p.get('active_eff', 0) > 0],
+            key=lambda x: x['active_eff'],
+            reverse=True
+        )
+        promoted_ids = set()
+
+        for s in starter_players:
+            st = str(s.get('injury_status') or '').upper()
+            is_out_or_doubtful = ('OUT' in st) or ('DOUBTFUL' in st)
+            if is_out_or_doubtful and available_bench:
+                promoted = available_bench.pop(0)
+                promoted_ids.add(id(promoted))
+                promoted_starter = dict(promoted)
+                promoted_starter['position'] = s.get('position', promoted.get('position', ''))
+                promoted_starter['promoted_from_bench'] = True
+                promoted_starter['replaced_player'] = s.get('clean_name', s.get('name'))
+                active_starter_players.append(promoted_starter)
+            else:
+                active_starter_players.append(s)
+
+        # Remaining active bench candidates (excluding promoted bench players)
+        active_bench_candidates = [p for p in bench_candidates if id(p) not in promoted_ids]
+        bench_top_3 = sorted(active_bench_candidates, key=lambda x: x['active_eff'], reverse=True)[:3]
+
         # Use 70/30 weighting if we matched at least 4 starters and at least 1 bench
         if len(starter_players) >= 4 and len(bench_top_3) >= 1:
-            s_n = len(starter_players)
+            s_n = len(full_starter_players)
             b_n = len(bench_top_3)
             fb_n = len(bench_full_top_3) if bench_full_top_3 else b_n
 
             # Full health power (70% starters, 30% bench, scaled to 8-man level)
-            s_eff_avg = sum(s['eff_pg'] for s in starter_players) / s_n
+            s_eff_avg = sum(s['eff_pg'] for s in full_starter_players) / s_n
             b_eff_avg = sum(b['eff_pg'] for b in (bench_full_top_3 or bench_top_3)) / fb_n
             full_roster_rating = 8.0 * (0.70 * s_eff_avg + 0.30 * b_eff_avg)
 
-            s_off_avg = sum(s.get('off_eff', s['eff_pg'] * 0.65) for s in starter_players) / s_n
+            s_off_avg = sum(s.get('off_eff', s['eff_pg'] * 0.65) for s in full_starter_players) / s_n
             b_off_avg = sum(b.get('off_eff', b['eff_pg'] * 0.65) for b in (bench_full_top_3 or bench_top_3)) / fb_n
             full_off_rating = 8.0 * (0.70 * s_off_avg + 0.30 * b_off_avg)
 
-            s_def_avg = sum(s.get('def_eff', s['eff_pg'] * 0.35) for s in starter_players) / s_n
+            s_def_avg = sum(s.get('def_eff', s['eff_pg'] * 0.35) for s in full_starter_players) / s_n
             b_def_avg = sum(b.get('def_eff', b['eff_pg'] * 0.35) for b in (bench_full_top_3 or bench_top_3)) / fb_n
             full_def_rating = 8.0 * (0.70 * s_def_avg + 0.30 * b_def_avg)
 
             # Active power (70% starters, 30% bench, scaled to 8-man level)
-            s_act_eff_avg = sum(s['active_eff'] for s in starter_players) / s_n
+            s_act_n = len(active_starter_players)
+            s_act_eff_avg = sum(s['active_eff'] for s in active_starter_players) / s_act_n
             b_act_eff_avg = sum(b['active_eff'] for b in bench_top_3) / b_n
             active_roster_rating = 8.0 * (0.70 * s_act_eff_avg + 0.30 * b_act_eff_avg)
 
-            s_act_off_avg = sum(s.get('active_off_eff', s['active_eff'] * 0.65) for s in starter_players) / s_n
+            s_act_off_avg = sum(s.get('active_off_eff', s['active_eff'] * 0.65) for s in active_starter_players) / s_act_n
             b_act_off_avg = sum(b.get('active_off_eff', b['active_eff'] * 0.65) for b in bench_top_3) / b_n
             active_off_rating = 8.0 * (0.70 * s_act_off_avg + 0.30 * b_act_off_avg)
 
-            s_act_def_avg = sum(s.get('active_def_eff', s['active_eff'] * 0.35) for s in starter_players) / s_n
+            s_act_def_avg = sum(s.get('active_def_eff', s['active_eff'] * 0.35) for s in active_starter_players) / s_act_n
             b_act_def_avg = sum(b.get('active_def_eff', b['active_eff'] * 0.35) for b in bench_top_3) / b_n
             active_def_rating = 8.0 * (0.70 * s_act_def_avg + 0.30 * b_act_def_avg)
 
-            rotation_display = starter_players + bench_top_3
+            rotation_display = active_starter_players + bench_top_3
         else:
             # Fallback to legacy Top 8 calculation
             full_top_8 = sorted(matched_ratings, key=lambda x: x['eff_pg'], reverse=True)[:8]
@@ -482,6 +529,7 @@ class PlayerRatingEngine:
             rotation_display = active_top_8
             if not starter_players:
                 starter_players = active_top_8[:5]
+            active_starter_players = starter_players
 
         off_loss = max(0.0, full_off_rating - active_off_rating)
         def_loss = max(0.0, full_def_rating - active_def_rating)
@@ -509,7 +557,7 @@ class PlayerRatingEngine:
                 'active_eff': round(float(p.get('active_eff', 0.0)), 1),
                 'injury_status': p.get('injury_status')
             }
-            for p in starter_players
+            for p in active_starter_players
         ]
         result['lineup_status'] = lineup_status
         result['is_lineup_confirmed'] = is_confirmed

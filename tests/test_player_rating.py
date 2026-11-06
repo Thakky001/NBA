@@ -247,5 +247,102 @@ class TestPlayerRating(unittest.TestCase):
             self.assertIn('New Guy', names)
 
 
+    def test_next_man_up_starter_replacement_when_out(self):
+        """Verify that when a confirmed starter is OUT, the 6th man is promoted to starters."""
+        mock_rw = MagicMock()
+        mock_rw.get_lineup_for_team.return_value = {
+            'lineup_status': 'Confirmed',
+            'is_confirmed': True,
+            'starters': [
+                {'name': 'Injured Star', 'position': 'PG'},
+                {'name': 'Player Two', 'position': 'SG'},
+                {'name': 'Player Three', 'position': 'SF'},
+                {'name': 'Player Four', 'position': 'PF'},
+                {'name': 'Player Five', 'position': 'C'},
+            ]
+        }
+        engine = PlayerRatingEngine(rotowire_collector=mock_rw)
+        engine._roster_cache[555] = pd.DataFrame([
+            {'name': 'Injured Star'},
+            {'name': 'Player Two'},
+            {'name': 'Player Three'},
+            {'name': 'Player Four'},
+            {'name': 'Player Five'},
+            {'name': 'Sixth Man'},
+            {'name': 'Bench Seven'},
+            {'name': 'Bench Eight'},
+            {'name': 'Bench Nine'},
+        ])
+        engine.draft_history = pd.DataFrame()
+        engine.player_stats = pd.DataFrame([
+            {'PLAYER_NAME': 'Injured Star', 'GP': 10, 'EFF_PG': 30.0},
+            {'PLAYER_NAME': 'Player Two', 'GP': 10, 'EFF_PG': 20.0},
+            {'PLAYER_NAME': 'Player Three', 'GP': 10, 'EFF_PG': 20.0},
+            {'PLAYER_NAME': 'Player Four', 'GP': 10, 'EFF_PG': 20.0},
+            {'PLAYER_NAME': 'Player Five', 'GP': 10, 'EFF_PG': 20.0},
+            {'PLAYER_NAME': 'Sixth Man', 'GP': 10, 'EFF_PG': 16.0},
+            {'PLAYER_NAME': 'Bench Seven', 'GP': 10, 'EFF_PG': 12.0},
+            {'PLAYER_NAME': 'Bench Eight', 'GP': 10, 'EFF_PG': 10.0},
+            {'PLAYER_NAME': 'Bench Nine', 'GP': 10, 'EFF_PG': 8.0},
+        ])
+        # Injured Star is OUT
+        engine.injuries_df = pd.DataFrame([
+            {'player_name': 'Injured Star', 'status': 'Out', 'detail': 'Knee'}
+        ])
+
+        with patch('config.resolve_team_info', return_value={'espn_id': 555}):
+            res = engine.calculate_team_roster_rating("Mock Team")
+            self.assertEqual(res['status'], 'success')
+            starter_names = [s['name'] for s in res['starters']]
+            # Injured Star was replaced in starting 5 by Sixth Man
+            self.assertIn('Sixth Man', starter_names)
+            self.assertNotIn('Injured Star', starter_names)
+            # Full roster rating preserves Injured Star (30.0)
+            self.assertGreater(res['full_roster_rating'], 150.0)
+            # Active roster rating uses Sixth Man (16.0) instead of 0.0 penalty
+            self.assertAlmostEqual(res['roster_rating'], 131.5, delta=1.0)
+            # Star still listed in injuries
+            self.assertTrue(any('Injured Star' in inj and 'OUT' in inj for inj in res['injuries']))
+
+    def test_prefix_name_matching_herb_and_nic(self):
+        """Verify prefix matching for common abbreviations (Herb -> Herbert, Nic -> Nicolas)."""
+        mock_rw = MagicMock()
+        mock_rw.get_lineup_for_team.return_value = {
+            'lineup_status': 'Expected',
+            'is_confirmed': False,
+            'starters': [
+                {'name': 'Herb Jones', 'position': 'SF'},
+                {'name': 'Nic Claxton', 'position': 'C'},
+                {'name': 'Cam Thomas', 'position': 'SG'},
+                {'name': 'Normal Player', 'position': 'PG'},
+                {'name': 'Fifth Player', 'position': 'PF'},
+            ]
+        }
+        engine = PlayerRatingEngine(rotowire_collector=mock_rw)
+        engine._roster_cache[444] = pd.DataFrame([
+            {'name': 'Herbert Jones'},
+            {'name': 'Nicolas Claxton'},
+            {'name': 'Cameron Thomas'},
+            {'name': 'Normal Player'},
+            {'name': 'Fifth Player'},
+        ])
+        engine.draft_history = pd.DataFrame()
+        engine.player_stats = pd.DataFrame([
+            {'PLAYER_NAME': 'Herbert Jones', 'GP': 10, 'EFF_PG': 14.0},
+            {'PLAYER_NAME': 'Nicolas Claxton', 'GP': 10, 'EFF_PG': 16.0},
+            {'PLAYER_NAME': 'Cameron Thomas', 'GP': 10, 'EFF_PG': 18.0},
+            {'PLAYER_NAME': 'Normal Player', 'GP': 10, 'EFF_PG': 15.0},
+            {'PLAYER_NAME': 'Fifth Player', 'GP': 10, 'EFF_PG': 13.0},
+        ])
+        engine.injuries_df = pd.DataFrame()
+
+        with patch('config.resolve_team_info', return_value={'espn_id': 444}):
+            res = engine.calculate_team_roster_rating("Mock Team")
+            names = [s['name'] for s in res['starters']]
+            self.assertIn('Herbert Jones', names)
+            self.assertIn('Nicolas Claxton', names)
+            self.assertIn('Cameron Thomas', names)
+
+
 if __name__ == '__main__':
     unittest.main()
