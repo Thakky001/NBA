@@ -819,6 +819,20 @@ class TrendAnalyzer:
             if not hasattr(self, '_ai_sp_model'):
                 self._ai_sp_model = SpreadResidualModel()
 
+            # Early season detection for synchronized conviction thresholds
+            feat_sync = result.get('features') or (result.get('over_under') or {}).get('features') or {}
+            try:
+                hg_sync = int(feat_sync.get('home_games_played', 10))
+            except Exception:
+                hg_sync = 10
+            try:
+                ag_sync = int(feat_sync.get('away_games_played', 10))
+            except Exception:
+                ag_sync = 10
+            min_games_sync = min(hg_sync, ag_sync)
+            is_early_ou_sync = min_games_sync < 20
+            is_early_sp_sync = min_games_sync < 10
+
             # 1. Over/Under AI Adjustment
             if self._ai_ou_model and self._ai_ou_model.is_fitted and result.get('over_under'):
                 ou_res = result['over_under']
@@ -828,16 +842,20 @@ class TrendAnalyzer:
                 ou_res['ai_residual'] = adj_ou['ai_residual']
                 ou_res['base_math_total'] = adj_ou['base_math_total']
                 ou_res['adjusted_total'] = adj_ou['adjusted_total']
-                if adj_ou['ai_residual'] != 0.0 and over_under_line is not None:
+                if isinstance(adj_ou.get('ai_residual'), (int, float)) and adj_ou['ai_residual'] != 0.0 and isinstance(over_under_line, (int, float)):
                     ou_res['projected_total'] = adj_ou['adjusted_total']
                     ou_res['total_edge'] = round(adj_ou['adjusted_total'] - over_under_line, 1)
-                    if ou_res['total_edge'] >= 2.0:
+                    edge_ou = ou_res['total_edge']
+                    # Synchronized with Asymmetric Conviction Gate:
+                    # OVER: Requires >= 5.0 in early season, >= 3.0 mid-season; LEAN OVER suppressed in early season
+                    # UNDER: Preserves <= -2.0 for STRONG, <= -1.0 for LEAN mid-season
+                    if edge_ou >= 5.0:
                         ou_res['recommendation'] = 'STRONG OVER'
-                    elif ou_res['total_edge'] <= -2.0:
-                        ou_res['recommendation'] = 'STRONG UNDER'
-                    elif ou_res['total_edge'] >= 1.0:
+                    elif not is_early_ou_sync and edge_ou >= 3.0:
                         ou_res['recommendation'] = 'LEAN OVER'
-                    elif ou_res['total_edge'] <= -1.0:
+                    elif edge_ou <= -2.0:
+                        ou_res['recommendation'] = 'STRONG UNDER'
+                    elif not is_early_ou_sync and edge_ou <= -1.0:
                         ou_res['recommendation'] = 'LEAN UNDER'
                     else:
                         ou_res['recommendation'] = 'NEUTRAL'
@@ -851,16 +869,17 @@ class TrendAnalyzer:
                 sp_res['ai_residual'] = adj_sp['ai_residual']
                 sp_res['base_math_margin'] = adj_sp['base_math_margin']
                 sp_res['adjusted_margin'] = adj_sp['adjusted_margin']
-                if adj_sp['ai_residual'] != 0.0 and spread_line is not None:
+                if isinstance(adj_sp.get('ai_residual'), (int, float)) and adj_sp['ai_residual'] != 0.0 and isinstance(spread_line, (int, float)):
                     sp_res['projected_margin'] = adj_sp['adjusted_margin']
                     sp_res['cover_edge'] = round(adj_sp['adjusted_margin'] + spread_line, 1)
-                    if sp_res['cover_edge'] >= 2.0:
+                    edge_sp = sp_res['cover_edge']
+                    if edge_sp >= 2.0:
                         sp_res['recommendation'] = 'STRONG HOME'
-                    elif sp_res['cover_edge'] <= -2.0:
-                        sp_res['recommendation'] = 'STRONG AWAY'
-                    elif sp_res['cover_edge'] >= 1.0:
+                    elif not is_early_sp_sync and edge_sp >= 0.8:
                         sp_res['recommendation'] = 'LEAN HOME'
-                    elif sp_res['cover_edge'] <= -1.0:
+                    elif edge_sp <= -2.0:
+                        sp_res['recommendation'] = 'STRONG AWAY'
+                    elif not is_early_sp_sync and edge_sp <= -0.8:
                         sp_res['recommendation'] = 'LEAN AWAY'
                     else:
                         sp_res['recommendation'] = 'NEUTRAL'

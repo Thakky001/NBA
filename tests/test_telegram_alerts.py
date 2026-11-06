@@ -118,6 +118,64 @@ class TestTelegramAlerts(unittest.TestCase):
         self.assertIn("+EV", card)
         self.assertIn("Kelly", card)
 
+    def test_format_game_card_market_clash_filter(self):
+        """When is_market_clash is True, format_game_card suppresses picks and outputs PASS."""
+        mock_analysis = {
+            'is_market_clash': True,
+            'spread': {
+                'recommendation': 'STRONG HOME',
+                'cover_edge': 5.0,
+                'win_prob': 0.70,
+                'ev': 0.20,
+                'kelly_quarter': 0.05,
+                'features': {'spread_line': -4.5}
+            },
+            'over_under': {
+                'recommendation': 'STRONG OVER',
+                'total_edge': 6.0,
+                'win_prob': 0.68,
+                'ev': 0.18,
+                'kelly_quarter': 0.04,
+                'features': {'over_under_line': 225.0}
+            }
+        }
+        mock_game_info = {
+            'home_team': 'Boston Celtics',
+            'away_team': 'Miami Heat',
+            'thai_time': '07:30',
+        }
+        card = format_game_card(mock_analysis, mock_game_info)
+        self.assertIn('ข้าม (PASS - สัญญาณขัดแย้งกับกระแสเงินตลาด)', card)
+        self.assertNotIn('ต่อ Boston Celtics', card)
+        self.assertNotIn('สูง (มั่นใจมาก)', card)
+
+    def test_format_game_card_capital_preservation_filter(self):
+        """When line_movement verdict is CAPITAL_PRESERVATION, picks are suppressed."""
+        mock_analysis = {
+            'is_market_clash': False,
+            'line_movement': {
+                'verdict': 'CAPITAL_PRESERVATION',
+                'analysis': 'Line moved against heavy public money'
+            },
+            'spread': {
+                'recommendation': 'STRONG HOME',
+                'cover_edge': 4.0,
+                'features': {'spread_line': -3.5}
+            },
+            'over_under': {
+                'recommendation': 'NEUTRAL',
+                'features': {'over_under_line': 220.0}
+            }
+        }
+        mock_game_info = {
+            'home_team': 'Los Angeles Lakers',
+            'away_team': 'Golden State Warriors',
+            'thai_time': '10:00',
+        }
+        card = format_game_card(mock_analysis, mock_game_info)
+        self.assertIn('ข้าม (PASS - สัญญาณขัดแย้งกับกระแสเงินตลาด)', card)
+        self.assertNotIn('ต่อ Los Angeles Lakers', card)
+
     def test_alerted_ledger_roundtrip(self):
         """Marking games as alerted persists and is_game_already_alerted checks accurately."""
         import tempfile

@@ -2115,9 +2115,9 @@ def _render_spread_analysis_card(home, away, sp_val, open_spread, sp_res, rec_te
                 fav_team, fav_pts = home, "0.0"
                 dog_team, dog_pts = away, "0.0"
 
-            roles_html = f'''<div class="matchup-roles-card"><div class="matchup-role-row"><div class="matchup-team-side"><span class="role-pill fav">🔴 ทีมต่อ</span><span class="matchup-team-name">{fav_team}</span></div><span class="matchup-point-val fav">{fav_pts}</span></div><div class="matchup-role-row"><div class="matchup-team-side"><span class="role-pill dog">🟢 ทีมรอง</span><span class="matchup-team-name">{dog_team}</span></div><span class="matchup-point-val dog">{dog_pts}</span></div></div>'''
+            roles_html = f'''<div class="matchup-roles-card"><div class="matchup-roles-header" style="font-size:0.75rem; color:#94A3B8; margin-bottom:6px; font-weight:600;">📌 เรตราคาเปิดจากบ่อน (Market Odds)</div><div class="matchup-role-row"><div class="matchup-team-side"><span class="role-pill fav">🏷️ บ่อนเปิดต่อ</span><span class="matchup-team-name">{fav_team}</span></div><span class="matchup-point-val fav">{fav_pts}</span></div><div class="matchup-role-row"><div class="matchup-team-side"><span class="role-pill dog">🏷️ บ่อนเปิดรอง</span><span class="matchup-team-name">{dog_team}</span></div><span class="matchup-point-val dog">{dog_pts}</span></div></div>'''
         except Exception:
-            roles_html = f'''<div class="matchup-roles-card"><div class="matchup-role-row"><div class="matchup-team-side"><span class="role-pill neutral">⚖️ เรตราคา</span><span class="matchup-team-name">{sp_line_pill}</span></div></div></div>'''
+            roles_html = f'''<div class="matchup-roles-card"><div class="matchup-roles-header" style="font-size:0.75rem; color:#94A3B8; margin-bottom:6px; font-weight:600;">📌 เรตราคาเปิดจากบ่อน (Market Odds)</div><div class="matchup-role-row"><div class="matchup-team-side"><span class="role-pill neutral">⚖️ เรตราคาบ่อน</span><span class="matchup-team-name">{sp_line_pill}</span></div></div></div>'''
 
     # 3. Live Pace Banner if in-play
     live_banner_html = ""

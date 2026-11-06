@@ -101,7 +101,8 @@ def is_game_already_alerted(date_str: str, game_id: str) -> bool:
     return str(game_id) in ledger.get(date_str, [])
 
 
-def format_game_card(analysis: Dict[str, Any], game_info: Dict[str, Any], odds_data: Dict[str, Any]) -> str:
+def format_game_card(analysis: Dict[str, Any], game_info: Dict[str, Any], odds_data: Optional[Dict[str, Any]] = None) -> str:
+    odds_data = odds_data or {}
     """Format an actionable, compact HTML card for a single NBA game (6-line compact mobile layout)."""
     home = game_info.get('home_team', 'Home')
     away = game_info.get('away_team', 'Away')
@@ -188,10 +189,15 @@ def format_game_card(analysis: Dict[str, Any], game_info: Dict[str, Any], odds_d
     sp_rec = sp_res.get('recommendation', 'NEUTRAL')
     ou_rec = ou_res.get('recommendation', 'NEUTRAL')
 
+    # Market Clash / PASS Strict Filter: Suppress picks where market line flow conflicts with model
+    global_clash = analysis.get('is_market_clash', False) or (analysis.get('line_movement', {}).get('verdict') in ['CAPITAL_PRESERVATION', 'PASS'])
+    sp_clash = global_clash or sp_res.get('is_market_clash', False) or (sp_res.get('line_movement', {}).get('verdict') in ['CAPITAL_PRESERVATION', 'PASS'])
+    ou_clash = global_clash or ou_res.get('is_market_clash', False) or (ou_res.get('line_movement', {}).get('verdict') in ['CAPITAL_PRESERVATION', 'PASS'])
+
     picks = []
-    if 'STRONG' in sp_rec or 'LEAN' in sp_rec:
+    if ('STRONG' in sp_rec or 'LEAN' in sp_rec) and not sp_clash:
         picks.append((sp_res, 'Spread'))
-    if 'STRONG' in ou_rec or 'LEAN' in ou_rec:
+    if ('STRONG' in ou_rec or 'LEAN' in ou_rec) and not ou_clash:
         picks.append((ou_res, 'Total'))
 
     if picks:
@@ -224,6 +230,8 @@ def format_game_card(analysis: Dict[str, Any], game_info: Dict[str, Any], odds_d
                 stat_items.append(ev_str)
 
             card_lines.append(f"📈 {' | '.join(stat_items)}")
+    elif sp_clash or ou_clash:
+        card_lines.append("⚖️ <b>คำแนะนำ:</b> ข้าม (PASS - สัญญาณขัดแย้งกับกระแสเงินตลาด)")
     else:
         card_lines.append("⚖️ <b>คำแนะนำ:</b> เรตราคาเปิดมาสมดุล (NEUTRAL)")
 
@@ -400,56 +408,74 @@ def run_alert_cycle(
             open_line=open_total
         )
 
-        # Apply AI CatBoost adjustments
+        # Apply AI CatBoost adjustments (synchronized with trend_analyzer, prevent double-adjustment)
+        feat_alert = analysis.get('features') or (analysis.get('over_under') or {}).get('features') or {}
+        try:
+            hg_alert = int(feat_alert.get('home_games_played', 10))
+        except Exception:
+            hg_alert = 10
+        try:
+            ag_alert = int(feat_alert.get('away_games_played', 10))
+        except Exception:
+            ag_alert = 10
+        min_g_alert = min(hg_alert, ag_alert)
+        is_early_ou_alert = min_g_alert < 20
+        is_early_sp_alert = min_g_alert < 10
+
         if ai_ou_model and ai_ou_model.is_fitted and analysis.get('over_under'):
             ou_res = analysis['over_under']
-            try:
-                adj_ou = ai_ou_model.get_adjusted_projection(
-                    home, away, fe, analyzer, game_date=date_str, over_under_line=ou_val
-                )
-                ou_res['ai_residual'] = adj_ou['ai_residual']
-                ou_res['base_math_total'] = adj_ou['base_math_total']
-                ou_res['adjusted_total'] = adj_ou['adjusted_total']
-                if adj_ou['ai_residual'] != 0.0 and ou_val is not None:
-                    ou_res['projected_total'] = adj_ou['adjusted_total']
-                    ou_res['total_edge'] = round(adj_ou['adjusted_total'] - ou_val, 1)
-                    if ou_res['total_edge'] >= 2.0:
-                        ou_res['recommendation'] = 'STRONG OVER'
-                    elif ou_res['total_edge'] <= -2.0:
-                        ou_res['recommendation'] = 'STRONG UNDER'
-                    elif ou_res['total_edge'] >= 1.0:
-                        ou_res['recommendation'] = 'LEAN OVER'
-                    elif ou_res['total_edge'] <= -1.0:
-                        ou_res['recommendation'] = 'LEAN UNDER'
-                    else:
-                        ou_res['recommendation'] = 'NEUTRAL'
-            except Exception as e:
-                logger.warning(f"AI OU adjustment failed gracefully: {e}")
+            # Only compute if not already computed inside full_matchup_analysis
+            if 'ai_residual' not in ou_res:
+                try:
+                    adj_ou = ai_ou_model.get_adjusted_projection(
+                        home, away, fe, analyzer, game_date=date_str, over_under_line=ou_val
+                    )
+                    ou_res['ai_residual'] = adj_ou['ai_residual']
+                    ou_res['base_math_total'] = adj_ou['base_math_total']
+                    ou_res['adjusted_total'] = adj_ou['adjusted_total']
+                    if isinstance(adj_ou.get('ai_residual'), (int, float)) and adj_ou['ai_residual'] != 0.0 and isinstance(ou_val, (int, float)):
+                        ou_res['projected_total'] = adj_ou['adjusted_total']
+                        ou_res['total_edge'] = round(adj_ou['adjusted_total'] - ou_val, 1)
+                        edge_ou = ou_res['total_edge']
+                        if edge_ou >= 5.0:
+                            ou_res['recommendation'] = 'STRONG OVER'
+                        elif not is_early_ou_alert and edge_ou >= 3.0:
+                            ou_res['recommendation'] = 'LEAN OVER'
+                        elif edge_ou <= -2.0:
+                            ou_res['recommendation'] = 'STRONG UNDER'
+                        elif not is_early_ou_alert and edge_ou <= -1.0:
+                            ou_res['recommendation'] = 'LEAN UNDER'
+                        else:
+                            ou_res['recommendation'] = 'NEUTRAL'
+                except Exception as e:
+                    logger.warning(f"AI OU adjustment failed gracefully: {e}")
 
         if ai_sp_model and ai_sp_model.is_fitted and analysis.get('spread'):
             sp_res = analysis['spread']
-            try:
-                adj_sp = ai_sp_model.get_adjusted_spread_projection(
-                    home, away, fe, analyzer, game_date=date_str, spread_line=sp_val
-                )
-                sp_res['ai_residual'] = adj_sp['ai_residual']
-                sp_res['base_math_margin'] = adj_sp['base_math_margin']
-                sp_res['adjusted_margin'] = adj_sp['adjusted_margin']
-                if adj_sp['ai_residual'] != 0.0 and sp_val is not None:
-                    sp_res['projected_margin'] = adj_sp['adjusted_margin']
-                    sp_res['cover_edge'] = round(adj_sp['adjusted_margin'] + sp_val, 1)
-                    if sp_res['cover_edge'] >= 2.0:
-                        sp_res['recommendation'] = 'STRONG HOME'
-                    elif sp_res['cover_edge'] <= -2.0:
-                        sp_res['recommendation'] = 'STRONG AWAY'
-                    elif sp_res['cover_edge'] >= 1.0:
-                        sp_res['recommendation'] = 'LEAN HOME'
-                    elif sp_res['cover_edge'] <= -1.0:
-                        sp_res['recommendation'] = 'LEAN AWAY'
-                    else:
-                        sp_res['recommendation'] = 'NEUTRAL'
-            except Exception as e:
-                logger.warning(f"AI Spread adjustment failed gracefully: {e}")
+            if 'ai_residual' not in sp_res:
+                try:
+                    adj_sp = ai_sp_model.get_adjusted_spread_projection(
+                        home, away, fe, analyzer, game_date=date_str, spread_line=sp_val
+                    )
+                    sp_res['ai_residual'] = adj_sp['ai_residual']
+                    sp_res['base_math_margin'] = adj_sp['base_math_margin']
+                    sp_res['adjusted_margin'] = adj_sp['adjusted_margin']
+                    if isinstance(adj_sp.get('ai_residual'), (int, float)) and adj_sp['ai_residual'] != 0.0 and isinstance(sp_val, (int, float)):
+                        sp_res['projected_margin'] = adj_sp['adjusted_margin']
+                        sp_res['cover_edge'] = round(adj_sp['adjusted_margin'] + sp_val, 1)
+                        edge_sp = sp_res['cover_edge']
+                        if edge_sp >= 2.0:
+                            sp_res['recommendation'] = 'STRONG HOME'
+                        elif not is_early_sp_alert and edge_sp >= 0.8:
+                            sp_res['recommendation'] = 'LEAN HOME'
+                        elif edge_sp <= -2.0:
+                            sp_res['recommendation'] = 'STRONG AWAY'
+                        elif not is_early_sp_alert and edge_sp <= -0.8:
+                            sp_res['recommendation'] = 'LEAN AWAY'
+                        else:
+                            sp_res['recommendation'] = 'NEUTRAL'
+                except Exception as e:
+                    logger.warning(f"AI Spread adjustment failed gracefully: {e}")
 
         card = format_game_card(analysis, game.to_dict(), odds_data)
         cards.append(card)

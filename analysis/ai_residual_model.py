@@ -129,17 +129,20 @@ class OverUnderResidualModel:
         a_form = fe.get_team_recent_form(a_team, n_games=5, before_date=game_date)
 
         g_date_str = str(game_date) if game_date else pd.Timestamp.now().strftime('%Y-%m-%d')
-        h_rest = fe.get_rest_days(h_team, game_date=g_date_str)
-        a_rest = fe.get_rest_days(a_team, game_date=g_date_str)
+        h_rest_raw = fe.get_rest_days(h_team, game_date=g_date_str)
+        a_rest_raw = fe.get_rest_days(a_team, game_date=g_date_str)
 
         try:
-            h_b2b = 1 if float(h_rest) <= 1.0 else 0
+            h_rest = float(h_rest_raw)
         except (ValueError, TypeError):
-            h_b2b = 0
+            h_rest = 2.0
         try:
-            a_b2b = 1 if float(a_rest) <= 1.0 else 0
+            a_rest = float(a_rest_raw)
         except (ValueError, TypeError):
-            a_b2b = 0
+            a_rest = 2.0
+
+        h_b2b = 1 if h_rest <= 1.0 else 0
+        a_b2b = 1 if a_rest <= 1.0 else 0
 
         h_pace = fe._get_team_adv_stat(h_team, 'pace', game_date) if hasattr(fe, '_get_team_adv_stat') else None
         a_pace = fe._get_team_adv_stat(a_team, 'pace', game_date) if hasattr(fe, '_get_team_adv_stat') else None
@@ -321,17 +324,20 @@ class SpreadResidualModel:
         a_form = fe.get_team_recent_form(a_team, n_games=5, before_date=game_date)
 
         g_date_str = str(game_date) if game_date else pd.Timestamp.now().strftime('%Y-%m-%d')
-        h_rest = fe.get_rest_days(h_team, game_date=g_date_str)
-        a_rest = fe.get_rest_days(a_team, game_date=g_date_str)
+        h_rest_raw = fe.get_rest_days(h_team, game_date=g_date_str)
+        a_rest_raw = fe.get_rest_days(a_team, game_date=g_date_str)
 
         try:
-            h_b2b = 1 if float(h_rest) <= 1.0 else 0
+            h_rest = float(h_rest_raw)
         except (ValueError, TypeError):
-            h_b2b = 0
+            h_rest = 2.0
         try:
-            a_b2b = 1 if float(a_rest) <= 1.0 else 0
+            a_rest = float(a_rest_raw)
         except (ValueError, TypeError):
-            a_b2b = 0
+            a_rest = 2.0
+
+        h_b2b = 1 if h_rest <= 1.0 else 0
+        a_b2b = 1 if a_rest <= 1.0 else 0
 
         # Advanced stats (Net Rating & Pace)
         h_net = fe._get_team_adv_stat(h_team, 'net_rating', game_date) if hasattr(fe, '_get_team_adv_stat') else None
