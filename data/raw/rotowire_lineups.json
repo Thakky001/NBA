@@ -61,7 +61,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-07 00:36:10"
+    "scraped_at": "2026-11-07 02:36:08"
   },
   "WAS": {
     "team": "Washington Wizards",
@@ -125,7 +125,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-07 00:36:10"
+    "scraped_at": "2026-11-07 02:36:08"
   },
   "Atlanta Hawks": {
     "team": "Atlanta Hawks",
@@ -194,7 +194,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-07 00:36:10"
+    "scraped_at": "2026-11-07 02:36:08"
   },
   "ATL": {
     "team": "Atlanta Hawks",
@@ -263,7 +263,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-07 00:36:10"
+    "scraped_at": "2026-11-07 02:36:08"
   },
   "Boston Celtics": {
     "team": "Boston Celtics",
@@ -301,7 +301,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-11-07 00:36:10"
+    "scraped_at": "2026-11-07 02:36:08"
   },
   "BOS": {
     "team": "Boston Celtics",
@@ -339,7 +339,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-11-07 00:36:10"
+    "scraped_at": "2026-11-07 02:36:08"
   },
   "Charlotte Hornets": {
     "team": "Charlotte Hornets",
@@ -378,6 +378,11 @@
     ],
     "injuries": [
       {
+        "name": "Brandon Miller",
+        "position": "F",
+        "status": "Very Likely To Play"
+      },
+      {
         "name": "Moussa Diabate",
         "position": "C",
         "status": "Very Unlikely To Play"
@@ -398,7 +403,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-07 00:36:10"
+    "scraped_at": "2026-11-07 02:36:08"
   },
   "CHA": {
     "team": "Charlotte Hornets",
@@ -437,6 +442,11 @@
     ],
     "injuries": [
       {
+        "name": "Brandon Miller",
+        "position": "F",
+        "status": "Very Likely To Play"
+      },
+      {
         "name": "Moussa Diabate",
         "position": "C",
         "status": "Very Unlikely To Play"
@@ -457,7 +467,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-07 00:36:10"
+    "scraped_at": "2026-11-07 02:36:08"
   },
   "Philadelphia 76ers": {
     "team": "Philadelphia 76ers",
@@ -511,7 +521,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-07 00:36:10"
+    "scraped_at": "2026-11-07 02:36:08"
   },
   "PHI": {
     "team": "Philadelphia 76ers",
@@ -565,7 +575,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-07 00:36:10"
+    "scraped_at": "2026-11-07 02:36:08"
   },
   "Cleveland Cavaliers": {
     "team": "Cleveland Cavaliers",
@@ -594,7 +604,7 @@
       {
         "name": "Sam Merrill",
         "position": "PF",
-        "status": "Very Likely To Play"
+        "status": "Very Unlikely To Play"
       },
       {
         "name": "Evan Mobley",
@@ -609,6 +619,11 @@
         "status": "Very Unlikely To Play"
       },
       {
+        "name": "Sam Merrill",
+        "position": "G",
+        "status": "Very Unlikely To Play"
+      },
+      {
         "name": "Nae'Qwan Tomlin",
         "position": "F",
         "status": "Very Unlikely To Play"
@@ -619,7 +634,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-07 00:36:10"
+    "scraped_at": "2026-11-07 02:36:08"
   },
   "CLE": {
     "team": "Cleveland Cavaliers",
@@ -648,7 +663,7 @@
       {
         "name": "Sam Merrill",
         "position": "PF",
-        "status": "Very Likely To Play"
+        "status": "Very Unlikely To Play"
       },
       {
         "name": "Evan Mobley",
@@ -663,6 +678,11 @@
         "status": "Very Unlikely To Play"
       },
       {
+        "name": "Sam Merrill",
+        "position": "G",
+        "status": "Very Unlikely To Play"
+      },
+      {
         "name": "Nae'Qwan Tomlin",
         "position": "F",
         "status": "Very Unlikely To Play"
@@ -673,7 +693,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-07 00:36:10"
+    "scraped_at": "2026-11-07 02:36:08"
   },
   "Minnesota Timberwolves": {
     "team": "Minnesota Timberwolves",
@@ -727,7 +747,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-07 00:36:10"
+    "scraped_at": "2026-11-07 02:36:08"
   },
   "MIN": {
     "team": "Minnesota Timberwolves",
@@ -781,7 +801,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-07 00:36:10"
+    "scraped_at": "2026-11-07 02:36:08"
   },
   "New Orleans Pelicans": {
     "team": "New Orleans Pelicans",
@@ -825,7 +845,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-07 00:36:10"
+    "scraped_at": "2026-11-07 02:36:08"
   },
   "NOP": {
     "team": "New Orleans Pelicans",
@@ -869,7 +889,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-07 00:36:10"
+    "scraped_at": "2026-11-07 02:36:08"
   },
   "Utah Jazz": {
     "team": "Utah Jazz",
@@ -877,8 +897,8 @@
     "opponent": "Dallas Mavericks",
     "opponent_abbr": "DAL",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Keyonte George",
@@ -918,7 +938,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-07 00:36:10"
+    "scraped_at": "2026-11-07 02:36:08"
   },
   "UTA": {
     "team": "Utah Jazz",
@@ -926,8 +946,8 @@
     "opponent": "Dallas Mavericks",
     "opponent_abbr": "DAL",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Keyonte George",
@@ -967,7 +987,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-07 00:36:10"
+    "scraped_at": "2026-11-07 02:36:08"
   },
   "Dallas Mavericks": {
     "team": "Dallas Mavericks",
@@ -975,8 +995,8 @@
     "opponent": "Utah Jazz",
     "opponent_abbr": "UTA",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Kyrie Irving",
@@ -984,7 +1004,7 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Max Christie",
+        "name": "Caleb Martin",
         "position": "SG",
         "status": "Very Likely To Play"
       },
@@ -1021,7 +1041,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-07 00:36:10"
+    "scraped_at": "2026-11-07 02:36:08"
   },
   "DAL": {
     "team": "Dallas Mavericks",
@@ -1029,8 +1049,8 @@
     "opponent": "Utah Jazz",
     "opponent_abbr": "UTA",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Kyrie Irving",
@@ -1038,7 +1058,7 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Max Christie",
+        "name": "Caleb Martin",
         "position": "SG",
         "status": "Very Likely To Play"
       },
@@ -1075,7 +1095,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-07 00:36:10"
+    "scraped_at": "2026-11-07 02:36:08"
   },
   "Toronto Raptors": {
     "team": "Toronto Raptors",
@@ -1083,8 +1103,8 @@
     "opponent": "Milwaukee Bucks",
     "opponent_abbr": "MIL",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Jamal Shead",
@@ -1134,7 +1154,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-07 00:36:10"
+    "scraped_at": "2026-11-07 02:36:08"
   },
   "TOR": {
     "team": "Toronto Raptors",
@@ -1142,8 +1162,8 @@
     "opponent": "Milwaukee Bucks",
     "opponent_abbr": "MIL",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Jamal Shead",
@@ -1193,7 +1213,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-07 00:36:10"
+    "scraped_at": "2026-11-07 02:36:08"
   },
   "Milwaukee Bucks": {
     "team": "Milwaukee Bucks",
@@ -1201,8 +1221,8 @@
     "opponent": "Toronto Raptors",
     "opponent_abbr": "TOR",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Brayden Burries",
@@ -1231,7 +1251,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-11-07 00:36:10"
+    "scraped_at": "2026-11-07 02:36:08"
   },
   "MIL": {
     "team": "Milwaukee Bucks",
@@ -1239,8 +1259,8 @@
     "opponent": "Toronto Raptors",
     "opponent_abbr": "TOR",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Brayden Burries",
@@ -1269,7 +1289,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-11-07 00:36:10"
+    "scraped_at": "2026-11-07 02:36:08"
   },
   "Oklahoma City Thunder": {
     "team": "Oklahoma City Thunder",
@@ -1286,12 +1306,12 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Ajay Mitchell",
+        "name": "Jared McCain",
         "position": "SG",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Jared McCain",
+        "name": "Ajay Mitchell",
         "position": "SF",
         "status": "Very Likely To Play"
       },
@@ -1338,7 +1358,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-07 00:36:10"
+    "scraped_at": "2026-11-07 02:36:08"
   },
   "OKC": {
     "team": "Oklahoma City Thunder",
@@ -1355,12 +1375,12 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Ajay Mitchell",
+        "name": "Jared McCain",
         "position": "SG",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Jared McCain",
+        "name": "Ajay Mitchell",
         "position": "SF",
         "status": "Very Likely To Play"
       },
@@ -1407,7 +1427,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-07 00:36:10"
+    "scraped_at": "2026-11-07 02:36:08"
   },
   "Memphis Grizzlies": {
     "team": "Memphis Grizzlies",
@@ -1456,7 +1476,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-07 00:36:10"
+    "scraped_at": "2026-11-07 02:36:08"
   },
   "MEM": {
     "team": "Memphis Grizzlies",
@@ -1505,7 +1525,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-07 00:36:10"
+    "scraped_at": "2026-11-07 02:36:08"
   },
   "Portland Trail Blazers": {
     "team": "Portland Trail Blazers",
@@ -1513,8 +1533,8 @@
     "opponent": "Los Angeles Lakers",
     "opponent_abbr": "LAL",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Damian Lillard",
@@ -1559,7 +1579,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-07 00:36:10"
+    "scraped_at": "2026-11-07 02:36:08"
   },
   "POR": {
     "team": "Portland Trail Blazers",
@@ -1567,8 +1587,8 @@
     "opponent": "Los Angeles Lakers",
     "opponent_abbr": "LAL",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Damian Lillard",
@@ -1613,7 +1633,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-07 00:36:10"
+    "scraped_at": "2026-11-07 02:36:08"
   },
   "Los Angeles Lakers": {
     "team": "Los Angeles Lakers",
@@ -1635,12 +1655,12 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Ziaire Williams",
+        "name": "Matisse Thybulle",
         "position": "SF",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Matisse Thybulle",
+        "name": "Jake LaRavia",
         "position": "PF",
         "status": "Very Likely To Play"
       },
@@ -1651,7 +1671,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-11-07 00:36:10"
+    "scraped_at": "2026-11-07 02:36:08"
   },
   "LAL": {
     "team": "Los Angeles Lakers",
@@ -1673,12 +1693,12 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Ziaire Williams",
+        "name": "Matisse Thybulle",
         "position": "SF",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Matisse Thybulle",
+        "name": "Jake LaRavia",
         "position": "PF",
         "status": "Very Likely To Play"
       },
@@ -1689,7 +1709,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-11-07 00:36:10"
+    "scraped_at": "2026-11-07 02:36:08"
   },
   "San Antonio Spurs": {
     "team": "San Antonio Spurs",
@@ -1697,8 +1717,8 @@
     "opponent": "Sacramento Kings",
     "opponent_abbr": "SAC",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "De'Aaron Fox",
@@ -1738,7 +1758,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-07 00:36:10"
+    "scraped_at": "2026-11-07 02:36:08"
   },
   "SAS": {
     "team": "San Antonio Spurs",
@@ -1746,8 +1766,8 @@
     "opponent": "Sacramento Kings",
     "opponent_abbr": "SAC",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "De'Aaron Fox",
@@ -1787,7 +1807,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-07 00:36:10"
+    "scraped_at": "2026-11-07 02:36:08"
   },
   "Sacramento Kings": {
     "team": "Sacramento Kings",
@@ -1795,8 +1815,8 @@
     "opponent": "San Antonio Spurs",
     "opponent_abbr": "SAS",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Darius Acuff",
@@ -1809,9 +1829,9 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "De'Andre Hunter",
+        "name": "Leaky Black",
         "position": "SF",
-        "status": "Very Unlikely To Play"
+        "status": "Very Likely To Play"
       },
       {
         "name": "Precious Achiuwa",
@@ -1846,7 +1866,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-07 00:36:10"
+    "scraped_at": "2026-11-07 02:36:08"
   },
   "SAC": {
     "team": "Sacramento Kings",
@@ -1854,8 +1874,8 @@
     "opponent": "San Antonio Spurs",
     "opponent_abbr": "SAS",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Darius Acuff",
@@ -1868,9 +1888,9 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "De'Andre Hunter",
+        "name": "Leaky Black",
         "position": "SF",
-        "status": "Very Unlikely To Play"
+        "status": "Very Likely To Play"
       },
       {
         "name": "Precious Achiuwa",
@@ -1905,6 +1925,6 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-07 00:36:10"
+    "scraped_at": "2026-11-07 02:36:08"
   }
 }
