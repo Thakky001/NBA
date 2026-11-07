@@ -47,7 +47,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 5037873,Drake Powell,4,Guard,"6' 5""",195 lbs,21,2,North Carolina,17,Brooklyn Nets
 3064514,Julius Randle,30,Forward,"6' 9""",250 lbs,31,13,Kentucky,17,Brooklyn Nets
 5242502,Ben Saraf,77,Guard,"6' 6""",200 lbs,20,2,,17,Brooklyn Nets
-4432194,Day'Ron Sharpe,20,Center,"6' 10""",265 lbs,24,6,North Carolina,17,Brooklyn Nets
+4432194,Day'Ron Sharpe,20,Center,"6' 10""",265 lbs,25,6,North Carolina,17,Brooklyn Nets
 5279130,Nolan Traore,10,Guard,"6' 3""",185 lbs,20,2,,17,Brooklyn Nets
 3150844,Moritz Wagner,13,Center,"6' 11""",245 lbs,29,9,Michigan,17,Brooklyn Nets
 5107173,Danny Wolf,2,Forward,"6' 11""",250 lbs,22,2,Michigan,17,Brooklyn Nets
@@ -361,7 +361,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 5241364,Bennett Stirtz,14,Guard,"6' 4""",190 lbs,23,0,Iowa,25,Oklahoma City Thunder
 4433159,Dalen Terry,,Guard,"6' 6""",210 lbs,24,5,Arizona,25,Oklahoma City Thunder
 5159925,Nikola Topic,44,Guard,"6' 6""",200 lbs,21,2,,25,Oklahoma City Thunder
-4683692,Cason Wallace,22,Guard,"6' 3""",195 lbs,22,4,Kentucky,25,Oklahoma City Thunder
+4683692,Cason Wallace,22,Guard,"6' 3""",195 lbs,23,4,Kentucky,25,Oklahoma City Thunder
 4593803,Jalen Williams,8,Guard,"6' 5""",211 lbs,25,5,Santa Clara,25,Oklahoma City Thunder
 4432823,Jaylin Williams,6,Forward,"6' 9""",240 lbs,24,5,Arkansas,25,Oklahoma City Thunder
 3133626,Kenrich Williams,34,Guard,"6' 7""",210 lbs,31,9,TCU,25,Oklahoma City Thunder
@@ -490,7 +490,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 4065673,Tony Bradley,13,Center,"6' 10""",248 lbs,28,9,North Carolina,26,Utah Jazz
 4683736,Kobe Bufkin,4,Guard,"6' 4""",195 lbs,23,4,Michigan,26,Utah Jazz
 4683766,Isaiah Collier,8,Guard,"6' 4""",210 lbs,22,3,USC,26,Utah Jazz
-4684793,Kyle Filipowski,2,Forward,"6' 11""",250 lbs,22,3,Duke,26,Utah Jazz
+4684793,Kyle Filipowski,2,Forward,"6' 11""",250 lbs,23,3,Duke,26,Utah Jazz
 4433627,Keyonte George,3,Guard,"6' 4""",185 lbs,22,4,Baylor,26,Utah Jazz
 4432811,Josh Green,5,Guard,"6' 6""",200 lbs,25,7,Arizona,26,Utah Jazz
 4397077,Jaxson Hayes,11,Center,"7' 0""",220 lbs,26,8,Texas,26,Utah Jazz
