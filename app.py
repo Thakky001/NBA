@@ -12,6 +12,21 @@ import time
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 logging.getLogger("streamlit.deprecation_util").setLevel(logging.ERROR)
 
+# Page config - Executed immediately at the very top of script
+st.set_page_config(
+    page_title="StatEngine",
+    layout="wide",
+    page_icon="logo/favicon.png" if os.path.exists("logo/favicon.png") else "🏀",
+    initial_sidebar_state="expanded"
+)
+
+# Streamlit Native App Logo for Sidebar and Navigation Header
+if hasattr(st, 'logo') and os.path.exists("logo/logo.png"):
+    try:
+        st.logo("logo/logo.png", icon_image="logo/favicon.png")
+    except Exception:
+        pass
+
 THAI_TZ = timezone(timedelta(hours=7))
 
 # Ensure current directory is at the beginning of sys.path
@@ -160,13 +175,7 @@ def t_dir(direction, factor_type):
     else:
         return "🏠" if direction == 'home' else "✈️" if direction == 'away' else "➖" 
 
-# Page config - Lock expanded sidebar for desktop view
-st.set_page_config(
-    page_title="NBA Statistical Trends & Edge Engine",
-    layout="wide",
-    page_icon="🏀",
-    initial_sidebar_state="expanded"
-)
+
 
 # Design System & Responsive Architecture (frontend-design + better-layout)
 st.markdown("""
@@ -1971,14 +1980,25 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Sleek Custom Hero (frontend-design)
-st.markdown("""
+# Sleek Custom Hero (frontend-design) with StatEngine Logo
+import base64
+_logo_b64 = ""
+if os.path.exists("logo/logo.png"):
+    with open("logo/logo.png", "rb") as _f:
+        _logo_b64 = base64.b64encode(_f.read()).decode("utf-8")
+
+_hero_logo_tag = f'<img src="data:image/png;base64,{_logo_b64}" style="height: 44px; width: 44px; object-fit: contain; filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.6)); vertical-align: middle; margin-right: 12px;">' if _logo_b64 else '🏀 '
+
+st.markdown(f"""
 <div class="quant-hero">
     <div class="quant-hero-badge">
         <span class="quant-pulse-dot"></span>
         <span>QUANT SPORTS INTELLIGENCE • LIVE ENGINE</span>
     </div>
-    <div class="quant-hero-title">🏀 NBA Statistical Edge Engine</div>
+    <div class="quant-hero-title" style="display: flex; align-items: center;">
+        {_hero_logo_tag}
+        <span>StatEngine</span>
+    </div>
     <div class="quant-hero-subtitle">ระบบวิเคราะห์สถิติขั้นสูง • Pace & Efficiency • FiveThirtyEight MOV-Elo • CatBoost Residuals</div>
 </div>
 """, unsafe_allow_html=True)
