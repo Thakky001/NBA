@@ -1,6 +1,6 @@
 team_name,player_name,status,detail,side,type,return_date
-Atlanta Hawks,Asa Newell,Day-To-Day,,Left,Toe,2026-11-09
-Atlanta Hawks,Keshon Gilbert,Day-To-Day,Inflammation,Left,Knee,2026-11-09
+Atlanta Hawks,Asa Newell,Out,,Left,Toe,2026-11-13
+Atlanta Hawks,Keshon Gilbert,Out,Inflammation,Left,Knee,2026-11-13
 Atlanta Hawks,Jock Landale,Out,,Left,Hip,2026-11-09
 Atlanta Hawks,Mouhamed Gueye,Out,Fracture,Left,Foot,2026-11-20
 Atlanta Hawks,Henri Veesaar,Out,,Right,Knee,2027-07-01
@@ -8,16 +8,16 @@ Boston Celtics,Mitchell Robinson,Day-To-Day,,,Illness,2026-11-08
 Brooklyn Nets,Grant Nelson,Day-To-Day,,Left,Knee,2026-11-10
 Brooklyn Nets,Mikel Brown Jr.,Out,,,Rest,2026-11-11
 Brooklyn Nets,Egor Demin,Out,Bruise,Right,Leg,2026-11-11
+Charlotte Hornets,Brandon Miller,Out,Soreness,Right,Groin,2026-11-12
 Charlotte Hornets,Moussa Diabate,Day-To-Day,,,Quadriceps,2026-11-09
-Charlotte Hornets,Brandon Miller,Day-To-Day,Soreness,Right,Groin,2026-11-09
-Charlotte Hornets,Dennis Schroder,Out,,,Thigh,2026-11-09
-Charlotte Hornets,Kon Knueppel,Out,Strain,Left,Hamstring,2026-11-09
+Charlotte Hornets,Dennis Schroder,Out,,,Thigh,2026-11-23
+Charlotte Hornets,Kon Knueppel,Out,Strain,Left,Hamstring,2026-12-12
 Charlotte Hornets,Grant Williams,Out,,Right,Hamstring,2026-11-09
 Chicago Bulls,Norman Powell,Out,Inflammation,Right,Shoulder,2026-11-11
 Chicago Bulls,Zach Collins,Out,,,Illness,2026-11-11
-Cleveland Cavaliers,Sam Merrill,Day-To-Day,,Right,Elbow,2026-11-09
 Cleveland Cavaliers,Jarrett Allen,Day-To-Day,,Right,Knee,2026-11-09
-Cleveland Cavaliers,Jaylon Tyson,Out,Sprain,Right,Ankle,2026-11-09
+Cleveland Cavaliers,Jaylon Tyson,Out,Sprain,Right,Ankle,2026-11-11
+Cleveland Cavaliers,Sam Merrill,Day-To-Day,,Right,Elbow,2026-11-09
 Dallas Mavericks,Sergio de Larrea,Out,Strain,Right,Knee,2026-11-12
 Dallas Mavericks,Tarik Biberovic,Out,Inflammation,Right,Heel,2026-11-12
 Dallas Mavericks,Dereck Lively II,Out,Surgery,Right,Foot,2026-11-12
@@ -57,7 +57,6 @@ Orlando Magic,Jalen Suggs,Out,,Right,Knee,2026-11-10
 Orlando Magic,Paolo Banchero,Out,Sprain,Right,Ankle,2026-11-22
 Orlando Magic,Noah Penda,Out,Strain,Right,Hamstring,2026-11-18
 Orlando Magic,Izaiyah Nelson,Out,Surgery,Left,Ankle,2026-11-18
-Philadelphia 76ers,Joel Embiid,Day-To-Day,,,,
 Philadelphia 76ers,Adem Bona,Out,Sprain,,Back,2026-11-10
 Philadelphia 76ers,Dominick Barlow,Out,Fracture,Not Specified,Back,2026-11-18
 Philadelphia 76ers,Ariel Hukporti,Out,Surgery,Right,Achilles,2027-10-01
@@ -67,22 +66,20 @@ Portland Trail Blazers,Robert Williams III,Day-To-Day,,,Rest,2026-11-10
 Portland Trail Blazers,Ja Morant,Out,Not Specified,Left,Hamstring,2026-12-01
 Portland Trail Blazers,Vit Krejci,Out,,Left,Ankle,2027-01-02
 Portland Trail Blazers,Shaedon Sharpe,Out,Surgery,Right,Knee,2027-03-02
-Sacramento Kings,Keegan Murray,Out,,Left,Ankle,2026-11-08
 Sacramento Kings,Maxime Raynaud,Out,Dislocated,Right,Knee,2026-11-10
 Sacramento Kings,Ben Simmons,Out,Surgery,Right,Achilles,2027-10-01
 San Antonio Spurs,Tobias Harris,Out,Strain,Left,Calf,2026-11-09
 San Antonio Spurs,Jayden Quaintance,Out,Surgery,Right,Knee,2026-12-03
+Toronto Raptors,Nate Bittle,Out,Fracture,Right,Foot,2026-11-15
 Toronto Raptors,Immanuel Quickley,Day-To-Day,,Right,Hamstring,2026-11-09
 Toronto Raptors,Scottie Barnes,Day-To-Day,Soreness,Left,Groin,2026-11-09
 Toronto Raptors,Kawhi Leonard,Out,Inflammation,Left,Knee,2026-11-23
-Toronto Raptors,Nate Bittle,Out,Fracture,Right,Foot,2026-11-09
 Utah Jazz,Keyonte George,Day-To-Day,,,Illness,2026-11-08
 Utah Jazz,Lauri Markkanen,Day-To-Day,Sprain,Right,Wrist,2026-11-08
 Utah Jazz,Jusuf Nurkic,Out,Strain,Right,Foot,2026-11-20
 Utah Jazz,Jaren Jackson Jr.,Out,Not Specified,Right,Knee,2026-12-14
+Washington Wizards,Tristan Vukcevic,Out,Pinched Nerve,Left,Hip,2026-11-16
 Washington Wizards,Anthony Davis,Day-To-Day,Sprain,Right,Ankle,2026-11-09
-Washington Wizards,Deandre Ayton,Day-To-Day,,Not Specified,Leg,2026-11-09
 Washington Wizards,Reece Beekman,Out,,,Shoulder,2026-12-03
-Washington Wizards,Tristan Vukcevic,Out,Pinched Nerve,Left,Hip,2026-11-09
 Washington Wizards,Justin Champagnie,Out,Not Specified,Right,Foot,2027-02-25
 Washington Wizards,Jamir Watkins,Out,Surgery,Left,Knee,2027-04-02

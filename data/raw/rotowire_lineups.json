@@ -51,7 +51,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 20:11:09"
+    "scraped_at": "2026-11-08 22:36:06"
   },
   "PHI": {
     "team": "Philadelphia 76ers",
@@ -105,7 +105,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 20:11:09"
+    "scraped_at": "2026-11-08 22:36:06"
   },
   "Chicago Bulls": {
     "team": "Chicago Bulls",
@@ -159,7 +159,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 20:11:09"
+    "scraped_at": "2026-11-08 22:36:06"
   },
   "CHI": {
     "team": "Chicago Bulls",
@@ -213,7 +213,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 20:11:09"
+    "scraped_at": "2026-11-08 22:36:06"
   },
   "Los Angeles Lakers": {
     "team": "Los Angeles Lakers",
@@ -221,8 +221,8 @@
     "opponent": "Detroit Pistons",
     "opponent_abbr": "DET",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Austin Reaves",
@@ -235,12 +235,12 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Ziaire Williams",
+        "name": "Matisse Thybulle",
         "position": "SF",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Matisse Thybulle",
+        "name": "Jake LaRavia",
         "position": "PF",
         "status": "Very Likely To Play"
       },
@@ -257,7 +257,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 20:11:09"
+    "scraped_at": "2026-11-08 22:36:06"
   },
   "LAL": {
     "team": "Los Angeles Lakers",
@@ -265,8 +265,8 @@
     "opponent": "Detroit Pistons",
     "opponent_abbr": "DET",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Austin Reaves",
@@ -279,12 +279,12 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Ziaire Williams",
+        "name": "Matisse Thybulle",
         "position": "SF",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Matisse Thybulle",
+        "name": "Jake LaRavia",
         "position": "PF",
         "status": "Very Likely To Play"
       },
@@ -301,7 +301,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 20:11:09"
+    "scraped_at": "2026-11-08 22:36:06"
   },
   "Detroit Pistons": {
     "team": "Detroit Pistons",
@@ -350,7 +350,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 20:11:09"
+    "scraped_at": "2026-11-08 22:36:06"
   },
   "DET": {
     "team": "Detroit Pistons",
@@ -399,7 +399,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 20:11:09"
+    "scraped_at": "2026-11-08 22:36:06"
   },
   "Utah Jazz": {
     "team": "Utah Jazz",
@@ -458,7 +458,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 20:11:09"
+    "scraped_at": "2026-11-08 22:36:06"
   },
   "UTA": {
     "team": "Utah Jazz",
@@ -517,7 +517,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 20:11:09"
+    "scraped_at": "2026-11-08 22:36:06"
   },
   "Minnesota Timberwolves": {
     "team": "Minnesota Timberwolves",
@@ -566,7 +566,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 20:11:09"
+    "scraped_at": "2026-11-08 22:36:06"
   },
   "MIN": {
     "team": "Minnesota Timberwolves",
@@ -615,7 +615,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 20:11:09"
+    "scraped_at": "2026-11-08 22:36:06"
   },
   "Brooklyn Nets": {
     "team": "Brooklyn Nets",
@@ -664,7 +664,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 20:11:09"
+    "scraped_at": "2026-11-08 22:36:06"
   },
   "BKN": {
     "team": "Brooklyn Nets",
@@ -713,7 +713,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 20:11:09"
+    "scraped_at": "2026-11-08 22:36:06"
   },
   "Dallas Mavericks": {
     "team": "Dallas Mavericks",
@@ -767,7 +767,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 20:11:09"
+    "scraped_at": "2026-11-08 22:36:06"
   },
   "DAL": {
     "team": "Dallas Mavericks",
@@ -821,7 +821,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 20:11:09"
+    "scraped_at": "2026-11-08 22:36:06"
   },
   "Boston Celtics": {
     "team": "Boston Celtics",
@@ -865,7 +865,7 @@
         "status": "Toss Up To Play"
       }
     ],
-    "scraped_at": "2026-11-08 20:11:09"
+    "scraped_at": "2026-11-08 22:36:06"
   },
   "BOS": {
     "team": "Boston Celtics",
@@ -909,7 +909,7 @@
         "status": "Toss Up To Play"
       }
     ],
-    "scraped_at": "2026-11-08 20:11:09"
+    "scraped_at": "2026-11-08 22:36:06"
   },
   "Milwaukee Bucks": {
     "team": "Milwaukee Bucks",
@@ -953,7 +953,7 @@
         "status": "Toss Up To Play"
       }
     ],
-    "scraped_at": "2026-11-08 20:11:09"
+    "scraped_at": "2026-11-08 22:36:06"
   },
   "MIL": {
     "team": "Milwaukee Bucks",
@@ -997,7 +997,7 @@
         "status": "Toss Up To Play"
       }
     ],
-    "scraped_at": "2026-11-08 20:11:09"
+    "scraped_at": "2026-11-08 22:36:06"
   },
   "New Orleans Pelicans": {
     "team": "New Orleans Pelicans",
@@ -1041,7 +1041,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 20:11:09"
+    "scraped_at": "2026-11-08 22:36:06"
   },
   "NOP": {
     "team": "New Orleans Pelicans",
@@ -1085,7 +1085,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 20:11:09"
+    "scraped_at": "2026-11-08 22:36:06"
   },
   "Los Angeles Clippers": {
     "team": "Los Angeles Clippers",
@@ -1149,7 +1149,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 20:11:09"
+    "scraped_at": "2026-11-08 22:36:06"
   },
   "LAC": {
     "team": "Los Angeles Clippers",
@@ -1213,7 +1213,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 20:11:09"
+    "scraped_at": "2026-11-08 22:36:06"
   },
   "Miami Heat": {
     "team": "Miami Heat",
@@ -1251,7 +1251,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-11-08 20:11:09"
+    "scraped_at": "2026-11-08 22:36:06"
   },
   "MIA": {
     "team": "Miami Heat",
@@ -1289,7 +1289,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-11-08 20:11:09"
+    "scraped_at": "2026-11-08 22:36:06"
   },
   "Sacramento Kings": {
     "team": "Sacramento Kings",
@@ -1333,17 +1333,12 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Keegan Murray",
-        "position": "F",
-        "status": "Toss Up To Play"
-      },
-      {
         "name": "Maxime Raynaud",
         "position": "C",
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 20:11:09"
+    "scraped_at": "2026-11-08 22:36:06"
   },
   "SAC": {
     "team": "Sacramento Kings",
@@ -1387,16 +1382,11 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Keegan Murray",
-        "position": "F",
-        "status": "Toss Up To Play"
-      },
-      {
         "name": "Maxime Raynaud",
         "position": "C",
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 20:11:09"
+    "scraped_at": "2026-11-08 22:36:06"
   }
 }
