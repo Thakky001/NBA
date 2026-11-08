@@ -322,7 +322,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 3442,DeAndre Jordan,6,Center,"6' 11""",265 lbs,38,19,Texas A&M,3,New Orleans Pelicans
 4683634,Bennedict Mathurin,24,Guard,"6' 5""",210 lbs,24,5,Arizona,3,New Orleans Pelicans
 4997538,Karlo Matkovic,17,Forward,"6' 10""",231 lbs,25,3,,3,New Orleans Pelicans
-4576086,Bryce McGowens,11,Guard,"6' 6""",190 lbs,23,5,Nebraska,3,New Orleans Pelicans
+4576086,Bryce McGowens,11,Guard,"6' 6""",190 lbs,24,5,Nebraska,3,New Orleans Pelicans
 5061589,Yves Missi,21,Center,"6' 11""",235 lbs,22,3,Baylor,3,New Orleans Pelicans
 4397688,Trey Murphy III,25,Forward,"6' 8""",206 lbs,26,6,Virginia,3,New Orleans Pelicans
 3907497,Dejounte Murray,5,Guard,"6' 4""",180 lbs,30,10,Washington,3,New Orleans Pelicans
@@ -493,7 +493,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 4683736,Kobe Bufkin,4,Guard,"6' 4""",195 lbs,23,4,Michigan,26,Utah Jazz
 4683766,Isaiah Collier,8,Guard,"6' 4""",210 lbs,22,3,USC,26,Utah Jazz
 4684793,Kyle Filipowski,2,Forward,"6' 11""",250 lbs,23,3,Duke,26,Utah Jazz
-4433627,Keyonte George,3,Guard,"6' 4""",185 lbs,22,4,Baylor,26,Utah Jazz
+4433627,Keyonte George,3,Guard,"6' 4""",185 lbs,23,4,Baylor,26,Utah Jazz
 4432811,Josh Green,5,Guard,"6' 6""",200 lbs,25,7,Arizona,26,Utah Jazz
 4397077,Jaxson Hayes,11,Center,"7' 0""",220 lbs,26,8,Texas,26,Utah Jazz
 4433618,Harrison Ingram,00,Forward,"6' 5""",230 lbs,23,3,North Carolina,26,Utah Jazz
