@@ -41,7 +41,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 00:11:10"
+    "scraped_at": "2026-11-08 00:36:04"
   },
   "DEN": {
     "team": "Denver Nuggets",
@@ -85,7 +85,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 00:11:10"
+    "scraped_at": "2026-11-08 00:36:04"
   },
   "Indiana Pacers": {
     "team": "Indiana Pacers",
@@ -139,7 +139,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 00:11:10"
+    "scraped_at": "2026-11-08 00:36:04"
   },
   "IND": {
     "team": "Indiana Pacers",
@@ -193,7 +193,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 00:11:10"
+    "scraped_at": "2026-11-08 00:36:04"
   },
   "Brooklyn Nets": {
     "team": "Brooklyn Nets",
@@ -237,7 +237,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 00:11:10"
+    "scraped_at": "2026-11-08 00:36:04"
   },
   "BKN": {
     "team": "Brooklyn Nets",
@@ -281,7 +281,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 00:11:10"
+    "scraped_at": "2026-11-08 00:36:04"
   },
   "Atlanta Hawks": {
     "team": "Atlanta Hawks",
@@ -345,7 +345,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 00:11:10"
+    "scraped_at": "2026-11-08 00:36:04"
   },
   "ATL": {
     "team": "Atlanta Hawks",
@@ -409,7 +409,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 00:11:10"
+    "scraped_at": "2026-11-08 00:36:04"
   },
   "New York Knicks": {
     "team": "New York Knicks",
@@ -453,7 +453,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 00:11:10"
+    "scraped_at": "2026-11-08 00:36:04"
   },
   "NYK": {
     "team": "New York Knicks",
@@ -497,7 +497,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 00:11:10"
+    "scraped_at": "2026-11-08 00:36:04"
   },
   "Cleveland Cavaliers": {
     "team": "Cleveland Cavaliers",
@@ -505,8 +505,8 @@
     "opponent": "New York Knicks",
     "opponent_abbr": "NYK",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "James Harden",
@@ -556,7 +556,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 00:11:10"
+    "scraped_at": "2026-11-08 00:36:04"
   },
   "CLE": {
     "team": "Cleveland Cavaliers",
@@ -564,8 +564,8 @@
     "opponent": "New York Knicks",
     "opponent_abbr": "NYK",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "James Harden",
@@ -615,7 +615,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 00:11:10"
+    "scraped_at": "2026-11-08 00:36:04"
   },
   "Washington Wizards": {
     "team": "Washington Wizards",
@@ -623,8 +623,8 @@
     "opponent": "Oklahoma City Thunder",
     "opponent_abbr": "OKC",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Trae Young",
@@ -642,12 +642,12 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Alex Sarr",
+        "name": "Bilal Coulibaly",
         "position": "PF",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Deandre Ayton",
+        "name": "Alex Sarr",
         "position": "C",
         "status": "Very Likely To Play"
       }
@@ -679,7 +679,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 00:11:10"
+    "scraped_at": "2026-11-08 00:36:04"
   },
   "WAS": {
     "team": "Washington Wizards",
@@ -687,8 +687,8 @@
     "opponent": "Oklahoma City Thunder",
     "opponent_abbr": "OKC",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Trae Young",
@@ -706,12 +706,12 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Alex Sarr",
+        "name": "Bilal Coulibaly",
         "position": "PF",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Deandre Ayton",
+        "name": "Alex Sarr",
         "position": "C",
         "status": "Very Likely To Play"
       }
@@ -743,7 +743,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 00:11:10"
+    "scraped_at": "2026-11-08 00:36:04"
   },
   "Oklahoma City Thunder": {
     "team": "Oklahoma City Thunder",
@@ -807,7 +807,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 00:11:10"
+    "scraped_at": "2026-11-08 00:36:04"
   },
   "OKC": {
     "team": "Oklahoma City Thunder",
@@ -871,7 +871,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 00:11:10"
+    "scraped_at": "2026-11-08 00:36:04"
   },
   "Orlando Magic": {
     "team": "Orlando Magic",
@@ -940,7 +940,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 00:11:10"
+    "scraped_at": "2026-11-08 00:36:04"
   },
   "ORL": {
     "team": "Orlando Magic",
@@ -1009,7 +1009,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 00:11:10"
+    "scraped_at": "2026-11-08 00:36:04"
   },
   "Golden State Warriors": {
     "team": "Golden State Warriors",
@@ -1063,7 +1063,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 00:11:10"
+    "scraped_at": "2026-11-08 00:36:04"
   },
   "GSW": {
     "team": "Golden State Warriors",
@@ -1117,7 +1117,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 00:11:10"
+    "scraped_at": "2026-11-08 00:36:04"
   },
   "Houston Rockets": {
     "team": "Houston Rockets",
@@ -1166,7 +1166,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 00:11:10"
+    "scraped_at": "2026-11-08 00:36:04"
   },
   "HOU": {
     "team": "Houston Rockets",
@@ -1215,7 +1215,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 00:11:10"
+    "scraped_at": "2026-11-08 00:36:04"
   },
   "Phoenix Suns": {
     "team": "Phoenix Suns",
@@ -1269,7 +1269,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 00:11:10"
+    "scraped_at": "2026-11-08 00:36:04"
   },
   "PHX": {
     "team": "Phoenix Suns",
@@ -1323,7 +1323,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 00:11:10"
+    "scraped_at": "2026-11-08 00:36:04"
   },
   "San Antonio Spurs": {
     "team": "San Antonio Spurs",
@@ -1372,7 +1372,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 00:11:10"
+    "scraped_at": "2026-11-08 00:36:04"
   },
   "SAS": {
     "team": "San Antonio Spurs",
@@ -1421,7 +1421,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 00:11:10"
+    "scraped_at": "2026-11-08 00:36:04"
   },
   "Portland Trail Blazers": {
     "team": "Portland Trail Blazers",
@@ -1480,7 +1480,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 00:11:10"
+    "scraped_at": "2026-11-08 00:36:04"
   },
   "POR": {
     "team": "Portland Trail Blazers",
@@ -1539,6 +1539,6 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-08 00:11:10"
+    "scraped_at": "2026-11-08 00:36:04"
   }
 }
