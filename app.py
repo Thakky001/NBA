@@ -177,6 +177,71 @@ def t_dir(direction, factor_type):
 
 
 
+# Mobile PWA / Apple Touch Icon & Meta Injection
+import base64
+_apple_icon_b64 = ""
+_fav_icon_b64 = ""
+if os.path.exists("logo/apple-touch-icon.png"):
+    with open("logo/apple-touch-icon.png", "rb") as _f:
+        _apple_icon_b64 = base64.b64encode(_f.read()).decode("utf-8")
+if os.path.exists("logo/favicon.png"):
+    with open("logo/favicon.png", "rb") as _f:
+        _fav_icon_b64 = base64.b64encode(_f.read()).decode("utf-8")
+
+st.markdown(f"""
+    <!-- Mobile PWA & Apple Touch Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="data:image/png;base64,{_apple_icon_b64}">
+    <link rel="icon" type="image/png" sizes="128x128" href="data:image/png;base64,{_fav_icon_b64}">
+    <meta name="apple-mobile-web-app-title" content="StatEngine">
+    <meta name="application-name" content="StatEngine">
+    <meta name="theme-color" content="#0B0F17">
+    <script>
+        (function() {{
+            const title = "StatEngine";
+            const appleIcon = "data:image/png;base64,{_apple_icon_b64}";
+            const favIcon = "data:image/png;base64,{_fav_icon_b64}";
+
+            function applyMobileMeta(doc) {{
+                try {{
+                    if (!doc) return;
+                    doc.title = title;
+                    
+                    let appleLink = doc.querySelector("link[rel='apple-touch-icon']");
+                    if (!appleLink) {{
+                        appleLink = doc.createElement("link");
+                        appleLink.rel = "apple-touch-icon";
+                        doc.head.appendChild(appleLink);
+                    }}
+                    appleLink.href = appleIcon;
+                    
+                    let iconLink = doc.querySelector("link[rel*='icon']");
+                    if (!iconLink) {{
+                        iconLink = doc.createElement("link");
+                        iconLink.rel = "shortcut icon";
+                        doc.head.appendChild(iconLink);
+                    }}
+                    iconLink.href = favIcon;
+                    
+                    let metaTitle = doc.querySelector("meta[name='apple-mobile-web-app-title']");
+                    if (!metaTitle) {{
+                        metaTitle = doc.createElement("meta");
+                        metaTitle.name = "apple-mobile-web-app-title";
+                        doc.head.appendChild(metaTitle);
+                    }}
+                    metaTitle.content = title;
+                }} catch (e) {{}}
+            }}
+
+            applyMobileMeta(document);
+            try {{
+                if (window.parent && window.parent.document) {{
+                    applyMobileMeta(window.parent.document);
+                }}
+            }} catch (e) {{}}
+        }})();
+    </script>
+""", unsafe_allow_html=True)
+
 # Design System & Responsive Architecture (frontend-design + better-layout)
 st.markdown("""
     <style>

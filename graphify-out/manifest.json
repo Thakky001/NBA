@@ -600,9 +600,9 @@
     "semantic_hash": ""
   },
   "app.py": {
-    "mtime": 1794151369.7687805,
-    "seen": 1794151452.1484482,
-    "ast_hash": "515b069e510cf785a07284210fbc194a",
+    "mtime": 1794151963.574306,
+    "seen": 1794152030.797343,
+    "ast_hash": "cba0df9ae8135607364dcf31b915f21a",
     "semantic_hash": ""
   },
   "collectors/__init__.py": {
@@ -2178,8 +2178,8 @@
     "semantic_hash": ""
   },
   "data/raw/rotowire_lineups.json": {
-    "mtime": 1794151396.093994,
-    "seen": 1794151452.1484623,
+    "mtime": 1794151475.4479368,
+    "seen": 1794152030.7973852,
     "ast_hash": "f037cd014dfb1ace308caa6cf78d6798",
     "semantic_hash": ""
   },
@@ -2295,6 +2295,42 @@
     "mtime": 1794151295.4564457,
     "seen": 1794151452.1488204,
     "ast_hash": "44d5115df3862259cac9075ea508fabb",
+    "semantic_hash": ""
+  },
+  "assets/android-chrome-192x192.png": {
+    "mtime": 1794151899.8016713,
+    "seen": 1794152030.7982483,
+    "ast_hash": "5c4a9db7bd21d0ae47543cdf58e54615",
+    "semantic_hash": ""
+  },
+  "assets/android-chrome-512x512.png": {
+    "mtime": 1794151899.8410814,
+    "seen": 1794152030.7982552,
+    "ast_hash": "033c37c340108b8c842c09491d1e1f3e",
+    "semantic_hash": ""
+  },
+  "assets/apple-touch-icon.png": {
+    "mtime": 1794151886.6084979,
+    "seen": 1794152030.7982597,
+    "ast_hash": "80920e199bee51b2fc367e2d8b8f94f6",
+    "semantic_hash": ""
+  },
+  "logo/android-chrome-192x192.png": {
+    "mtime": 1794151899.7923973,
+    "seen": 1794152030.798283,
+    "ast_hash": "5c4a9db7bd21d0ae47543cdf58e54615",
+    "semantic_hash": ""
+  },
+  "logo/android-chrome-512x512.png": {
+    "mtime": 1794151899.8303483,
+    "seen": 1794152030.7982872,
+    "ast_hash": "033c37c340108b8c842c09491d1e1f3e",
+    "semantic_hash": ""
+  },
+  "logo/apple-touch-icon.png": {
+    "mtime": 1794151886.6070306,
+    "seen": 1794152030.7982912,
+    "ast_hash": "80920e199bee51b2fc367e2d8b8f94f6",
     "semantic_hash": ""
   }
 }
