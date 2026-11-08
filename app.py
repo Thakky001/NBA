@@ -209,7 +209,7 @@ st.markdown("""
     /* Remove wasteful default Streamlit top margin */
     .main .block-container {
         padding-top: 1.25rem !important;
-        padding-bottom: 2rem !important;
+        padding-bottom: 6.5rem !important; /* Extra bottom clearance for mobile so Streamlit Manage App button never covers cards */
         padding-left: 0.85rem !important;
         padding-right: 0.85rem !important;
         max-width: 1200px !important;
@@ -2556,6 +2556,8 @@ def get_analyzer(cache_version: str = "v11_rotowire_lineups"):
     team_advanced = None
     if os.path.exists('data/raw/nba_api_advanced.csv'):
         team_advanced = pd.read_csv('data/raw/nba_api_advanced.csv')
+        mtime = os.path.getmtime('data/raw/nba_api_advanced.csv')
+        team_advanced['snapshot_at'] = pd.to_datetime(mtime, unit='s', utc=True)
         
     fe = FeatureEngineer(game_history, team_advanced=team_advanced)
     return TrendAnalyzer(fe)

@@ -1,7 +1,7 @@
-# Graph Report - NBA  (2026-11-06)
+# Graph Report - NBA  (2026-11-08)
 
 ## Corpus Check
-- 367 files · ~242,897 words
+- 367 files · ~241,901 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 22 file(s) not represented in the graph (top: .csv 15, .parquet 3, .cbm 2)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `243b1ea3`
+- Built from commit: `7aa81db4`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 

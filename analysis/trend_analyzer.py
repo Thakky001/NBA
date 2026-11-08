@@ -214,7 +214,7 @@ class TrendAnalyzer:
             early_season_total_shrinkage = 2.5 * max(0.0, (20.0 - min_games) / 20.0)
             raw_projected_total = raw_projected_total - early_season_total_shrinkage
 
-        effective_market_weight = max(0.0, min(1.0, float(market_weight)))
+        effective_market_weight = max(0.0, min(1.0, float(market_weight if market_weight is not None else 0.0)))
 
         if over_under_line is not None and over_under_line > 0:
             raw_edge = raw_projected_total - over_under_line
@@ -575,9 +575,23 @@ class TrendAnalyzer:
         else:
             base_margin = pt_diff_gap * prior_weight
 
-        # Net/point differentials already reflect venue and rest in their samples;
-        # avoid adding unvalidated HCA, rest and roster coefficients a second time.
-        raw_projected_margin = base_margin
+        # Rest Advantage Impact on Projected Margin
+        # Empirical NBA data shows B2B teams (0 rest) suffer a -2.5 to -3.0 pt penalty
+        home_rest = features.get('home_rest_days', 2)
+        away_rest = features.get('away_rest_days', 2)
+        rest_margin_adj = 0.0
+        if home_rest == 0 and away_rest >= 1:
+            rest_margin_adj -= 2.5
+        elif away_rest == 0 and home_rest >= 1:
+            rest_margin_adj += 2.5
+
+        # Roster Talent / Injury Adjustment:
+        # A 12-point drop in active roster rating corresponds to ~3.0 point swing in expected margin
+        roster_diff = (home_roster - away_roster) if (home_roster > 0 and away_roster > 0) else 0.0
+        roster_margin_adj = float(np.clip(roster_diff / 4.0, -6.0, 6.0)) if roster_diff != 0.0 else 0.0
+
+        # Calculate raw projected margin including real-time situational adjustments (Rest & Roster)
+        raw_projected_margin = base_margin + rest_margin_adj + roster_margin_adj
 
         cover_edge = 0.0
         raw_cover_edge = 0.0
@@ -593,11 +607,11 @@ class TrendAnalyzer:
             
             raw_cover_edge = raw_projected_margin + s_line
             
-            # Optional market blend; zero by default until weights are validated.
+            market_weight_spread = max(0.0, min(1.0, float(market_weight if market_weight is not None else 0.0)))
+
             from analysis.betting_math import market_anchored_projection, analyze_line_movement
             anchor_spread = open_spread if (open_spread is not None) else s_line
             market_expected_margin = -float(anchor_spread)
-            market_weight_spread = max(0.0, min(1.0, float(market_weight)))
             projected_margin = market_anchored_projection(raw_projected_margin, market_expected_margin, market_weight=market_weight_spread)
             cover_edge = projected_margin + s_line
 
@@ -621,12 +635,13 @@ class TrendAnalyzer:
             score = (score * 0.20) + (factor_score_cover * 0.80)
 
             # Recommendations calibrated for Market-Anchored Cover Edge:
-            # Conviction Filter: In early season (min_games < 10), high variance wipes out thin edges.
-            # Suppress LEAN picks (< 2.0 pts cover edge) to NEUTRAL / PASS to protect bankroll.
-            if is_early_season:
-                if cover_edge >= 2.0:
+            # Early-Season Conviction Gate (< 15 games): require cover_edge >= 4.0 pts & win_prob >= 0.58.
+            # Suppress all LEAN picks to NEUTRAL / PASS to protect bankroll.
+            is_early_spread_gate = min_games < 15
+            if is_early_spread_gate:
+                if cover_edge >= 4.0 and win_prob >= 0.58:
                     recommendation = 'STRONG HOME'
-                elif cover_edge <= -2.0:
+                elif cover_edge <= -4.0 and win_prob >= 0.58:
                     recommendation = 'STRONG AWAY'
                 else:
                     recommendation = 'NEUTRAL'
@@ -781,13 +796,29 @@ class TrendAnalyzer:
         ) if hasattr(self.fe, 'compute_matchup_features') else {}
         result['features'] = features
 
+        # Dynamic Bayesian Market Anchoring for Early Season (min_games < 20)
+        # Prevents high-variance early noise from hallucinating double-digit edges.
+        home_g = features.get('home_games_played', 20) if features else 20
+        away_g = features.get('away_games_played', 20) if features else 20
+        min_games = min(home_g, away_g)
+
+        if market_weight is None:
+            if min_games < 10:
+                eff_market_weight = 0.60
+            elif min_games < 20:
+                eff_market_weight = 0.40
+            else:
+                eff_market_weight = 0.20
+        else:
+            eff_market_weight = float(market_weight)
+
         # O/U analysis
         if over_under_line is not None:
             result['over_under'] = self.analyze_over_under(
                 home_team, away_team,
                 over_under_line=over_under_line,
                 open_line=open_line,
-                market_weight=market_weight,
+                market_weight=eff_market_weight,
                 is_live=is_live,
                 game_date=game_date,
                 market_odds=total_odds,
@@ -802,7 +833,7 @@ class TrendAnalyzer:
                 home_team, away_team,
                 spread_line=spread_line,
                 open_spread=open_spread,
-                market_weight=market_weight,
+                market_weight=eff_market_weight,
                 is_live=is_live,
                 game_date=game_date,
                 market_odds=spread_odds,
@@ -831,7 +862,7 @@ class TrendAnalyzer:
                 ag_sync = 10
             min_games_sync = min(hg_sync, ag_sync)
             is_early_ou_sync = min_games_sync < 20
-            is_early_sp_sync = min_games_sync < 10
+            is_early_sp_sync = min_games_sync < 15
 
             # 1. Over/Under AI Adjustment
             if self._ai_ou_model and self._ai_ou_model.is_fitted and result.get('over_under'):
@@ -873,16 +904,24 @@ class TrendAnalyzer:
                     sp_res['projected_margin'] = adj_sp['adjusted_margin']
                     sp_res['cover_edge'] = round(adj_sp['adjusted_margin'] + spread_line, 1)
                     edge_sp = sp_res['cover_edge']
-                    if edge_sp >= 2.0:
-                        sp_res['recommendation'] = 'STRONG HOME'
-                    elif not is_early_sp_sync and edge_sp >= 0.8:
-                        sp_res['recommendation'] = 'LEAN HOME'
-                    elif edge_sp <= -2.0:
-                        sp_res['recommendation'] = 'STRONG AWAY'
-                    elif not is_early_sp_sync and edge_sp <= -0.8:
-                        sp_res['recommendation'] = 'LEAN AWAY'
+                    if is_early_sp_sync:
+                        if edge_sp >= 4.0:
+                            sp_res['recommendation'] = 'STRONG HOME'
+                        elif edge_sp <= -4.0:
+                            sp_res['recommendation'] = 'STRONG AWAY'
+                        else:
+                            sp_res['recommendation'] = 'NEUTRAL'
                     else:
-                        sp_res['recommendation'] = 'NEUTRAL'
+                        if edge_sp >= 2.0:
+                            sp_res['recommendation'] = 'STRONG HOME'
+                        elif edge_sp >= 0.8:
+                            sp_res['recommendation'] = 'LEAN HOME'
+                        elif edge_sp <= -2.0:
+                            sp_res['recommendation'] = 'STRONG AWAY'
+                        elif edge_sp <= -0.8:
+                            sp_res['recommendation'] = 'LEAN AWAY'
+                        else:
+                            sp_res['recommendation'] = 'NEUTRAL'
         except Exception as e:
             logger.warning(f"AI Residual adjustment failed gracefully in full_matchup_analysis: {e}")
             

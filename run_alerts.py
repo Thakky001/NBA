@@ -329,7 +329,12 @@ def run_alert_cycle(
     merger = DataMerger()
     game_history = merger.load_all_games()
     adv_path = os.path.join(DATA_DIR, 'raw', 'nba_api_advanced.csv')
-    team_adv = pd.read_csv(adv_path) if os.path.exists(adv_path) else None
+    if os.path.exists(adv_path):
+        team_adv = pd.read_csv(adv_path)
+        mtime = os.path.getmtime(adv_path)
+        team_adv['snapshot_at'] = pd.to_datetime(mtime, unit='s', utc=True)
+    else:
+        team_adv = None
     fe = FeatureEngineer(game_history, team_advanced=team_adv)
     analyzer = TrendAnalyzer(fe)
 
@@ -420,7 +425,7 @@ def run_alert_cycle(
             ag_alert = 10
         min_g_alert = min(hg_alert, ag_alert)
         is_early_ou_alert = min_g_alert < 20
-        is_early_sp_alert = min_g_alert < 10
+        is_early_sp_alert = min_g_alert < 15
 
         if ai_ou_model and ai_ou_model.is_fitted and analysis.get('over_under'):
             ou_res = analysis['over_under']
@@ -464,16 +469,24 @@ def run_alert_cycle(
                         sp_res['projected_margin'] = adj_sp['adjusted_margin']
                         sp_res['cover_edge'] = round(adj_sp['adjusted_margin'] + sp_val, 1)
                         edge_sp = sp_res['cover_edge']
-                        if edge_sp >= 2.0:
-                            sp_res['recommendation'] = 'STRONG HOME'
-                        elif not is_early_sp_alert and edge_sp >= 0.8:
-                            sp_res['recommendation'] = 'LEAN HOME'
-                        elif edge_sp <= -2.0:
-                            sp_res['recommendation'] = 'STRONG AWAY'
-                        elif not is_early_sp_alert and edge_sp <= -0.8:
-                            sp_res['recommendation'] = 'LEAN AWAY'
+                        if is_early_sp_alert:
+                            if edge_sp >= 4.0:
+                                sp_res['recommendation'] = 'STRONG HOME'
+                            elif edge_sp <= -4.0:
+                                sp_res['recommendation'] = 'STRONG AWAY'
+                            else:
+                                sp_res['recommendation'] = 'NEUTRAL'
                         else:
-                            sp_res['recommendation'] = 'NEUTRAL'
+                            if edge_sp >= 2.0:
+                                sp_res['recommendation'] = 'STRONG HOME'
+                            elif edge_sp >= 0.8:
+                                sp_res['recommendation'] = 'LEAN HOME'
+                            elif edge_sp <= -2.0:
+                                sp_res['recommendation'] = 'STRONG AWAY'
+                            elif edge_sp <= -0.8:
+                                sp_res['recommendation'] = 'LEAN AWAY'
+                            else:
+                                sp_res['recommendation'] = 'NEUTRAL'
                 except Exception as e:
                     logger.warning(f"AI Spread adjustment failed gracefully: {e}")
 
