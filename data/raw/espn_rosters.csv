@@ -88,10 +88,10 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 5095151,Caleb Wilson,8,Forward,"6' 9""",211 lbs,20,0,North Carolina,4,Chicago Bulls
 4066328,Jarrett Allen,31,Center,"6' 9""",243 lbs,28,10,Texas,5,Cleveland Cavaliers
 3934723,Thomas Bryant,3,Center,"6' 9""",248 lbs,29,10,Indiana,5,Cleveland Cavaliers
-4431734,Tristan Enaruna,21,Forward,"6' 8""",220 lbs,25,2,Cleveland State,5,Cleveland Cavaliers
 3992,James Harden,1,Guard,"6' 5""",220 lbs,37,18,Arizona State,5,Cleveland Cavaliers
 2995706,Mario Hezonja,33,Forward,"6' 8""",220 lbs,31,6,,5,Cleveland Cavaliers
 4066757,Sam Merrill,5,Guard,"6' 4""",205 lbs,30,7,Utah State,5,Cleveland Cavaliers
+5177362,Riley Minix,12,Forward,"6' 7""",230 lbs,26,3,Morehead State,5,Cleveland Cavaliers
 3908809,Donovan Mitchell,45,Guard,"6' 2""",215 lbs,30,10,Louisville,5,Cleveland Cavaliers
 4432158,Evan Mobley,4,Center,"6' 11""",215 lbs,25,6,USC,5,Cleveland Cavaliers
 4702134,Norchad Omier,15,Center,"6' 7""",248 lbs,25,0,Baylor,5,Cleveland Cavaliers
@@ -186,6 +186,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 4432639,Jabari Smith Jr.,10,Forward,"6' 11""",220 lbs,23,5,Auburn,10,Houston Rockets
 3136777,Jae'Sean Tate,8,Forward,"6' 4""",230 lbs,31,7,Ohio State,10,Houston Rockets
 4684740,Amen Thompson,1,Guard,"6' 7""",200 lbs,23,4,,10,Houston Rockets
+5105837,Bruce Thornton,2,Guard,"6' 0""",229 lbs,23,0,Ohio State,10,Houston Rockets
 4432827,Oscar Tshiebwe,9,Center,"6' 8""",255 lbs,26,4,Kentucky,10,Houston Rockets
 2991230,Fred VanVleet,5,Guard,"6' 0""",197 lbs,32,11,Wichita State,10,Houston Rockets
 4431752,Kobe Brown,24,Guard,"6' 7""",250 lbs,26,4,Missouri,11,Indiana Pacers
@@ -257,6 +258,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 4431785,Scotty Pippen Jr.,1,Guard,"6' 2""",170 lbs,25,5,Vanderbilt,29,Memphis Grizzlies
 4593016,Quinten Post,41,Center,"7' 0""",238 lbs,26,3,Boston College,29,Memphis Grizzlies
 4595400,Olivier-Maxence Prosper,18,Forward,"6' 7""",230 lbs,24,4,Marquette,29,Memphis Grizzlies
+5105462,Richie Saunders,5,Guard,"6' 5""",205 lbs,25,0,BYU,29,Memphis Grizzlies
 4781746,Javon Small,10,Guard,"6' 1""",190 lbs,23,2,West Virginia,29,Memphis Grizzlies
 4433083,Cam Spencer,24,Guard,"6' 3""",205 lbs,26,3,UConn,29,Memphis Grizzlies
 4432810,Isaiah Stewart,28,Center,"6' 8""",250 lbs,25,7,Washington,29,Memphis Grizzlies
