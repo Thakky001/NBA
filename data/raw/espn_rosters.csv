@@ -351,6 +351,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 4432808,James Wiseman,35,Center,"6' 11""",240 lbs,25,7,Memphis,18,New York Knicks
 4684208,Brooks Barnhizer,23,Forward,"6' 6""",226 lbs,24,2,Northwestern,25,Oklahoma City Thunder
 2991350,Alex Caruso,9,Guard,"6' 5""",186 lbs,32,10,Texas A&M,25,Oklahoma City Thunder
+4702384,Nique Clifford,,Guard,"6' 5""",175 lbs,24,2,Colorado State,25,Oklahoma City Thunder
 5105800,Josh Dix,21,Guard,"6' 5""",206 lbs,22,0,Creighton,25,Oklahoma City Thunder
 4278073,Shai Gilgeous-Alexander,2,Guard,"6' 6""",195 lbs,28,9,Kentucky,25,Oklahoma City Thunder
 4222252,Isaiah Hartenstein,55,Center,"7' 0""",250 lbs,28,9,,25,Oklahoma City Thunder
@@ -439,7 +440,6 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 5142620,Darius Acuff Jr.,5,Guard,"6' 2""",186 lbs,19,0,Arkansas,23,Sacramento Kings
 4395650,Leaky Black,19,Forward,"6' 6""",209 lbs,27,3,North Carolina,23,Sacramento Kings
 4433174,Dylan Cardwell,32,Center,"6' 10""",255 lbs,24,2,Auburn,23,Sacramento Kings
-4702384,Nique Clifford,10,Guard,"6' 5""",175 lbs,24,2,Colorado State,23,Sacramento Kings
 4065732,De'Andre Hunter,15,Forward,"6' 7""",221 lbs,28,8,Virginia,23,Sacramento Kings
 4917149,Alex Karaban,33,Forward,"6' 7""",225 lbs,23,0,UConn,23,Sacramento Kings
 3064440,Zach LaVine,8,Guard,"6' 5""",200 lbs,31,13,UCLA,23,Sacramento Kings
