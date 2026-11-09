@@ -393,9 +393,9 @@ class TrendAnalyzer:
             'roster': 0.20
         }
         
-        home_games = features.get('home_games_played', 10)
-        away_games = features.get('away_games_played', 10)
-        min_games = min(home_games, away_games)
+        home_games = features.get('home_games_played', 20)
+        away_games = features.get('away_games_played', 20)
+        min_games = min(home_games, away_games) if (home_games is not None and away_games is not None) else 20
         is_early_season = min_games < 10
         
         home_roster = features.get('home_roster_rating', 0)
@@ -586,9 +586,9 @@ class TrendAnalyzer:
             rest_margin_adj += 2.5
 
         # Roster Talent / Injury Adjustment:
-        # A 12-point drop in active roster rating corresponds to ~3.0 point swing in expected margin
+        # Smooth scaling calibrated to NBA Vegas spread impact (Max ±4.0 pts ceiling)
         roster_diff = (home_roster - away_roster) if (home_roster > 0 and away_roster > 0) else 0.0
-        roster_margin_adj = float(np.clip(roster_diff / 4.0, -6.0, 6.0)) if roster_diff != 0.0 else 0.0
+        roster_margin_adj = float(np.clip(roster_diff / 7.5, -4.0, 4.0)) if roster_diff != 0.0 else 0.0
 
         # Calculate raw projected margin including real-time situational adjustments (Rest & Roster)
         raw_projected_margin = base_margin + rest_margin_adj + roster_margin_adj
@@ -640,9 +640,9 @@ class TrendAnalyzer:
             is_early_spread_gate = min_games < 15
             away_win_prob = spread_probs['loss'] if spread_probs else (1.0 - win_prob)
             if is_early_spread_gate:
-                if cover_edge >= 4.0 and win_prob >= 0.58:
+                if cover_edge >= 3.0 and win_prob >= 0.58:
                     recommendation = 'STRONG HOME'
-                elif cover_edge <= -4.0 and away_win_prob >= 0.58:
+                elif cover_edge <= -3.0 and away_win_prob >= 0.58:
                     recommendation = 'STRONG AWAY'
                 else:
                     recommendation = 'NEUTRAL'
@@ -752,7 +752,7 @@ class TrendAnalyzer:
                                over_under_line: float = None,
                                open_spread: float = None,
                                open_line: float = None,
-                               market_weight: float = 0.0,
+                               market_weight: float = None,
                                is_live: bool = False,
                                game_date: str = None,
                                spread_odds: Any = None,
@@ -804,9 +804,9 @@ class TrendAnalyzer:
         min_games = min(home_g, away_g)
 
         if market_weight is None:
-            if min_games < 10:
+            if min_games < 15:
                 eff_market_weight = 0.60
-            elif min_games < 20:
+            elif min_games < 25:
                 eff_market_weight = 0.40
             else:
                 eff_market_weight = 0.20
@@ -888,11 +888,11 @@ class TrendAnalyzer:
                     # Synchronized with Asymmetric Conviction Gate:
                     # OVER: Requires >= 5.0 in early season, >= 3.0 mid-season; LEAN OVER suppressed in early season
                     # UNDER: Preserves <= -2.0 for STRONG, <= -1.0 for LEAN mid-season
-                    if edge_ou >= 5.0 and (not is_early_ou_sync or over_p >= 0.58):
+                    if edge_ou >= 4.0 and (not is_early_ou_sync or over_p >= 0.58):
                         ou_res['recommendation'] = 'STRONG OVER'
                     elif not is_early_ou_sync and edge_ou >= 3.0:
                         ou_res['recommendation'] = 'LEAN OVER'
-                    elif edge_ou <= -2.0 and (not is_early_ou_sync or under_p >= 0.58):
+                    elif edge_ou <= -2.5 and (not is_early_ou_sync or under_p >= 0.58):
                         ou_res['recommendation'] = 'STRONG UNDER'
                     elif not is_early_ou_sync and edge_ou <= -1.0:
                         ou_res['recommendation'] = 'LEAN UNDER'
@@ -932,9 +932,9 @@ class TrendAnalyzer:
                     away_win_sp = new_sp_probs.get('loss', 0.5)
 
                     if is_early_sp_sync:
-                        if edge_sp >= 4.0 and home_win_sp >= 0.58:
+                        if edge_sp >= 3.0 and home_win_sp >= 0.58:
                             sp_res['recommendation'] = 'STRONG HOME'
-                        elif edge_sp <= -4.0 and away_win_sp >= 0.58:
+                        elif edge_sp <= -3.0 and away_win_sp >= 0.58:
                             sp_res['recommendation'] = 'STRONG AWAY'
                         else:
                             sp_res['recommendation'] = 'NEUTRAL'

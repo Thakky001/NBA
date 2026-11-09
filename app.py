@@ -27,6 +27,64 @@ if hasattr(st, 'logo') and os.path.exists("logo/logo.png"):
     except Exception:
         pass
 
+# Inject PWA metadata, Apple Touch Icon, and Mobile Web App title into parent DOM
+import streamlit.components.v1 as components
+components.html(
+    """
+    <script>
+        (function() {
+            try {
+                const pDoc = window.parent.document;
+                if (!pDoc) return;
+                
+                // 1. Force Page Title
+                pDoc.title = "StatEngine";
+                
+                // 2. Set Apple Touch Icon
+                let appleIcon = pDoc.querySelector("link[rel*='apple-touch-icon']");
+                if (!appleIcon) {
+                    appleIcon = pDoc.createElement('link');
+                    appleIcon.rel = 'apple-touch-icon';
+                    appleIcon.sizes = '180x180';
+                    pDoc.head.appendChild(appleIcon);
+                }
+                appleIcon.href = "https://raw.githubusercontent.com/Thakky001/NBA/main/logo/apple-touch-icon.png";
+                
+                // 3. Set Favicon
+                let favIcon = pDoc.querySelector("link[rel*='icon']");
+                if (!favIcon) {
+                    favIcon = pDoc.createElement('link');
+                    favIcon.rel = 'icon';
+                    pDoc.head.appendChild(favIcon);
+                }
+                favIcon.href = "https://raw.githubusercontent.com/Thakky001/NBA/main/logo/favicon.png";
+                
+                // 4. Set Mobile Web App Meta Titles
+                let metaAppTitle = pDoc.querySelector("meta[name='apple-mobile-web-app-title']");
+                if (!metaAppTitle) {
+                    metaAppTitle = pDoc.createElement('meta');
+                    metaAppTitle.name = 'apple-mobile-web-app-title';
+                    pDoc.head.appendChild(metaAppTitle);
+                }
+                metaAppTitle.content = "StatEngine";
+                
+                let metaAppName = pDoc.querySelector("meta[name='application-name']");
+                if (!metaAppName) {
+                    metaAppName = pDoc.createElement('meta');
+                    metaAppName.name = 'application-name';
+                    pDoc.head.appendChild(metaAppName);
+                }
+                metaAppName.content = "StatEngine";
+            } catch (e) {
+                console.error("Failed to inject PWA meta:", e);
+            }
+        })();
+    </script>
+    """,
+    height=0,
+    width=0
+)
+
 THAI_TZ = timezone(timedelta(hours=7))
 
 # Ensure current directory is at the beginning of sys.path
@@ -2338,7 +2396,7 @@ def _render_spread_analysis_card(home, away, sp_val, open_spread, sp_res, rec_te
             compare_html = f'''<div class="market-compare-grid"><div class="market-compare-col"><span style="color:#94A3B8;">📊 ฝั่งโมเดล:</span><br><strong style="color:#F1F5F9;">{clean_rec}</strong> <span style="color:#38BDF8;">({prob_pct})</span></div><div class="market-compare-col"><span style="color:#94A3B8;">🌊 ฝั่งกระแสเงิน:</span><br><strong style="color:#F1F5F9;">ดัน{m_dir}</strong> <span style="color:#FBBF24;">({m_prob:.1%}{diff_str})</span></div></div>'''
 
         verdict_html = ""
-        if is_clash_sp or lm_sp.get('verdict') in ['CAPITAL_PRESERVATION', 'PASS']:
+        if is_clash_sp or is_pass_verdict or lm_sp.get('verdict') in ['CAPITAL_PRESERVATION', 'PASS']:
             detail_sub = f' <span class="verdict-sep">—</span> <span class="verdict-detail">{v_detail or "สัญญาณขัดแย้งกับตลาด แนะนำรักษาเงินทุน"}</span>'
             verdict_html = f'''<div class="verdict-banner pass"><span class="verdict-badge">🎯 ฟันธง:</span> <strong class="verdict-title">ข้าม (PASS) / งดวางเงิน</strong>{detail_sub}</div>'''
         elif lm_sp.get('verdict') == 'CONFIRMED_ALIGNED' or v_title:
@@ -2479,7 +2537,7 @@ def _render_ou_analysis_card(ou_val, open_total, ou_res, rec_text, t_edge, win_p
             compare_html = f'''<div class="market-compare-grid"><div class="market-compare-col"><span style="color:#94A3B8;">📊 ฝั่งโมเดล:</span><br><strong style="color:#F1F5F9;">{clean_rec}</strong> <span style="color:#38BDF8;">({prob_pct})</span></div><div class="market-compare-col"><span style="color:#94A3B8;">🌊 ฝั่งกระแสเงิน:</span><br><strong style="color:#F1F5F9;">ดัน{m_dir}</strong> <span style="color:#FBBF24;">({m_prob:.1%}{diff_str})</span></div></div>'''
 
         verdict_html = ""
-        if is_clash_ou or lm_ou.get('verdict') in ['CAPITAL_PRESERVATION', 'PASS']:
+        if is_clash_ou or is_pass_ou_verdict or lm_ou.get('verdict') in ['CAPITAL_PRESERVATION', 'PASS']:
             detail_sub = f' <span class="verdict-sep">—</span> <span class="verdict-detail">{v_detail or "สัญญาณขัดแย้งกับตลาด แนะนำรักษาเงินทุน"}</span>'
             verdict_html = f'''<div class="verdict-banner pass"><span class="verdict-badge">🎯 ฟันธง:</span> <strong class="verdict-title">ข้าม (PASS) / งดวางเงิน</strong>{detail_sub}</div>'''
         elif lm_ou.get('verdict') == 'CONFIRMED_ALIGNED' or v_title:

@@ -123,7 +123,8 @@ class OverUnderResidualModel:
             over_under_line=over_under_line,
             game_date=game_date
         )
-        math_proj = math_analysis.get('raw_projected_total') or math_analysis.get('projected_total', 220.0)
+        # Use market-anchored projected_total to ensure AI residual trains and adjusts on anchored baseline
+        math_proj = math_analysis.get('projected_total') or math_analysis.get('raw_projected_total', 220.0)
 
         h_form = fe.get_team_recent_form(h_team, n_games=5, before_date=game_date)
         a_form = fe.get_team_recent_form(a_team, n_games=5, before_date=game_date)
@@ -315,9 +316,10 @@ class SpreadResidualModel:
             spread_line=spread_line,
             game_date=game_date
         )
-        math_proj = math_analysis.get('raw_projected_margin')
+        # Use market-anchored projected_margin to ensure AI residual trains and adjusts on anchored baseline
+        math_proj = math_analysis.get('projected_margin')
         if math_proj is None:
-            math_proj = math_analysis.get('projected_margin', 0.0)
+            math_proj = math_analysis.get('raw_projected_margin', 0.0)
 
         # 2. Team recent forms strictly before game_date
         h_form = fe.get_team_recent_form(h_team, n_games=5, before_date=game_date)

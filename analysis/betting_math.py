@@ -574,6 +574,19 @@ def analyze_line_movement(open_line: Optional[float],
 
     # Stable line check (< 0.5 pt shift)
     if abs_diff < 0.5:
+        if rec_upper == 'NEUTRAL' or model_dir == 'สูสี' or 'ข้าม' in rec_upper:
+            return {
+                'has_movement': True,
+                'diff': diff,
+                'status': 'STABLE',
+                'badge': '➖ Stable Line',
+                'detail': f'ราคาแทบไม่เปลี่ยนจาก {o_val:.1f} เป็น {c_val:.1f}',
+                'market_flow_prob': None,
+                'market_flow_direction': flow_dir,
+                'verdict': 'CAPITAL_PRESERVATION',
+                'verdict_title': 'ข้าม (PASS) — สถิติสูสี',
+                'verdict_detail': 'โมเดลสถิติสูสี ไม่มี Edge ที่คุ้มค่าต่อการลงทุน แนะนำรักษาเงินทุน'
+            }
         return {
             'has_movement': True,
             'diff': diff,

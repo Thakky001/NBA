@@ -468,6 +468,11 @@ class PlayerRatingEngine:
                 promoted = available_bench.pop(0)
                 promoted_ids.add(id(promoted))
                 promoted_starter = dict(promoted)
+                # Next-Man-Up Replacement Floor: Ensure replacement player has NBA rotation floor (12.0 EFF)
+                if promoted_starter.get('active_eff', 0.0) < 12.0:
+                    promoted_starter['active_eff'] = 12.0
+                    promoted_starter['active_off_eff'] = round(12.0 * 0.65, 1)
+                    promoted_starter['active_def_eff'] = round(12.0 * 0.35, 1)
                 promoted_starter['position'] = s.get('position', promoted.get('position', ''))
                 promoted_starter['promoted_from_bench'] = True
                 promoted_starter['replaced_player'] = s.get('clean_name', s.get('name'))
@@ -503,6 +508,13 @@ class PlayerRatingEngine:
             s_act_eff_avg = sum(s['active_eff'] for s in active_starter_players) / s_act_n
             b_act_eff_avg = sum(b['active_eff'] for b in bench_top_3) / b_n
             active_roster_rating = 8.0 * (0.70 * s_act_eff_avg + 0.30 * b_act_eff_avg)
+
+            # Team Injury Penalty Cap: In NBA betting markets, missing key players shifts point spread by at most 3.5-4.5 pts (~22 rating pts)
+            max_injury_loss = 22.0
+            if full_roster_rating > 0 and (full_roster_rating - active_roster_rating) > max_injury_loss:
+                active_roster_rating = full_roster_rating - max_injury_loss
+            # NBA Team Floor: Prevent active roster rating collapsing below professional 8-man rotation minimum
+            active_roster_rating = max(active_roster_rating, 108.0)
 
             s_act_off_avg = sum(s.get('active_off_eff', s['active_eff'] * 0.65) for s in active_starter_players) / s_act_n
             b_act_off_avg = sum(b.get('active_off_eff', b['active_eff'] * 0.65) for b in bench_top_3) / b_n
