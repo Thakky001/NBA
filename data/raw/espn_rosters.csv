@@ -7,7 +7,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 2578185,Dorian Finney-Smith,8,Forward,"6' 7""",220 lbs,33,11,Florida,1,Atlanta Hawks
 5149077,Kingston Flemings,4,Guard,"6' 3""",183 lbs,19,0,Houston,1,Atlanta Hawks
 4585618,Keshon Gilbert,00,Guard,"6' 4""",200 lbs,23,2,Iowa State,1,Atlanta Hawks
-4712863,Mouhamed Gueye,18,Forward,"6' 11""",210 lbs,23,4,Washington State,1,Atlanta Hawks
+4712863,Mouhamed Gueye,18,Forward,"6' 11""",210 lbs,24,4,Washington State,1,Atlanta Hawks
 4701230,Jalen Johnson,1,Forward,"6' 8""",219 lbs,24,6,Duke,1,Atlanta Hawks
 4280151,Corey Kispert,24,Forward,"6' 6""",224 lbs,27,6,Gonzaga,1,Atlanta Hawks
 3146557,Jock Landale,31,Center,"6' 11""",255 lbs,31,6,Saint Mary's,1,Atlanta Hawks
@@ -362,7 +362,6 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 4432185,Micah Peavy,,Guard,"6' 7""",220 lbs,25,2,Georgetown,25,Oklahoma City Thunder
 5061603,Thomas Sorber,12,Center,"6' 9""",250 lbs,20,0,Georgetown,25,Oklahoma City Thunder
 5241364,Bennett Stirtz,14,Guard,"6' 4""",190 lbs,23,0,Iowa,25,Oklahoma City Thunder
-4433159,Dalen Terry,,Guard,"6' 6""",210 lbs,24,5,Arizona,25,Oklahoma City Thunder
 5159925,Nikola Topic,44,Guard,"6' 6""",200 lbs,21,2,,25,Oklahoma City Thunder
 4683692,Cason Wallace,22,Guard,"6' 3""",195 lbs,23,4,Kentucky,25,Oklahoma City Thunder
 4593803,Jalen Williams,8,Guard,"6' 5""",211 lbs,25,5,Santa Clara,25,Oklahoma City Thunder
