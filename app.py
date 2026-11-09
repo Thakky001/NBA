@@ -2281,33 +2281,47 @@ def _render_spread_analysis_card(home, away, sp_val, open_spread, sp_res, rec_te
         proj_leader = home if margin > 0 else away
         live_banner_html = f'''<div class="live-pace-banner"><span>⚡ <strong>Live Proj Margin:</strong> {proj_leader} +{abs(margin):.1f} PTS</span><span style="color:#94A3B8;">({away} {live_proj.get("proj_away",0):.0f} - {live_proj.get("proj_home",0):.0f} {home})</span></div>'''
 
-    # 4. Hero Pick Box
-    is_strong = 'STRONG' in sp_res.get('recommendation', '') or 'มั่นใจมาก' in rec_text
-    is_lean = 'LEAN' in sp_res.get('recommendation', '') or 'น่าสนใจ' in rec_text
+    # 4. Market Flow & Line Movement Context
+    lm_sp = sp_res.get('line_movement') or {}
+    sp_verdict = lm_sp.get('verdict')
+    is_pass_verdict = is_clash_sp or (sp_verdict in ['CAPITAL_PRESERVATION', 'PASS']) or (sp_res.get('recommendation') == 'NEUTRAL')
+
+    # Hero Pick Box (Synchronized with final verdict to prevent contradictory cards)
+    is_strong = ('STRONG' in sp_res.get('recommendation', '') or 'มั่นใจมาก' in rec_text) and not is_pass_verdict
+    is_lean = ('LEAN' in sp_res.get('recommendation', '') or 'น่าสนใจ' in rec_text) and not is_pass_verdict
+    
+    raw_clean_rec = rec_text.replace('(มั่นใจมาก)', '').replace('(น่าสนใจ)', '').replace('🔥', '').replace('🏠', '').replace('✈️', '').replace('🎯', '').strip()
     
     if is_clash_sp:
         conf_badge = '<span class="confidence-pill caution">⚠️ สัญญาณขัดแย้ง</span>'
         box_class = "hero-pick-box clash"
         fill_class = "custom-prob-fill clash"
+        clean_rec = "ข้าม (PASS) — สัญญาณขัดแย้งกับตลาด"
+    elif is_pass_verdict:
+        conf_badge = '<span class="confidence-pill neutral">⚖️ รอดู / สูสี</span>'
+        box_class = "hero-pick-box"
+        fill_class = "custom-prob-fill"
+        clean_rec = "ข้าม (PASS) — แนะนำรักษาเงินทุน"
     elif is_strong:
         conf_badge = '<span class="confidence-pill high">🔥 มั่นใจมาก</span>'
         box_class = "hero-pick-box"
         fill_class = "custom-prob-fill"
+        clean_rec = raw_clean_rec
     elif is_lean:
         conf_badge = '<span class="confidence-pill medium">⚡ น่าสนใจ</span>'
         box_class = "hero-pick-box"
         fill_class = "custom-prob-fill"
+        clean_rec = raw_clean_rec
     else:
         conf_badge = '<span class="confidence-pill neutral">⚖️ รอดู / สูสี</span>'
         box_class = "hero-pick-box"
         fill_class = "custom-prob-fill"
+        clean_rec = raw_clean_rec
 
     prob_pct = f"{win_p * 100:.1f}%"
     edge_chip = f'<span class="edge-pill">Cover Edge: {c_edge:+.1f} แต้ม</span>' if c_edge else ''
-    clean_rec = rec_text.replace('(มั่นใจมาก)', '').replace('(น่าสนใจ)', '').replace('🔥', '').replace('🏠', '').replace('✈️', '').replace('🎯', '').strip()
 
     # 5. Market Flow & Line Movement Callout
-    lm_sp = sp_res.get('line_movement') or {}
     market_html = ""
     if lm_sp and lm_sp.get('badge'):
         badge_txt = lm_sp.get('badge', '')
@@ -2407,30 +2421,45 @@ def _render_ou_analysis_card(ou_val, open_total, ou_res, rec_text, t_edge, win_p
     if is_live and live_proj:
         live_banner_html = f'''<div class="live-pace-banner"><span>⚡ <strong>Live Projected Total:</strong> {live_proj.get("proj_total", 0):.1f} PTS</span><span style="color:#94A3B8;">(Pace: {live_proj.get("scoring_rate", 0):.2f} pts/m)</span></div>'''
 
-    # 4. Hero Pick Box
-    is_strong = 'STRONG' in ou_res.get('recommendation', '') or 'มั่นใจมาก' in rec_text
-    is_lean = 'LEAN' in ou_res.get('recommendation', '') or 'น่าสนใจ' in rec_text
-    
+    # 4. Market Flow & Line Movement Context
+    lm_ou = ou_res.get('line_movement') or {}
+    ou_verdict = lm_ou.get('verdict')
+    is_pass_ou_verdict = is_clash_ou or (ou_verdict in ['CAPITAL_PRESERVATION', 'PASS']) or (ou_res.get('recommendation') == 'NEUTRAL')
+
+    # Hero Pick Box (Synchronized with final verdict to prevent contradictory cards)
+    is_strong = ('STRONG' in ou_res.get('recommendation', '') or 'มั่นใจมาก' in rec_text) and not is_pass_ou_verdict
+    is_lean = ('LEAN' in ou_res.get('recommendation', '') or 'น่าสนใจ' in rec_text) and not is_pass_ou_verdict
+
+    raw_clean_rec = rec_text.replace('(มั่นใจมาก)', '').replace('(น่าสนใจ)', '').replace('🔥', '').replace('📈', '').replace('📉', '').replace('🎯', '').strip()
+
     if is_clash_ou:
         conf_badge = '<span class="confidence-pill caution">⚠️ สัญญาณขัดแย้ง</span>'
         box_class = "hero-pick-box clash"
         fill_class = "custom-prob-fill clash"
+        clean_rec = "ข้าม (PASS) — สัญญาณขัดแย้งกับตลาด"
+    elif is_pass_ou_verdict:
+        conf_badge = '<span class="confidence-pill neutral">⚖️ รอดู / สูสี</span>'
+        box_class = "hero-pick-box"
+        fill_class = "custom-prob-fill"
+        clean_rec = "ข้าม (PASS) — แนะนำรักษาเงินทุน"
     elif is_strong:
         conf_badge = '<span class="confidence-pill high">🔥 มั่นใจมาก</span>'
         box_class = "hero-pick-box"
         fill_class = "custom-prob-fill"
+        clean_rec = raw_clean_rec
     elif is_lean:
         conf_badge = '<span class="confidence-pill medium">⚡ น่าสนใจ</span>'
         box_class = "hero-pick-box"
         fill_class = "custom-prob-fill"
+        clean_rec = raw_clean_rec
     else:
         conf_badge = '<span class="confidence-pill neutral">⚖️ รอดู / สูสี</span>'
         box_class = "hero-pick-box"
         fill_class = "custom-prob-fill"
+        clean_rec = raw_clean_rec
 
     prob_pct = f"{win_p * 100:.1f}%"
     edge_chip = f'<span class="edge-pill">Edge: {t_edge:+.1f} แต้ม</span>' if t_edge else ''
-    clean_rec = rec_text.replace('(มั่นใจมาก)', '').replace('(น่าสนใจ)', '').replace('🔥', '').replace('📈', '').replace('📉', '').replace('🎯', '').strip()
 
     # 5. Market Flow & Line Movement Callout
     lm_ou = ou_res.get('line_movement') or {}

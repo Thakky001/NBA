@@ -230,8 +230,10 @@ def format_game_card(analysis: Dict[str, Any], game_info: Dict[str, Any], odds_d
                 stat_items.append(ev_str)
 
             card_lines.append(f"📈 {' | '.join(stat_items)}")
-    elif sp_clash or ou_clash:
+    elif global_clash or (sp_res.get('is_market_clash') and ('STRONG' in sp_rec or 'LEAN' in sp_rec)) or (ou_res.get('is_market_clash') and ('STRONG' in ou_rec or 'LEAN' in ou_rec)):
         card_lines.append("⚖️ <b>คำแนะนำ:</b> ข้าม (PASS - สัญญาณขัดแย้งกับกระแสเงินตลาด)")
+    elif sp_clash or ou_clash:
+        card_lines.append("⚖️ <b>คำแนะนำ:</b> ข้าม (PASS - แนะนำรักษาเงินทุน สถิติสูสีไม่มี Edge คุ้มเสี่ยง)")
     else:
         card_lines.append("⚖️ <b>คำแนะนำ:</b> เรตราคาเปิดมาสมดุล (NEUTRAL)")
 

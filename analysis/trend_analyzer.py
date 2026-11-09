@@ -638,10 +638,11 @@ class TrendAnalyzer:
             # Early-Season Conviction Gate (< 15 games): require cover_edge >= 4.0 pts & win_prob >= 0.58.
             # Suppress all LEAN picks to NEUTRAL / PASS to protect bankroll.
             is_early_spread_gate = min_games < 15
+            away_win_prob = spread_probs['loss'] if spread_probs else (1.0 - win_prob)
             if is_early_spread_gate:
                 if cover_edge >= 4.0 and win_prob >= 0.58:
                     recommendation = 'STRONG HOME'
-                elif cover_edge <= -4.0 and win_prob >= 0.58:
+                elif cover_edge <= -4.0 and away_win_prob >= 0.58:
                     recommendation = 'STRONG AWAY'
                 else:
                     recommendation = 'NEUTRAL'
@@ -877,19 +878,38 @@ class TrendAnalyzer:
                     ou_res['projected_total'] = adj_ou['adjusted_total']
                     ou_res['total_edge'] = round(adj_ou['adjusted_total'] - over_under_line, 1)
                     edge_ou = ou_res['total_edge']
+
+                    from analysis.betting_math import calculate_spread_probabilities, analyze_line_movement
+                    sigma_t = ou_res.get('sigma_total') or 12.5
+                    new_ou_probs = calculate_spread_probabilities(-over_under_line, adj_ou['adjusted_total'], sigma_t)
+                    over_p = new_ou_probs.get('win', 0.5)
+                    under_p = new_ou_probs.get('loss', 0.5)
+
                     # Synchronized with Asymmetric Conviction Gate:
                     # OVER: Requires >= 5.0 in early season, >= 3.0 mid-season; LEAN OVER suppressed in early season
                     # UNDER: Preserves <= -2.0 for STRONG, <= -1.0 for LEAN mid-season
-                    if edge_ou >= 5.0:
+                    if edge_ou >= 5.0 and (not is_early_ou_sync or over_p >= 0.58):
                         ou_res['recommendation'] = 'STRONG OVER'
                     elif not is_early_ou_sync and edge_ou >= 3.0:
                         ou_res['recommendation'] = 'LEAN OVER'
-                    elif edge_ou <= -2.0:
+                    elif edge_ou <= -2.0 and (not is_early_ou_sync or under_p >= 0.58):
                         ou_res['recommendation'] = 'STRONG UNDER'
                     elif not is_early_ou_sync and edge_ou <= -1.0:
                         ou_res['recommendation'] = 'LEAN UNDER'
                     else:
                         ou_res['recommendation'] = 'NEUTRAL'
+
+                    rec_ou = ou_res['recommendation']
+                    pick_win_ou = over_p if 'OVER' in rec_ou else (under_p if 'UNDER' in rec_ou else 0.50)
+                    ou_res['win_prob'] = pick_win_ou
+                    ou_res['raw_win_prob'] = pick_win_ou
+                    ou_res['confidence'] = abs(pick_win_ou - 0.5) * 2.0
+
+                    open_l = ou_res.get('open_line')
+                    ou_res['line_movement'] = analyze_line_movement(
+                        open_l, over_under_line, market_type='total', recommendation=rec_ou,
+                        home_team=home_team, away_team=away_team, is_live=is_live
+                    )
 
             # 2. Spread AI Adjustment
             if self._ai_sp_model and self._ai_sp_model.is_fitted and result.get('spread'):
@@ -904,10 +924,17 @@ class TrendAnalyzer:
                     sp_res['projected_margin'] = adj_sp['adjusted_margin']
                     sp_res['cover_edge'] = round(adj_sp['adjusted_margin'] + spread_line, 1)
                     edge_sp = sp_res['cover_edge']
+
+                    from analysis.betting_math import calculate_spread_probabilities, analyze_line_movement
+                    sigma_m = sp_res.get('sigma_margin') or 12.5
+                    new_sp_probs = calculate_spread_probabilities(spread_line, adj_sp['adjusted_margin'], sigma_m)
+                    home_win_sp = new_sp_probs.get('win', 0.5)
+                    away_win_sp = new_sp_probs.get('loss', 0.5)
+
                     if is_early_sp_sync:
-                        if edge_sp >= 4.0:
+                        if edge_sp >= 4.0 and home_win_sp >= 0.58:
                             sp_res['recommendation'] = 'STRONG HOME'
-                        elif edge_sp <= -4.0:
+                        elif edge_sp <= -4.0 and away_win_sp >= 0.58:
                             sp_res['recommendation'] = 'STRONG AWAY'
                         else:
                             sp_res['recommendation'] = 'NEUTRAL'
@@ -922,6 +949,18 @@ class TrendAnalyzer:
                             sp_res['recommendation'] = 'LEAN AWAY'
                         else:
                             sp_res['recommendation'] = 'NEUTRAL'
+
+                    rec_sp = sp_res['recommendation']
+                    pick_win_sp = home_win_sp if 'HOME' in rec_sp else (away_win_sp if 'AWAY' in rec_sp else 0.50)
+                    sp_res['win_prob'] = pick_win_sp
+                    sp_res['raw_win_prob'] = pick_win_sp
+                    sp_res['confidence'] = abs(pick_win_sp - 0.5) * 2.0
+
+                    open_s = sp_res.get('open_spread')
+                    sp_res['line_movement'] = analyze_line_movement(
+                        open_s, spread_line, market_type='spread', recommendation=rec_sp,
+                        home_team=home_team, away_team=away_team, is_live=is_live
+                    )
         except Exception as e:
             logger.warning(f"AI Residual adjustment failed gracefully in full_matchup_analysis: {e}")
             
