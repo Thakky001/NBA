@@ -51,7 +51,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:36:04"
+    "scraped_at": "2026-11-09 01:35:57"
   },
   "PHI": {
     "team": "Philadelphia 76ers",
@@ -105,7 +105,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:36:04"
+    "scraped_at": "2026-11-09 01:35:57"
   },
   "Chicago Bulls": {
     "team": "Chicago Bulls",
@@ -159,7 +159,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:36:04"
+    "scraped_at": "2026-11-09 01:35:57"
   },
   "CHI": {
     "team": "Chicago Bulls",
@@ -213,7 +213,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:36:04"
+    "scraped_at": "2026-11-09 01:35:57"
   },
   "Los Angeles Lakers": {
     "team": "Los Angeles Lakers",
@@ -252,12 +252,17 @@
     ],
     "injuries": [
       {
+        "name": "Quentin Grimes",
+        "position": "G",
+        "status": "Very Likely To Play"
+      },
+      {
         "name": "Luka Doncic",
         "position": "G",
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:36:04"
+    "scraped_at": "2026-11-09 01:35:57"
   },
   "LAL": {
     "team": "Los Angeles Lakers",
@@ -296,12 +301,17 @@
     ],
     "injuries": [
       {
+        "name": "Quentin Grimes",
+        "position": "G",
+        "status": "Very Likely To Play"
+      },
+      {
         "name": "Luka Doncic",
         "position": "G",
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:36:04"
+    "scraped_at": "2026-11-09 01:35:57"
   },
   "Detroit Pistons": {
     "team": "Detroit Pistons",
@@ -350,7 +360,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:36:04"
+    "scraped_at": "2026-11-09 01:35:57"
   },
   "DET": {
     "team": "Detroit Pistons",
@@ -399,7 +409,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:36:04"
+    "scraped_at": "2026-11-09 01:35:57"
   },
   "Utah Jazz": {
     "team": "Utah Jazz",
@@ -453,7 +463,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:36:04"
+    "scraped_at": "2026-11-09 01:35:57"
   },
   "UTA": {
     "team": "Utah Jazz",
@@ -507,7 +517,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:36:04"
+    "scraped_at": "2026-11-09 01:35:57"
   },
   "Minnesota Timberwolves": {
     "team": "Minnesota Timberwolves",
@@ -556,7 +566,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:36:04"
+    "scraped_at": "2026-11-09 01:35:57"
   },
   "MIN": {
     "team": "Minnesota Timberwolves",
@@ -605,7 +615,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:36:04"
+    "scraped_at": "2026-11-09 01:35:57"
   },
   "Brooklyn Nets": {
     "team": "Brooklyn Nets",
@@ -654,7 +664,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:36:04"
+    "scraped_at": "2026-11-09 01:35:57"
   },
   "BKN": {
     "team": "Brooklyn Nets",
@@ -703,7 +713,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:36:04"
+    "scraped_at": "2026-11-09 01:35:57"
   },
   "Dallas Mavericks": {
     "team": "Dallas Mavericks",
@@ -757,7 +767,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:36:04"
+    "scraped_at": "2026-11-09 01:35:57"
   },
   "DAL": {
     "team": "Dallas Mavericks",
@@ -811,7 +821,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:36:04"
+    "scraped_at": "2026-11-09 01:35:57"
   },
   "Boston Celtics": {
     "team": "Boston Celtics",
@@ -819,16 +829,16 @@
     "opponent": "Milwaukee Bucks",
     "opponent_abbr": "MIL",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
-        "name": "Derrick White",
+        "name": "Mike Conley",
         "position": "PG",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Hugo Gonzalez",
+        "name": "Derrick White",
         "position": "SG",
         "status": "Very Likely To Play"
       },
@@ -849,7 +859,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-11-09 00:36:04"
+    "scraped_at": "2026-11-09 01:35:57"
   },
   "BOS": {
     "team": "Boston Celtics",
@@ -857,16 +867,16 @@
     "opponent": "Milwaukee Bucks",
     "opponent_abbr": "MIL",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
-        "name": "Derrick White",
+        "name": "Mike Conley",
         "position": "PG",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Hugo Gonzalez",
+        "name": "Derrick White",
         "position": "SG",
         "status": "Very Likely To Play"
       },
@@ -887,7 +897,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-11-09 00:36:04"
+    "scraped_at": "2026-11-09 01:35:57"
   },
   "Milwaukee Bucks": {
     "team": "Milwaukee Bucks",
@@ -895,8 +905,8 @@
     "opponent": "Boston Celtics",
     "opponent_abbr": "BOS",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Brayden Burries",
@@ -931,7 +941,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:36:04"
+    "scraped_at": "2026-11-09 01:35:57"
   },
   "MIL": {
     "team": "Milwaukee Bucks",
@@ -939,8 +949,8 @@
     "opponent": "Boston Celtics",
     "opponent_abbr": "BOS",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Brayden Burries",
@@ -975,7 +985,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:36:04"
+    "scraped_at": "2026-11-09 01:35:57"
   },
   "New Orleans Pelicans": {
     "team": "New Orleans Pelicans",
@@ -983,8 +993,8 @@
     "opponent": "Los Angeles Clippers",
     "opponent_abbr": "LAC",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Dejounte Murray",
@@ -1019,7 +1029,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:36:04"
+    "scraped_at": "2026-11-09 01:35:57"
   },
   "NOP": {
     "team": "New Orleans Pelicans",
@@ -1027,8 +1037,8 @@
     "opponent": "Los Angeles Clippers",
     "opponent_abbr": "LAC",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Dejounte Murray",
@@ -1063,7 +1073,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:36:04"
+    "scraped_at": "2026-11-09 01:35:57"
   },
   "Los Angeles Clippers": {
     "team": "Los Angeles Clippers",
@@ -1071,8 +1081,8 @@
     "opponent": "New Orleans Pelicans",
     "opponent_abbr": "NOP",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Darius Garland",
@@ -1127,7 +1137,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:36:04"
+    "scraped_at": "2026-11-09 01:35:57"
   },
   "LAC": {
     "team": "Los Angeles Clippers",
@@ -1135,8 +1145,8 @@
     "opponent": "New Orleans Pelicans",
     "opponent_abbr": "NOP",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Darius Garland",
@@ -1191,7 +1201,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:36:04"
+    "scraped_at": "2026-11-09 01:35:57"
   },
   "Miami Heat": {
     "team": "Miami Heat",
@@ -1199,8 +1209,8 @@
     "opponent": "Sacramento Kings",
     "opponent_abbr": "SAC",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Davion Mitchell",
@@ -1213,7 +1223,7 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Andrew Wiggins",
+        "name": "Pelle Larsson",
         "position": "SF",
         "status": "Very Likely To Play"
       },
@@ -1229,7 +1239,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-11-09 00:36:04"
+    "scraped_at": "2026-11-09 01:35:57"
   },
   "MIA": {
     "team": "Miami Heat",
@@ -1237,8 +1247,8 @@
     "opponent": "Sacramento Kings",
     "opponent_abbr": "SAC",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Davion Mitchell",
@@ -1251,7 +1261,7 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Andrew Wiggins",
+        "name": "Pelle Larsson",
         "position": "SF",
         "status": "Very Likely To Play"
       },
@@ -1267,7 +1277,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-11-09 00:36:04"
+    "scraped_at": "2026-11-09 01:35:57"
   },
   "Sacramento Kings": {
     "team": "Sacramento Kings",
@@ -1299,9 +1309,9 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Domantas Sabonis",
+        "name": "Dylan Cardwell",
         "position": "C",
-        "status": "Toss Up To Play"
+        "status": "Very Likely To Play"
       }
     ],
     "injuries": [
@@ -1311,17 +1321,17 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Domantas Sabonis",
+        "name": "Maxime Raynaud",
         "position": "C",
-        "status": "Toss Up To Play"
+        "status": "Very Unlikely To Play"
       },
       {
-        "name": "Maxime Raynaud",
+        "name": "Domantas Sabonis",
         "position": "C",
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:36:04"
+    "scraped_at": "2026-11-09 01:35:57"
   },
   "SAC": {
     "team": "Sacramento Kings",
@@ -1353,9 +1363,9 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Domantas Sabonis",
+        "name": "Dylan Cardwell",
         "position": "C",
-        "status": "Toss Up To Play"
+        "status": "Very Likely To Play"
       }
     ],
     "injuries": [
@@ -1365,16 +1375,16 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Domantas Sabonis",
+        "name": "Maxime Raynaud",
         "position": "C",
-        "status": "Toss Up To Play"
+        "status": "Very Unlikely To Play"
       },
       {
-        "name": "Maxime Raynaud",
+        "name": "Domantas Sabonis",
         "position": "C",
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:36:04"
+    "scraped_at": "2026-11-09 01:35:57"
   }
 }
