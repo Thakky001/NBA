@@ -51,7 +51,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:11:10"
+    "scraped_at": "2026-11-09 00:36:04"
   },
   "PHI": {
     "team": "Philadelphia 76ers",
@@ -105,7 +105,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:11:10"
+    "scraped_at": "2026-11-09 00:36:04"
   },
   "Chicago Bulls": {
     "team": "Chicago Bulls",
@@ -159,7 +159,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:11:10"
+    "scraped_at": "2026-11-09 00:36:04"
   },
   "CHI": {
     "team": "Chicago Bulls",
@@ -213,7 +213,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:11:10"
+    "scraped_at": "2026-11-09 00:36:04"
   },
   "Los Angeles Lakers": {
     "team": "Los Angeles Lakers",
@@ -257,7 +257,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:11:10"
+    "scraped_at": "2026-11-09 00:36:04"
   },
   "LAL": {
     "team": "Los Angeles Lakers",
@@ -301,7 +301,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:11:10"
+    "scraped_at": "2026-11-09 00:36:04"
   },
   "Detroit Pistons": {
     "team": "Detroit Pistons",
@@ -350,7 +350,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:11:10"
+    "scraped_at": "2026-11-09 00:36:04"
   },
   "DET": {
     "team": "Detroit Pistons",
@@ -399,7 +399,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:11:10"
+    "scraped_at": "2026-11-09 00:36:04"
   },
   "Utah Jazz": {
     "team": "Utah Jazz",
@@ -453,7 +453,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:11:10"
+    "scraped_at": "2026-11-09 00:36:04"
   },
   "UTA": {
     "team": "Utah Jazz",
@@ -507,7 +507,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:11:10"
+    "scraped_at": "2026-11-09 00:36:04"
   },
   "Minnesota Timberwolves": {
     "team": "Minnesota Timberwolves",
@@ -556,7 +556,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:11:10"
+    "scraped_at": "2026-11-09 00:36:04"
   },
   "MIN": {
     "team": "Minnesota Timberwolves",
@@ -605,7 +605,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:11:10"
+    "scraped_at": "2026-11-09 00:36:04"
   },
   "Brooklyn Nets": {
     "team": "Brooklyn Nets",
@@ -654,7 +654,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:11:10"
+    "scraped_at": "2026-11-09 00:36:04"
   },
   "BKN": {
     "team": "Brooklyn Nets",
@@ -703,7 +703,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:11:10"
+    "scraped_at": "2026-11-09 00:36:04"
   },
   "Dallas Mavericks": {
     "team": "Dallas Mavericks",
@@ -757,7 +757,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:11:10"
+    "scraped_at": "2026-11-09 00:36:04"
   },
   "DAL": {
     "team": "Dallas Mavericks",
@@ -811,7 +811,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:11:10"
+    "scraped_at": "2026-11-09 00:36:04"
   },
   "Boston Celtics": {
     "team": "Boston Celtics",
@@ -848,14 +848,8 @@
         "status": "Very Likely To Play"
       }
     ],
-    "injuries": [
-      {
-        "name": "Mitchell Robinson",
-        "position": "C",
-        "status": "Toss Up To Play"
-      }
-    ],
-    "scraped_at": "2026-11-09 00:11:10"
+    "injuries": [],
+    "scraped_at": "2026-11-09 00:36:04"
   },
   "BOS": {
     "team": "Boston Celtics",
@@ -892,14 +886,8 @@
         "status": "Very Likely To Play"
       }
     ],
-    "injuries": [
-      {
-        "name": "Mitchell Robinson",
-        "position": "C",
-        "status": "Toss Up To Play"
-      }
-    ],
-    "scraped_at": "2026-11-09 00:11:10"
+    "injuries": [],
+    "scraped_at": "2026-11-09 00:36:04"
   },
   "Milwaukee Bucks": {
     "team": "Milwaukee Bucks",
@@ -943,7 +931,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:11:10"
+    "scraped_at": "2026-11-09 00:36:04"
   },
   "MIL": {
     "team": "Milwaukee Bucks",
@@ -987,7 +975,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:11:10"
+    "scraped_at": "2026-11-09 00:36:04"
   },
   "New Orleans Pelicans": {
     "team": "New Orleans Pelicans",
@@ -1031,7 +1019,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:11:10"
+    "scraped_at": "2026-11-09 00:36:04"
   },
   "NOP": {
     "team": "New Orleans Pelicans",
@@ -1075,7 +1063,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:11:10"
+    "scraped_at": "2026-11-09 00:36:04"
   },
   "Los Angeles Clippers": {
     "team": "Los Angeles Clippers",
@@ -1139,7 +1127,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:11:10"
+    "scraped_at": "2026-11-09 00:36:04"
   },
   "LAC": {
     "team": "Los Angeles Clippers",
@@ -1203,7 +1191,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:11:10"
+    "scraped_at": "2026-11-09 00:36:04"
   },
   "Miami Heat": {
     "team": "Miami Heat",
@@ -1241,7 +1229,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-11-09 00:11:10"
+    "scraped_at": "2026-11-09 00:36:04"
   },
   "MIA": {
     "team": "Miami Heat",
@@ -1279,7 +1267,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-11-09 00:11:10"
+    "scraped_at": "2026-11-09 00:36:04"
   },
   "Sacramento Kings": {
     "team": "Sacramento Kings",
@@ -1333,7 +1321,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:11:10"
+    "scraped_at": "2026-11-09 00:36:04"
   },
   "SAC": {
     "team": "Sacramento Kings",
@@ -1387,6 +1375,6 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-09 00:11:10"
+    "scraped_at": "2026-11-09 00:36:04"
   }
 }
