@@ -1,7 +1,7 @@
 # Graph Report - NBA  (2026-11-10)
 
 ## Corpus Check
-- 368 files · ~656,068 words
+- 368 files · ~656,070 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 25 file(s) not represented in the graph (top: .csv 15, .ico 3, .parquet 3)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `141f5b97`
+- Built from commit: `4f0c8e2e`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -1111,7 +1111,7 @@ _Questions this graph is uniquely positioned to answer:_
 - **Should `lib/render-report.mjs` be split into smaller, more focused modules?**
   _Cohesion score 0.12605042016806722 - nodes in this community are weakly interconnected._
 - **Why does `FeatureEngineer` connect `FeatureEngineer` to `PlayerRatingEngine`, `.merge_game_data`, `GameReporter`, `OverUnderResidualModel`, `pandas`, `pandas`, `app.py`, `OddsCollector`?**
-  _High betweenness centrality (0.012) - this node is a cross-community bridge._
+  _High betweenness centrality (0.011) - this node is a cross-community bridge._
 - **Are the 5 inferred relationships involving `FeatureEngineer` (e.g. with `get_analyzer()` and `PlayerRatingEngine`) actually correct?**
   _`FeatureEngineer` has 5 INFERRED edges - model-reasoned connections that need verification._
 - **Should `Layout` be split into smaller, more focused modules?**

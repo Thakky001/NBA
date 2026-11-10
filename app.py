@@ -2744,7 +2744,7 @@ def get_cached_line_movement(game_id: str):
     return espn.get_game_line_movement(str(game_id))
 
 @st.cache_data(ttl=300)
-def get_cached_analysis(_analyzer, home_team, away_team, spread_line, over_under_line, open_spread, open_line, is_live=False):
+def get_cached_analysis(_analyzer, home_team, away_team, spread_line, over_under_line, open_spread, open_line, is_live=False, cache_version="v12_normalized_advanced_stats"):
     """Cache computationally heavy matchup simulation for 5 minutes."""
     try:
         return _analyzer.full_matchup_analysis(
@@ -2869,7 +2869,8 @@ def render_game_slate(selected_date, is_live_refresh):
                     home_team=home, away_team=away, 
                     spread_line=sp_val, over_under_line=ou_val,
                     open_spread=open_spread, open_line=open_total,
-                    is_live=is_live
+                    is_live=is_live,
+                    cache_version="v12_normalized_advanced_stats"
                 )
             
                 sp_feat = (analysis.get('spread') or {}).get('features') or {}
