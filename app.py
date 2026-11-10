@@ -3588,6 +3588,11 @@ def render_track_record_tab():
             'FOLLOW_MARKET': '🌊 ตามกระแสเงินตลาด',
             'FOLLOW_MODEL': '🛡️ ยึดโมเดลสถิติ',
             'CONFIRMED_ALIGNED': '🔥 สถิติ & ตลาดตรงกัน',
+            'MOVE_ALIGNED': '🔥 ตลาดหนุน (Confirmed)',
+            'STABLE_MODEL': '➖ ตลาดนิ่ง (Confirmed)',
+            'MOVE_CONFLICT': '⚠️ ตลาดสวนทาง (Conflict)',
+            'CAPITAL_PRESERVATION': '🛡️ รักษาเงินทุน (Pass)',
+            'PASS': '⚖️ ข้าม (Pass)',
             'NEUTRAL_WATCH': '⚖️ รอดูสถานการณ์',
         }
         val = str(v).strip()
@@ -3613,11 +3618,12 @@ def render_track_record_tab():
         display_rows.append({
             "วันที่": row.get('date', '-'),
             "คู่แข่งขัน": f"{row.get('away_team', '')} @ {row.get('home_team', '')}",
-            "สกอร์จริง (เยือน-เหย้า)": format_score(row),
+            "สกอร์จริง": format_score(row),
             "เรตราคาปิด": f"{ou_line} | ต่อ {sp_line}",
             "คำทำนาย สูง/ต่ำ": f"{t_rec(ou_rec)} [{format_badge(row.get('ou_result'))}]",
+            "กระแสเงิน O/U": t_verdict(row.get('ou_verdict')),
             "คำทำนาย แต้มต่อ": f"{t_rec(sp_rec, spread_line=row.get('spread_line'))} [{format_badge(row.get('sp_result'))}]",
-            "ฟันธงกระแสเงิน": f"{t_verdict(row.get('ou_verdict'))} [{format_badge(row.get('verdict_result'))}]",
+            "กระแสเงิน แต้มต่อ": t_verdict(row.get('sp_verdict')),
             "สถานะ": "✅ จบแล้ว" if row.get('status') == 'GRADED' else "⏳ รอผล"
         })
 
