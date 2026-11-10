@@ -46,7 +46,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-10 00:11:12"
+    "scraped_at": "2026-11-10 00:35:55"
   },
   "LAL": {
     "team": "Los Angeles Lakers",
@@ -95,7 +95,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-10 00:11:12"
+    "scraped_at": "2026-11-10 00:35:55"
   },
   "Atlanta Hawks": {
     "team": "Atlanta Hawks",
@@ -154,7 +154,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-10 00:11:12"
+    "scraped_at": "2026-11-10 00:35:55"
   },
   "ATL": {
     "team": "Atlanta Hawks",
@@ -213,7 +213,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-10 00:11:12"
+    "scraped_at": "2026-11-10 00:35:55"
   },
   "Washington Wizards": {
     "team": "Washington Wizards",
@@ -277,7 +277,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-10 00:11:12"
+    "scraped_at": "2026-11-10 00:35:55"
   },
   "WAS": {
     "team": "Washington Wizards",
@@ -341,7 +341,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-10 00:11:12"
+    "scraped_at": "2026-11-10 00:35:55"
   },
   "Detroit Pistons": {
     "team": "Detroit Pistons",
@@ -390,7 +390,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-10 00:11:12"
+    "scraped_at": "2026-11-10 00:35:55"
   },
   "DET": {
     "team": "Detroit Pistons",
@@ -439,7 +439,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-10 00:11:12"
+    "scraped_at": "2026-11-10 00:35:55"
   },
   "Cleveland Cavaliers": {
     "team": "Cleveland Cavaliers",
@@ -493,7 +493,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-10 00:11:12"
+    "scraped_at": "2026-11-10 00:35:55"
   },
   "CLE": {
     "team": "Cleveland Cavaliers",
@@ -547,7 +547,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-10 00:11:12"
+    "scraped_at": "2026-11-10 00:35:55"
   },
   "Charlotte Hornets": {
     "team": "Charlotte Hornets",
@@ -611,7 +611,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-10 00:11:12"
+    "scraped_at": "2026-11-10 00:35:55"
   },
   "CHA": {
     "team": "Charlotte Hornets",
@@ -675,7 +675,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-10 00:11:12"
+    "scraped_at": "2026-11-10 00:35:55"
   },
   "Memphis Grizzlies": {
     "team": "Memphis Grizzlies",
@@ -724,7 +724,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-10 00:11:12"
+    "scraped_at": "2026-11-10 00:35:55"
   },
   "MEM": {
     "team": "Memphis Grizzlies",
@@ -773,7 +773,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-10 00:11:12"
+    "scraped_at": "2026-11-10 00:35:55"
   },
   "Toronto Raptors": {
     "team": "Toronto Raptors",
@@ -837,7 +837,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-10 00:11:12"
+    "scraped_at": "2026-11-10 00:35:55"
   },
   "TOR": {
     "team": "Toronto Raptors",
@@ -901,7 +901,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-10 00:11:12"
+    "scraped_at": "2026-11-10 00:35:55"
   },
   "Indiana Pacers": {
     "team": "Indiana Pacers",
@@ -909,8 +909,8 @@
     "opponent": "Dallas Mavericks",
     "opponent_abbr": "DAL",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Andrew Nembhard",
@@ -918,7 +918,7 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Kelly Oubre",
+        "name": "Braden Smith",
         "position": "SG",
         "status": "Very Likely To Play"
       },
@@ -955,7 +955,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-10 00:11:12"
+    "scraped_at": "2026-11-10 00:35:55"
   },
   "IND": {
     "team": "Indiana Pacers",
@@ -963,8 +963,8 @@
     "opponent": "Dallas Mavericks",
     "opponent_abbr": "DAL",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Andrew Nembhard",
@@ -972,7 +972,7 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Kelly Oubre",
+        "name": "Braden Smith",
         "position": "SG",
         "status": "Very Likely To Play"
       },
@@ -1009,7 +1009,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-10 00:11:12"
+    "scraped_at": "2026-11-10 00:35:55"
   },
   "Dallas Mavericks": {
     "team": "Dallas Mavericks",
@@ -1017,8 +1017,8 @@
     "opponent": "Indiana Pacers",
     "opponent_abbr": "IND",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Kyrie Irving",
@@ -1068,7 +1068,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-10 00:11:12"
+    "scraped_at": "2026-11-10 00:35:55"
   },
   "DAL": {
     "team": "Dallas Mavericks",
@@ -1076,8 +1076,8 @@
     "opponent": "Indiana Pacers",
     "opponent_abbr": "IND",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Kyrie Irving",
@@ -1127,7 +1127,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-10 00:11:12"
+    "scraped_at": "2026-11-10 00:35:55"
   },
   "Denver Nuggets": {
     "team": "Denver Nuggets",
@@ -1201,7 +1201,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-10 00:11:12"
+    "scraped_at": "2026-11-10 00:35:55"
   },
   "DEN": {
     "team": "Denver Nuggets",
@@ -1275,7 +1275,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-10 00:11:12"
+    "scraped_at": "2026-11-10 00:35:55"
   },
   "Houston Rockets": {
     "team": "Houston Rockets",
@@ -1329,7 +1329,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-10 00:11:12"
+    "scraped_at": "2026-11-10 00:35:55"
   },
   "HOU": {
     "team": "Houston Rockets",
@@ -1383,7 +1383,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-10 00:11:12"
+    "scraped_at": "2026-11-10 00:35:55"
   },
   "San Antonio Spurs": {
     "team": "San Antonio Spurs",
@@ -1437,7 +1437,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-10 00:11:12"
+    "scraped_at": "2026-11-10 00:35:55"
   },
   "SAS": {
     "team": "San Antonio Spurs",
@@ -1491,7 +1491,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-10 00:11:12"
+    "scraped_at": "2026-11-10 00:35:55"
   },
   "Phoenix Suns": {
     "team": "Phoenix Suns",
@@ -1532,7 +1532,7 @@
       {
         "name": "Jordan Goodwin",
         "position": "G",
-        "status": "Toss Up To Play"
+        "status": "Very Unlikely To Play"
       },
       {
         "name": "Mark Williams",
@@ -1540,7 +1540,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-10 00:11:12"
+    "scraped_at": "2026-11-10 00:35:55"
   },
   "PHX": {
     "team": "Phoenix Suns",
@@ -1581,7 +1581,7 @@
       {
         "name": "Jordan Goodwin",
         "position": "G",
-        "status": "Toss Up To Play"
+        "status": "Very Unlikely To Play"
       },
       {
         "name": "Mark Williams",
@@ -1589,7 +1589,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-10 00:11:12"
+    "scraped_at": "2026-11-10 00:35:55"
   },
   "New Orleans Pelicans": {
     "team": "New Orleans Pelicans",
@@ -1648,7 +1648,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-10 00:11:12"
+    "scraped_at": "2026-11-10 00:35:55"
   },
   "NOP": {
     "team": "New Orleans Pelicans",
@@ -1707,7 +1707,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-10 00:11:12"
+    "scraped_at": "2026-11-10 00:35:55"
   },
   "Golden State Warriors": {
     "team": "Golden State Warriors",
@@ -1776,7 +1776,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-10 00:11:12"
+    "scraped_at": "2026-11-10 00:35:55"
   },
   "GSW": {
     "team": "Golden State Warriors",
@@ -1845,6 +1845,6 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-10 00:11:12"
+    "scraped_at": "2026-11-10 00:35:55"
   }
 }
