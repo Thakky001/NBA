@@ -869,7 +869,8 @@ class TrendAnalyzer:
             if self._ai_ou_model and self._ai_ou_model.is_fitted and result.get('over_under'):
                 ou_res = result['over_under']
                 adj_ou = self._ai_ou_model.get_adjusted_projection(
-                    home_team, away_team, self.fe, self, game_date=game_date, over_under_line=over_under_line
+                    home_team, away_team, self.fe, self, game_date=game_date, over_under_line=over_under_line,
+                    market_weight=eff_market_weight
                 )
                 ou_res['ai_residual'] = adj_ou['ai_residual']
                 ou_res['base_math_total'] = adj_ou['base_math_total']

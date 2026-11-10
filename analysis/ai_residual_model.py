@@ -110,7 +110,8 @@ class OverUnderResidualModel:
         fe: Any,
         analyzer: Any,
         game_date: Optional[str] = None,
-        over_under_line: Optional[float] = None
+        over_under_line: Optional[float] = None,
+        market_weight: Optional[float] = None
     ) -> Dict[str, Any]:
         """Extract all contextual and quantitative features for a single matchup."""
         from config import normalize_team_name
@@ -121,7 +122,8 @@ class OverUnderResidualModel:
             home_team=h_team,
             away_team=a_team,
             over_under_line=over_under_line,
-            game_date=game_date
+            game_date=game_date,
+            market_weight=market_weight
         )
         # Use market-anchored projected_total to ensure AI residual trains and adjusts on anchored baseline
         math_proj = math_analysis.get('projected_total') or math_analysis.get('raw_projected_total', 220.0)
@@ -194,11 +196,12 @@ class OverUnderResidualModel:
         fe: Any,
         analyzer: Any,
         game_date: Optional[str] = None,
-        over_under_line: Optional[float] = None
+        over_under_line: Optional[float] = None,
+        market_weight: Optional[float] = None
     ) -> Dict[str, Any]:
         """Returns base math projection, AI residual, and final combined total."""
         features = self.extract_game_features(
-            home_team, away_team, fe, analyzer, game_date, over_under_line
+            home_team, away_team, fe, analyzer, game_date, over_under_line, market_weight=market_weight
         )
         base_math = features['math_projected_total']
         ai_residual = self.predict_residual(features)
@@ -299,7 +302,8 @@ class SpreadResidualModel:
         fe: Any,
         analyzer: Any,
         game_date: Optional[str] = None,
-        spread_line: Optional[float] = None
+        spread_line: Optional[float] = None,
+        market_weight: Optional[float] = None
     ) -> Dict[str, Any]:
         """Extract all contextual and quantitative features for Spread / Margin prediction.
         
@@ -314,7 +318,8 @@ class SpreadResidualModel:
             home_team=h_team,
             away_team=a_team,
             spread_line=spread_line,
-            game_date=game_date
+            game_date=game_date,
+            market_weight=market_weight
         )
         # Use market-anchored projected_margin to ensure AI residual trains and adjusts on anchored baseline
         math_proj = math_analysis.get('projected_margin')

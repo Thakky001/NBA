@@ -594,9 +594,9 @@
     "semantic_hash": ""
   },
   "analysis/trend_analyzer.py": {
-    "mtime": 1794231272.740451,
-    "seen": 1794231368.8691683,
-    "ast_hash": "80756a30379c259b00c42978f8077c4f",
+    "mtime": 1794316978.9030254,
+    "seen": 1794317031.604163,
+    "ast_hash": "e6185906e763ac47e73a166b13fe3c61",
     "semantic_hash": ""
   },
   "app.py": {
@@ -2154,9 +2154,9 @@
     "semantic_hash": ""
   },
   "analysis/ai_residual_model.py": {
-    "mtime": 1794230875.541055,
-    "seen": 1794231368.8691585,
-    "ast_hash": "d3affcc731cb5373c8113e0e14b2a0e3",
+    "mtime": 1794316891.3256967,
+    "seen": 1794317031.604133,
+    "ast_hash": "10d11e019a8c4da338049275fab1900b",
     "semantic_hash": ""
   },
   "scripts/train_and_evaluate_residual.py": {
