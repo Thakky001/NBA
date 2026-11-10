@@ -271,6 +271,17 @@ def record_slate_predictions(
         ou_lm = ou_res.get('line_movement') or {}
         sp_lm = sp_res.get('line_movement') or {}
 
+        # Synchronize ledger actionable picks with Telegram Alert filter
+        CLASH_VERDICTS = {'CAPITAL_PRESERVATION', 'PASS', 'MOVE_CONFLICT'}
+        ou_rec_raw = ou_res.get('recommendation')
+        sp_rec_raw = sp_res.get('recommendation')
+
+        ou_clash = ou_res.get('is_market_clash', False) or (ou_lm.get('verdict') in CLASH_VERDICTS)
+        sp_clash = sp_res.get('is_market_clash', False) or (sp_lm.get('verdict') in CLASH_VERDICTS)
+
+        eff_ou_rec = 'NEUTRAL' if ou_clash else ou_rec_raw
+        eff_sp_rec = 'NEUTRAL' if sp_clash else sp_rec_raw
+
         new_rows.append({
             'game_id': gid,
             'date': date_str,
@@ -278,11 +289,11 @@ def record_slate_predictions(
             'away_team': away,
             'spread_line': sp_val,
             'total_line': ou_val,
-            'ou_recommendation': ou_res.get('recommendation'),
+            'ou_recommendation': eff_ou_rec,
             'ou_edge': round(ou_res.get('total_edge', 0.0), 2) if ou_res.get('total_edge') is not None else None,
             'ou_win_prob': round(ou_res.get('win_prob', 0.5), 4) if ou_res.get('win_prob') is not None else None,
             'ou_verdict': ou_lm.get('verdict'),
-            'sp_recommendation': sp_res.get('recommendation'),
+            'sp_recommendation': eff_sp_rec,
             'sp_cover_edge': round(sp_res.get('cover_edge', 0.0), 2) if sp_res.get('cover_edge') is not None else None,
             'sp_win_prob': round(sp_res.get('win_prob', 0.5), 4) if sp_res.get('win_prob') is not None else None,
             'sp_verdict': sp_lm.get('verdict'),
