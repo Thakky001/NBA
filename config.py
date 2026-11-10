@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 # Season and league settings
 NBA_SEASON: int = 2026
-NBA_API_SEASON: str = "2025-26"  # nba_api uses this format
+NBA_API_SEASON: str = "2026-27"  # nba_api uses this format
 LEAGUE_ID: str = "00"  # NBA league ID for nba_api
 
 # ESPN API base URLs

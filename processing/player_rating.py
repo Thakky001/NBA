@@ -52,8 +52,9 @@ def normalize_name(name: str) -> str:
 class PlayerRatingEngine:
     """Evaluates team strength based on individual player ratings (EFF/PIE)."""
     
-    def __init__(self, season='2025-26', rotowire_collector=None):
-        self.season = season
+    def __init__(self, season=None, rotowire_collector=None):
+        from config import NBA_API_SEASON
+        self.season = season or NBA_API_SEASON
         self.espn = ESPNCollector()
         self.rotowire = rotowire_collector or RotoWireCollector()
         self._teams_cache = None

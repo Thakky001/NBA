@@ -12,8 +12,9 @@ class AdvancedStatsCollector:
 
     LEAGUE_ID = '00'
 
-    def __init__(self, season: str = '2025-26', max_retries: int = 3, retry_delay: float = 0.1, backoff_factor: float = 2.0):
-        self.season = season
+    def __init__(self, season: Optional[str] = None, max_retries: int = 3, retry_delay: float = 0.1, backoff_factor: float = 2.0):
+        from config import NBA_API_SEASON
+        self.season = season or NBA_API_SEASON
         self.max_retries = max_retries
         self.retry_delay = retry_delay
         self.backoff_factor = backoff_factor
