@@ -139,16 +139,29 @@ def format_game_card(analysis: Dict[str, Any], game_info: Dict[str, Any], odds_d
 
     card_lines.append(f"📊 <b>เรต:</b> {sp_text} | O/U {ou_text} ({st_badge})")
 
+    # Helper to extract surname properly handling generational suffixes (Jr., III, etc.)
+    def _get_player_surname(full_name: str) -> str:
+        if not full_name:
+            return ""
+        parts = full_name.strip().split()
+        if len(parts) <= 1:
+            return parts[0]
+        suffixes = {'jr.', 'jr', 'sr.', 'sr', 'ii', 'iii', 'iv', 'v'}
+        if parts[-1].lower().rstrip('.') in suffixes:
+            if len(parts) >= 2:
+                return f"{parts[-2]} {parts[-1]}"
+        return parts[-1]
+
     # Line 3: 5 Starters (only surnames, 1 line)
     h_starters = feat.get('home_starters', [])
     a_starters = feat.get('away_starters', [])
     starter_parts = []
     if a_starters:
-        a_surnames = ", ".join(s.get('name', '').split()[-1] for s in a_starters[:5] if s.get('name'))
+        a_surnames = ", ".join(_get_player_surname(s.get('name', '')) for s in a_starters[:5] if s.get('name'))
         if a_surnames:
             starter_parts.append(f"{a_abbr}: {a_surnames}")
     if h_starters:
-        h_surnames = ", ".join(s.get('name', '').split()[-1] for s in h_starters[:5] if s.get('name'))
+        h_surnames = ", ".join(_get_player_surname(s.get('name', '')) for s in h_starters[:5] if s.get('name'))
         if h_surnames:
             starter_parts.append(f"{h_abbr}: {h_surnames}")
     if starter_parts:
@@ -158,14 +171,14 @@ def format_game_card(analysis: Dict[str, Any], game_info: Dict[str, Any], odds_d
     def _clean_inj(inj_list):
         items = []
         for item in inj_list[:3]:
-            match = re.search(r"([A-Za-z\.\'\-]+)(?:\s+\(Base\))?\s*\[(.*?)\]", item)
+            match = re.search(r"(.*?)(?:\s+\(Base\))?\s*\[(.*?)\]", item)
             if match:
-                name_part = item.split('[')[0].strip().replace('(Base)', '').strip().split()[-1]
+                raw_name = match.group(1).strip()
+                name_part = _get_player_surname(raw_name)
                 status_raw = match.group(2).split('-')[0].strip()
                 items.append(f"{name_part} [{status_raw}]")
             else:
-                parts = item.split()
-                items.append(parts[-1] if parts else item)
+                items.append(_get_player_surname(item))
         return ", ".join(items)
 
     h_inj = feat.get('home_injuries', [])
