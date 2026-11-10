@@ -237,11 +237,11 @@ game_id,date,status,period,clock,clock_detail,season_type,home_team,home_id,home
 401909955,2026-11-10T00:30Z,STATUS_FINAL,4,12:00,Final,2,Toronto Raptors,28,102,Memphis Grizzlies,29,118,,,,,Scotiabank Arena
 401909956,2026-11-10T01:00Z,STATUS_FINAL,4,12:00,Final,2,Dallas Mavericks,6,125,Indiana Pacers,11,122,,,,,American Airlines Center
 401909957,2026-11-10T01:30Z,STATUS_FINAL,4,12:00,Final,2,Houston Rockets,10,110,Denver Nuggets,7,100,,,,,Toyota Center (Houston)
-401909958,2026-11-10T02:00Z,STATUS_FINAL,4,0.0,Final,2,Phoenix Suns,21,96,San Antonio Spurs,24,122,,,,,Mortgage Matchup Center
-401909959,2026-11-10T03:00Z,STATUS_IN_PROGRESS,3,9:36,9:36 - 3rd Quarter,2,Golden State Warriors,9,80,New Orleans Pelicans,3,48,,,,,Chase Center
+401909958,2026-11-10T02:00Z,STATUS_FINAL,4,12:00,Final,2,Phoenix Suns,21,96,San Antonio Spurs,24,122,,,,,Mortgage Matchup Center
+401909959,2026-11-10T03:00Z,STATUS_FINAL,4,12:00,Final,2,Golden State Warriors,9,138,New Orleans Pelicans,3,87,,,,,Chase Center
 401909960,2026-11-11T00:30Z,STATUS_SCHEDULED,0,0.0,"Tue, November 10th at 7:30 PM EST",2,New York Knicks,18,0,Milwaukee Bucks,15,0,NY -15.5,220.5,,,Madison Square Garden
-401909961,2026-11-11T01:00Z,STATUS_SCHEDULED,0,0.0,"Tue, November 10th at 8:00 PM EST",2,Philadelphia 76ers,20,0,Boston Celtics,2,0,BOS -1.5,216.5,,,Xfinity Mobile Arena
-401909962,2026-11-11T02:00Z,STATUS_SCHEDULED,0,0.0,"Tue, November 10th at 9:00 PM EST",2,Phoenix Suns,21,0,LA Clippers,12,0,,,,,Mortgage Matchup Center
-401909963,2026-11-11T02:00Z,STATUS_SCHEDULED,0,0.0,"Tue, November 10th at 9:00 PM EST",2,Utah Jazz,26,0,Miami Heat,14,0,MIA -9.5,228.5,,,Delta Center
-401909964,2026-11-11T03:00Z,STATUS_SCHEDULED,0,0.0,"Tue, November 10th at 10:00 PM EST",2,Sacramento Kings,23,0,Orlando Magic,19,0,ORL -5.5,222.5,,,Golden 1 Center
-401909965,2026-11-11T04:00Z,STATUS_SCHEDULED,0,0.0,"Tue, November 10th at 11:00 PM EST",2,Portland Trail Blazers,22,0,Oklahoma City Thunder,25,0,OKC -1.5,226.5,,,Moda Center
+401909961,2026-11-11T01:00Z,STATUS_SCHEDULED,0,0.0,"Tue, November 10th at 8:00 PM EST",2,Philadelphia 76ers,20,0,Boston Celtics,2,0,BOS -1.5,217.5,,,Xfinity Mobile Arena
+401909962,2026-11-11T02:00Z,STATUS_SCHEDULED,0,0.0,"Tue, November 10th at 9:00 PM EST",2,Phoenix Suns,21,0,LA Clippers,12,0,PHX -3.5,224.5,,,Mortgage Matchup Center
+401909963,2026-11-11T02:00Z,STATUS_SCHEDULED,0,0.0,"Tue, November 10th at 9:00 PM EST",2,Utah Jazz,26,0,Miami Heat,14,0,MIA -8.5,227.5,,,Delta Center
+401909964,2026-11-11T03:00Z,STATUS_SCHEDULED,0,0.0,"Tue, November 10th at 10:00 PM EST",2,Sacramento Kings,23,0,Orlando Magic,19,0,ORL -6.5,222.5,,,Golden 1 Center
+401909965,2026-11-11T04:00Z,STATUS_SCHEDULED,0,0.0,"Tue, November 10th at 11:00 PM EST",2,Portland Trail Blazers,22,0,Oklahoma City Thunder,25,0,OKC -1.5,224.5,,,Moda Center

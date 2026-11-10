@@ -253,7 +253,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 5105550,GG Jackson,45,Forward,"6' 9""",210 lbs,21,4,South Carolina,29,Memphis Grizzlies
 4065733,Ty Jerome,2,Guard,"6' 5""",195 lbs,29,8,Virginia,29,Memphis Grizzlies
 5231919,Karim Lopez,35,Forward,"6' 8""",222 lbs,19,0,,29,Memphis Grizzlies
-4683934,Jahmai Mashack,21,Guard,"6' 3""",197 lbs,23,2,Tennessee,29,Memphis Grizzlies
+4683934,Jahmai Mashack,21,Guard,"6' 3""",197 lbs,24,2,Tennessee,29,Memphis Grizzlies
 4594326,Kris Murray,17,Forward,"6' 8""",218 lbs,26,4,Iowa,29,Memphis Grizzlies
 4431785,Scotty Pippen Jr.,1,Guard,"6' 2""",170 lbs,25,5,Vanderbilt,29,Memphis Grizzlies
 4593016,Quinten Post,41,Center,"7' 0""",238 lbs,26,3,Boston College,29,Memphis Grizzlies
@@ -330,7 +330,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 4277956,Jordan Poole,3,Guard,"6' 4""",194 lbs,27,8,Michigan,3,New Orleans Pelicans
 4869780,Derik Queen,22,Center,"6' 9""",250 lbs,21,2,Maryland,3,New Orleans Pelicans
 4683742,Julian Reese,13,Forward,"6' 9""",252 lbs,23,2,Maryland,3,New Orleans Pelicans
-4431675,Trendon Watford,9,Forward,"6' 8""",237 lbs,25,6,LSU,3,New Orleans Pelicans
+4431675,Trendon Watford,9,Forward,"6' 8""",237 lbs,26,6,LSU,3,New Orleans Pelicans
 4395628,Zion Williamson,1,Forward,"6' 6""",284 lbs,26,7,Duke,3,New Orleans Pelicans
 4683730,Jaden Akins,14,Guard,"6' 4""",195 lbs,23,0,Michigan State,18,New York Knicks
 4277869,Jose Alvarado,5,Guard,"6' 0""",179 lbs,28,6,Georgia Tech,18,New York Knicks
