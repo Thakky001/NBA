@@ -528,6 +528,11 @@ st.markdown("""
         background: rgba(167, 139, 250, 0.12);
         border: 1px solid rgba(167, 139, 250, 0.25);
     }
+    .matchday-sync.upcoming {
+        color: #34D399;
+        background: rgba(16, 185, 129, 0.12);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+    }
 
     /* 4.1 Match Meta Strip (Time & Venue) */
     .match-meta-strip {
@@ -2587,12 +2592,6 @@ def _render_ou_analysis_card(ou_val, open_total, ou_res, rec_text, t_edge, win_p
 
 
 
-# Sidebar
-st.sidebar.header("📅 ตั้งค่าการค้นหา")
-today_thai = datetime.now(THAI_TZ).date()
-selected_date = st.sidebar.date_input("เลือกวันที่แข่งขัน (เวลาไทย)", today_thai)
-is_today = (selected_date == today_thai)
-
 def check_slate_status(df: pd.DataFrame):
     """Checks if there are active in-progress games and whether all games are finished."""
     if df is None or df.empty or 'status' not in df.columns:
@@ -2616,6 +2615,8 @@ def get_smart_scoreboard(date_val, force: bool = False) -> pd.DataFrame:
     now_ts = time.time()
     cache_entry = st.session_state['scoreboard_cache'].get(d_str)
 
+    curr_today = datetime.now(THAI_TZ).date()
+
     if not force and cache_entry is not None:
         cached_df = cache_entry['df']
         cached_ts = cache_entry['ts']
@@ -2623,7 +2624,7 @@ def get_smart_scoreboard(date_val, force: bool = False) -> pd.DataFrame:
         all_final = cache_entry['all_final']
 
         # Past date: never re-fetch once loaded
-        if date_val < today_thai:
+        if date_val < curr_today:
             return cached_df
 
         # All games today are finished: do not re-fetch for at least 1 hour
@@ -2650,6 +2651,33 @@ def get_smart_scoreboard(date_val, force: bool = False) -> pd.DataFrame:
     }
     return df
 
+# Sidebar
+st.sidebar.header("📅 ตั้งค่าการค้นหา")
+today_thai = datetime.now(THAI_TZ).date()
+tomorrow_thai = today_thai + timedelta(days=1)
+
+# Check today's game slate to determine smart default date
+today_slate = get_smart_scoreboard(today_thai)
+today_has_live, today_all_final = check_slate_status(today_slate)
+today_is_finished = today_all_final and not today_slate.empty and not today_has_live
+
+# Smart auto-switch to tomorrow if entering when today's games are already finished
+if 'app_selected_date' not in st.session_state or st.session_state.get('app_date_sync_day') != today_thai:
+    st.session_state['app_date_sync_day'] = today_thai
+    if today_is_finished:
+        st.session_state['app_selected_date'] = tomorrow_thai
+        st.session_state['auto_forwarded_tomorrow'] = True
+    else:
+        st.session_state['app_selected_date'] = today_thai
+        st.session_state['auto_forwarded_tomorrow'] = False
+
+selected_date = st.sidebar.date_input(
+    "เลือกวันที่แข่งขัน (เวลาไทย)",
+    key="app_selected_date"
+)
+is_today = (selected_date == today_thai)
+is_tomorrow = (selected_date == tomorrow_thai)
+
 # Inspect initial slate status to disable auto-refresh if no live games
 initial_slate = get_smart_scoreboard(selected_date)
 has_live_games, all_games_final = check_slate_status(initial_slate)
@@ -2661,8 +2689,13 @@ auto_refresh = st.sidebar.toggle(
 )
 if is_today and all_games_final:
     st.sidebar.caption("🏁 เกมวันนี้แข่งจบครบทุกคู่แล้ว (ระบบปิด Live Sync อัตโนมัติ)")
+    if st.sidebar.button("⏭️ สลับไปดูวันพรุ่งนี้", use_container_width=True):
+        st.session_state['app_selected_date'] = tomorrow_thai
+        st.rerun()
+elif is_tomorrow and today_is_finished:
+    st.sidebar.caption("⏭️ เกมวันนี้จบครบแล้ว สลับมาดูวันพรุ่งนี้อัตโนมัติ")
 elif not is_today:
-    st.sidebar.caption("📅 ดูข้อมูลย้อนหลัง (ไม่มีการดึงข้อมูลสด)")
+    st.sidebar.caption("📅 ดูข้อมูลย้อนหลัง / ล่วงหน้า (ไม่มีการดึงข้อมูลสด)")
 elif not has_live_games:
     st.sidebar.caption("⏳ ยังไม่มีคู่ที่กำลังแข่งสด (ระบบพักการรีเฟรช)")
 
@@ -2778,8 +2811,10 @@ def render_game_slate(selected_date, is_live_refresh):
         now_badge = f'<div class="matchday-sync live">⚡ Live In-Play: {datetime.now(THAI_TZ).strftime("%H:%M:%S")} น.</div>'
     elif is_today and all_games_final:
         now_badge = '<div class="matchday-sync final">🏁 ทุกคู่แข่งจบแล้ว (ไม่มีเกมสด)</div>'
+    elif is_tomorrow and today_is_finished:
+        now_badge = '<div class="matchday-sync upcoming">⏭️ เกมวันนี้แข่งจบแล้ว — กำลังแสดงโปรแกรมวันถัดไป</div>'
     elif not is_today:
-        now_badge = '<div class="matchday-sync history">📅 ประวัติการแข่งขันย้อนหลัง</div>'
+        now_badge = '<div class="matchday-sync history">📅 ข้อมูลการแข่งขันย้อนหลัง / ล่วงหน้า</div>'
     else:
         now_badge = ''
 
@@ -2789,6 +2824,15 @@ def render_game_slate(selected_date, is_live_refresh):
         {now_badge}
     </div>
     """, unsafe_allow_html=True)
+
+    if is_today and all_games_final:
+        col_msg, col_act = st.columns([3, 2])
+        with col_msg:
+            st.info("🏁 ทุกคู่ของวันนี้แข่งจบหมดแล้ว ไม่มีเกมสด")
+        with col_act:
+            if st.button("⏭️ ไปยังโปรแกรมวันพรุ่งนี้", use_container_width=True, type="primary"):
+                st.session_state['app_selected_date'] = tomorrow_thai
+                st.rerun()
 
 
     with st.spinner("กำลังประมวลผลการวิเคราะห์..."):
