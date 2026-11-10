@@ -131,6 +131,20 @@ class DataMerger:
         # Filter out preseason (1) and postseason/playoff (3) games to ensure only regular season form
         if 'season_type' in combined.columns:
             combined = combined[~combined['season_type'].isin([1, 1.0, '1', '1.0', 3, 3.0, '3', '3.0'])].copy()
+
+        # Exclude in-progress, halftime, scheduled, postponed, or canceled games from historical training / form
+        if 'status' in combined.columns:
+            non_final_mask = combined['status'].astype(str).str.upper().str.contains(
+                r'IN_PROGRESS|HALFTIME|SCHEDULED|POSTPONED|CANCELED', regex=True, na=False
+            )
+            combined = combined[~non_final_mask].copy()
+
+        # Completed games must have valid scores (> 0 for both teams)
+        if 'home_score' in combined.columns and 'away_score' in combined.columns:
+            h_s = pd.to_numeric(combined['home_score'], errors='coerce')
+            a_s = pd.to_numeric(combined['away_score'], errors='coerce')
+            valid_scores = (h_s.notna()) & (a_s.notna()) & (h_s > 0) & (a_s > 0)
+            combined = combined[valid_scores].copy()
                 
         return combined[expected_cols]
     
