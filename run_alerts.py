@@ -190,9 +190,15 @@ def format_game_card(analysis: Dict[str, Any], game_info: Dict[str, Any], odds_d
     ou_rec = ou_res.get('recommendation', 'NEUTRAL')
 
     # Market Clash / PASS Strict Filter: Suppress picks where market line flow conflicts with model
-    global_clash = analysis.get('is_market_clash', False) or (analysis.get('line_movement', {}).get('verdict') in ['CAPITAL_PRESERVATION', 'PASS'])
-    sp_clash = global_clash or sp_res.get('is_market_clash', False) or (sp_res.get('line_movement', {}).get('verdict') in ['CAPITAL_PRESERVATION', 'PASS'])
-    ou_clash = global_clash or ou_res.get('is_market_clash', False) or (ou_res.get('line_movement', {}).get('verdict') in ['CAPITAL_PRESERVATION', 'PASS'])
+    CLASH_VERDICTS = {'CAPITAL_PRESERVATION', 'PASS', 'MOVE_CONFLICT'}
+    sp_lm = sp_res.get('line_movement') or {}
+    ou_lm = ou_res.get('line_movement') or {}
+    sp_v = sp_lm.get('verdict')
+    ou_v = ou_lm.get('verdict')
+
+    global_clash = analysis.get('is_market_clash', False) or (analysis.get('line_movement', {}).get('verdict') in CLASH_VERDICTS)
+    sp_clash = global_clash or sp_res.get('is_market_clash', False) or (sp_v in CLASH_VERDICTS)
+    ou_clash = global_clash or ou_res.get('is_market_clash', False) or (ou_v in CLASH_VERDICTS)
 
     picks = []
     if ('STRONG' in sp_rec or 'LEAN' in sp_rec) and not sp_clash:
@@ -209,18 +215,24 @@ def format_game_card(analysis: Dict[str, Any], game_info: Dict[str, Any], odds_d
             q_kelly = res.get('kelly_quarter', 0.0)
             ai_adj = res.get('ai_residual')
 
+            lm_pick = res.get('line_movement') or {}
+            is_confirmed = lm_pick.get('verdict') in ['CONFIRMED_ALIGNED', 'MOVE_ALIGNED', 'STABLE_MODEL']
+            pick_badge = "🔥 [CONFIRMED]" if is_confirmed else "🎯"
+
             if p_type == 'Spread':
                 action_text = t_rec(rec, spread_line=sp_val, home_team=home, away_team=away)
-                card_lines.append(f"🎯 <b>แต้มต่อ: {action_text}</b>")
+                card_lines.append(f"{pick_badge} <b>แต้มต่อ: {action_text}</b>")
             else:
                 action_text = t_rec(rec)
                 line_str = f" {ou_val:.1f}" if ou_val is not None else ""
-                card_lines.append(f"🎯 <b>สูง/ต่ำ: {action_text}{line_str}</b>")
+                card_lines.append(f"{pick_badge} <b>สูง/ต่ำ: {action_text}{line_str}</b>")
 
             stat_items = [
                 f"Win <code>{win_p:.1%}</code>",
                 f"Edge <code>{edge:+.1f} pts</code>"
             ]
+            if is_confirmed:
+                stat_items.append("🌊 ตลาดหนุน")
             if ai_adj is not None and ai_adj != 0.0:
                 stat_items.append(f"🤖 AI: <code>{ai_adj:+.1f}</code>")
             if ev is not None and ev > 0:
@@ -230,7 +242,7 @@ def format_game_card(analysis: Dict[str, Any], game_info: Dict[str, Any], odds_d
                 stat_items.append(ev_str)
 
             card_lines.append(f"📈 {' | '.join(stat_items)}")
-    elif global_clash or (sp_res.get('is_market_clash') and ('STRONG' in sp_rec or 'LEAN' in sp_rec)) or (ou_res.get('is_market_clash') and ('STRONG' in ou_rec or 'LEAN' in ou_rec)):
+    elif global_clash or sp_v == 'MOVE_CONFLICT' or ou_v == 'MOVE_CONFLICT' or (sp_res.get('is_market_clash') and ('STRONG' in sp_rec or 'LEAN' in sp_rec)) or (ou_res.get('is_market_clash') and ('STRONG' in ou_rec or 'LEAN' in ou_rec)):
         card_lines.append("⚖️ <b>คำแนะนำ:</b> ข้าม (PASS - สัญญาณขัดแย้งกับกระแสเงินตลาด)")
     elif sp_clash or ou_clash:
         card_lines.append("⚖️ <b>คำแนะนำ:</b> ข้าม (PASS - แนะนำรักษาเงินทุน สถิติสูสีไม่มี Edge คุ้มเสี่ยง)")

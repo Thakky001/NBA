@@ -2342,7 +2342,8 @@ def _render_spread_analysis_card(home, away, sp_val, open_spread, sp_res, rec_te
     # 4. Market Flow & Line Movement Context
     lm_sp = sp_res.get('line_movement') or {}
     sp_verdict = lm_sp.get('verdict')
-    is_pass_verdict = is_clash_sp or (sp_verdict in ['CAPITAL_PRESERVATION', 'PASS']) or (sp_res.get('recommendation') == 'NEUTRAL')
+    is_clash_sp = is_clash_sp or (sp_verdict == 'MOVE_CONFLICT')
+    is_pass_verdict = is_clash_sp or (sp_verdict in ['CAPITAL_PRESERVATION', 'PASS', 'MOVE_CONFLICT']) or (sp_res.get('recommendation') == 'NEUTRAL')
 
     # Hero Pick Box (Synchronized with final verdict to prevent contradictory cards)
     is_strong = ('STRONG' in sp_res.get('recommendation', '') or 'มั่นใจมาก' in rec_text) and not is_pass_verdict
@@ -2482,7 +2483,8 @@ def _render_ou_analysis_card(ou_val, open_total, ou_res, rec_text, t_edge, win_p
     # 4. Market Flow & Line Movement Context
     lm_ou = ou_res.get('line_movement') or {}
     ou_verdict = lm_ou.get('verdict')
-    is_pass_ou_verdict = is_clash_ou or (ou_verdict in ['CAPITAL_PRESERVATION', 'PASS']) or (ou_res.get('recommendation') == 'NEUTRAL')
+    is_clash_ou = is_clash_ou or (ou_verdict == 'MOVE_CONFLICT')
+    is_pass_ou_verdict = is_clash_ou or (ou_verdict in ['CAPITAL_PRESERVATION', 'PASS', 'MOVE_CONFLICT']) or (ou_res.get('recommendation') == 'NEUTRAL')
 
     # Hero Pick Box (Synchronized with final verdict to prevent contradictory cards)
     is_strong = ('STRONG' in ou_res.get('recommendation', '') or 'มั่นใจมาก' in rec_text) and not is_pass_ou_verdict
