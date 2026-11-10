@@ -2717,7 +2717,7 @@ if st.sidebar.button("🔄 อัปเดตฐานข้อมูลสถ�
 
 # Load Data with Streamlit Caching
 @st.cache_resource
-def get_analyzer(cache_version: str = "v11_rotowire_lineups"):
+def get_analyzer(cache_version: str = "v12_normalized_advanced_stats"):
     from processing.data_merger import DataMerger
     from processing.feature_engineering import FeatureEngineer
     from analysis.trend_analyzer import TrendAnalyzer

@@ -1,17 +1,17 @@
 # Graph Report - NBA  (2026-11-10)
 
 ## Corpus Check
-- 368 files · ~656,033 words
+- 368 files · ~656,068 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 25 file(s) not represented in the graph (top: .csv 15, .ico 3, .parquet 3)
 
 ## Summary
-- 3127 nodes · 5134 edges · 320 communities (186 shown, 134 thin omitted)
+- 3127 nodes · 5135 edges · 318 communities (185 shown, 133 thin omitted)
 - Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 201 edges (avg confidence: 0.88)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `f9c9b574`
+- Built from commit: `141f5b97`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -37,10 +37,8 @@
 - pandas
 - verify-claim.mjs
 - collect-signals.mjs
-- run_alerts.py
 - analyze_line_movement
 - citations.mjs
-- main.py
 - support-topics.mjs
 - cold-start.mjs
 - investigation-brief.mjs
@@ -339,7 +337,7 @@
 5. `TrendAnalyzer` - 32 edges
 6. `extractClaims()` - 31 edges
 7. `OddsCollector` - 29 edges
-8. `normalize_team_name()` - 28 edges
+8. `normalize_team_name()` - 29 edges
 9. `run_alert_cycle()` - 28 edges
 10. `canonicalizeRoute()` - 27 edges
 
@@ -358,7 +356,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (320 total, 134 thin omitted)
+## Communities (318 total, 133 thin omitted)
 
 ### Community 0 - "lib/render-report.mjs"
 Cohesion: 0.13
@@ -389,16 +387,12 @@ Cohesion: 0.06
 Nodes (36): computeImpactLabel(), cwvIssue(), formatCwvIssue(), formatInteger(), joinEnglish(), parseSigNumber(), round1(), round2() (+28 more)
 
 ### Community 7 - "OverUnderResidualModel"
-Cohesion: 0.08
-Nodes (5): OverUnderResidualModel, parse_streak_val(), SpreadResidualModel, TrendAnalyzer, TestAIResidualModel
+Cohesion: 0.07
+Nodes (9): OverUnderResidualModel, parse_streak_val(), SpreadResidualModel, TrendAnalyzer, build_evaluation_datasets(), main(), simulate_ou_betting(), simulate_spread_betting() (+1 more)
 
 ### Community 8 - "SDVCollector"
 Cohesion: 0.09
 Nodes (3): SDVCollector, _fetch(), TestSDVCollector
-
-### Community 9 - "pandas"
-Cohesion: 0.11
-Nodes (4): build_evaluation_datasets(), main(), simulate_ou_betting(), simulate_spread_betting()
 
 ### Community 10 - "React View Transitions"
 Cohesion: 0.06
@@ -429,8 +423,8 @@ Cohesion: 0.12
 Nodes (3): Commands that DO NOT exist — never call these, AdvancedStatsCollector, _fetch()
 
 ### Community 18 - "pandas"
-Cohesion: 0.09
-Nodes (12): backfill_season_history(), calculate_track_record(), get_available_ledger_dates(), grade_finished_games(), grade_over_under_pick(), grade_spread_pick(), grade_verdict_pick(), load_ledger() (+4 more)
+Cohesion: 0.06
+Nodes (20): backfill_season_history(), calculate_track_record(), get_available_ledger_dates(), grade_finished_games(), grade_over_under_pick(), grade_spread_pick(), grade_verdict_pick(), load_ledger() (+12 more)
 
 ### Community 19 - "verify-claim.mjs"
 Cohesion: 0.06
@@ -440,10 +434,6 @@ Nodes (86): isKnownUrl(), findRecContradictions(), asArray(), buildScriptHasMigr
 Cohesion: 0.18
 Nodes (24): defaultNormalize(), normalizerFor(), QUERIES, TIME_WINDOW, checkObservabilityPlusConfiguration(), getContract(), getMetricsSchema(), getProjectConfig() (+16 more)
 
-### Community 21 - "run_alerts.py"
-Cohesion: 0.12
-Nodes (9): ensure_dirs(), translate_recommendation(), format_game_card(), _clean_inj(), _get_player_surname(), is_game_already_alerted(), load_alerted_ledger(), mark_games_alerted() (+1 more)
-
 ### Community 22 - "analyze_line_movement"
 Cohesion: 0.15
 Nodes (3): analyze_line_movement(), market_anchored_projection(), TestLineMovementAndAnchoring
@@ -451,10 +441,6 @@ Nodes (3): analyze_line_movement(), market_anchored_projection(), TestLineMoveme
 ### Community 23 - "citations.mjs"
 Cohesion: 0.18
 Nodes (18): compareVersion(), HERE, LIBRARY_PATH, libraryForStack(), loadLibrary(), lookupSkillRule(), lookupUrl(), matchesFrameworkVersion() (+10 more)
-
-### Community 24 - "main.py"
-Cohesion: 0.16
-Nodes (9): cmd_matchup(), cmd_refresh(), cmd_roster(), cmd_standings(), cmd_teams(), _load_advanced_stats(), _load_game_history(), main() (+1 more)
 
 ### Community 25 - "support-topics.mjs"
 Cohesion: 0.13
@@ -690,7 +676,7 @@ Nodes (8): Implementation Workflow, Step 1: Audit the App, Step 2: Add CSS Recip
 
 ### Community 86 - "app.py"
 Cohesion: 0.06
-Nodes (25): calculate_live_pace_projection(), calculate_track_record(), check_slate_status(), format_and_sort_starters(), get_analyzer(), get_available_ledger_dates(), get_cached_analysis(), get_cached_line_movement() (+17 more)
+Nodes (23): calculate_live_pace_projection(), calculate_track_record(), check_slate_status(), format_and_sort_starters(), get_available_ledger_dates(), get_cached_analysis(), get_cached_line_movement(), get_espn_position_map() (+15 more)
 
 ### Community 87 - "prepare-investigation-brief.mjs"
 Cohesion: 0.24
@@ -1036,6 +1022,14 @@ Nodes (3): 8.1 Destructure Functions Early in Render (React Compiler), 8.2 Use .
 Cohesion: 0.67
 Nodes (3): isApplicable(), metadata, scan()
 
+### Community 294 - ".merge_game_data"
+Cohesion: 0.08
+Nodes (5): get_analyzer(), get_espn_collector(), get_odds_collector(), DataMerger, TestDataMerger
+
+### Community 295 - "GameReporter"
+Cohesion: 0.08
+Nodes (10): cmd_matchup(), cmd_standings(), cmd_teams(), cmd_today(), _load_advanced_stats(), _load_game_history(), main(), GameReporter (+2 more)
+
 ### Community 296 - "hard-gates.mjs"
 Cohesion: 0.33
 Nodes (9): applyHardGates(), FLAGS_ENDPOINT, flagsEndpointReason(), isFlagsEndpointCandidate(), isWorkflowRuntimeEndpointCandidate(), normalizeRoute(), VERCEL_FLAGS_PACKAGES, WORKFLOW_ENDPOINT_PREFIXES (+1 more)
@@ -1061,8 +1055,8 @@ Cohesion: 0.22
 Nodes (8): Choosing the Season, CRITICAL: Before Any Query, Error Handling, NBA Data, Quick Start, Setup, Shaping Long NBA Stats Results, Using ESPN and NBA Stats Together
 
 ### Community 304 - "normalize_team_name"
-Cohesion: 0.13
-Nodes (8): match_team(), calculate_home_spread(), normalize_team_name(), parse_spread(), resolve_team_info(), _load_cached_draft_history(), normalize_name(), _parse_spread()
+Cohesion: 0.17
+Nodes (7): match_team(), calculate_home_spread(), normalize_team_name(), parse_spread(), resolve_team_info(), translate_recommendation(), _parse_spread()
 
 ### Community 305 - "middleware-broad-matcher.mjs"
 Cohesion: 0.67
@@ -1101,26 +1095,26 @@ Cohesion: 0.40
 Nodes (4): Betting Analysis — API Reference, Commands, Key Concepts, Odds Formats
 
 ### Community 321 - "ESPNCollector"
-Cohesion: 0.10
-Nodes (5): Commands, Examples, Troubleshooting, ESPNCollector, fetch_calendar()
+Cohesion: 0.09
+Nodes (7): Commands, Examples, Troubleshooting, ESPNCollector, fetch_calendar(), cmd_refresh(), cmd_roster()
 
 ## Knowledge Gaps
-- **134 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **133 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `TrendAnalyzer` connect `OverUnderResidualModel` to `TrendAnalyzer`, `devig`, `pandas`, `betting_math.py`, `cmd_today`, `pandas`, `run_alerts.py`, `app.py`, `analyze_line_movement`, `main.py`?**
+- **Why does `TrendAnalyzer` connect `OverUnderResidualModel` to `TrendAnalyzer`, `devig`, `.merge_game_data`, `GameReporter`, `pandas`, `betting_math.py`, `pandas`, `app.py`, `analyze_line_movement`?**
   _High betweenness centrality (0.014) - this node is a cross-community bridge._
 - **Are the 4 inferred relationships involving `ESPNCollector` (e.g. with `get_espn_collector()` and `DataMerger`) actually correct?**
   _`ESPNCollector` has 4 INFERRED edges - model-reasoned connections that need verification._
 - **Should `lib/render-report.mjs` be split into smaller, more focused modules?**
   _Cohesion score 0.12605042016806722 - nodes in this community are weakly interconnected._
-- **Why does `FeatureEngineer` connect `FeatureEngineer` to `PlayerRatingEngine`, `OverUnderResidualModel`, `pandas`, `cmd_today`, `pandas`, `run_alerts.py`, `app.py`, `main.py`, `OddsCollector`?**
+- **Why does `FeatureEngineer` connect `FeatureEngineer` to `PlayerRatingEngine`, `.merge_game_data`, `GameReporter`, `OverUnderResidualModel`, `pandas`, `pandas`, `app.py`, `OddsCollector`?**
   _High betweenness centrality (0.012) - this node is a cross-community bridge._
 - **Are the 5 inferred relationships involving `FeatureEngineer` (e.g. with `get_analyzer()` and `PlayerRatingEngine`) actually correct?**
   _`FeatureEngineer` has 5 INFERRED edges - model-reasoned connections that need verification._
 - **Should `Layout` be split into smaller, more focused modules?**
   _Cohesion score 0.06451612903225806 - nodes in this community are weakly interconnected._
-- **Why does `ESPNCollector` connect `ESPNCollector` to `.get_game_summary`, `PlayerRatingEngine`, `.merge_game_data`, `pandas`, `cmd_today`, `normalize_team_name`, `pandas`, `run_alerts.py`, `app.py`, `main.py`, `OddsCollector`?**
+- **Why does `ESPNCollector` connect `ESPNCollector` to `PlayerRatingEngine`, `.merge_game_data`, `GameReporter`, `pandas`, `pandas`, `app.py`, `.get_game_summary`, `OddsCollector`?**
   _High betweenness centrality (0.010) - this node is a cross-community bridge._

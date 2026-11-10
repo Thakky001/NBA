@@ -76,6 +76,9 @@ class FeatureEngineer:
                 elif lower in ['def_rating', 'drtg', 'def_rtg']: adv_map[col] = 'def_rating'
                 elif lower in ['net_rating', 'nrtg', 'net_rtg']: adv_map[col] = 'net_rating'
             self.team_advanced.rename(columns=adv_map, inplace=True)
+            if 'team' in self.team_advanced.columns:
+                from config import normalize_team_name
+                self.team_advanced['team'] = self.team_advanced['team'].apply(lambda t: normalize_team_name(str(t)) or t)
 
     def _get_team_games(self, team: str, before_date: Optional[pd.Timestamp] = None) -> pd.DataFrame:
         """Helper to get all games for a specific team, sorted by date."""
@@ -357,7 +360,10 @@ class FeatureEngineer:
                 cutoff = cutoff + pd.Timedelta(days=1)
             available = pd.to_datetime(frame[date_col], errors='coerce', utc=True)
             frame = frame[available < cutoff]
-        row = frame[frame['team'] == norm_team]
+        row = frame[(frame['team'] == norm_team) | (frame['team'] == team)]
+        if row.empty and 'team' in frame.columns:
+            matched_idx = frame['team'].apply(lambda x: normalize_team_name(str(x)) == norm_team)
+            row = frame[matched_idx]
         if date_col is not None and not row.empty:
             row = row.sort_values(date_col).tail(1)
         if row.empty or stat not in row.columns:
