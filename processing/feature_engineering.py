@@ -353,6 +353,8 @@ class FeatureEngineer:
             if date_col is None:
                 return None
             cutoff = pd.to_datetime(as_of, utc=True)
+            if cutoff == cutoff.floor('D'):
+                cutoff = cutoff + pd.Timedelta(days=1)
             available = pd.to_datetime(frame[date_col], errors='coerce', utc=True)
             frame = frame[available < cutoff]
         row = frame[frame['team'] == norm_team]
@@ -489,6 +491,8 @@ class FeatureEngineer:
                 if date_col is None:
                     return 99.5
                 cutoff = pd.to_datetime(as_of, utc=True)
+                if cutoff == cutoff.floor('D'):
+                    cutoff = cutoff + pd.Timedelta(days=1)
                 available = pd.to_datetime(frame[date_col], errors='coerce', utc=True)
                 frame = frame[available < cutoff]
             if date_col is not None and not frame.empty:
