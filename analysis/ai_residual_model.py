@@ -412,11 +412,12 @@ class SpreadResidualModel:
         fe: Any,
         analyzer: Any,
         game_date: Optional[str] = None,
-        spread_line: Optional[float] = None
+        spread_line: Optional[float] = None,
+        market_weight: Optional[float] = None
     ) -> Dict[str, Any]:
         """Returns base math margin, AI residual, and final combined projected margin."""
         features = self.extract_spread_features(
-            home_team, away_team, fe, analyzer, game_date, spread_line
+            home_team, away_team, fe, analyzer, game_date, spread_line, market_weight=market_weight
         )
         base_math = features['math_projected_margin']
         ai_residual = self.predict_residual(features)

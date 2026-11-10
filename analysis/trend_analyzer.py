@@ -916,7 +916,8 @@ class TrendAnalyzer:
             if self._ai_sp_model and self._ai_sp_model.is_fitted and result.get('spread'):
                 sp_res = result['spread']
                 adj_sp = self._ai_sp_model.get_adjusted_spread_projection(
-                    home_team, away_team, self.fe, self, game_date=game_date, spread_line=spread_line
+                    home_team, away_team, self.fe, self, game_date=game_date, spread_line=spread_line,
+                    market_weight=eff_market_weight
                 )
                 sp_res['ai_residual'] = adj_sp['ai_residual']
                 sp_res['base_math_margin'] = adj_sp['base_math_margin']
