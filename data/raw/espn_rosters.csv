@@ -18,6 +18,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 4397183,Aaron Wiggins,2,Guard,"6' 5""",190 lbs,27,6,Maryland,1,Atlanta Hawks
 4431714,Jalen Wilson,22,Forward,"6' 6""",220 lbs,26,4,Kansas,1,Atlanta Hawks
 4433188,Devin Carter,99,Guard,"6' 2""",188 lbs,24,3,Providence,2,Boston Celtics
+5142621,Chris Cenac Jr.,12,Forward,"6' 11""",240 lbs,19,0,Houston,2,Boston Celtics
 3195,Mike Conley,45,Guard,"6' 1""",175 lbs,39,20,Ohio State,2,Boston Celtics
 4277951,Luka Garza,52,Center,"6' 10""",243 lbs,27,6,Iowa,2,Boston Celtics
 4251,Paul George,13,Forward,"6' 8""",221 lbs,36,17,Fresno State,2,Boston Celtics
@@ -146,7 +147,6 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 5107199,Daniss Jenkins,24,Guard,"6' 4""",165 lbs,25,3,St. John's,8,Detroit Pistons
 4395702,Isaiah Joe,17,Guard,"6' 4""",165 lbs,27,7,Arkansas,8,Detroit Pistons
 5107818,Isaac Jones,13,Center,"6' 8""",245 lbs,26,3,Washington State,8,Detroit Pistons
-4700852,Chaz Lanier,8,Guard,"6' 3""",206 lbs,24,2,Tennessee,8,Detroit Pistons
 5258459,Ebuka Okorie,23,Guard,"6' 2""",186 lbs,19,0,Stanford,8,Detroit Pistons
 5037878,Ugonna Onyenso,34,Center,"7' 0""",236 lbs,22,0,Virginia,8,Detroit Pistons
 2990962,Taurean Prince,12,Forward,"6' 6""",218 lbs,32,11,Baylor,8,Detroit Pistons
@@ -226,6 +226,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 5254165,Keaton Wagler,1,Guard,"6' 5""",188 lbs,19,0,Illinois,12,LA Clippers
 4683935,Blake Wesley,20,Guard,"6' 4""",190 lbs,23,5,Notre Dame,12,LA Clippers
 5113969,Cameron Carr,43,Guard,"6' 5""",184 lbs,21,0,Baylor,13,Los Angeles Lakers
+5105817,Carson Cooper,,Center,"6' 11""",245 lbs,22,0,Michigan State,13,Los Angeles Lakers
 3945274,Luka Doncic,77,Guard,"6' 8""",230 lbs,27,9,,13,Los Angeles Lakers
 4397014,Quentin Grimes,5,Guard,"6' 4""",210 lbs,26,6,Houston,13,Los Angeles Lakers
 4868423,Jaden Hardy,7,Guard,"6' 3""",198 lbs,24,5,,13,Los Angeles Lakers
@@ -234,7 +235,6 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 4433136,Walker Kessler,14,Center,"7' 2""",245 lbs,25,5,Auburn,13,Los Angeles Lakers
 4592691,Jake LaRavia,12,Forward,"6' 7""",235 lbs,25,5,Wake Forest,13,Los Angeles Lakers
 3155535,Kevon Looney,55,Forward,"6' 9""",222 lbs,30,12,UCLA,13,Los Angeles Lakers
-4596528,Lawson Lovering,,Center,"7' 1""",233 lbs,23,0,Utah,13,Los Angeles Lakers
 4278580,Sandro Mamukelashvili,54,Forward,"6' 9""",240 lbs,27,6,Seton Hall,13,Los Angeles Lakers
 4702972,Chris Manon,30,Guard,"6' 4""",209 lbs,24,2,Vanderbilt,13,Los Angeles Lakers
 5114350,AK Okereke,31,Forward,"6' 7""",244 lbs,23,0,Vanderbilt,13,Los Angeles Lakers
@@ -245,7 +245,6 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 4278077,Jarred Vanderbilt,2,Forward,"6' 8""",214 lbs,27,9,Kentucky,13,Los Angeles Lakers
 4433137,Ziaire Williams,11,Forward,"6' 9""",185 lbs,25,6,Stanford,13,Los Angeles Lakers
 5041935,Cameron Boozer,27,Forward,"6' 8""",253 lbs,19,0,Duke,29,Memphis Grizzlies
-5105817,Carson Cooper,20,Center,"6' 11""",245 lbs,22,0,Michigan State,29,Memphis Grizzlies
 4903027,Cedric Coward,23,Forward,"6' 5""",206 lbs,23,2,Washington State,29,Memphis Grizzlies
 4600663,Zach Edey,14,Center,"7' 3""",305 lbs,24,3,Purdue,29,Memphis Grizzlies
 2991070,Jerami Grant,3,Forward,"6' 7""",213 lbs,32,13,Syracuse,29,Memphis Grizzlies
@@ -304,7 +303,6 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 3934673,Donte DiVincenzo,0,Guard,"6' 4""",203 lbs,29,9,Villanova,16,Minnesota Timberwolves
 4397002,Ayo Dosunmu,13,Guard,"6' 4""",200 lbs,26,6,Illinois,16,Minnesota Timberwolves
 4594268,Anthony Edwards,5,Guard,"6' 4""",225 lbs,25,7,Georgia,16,Minnesota Timberwolves
-5061585,Isaiah Evans,33,Forward,"6' 6""",186 lbs,20,0,Duke,16,Minnesota Timberwolves
 3032976,Rudy Gobert,27,Center,"7' 1""",258 lbs,34,14,,16,Minnesota Timberwolves
 4592492,Bones Hyland,8,Guard,"6' 2""",169 lbs,26,6,VCU,16,Minnesota Timberwolves
 4433247,Jonathan Kuminga,24,Forward,"6' 7""",225 lbs,24,6,,16,Minnesota Timberwolves
