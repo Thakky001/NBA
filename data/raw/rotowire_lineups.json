@@ -41,7 +41,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-11 02:36:08"
+    "scraped_at": "2026-11-11 03:36:06"
   },
   "MIL": {
     "team": "Milwaukee Bucks",
@@ -85,7 +85,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-11 02:36:08"
+    "scraped_at": "2026-11-11 03:36:06"
   },
   "New York Knicks": {
     "team": "New York Knicks",
@@ -129,7 +129,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-11 02:36:08"
+    "scraped_at": "2026-11-11 03:36:06"
   },
   "NYK": {
     "team": "New York Knicks",
@@ -173,7 +173,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-11 02:36:08"
+    "scraped_at": "2026-11-11 03:36:06"
   },
   "Boston Celtics": {
     "team": "Boston Celtics",
@@ -211,7 +211,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-11-11 02:36:08"
+    "scraped_at": "2026-11-11 03:36:06"
   },
   "BOS": {
     "team": "Boston Celtics",
@@ -249,7 +249,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-11-11 02:36:08"
+    "scraped_at": "2026-11-11 03:36:06"
   },
   "Philadelphia 76ers": {
     "team": "Philadelphia 76ers",
@@ -303,7 +303,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-11 02:36:08"
+    "scraped_at": "2026-11-11 03:36:06"
   },
   "PHI": {
     "team": "Philadelphia 76ers",
@@ -357,7 +357,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-11 02:36:08"
+    "scraped_at": "2026-11-11 03:36:06"
   },
   "Los Angeles Clippers": {
     "team": "Los Angeles Clippers",
@@ -421,7 +421,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-11 02:36:08"
+    "scraped_at": "2026-11-11 03:36:06"
   },
   "LAC": {
     "team": "Los Angeles Clippers",
@@ -485,7 +485,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-11 02:36:08"
+    "scraped_at": "2026-11-11 03:36:06"
   },
   "Phoenix Suns": {
     "team": "Phoenix Suns",
@@ -529,7 +529,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-11 02:36:08"
+    "scraped_at": "2026-11-11 03:36:06"
   },
   "PHX": {
     "team": "Phoenix Suns",
@@ -573,7 +573,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-11 02:36:08"
+    "scraped_at": "2026-11-11 03:36:06"
   },
   "Miami Heat": {
     "team": "Miami Heat",
@@ -611,7 +611,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-11-11 02:36:08"
+    "scraped_at": "2026-11-11 03:36:06"
   },
   "MIA": {
     "team": "Miami Heat",
@@ -649,7 +649,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-11-11 02:36:08"
+    "scraped_at": "2026-11-11 03:36:06"
   },
   "Utah Jazz": {
     "team": "Utah Jazz",
@@ -708,7 +708,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-11 02:36:08"
+    "scraped_at": "2026-11-11 03:36:06"
   },
   "UTA": {
     "team": "Utah Jazz",
@@ -767,7 +767,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-11 02:36:08"
+    "scraped_at": "2026-11-11 03:36:06"
   },
   "Orlando Magic": {
     "team": "Orlando Magic",
@@ -836,7 +836,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-11 02:36:08"
+    "scraped_at": "2026-11-11 03:36:06"
   },
   "ORL": {
     "team": "Orlando Magic",
@@ -905,7 +905,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-11 02:36:08"
+    "scraped_at": "2026-11-11 03:36:06"
   },
   "Sacramento Kings": {
     "team": "Sacramento Kings",
@@ -913,8 +913,8 @@
     "opponent": "Orlando Magic",
     "opponent_abbr": "ORL",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Darius Acuff",
@@ -954,7 +954,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-11 02:36:08"
+    "scraped_at": "2026-11-11 03:36:06"
   },
   "SAC": {
     "team": "Sacramento Kings",
@@ -962,8 +962,8 @@
     "opponent": "Orlando Magic",
     "opponent_abbr": "ORL",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Darius Acuff",
@@ -1003,7 +1003,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-11 02:36:08"
+    "scraped_at": "2026-11-11 03:36:06"
   },
   "Oklahoma City Thunder": {
     "team": "Oklahoma City Thunder",
@@ -1067,7 +1067,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-11 02:36:08"
+    "scraped_at": "2026-11-11 03:36:06"
   },
   "OKC": {
     "team": "Oklahoma City Thunder",
@@ -1131,7 +1131,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-11 02:36:08"
+    "scraped_at": "2026-11-11 03:36:06"
   },
   "Portland Trail Blazers": {
     "team": "Portland Trail Blazers",
@@ -1185,7 +1185,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-11 02:36:08"
+    "scraped_at": "2026-11-11 03:36:06"
   },
   "POR": {
     "team": "Portland Trail Blazers",
@@ -1239,6 +1239,6 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-11 02:36:08"
+    "scraped_at": "2026-11-11 03:36:06"
   }
 }
