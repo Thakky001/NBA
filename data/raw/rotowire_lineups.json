@@ -41,7 +41,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-11 00:35:57"
+    "scraped_at": "2026-11-11 01:36:03"
   },
   "MIL": {
     "team": "Milwaukee Bucks",
@@ -85,7 +85,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-11 00:35:57"
+    "scraped_at": "2026-11-11 01:36:03"
   },
   "New York Knicks": {
     "team": "New York Knicks",
@@ -129,7 +129,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-11 00:35:57"
+    "scraped_at": "2026-11-11 01:36:03"
   },
   "NYK": {
     "team": "New York Knicks",
@@ -173,7 +173,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-11 00:35:57"
+    "scraped_at": "2026-11-11 01:36:03"
   },
   "Boston Celtics": {
     "team": "Boston Celtics",
@@ -181,16 +181,16 @@
     "opponent": "Philadelphia 76ers",
     "opponent_abbr": "PHI",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
-        "name": "Mike Conley",
+        "name": "Derrick White",
         "position": "PG",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Derrick White",
+        "name": "Jordan Walsh",
         "position": "SG",
         "status": "Very Likely To Play"
       },
@@ -211,7 +211,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-11-11 00:35:57"
+    "scraped_at": "2026-11-11 01:36:03"
   },
   "BOS": {
     "team": "Boston Celtics",
@@ -219,16 +219,16 @@
     "opponent": "Philadelphia 76ers",
     "opponent_abbr": "PHI",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
-        "name": "Mike Conley",
+        "name": "Derrick White",
         "position": "PG",
         "status": "Very Likely To Play"
       },
       {
-        "name": "Derrick White",
+        "name": "Jordan Walsh",
         "position": "SG",
         "status": "Very Likely To Play"
       },
@@ -249,7 +249,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-11-11 00:35:57"
+    "scraped_at": "2026-11-11 01:36:03"
   },
   "Philadelphia 76ers": {
     "team": "Philadelphia 76ers",
@@ -257,8 +257,8 @@
     "opponent": "Boston Celtics",
     "opponent_abbr": "BOS",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Tyrese Maxey",
@@ -303,7 +303,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-11 00:35:57"
+    "scraped_at": "2026-11-11 01:36:03"
   },
   "PHI": {
     "team": "Philadelphia 76ers",
@@ -311,8 +311,8 @@
     "opponent": "Boston Celtics",
     "opponent_abbr": "BOS",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Tyrese Maxey",
@@ -357,7 +357,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-11 00:35:57"
+    "scraped_at": "2026-11-11 01:36:03"
   },
   "Los Angeles Clippers": {
     "team": "Los Angeles Clippers",
@@ -365,8 +365,8 @@
     "opponent": "Phoenix Suns",
     "opponent_abbr": "PHX",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Darius Garland",
@@ -398,7 +398,7 @@
       {
         "name": "Cam Christie",
         "position": "G",
-        "status": "Toss Up To Play"
+        "status": "Very Likely To Play"
       },
       {
         "name": "Bradley Beal",
@@ -421,7 +421,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-11 00:35:57"
+    "scraped_at": "2026-11-11 01:36:03"
   },
   "LAC": {
     "team": "Los Angeles Clippers",
@@ -429,8 +429,8 @@
     "opponent": "Phoenix Suns",
     "opponent_abbr": "PHX",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Darius Garland",
@@ -462,7 +462,7 @@
       {
         "name": "Cam Christie",
         "position": "G",
-        "status": "Toss Up To Play"
+        "status": "Very Likely To Play"
       },
       {
         "name": "Bradley Beal",
@@ -485,7 +485,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-11 00:35:57"
+    "scraped_at": "2026-11-11 01:36:03"
   },
   "Phoenix Suns": {
     "team": "Phoenix Suns",
@@ -493,8 +493,8 @@
     "opponent": "Los Angeles Clippers",
     "opponent_abbr": "LAC",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Devin Booker",
@@ -529,7 +529,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-11 00:35:57"
+    "scraped_at": "2026-11-11 01:36:03"
   },
   "PHX": {
     "team": "Phoenix Suns",
@@ -537,8 +537,8 @@
     "opponent": "Los Angeles Clippers",
     "opponent_abbr": "LAC",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Devin Booker",
@@ -573,7 +573,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-11 00:35:57"
+    "scraped_at": "2026-11-11 01:36:03"
   },
   "Miami Heat": {
     "team": "Miami Heat",
@@ -581,8 +581,8 @@
     "opponent": "Utah Jazz",
     "opponent_abbr": "UTA",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Davion Mitchell",
@@ -602,7 +602,7 @@
       {
         "name": "Giannis Antetokounmpo",
         "position": "PF",
-        "status": "Toss Up To Play"
+        "status": "Very Likely To Play"
       },
       {
         "name": "Bam Adebayo",
@@ -610,14 +610,8 @@
         "status": "Very Likely To Play"
       }
     ],
-    "injuries": [
-      {
-        "name": "Giannis Antetokounmpo",
-        "position": "F",
-        "status": "Toss Up To Play"
-      }
-    ],
-    "scraped_at": "2026-11-11 00:35:57"
+    "injuries": [],
+    "scraped_at": "2026-11-11 01:36:03"
   },
   "MIA": {
     "team": "Miami Heat",
@@ -625,8 +619,8 @@
     "opponent": "Utah Jazz",
     "opponent_abbr": "UTA",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Davion Mitchell",
@@ -646,7 +640,7 @@
       {
         "name": "Giannis Antetokounmpo",
         "position": "PF",
-        "status": "Toss Up To Play"
+        "status": "Very Likely To Play"
       },
       {
         "name": "Bam Adebayo",
@@ -654,14 +648,8 @@
         "status": "Very Likely To Play"
       }
     ],
-    "injuries": [
-      {
-        "name": "Giannis Antetokounmpo",
-        "position": "F",
-        "status": "Toss Up To Play"
-      }
-    ],
-    "scraped_at": "2026-11-11 00:35:57"
+    "injuries": [],
+    "scraped_at": "2026-11-11 01:36:03"
   },
   "Utah Jazz": {
     "team": "Utah Jazz",
@@ -720,7 +708,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-11 00:35:57"
+    "scraped_at": "2026-11-11 01:36:03"
   },
   "UTA": {
     "team": "Utah Jazz",
@@ -779,7 +767,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-11 00:35:57"
+    "scraped_at": "2026-11-11 01:36:03"
   },
   "Orlando Magic": {
     "team": "Orlando Magic",
@@ -818,12 +806,12 @@
     ],
     "injuries": [
       {
-        "name": "Tristan da Silva",
+        "name": "Paolo Banchero",
         "position": "F",
-        "status": "Toss Up To Play"
+        "status": "Very Unlikely To Play"
       },
       {
-        "name": "Paolo Banchero",
+        "name": "Tristan da Silva",
         "position": "F",
         "status": "Very Unlikely To Play"
       },
@@ -848,7 +836,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-11 00:35:57"
+    "scraped_at": "2026-11-11 01:36:03"
   },
   "ORL": {
     "team": "Orlando Magic",
@@ -887,12 +875,12 @@
     ],
     "injuries": [
       {
-        "name": "Tristan da Silva",
+        "name": "Paolo Banchero",
         "position": "F",
-        "status": "Toss Up To Play"
+        "status": "Very Unlikely To Play"
       },
       {
-        "name": "Paolo Banchero",
+        "name": "Tristan da Silva",
         "position": "F",
         "status": "Very Unlikely To Play"
       },
@@ -917,7 +905,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-11 00:35:57"
+    "scraped_at": "2026-11-11 01:36:03"
   },
   "Sacramento Kings": {
     "team": "Sacramento Kings",
@@ -966,7 +954,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-11 00:35:57"
+    "scraped_at": "2026-11-11 01:36:03"
   },
   "SAC": {
     "team": "Sacramento Kings",
@@ -1015,7 +1003,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-11 00:35:57"
+    "scraped_at": "2026-11-11 01:36:03"
   },
   "Oklahoma City Thunder": {
     "team": "Oklahoma City Thunder",
@@ -1079,7 +1067,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-11 00:35:57"
+    "scraped_at": "2026-11-11 01:36:03"
   },
   "OKC": {
     "team": "Oklahoma City Thunder",
@@ -1143,7 +1131,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-11 00:35:57"
+    "scraped_at": "2026-11-11 01:36:03"
   },
   "Portland Trail Blazers": {
     "team": "Portland Trail Blazers",
@@ -1197,7 +1185,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-11 00:35:57"
+    "scraped_at": "2026-11-11 01:36:03"
   },
   "POR": {
     "team": "Portland Trail Blazers",
@@ -1251,6 +1239,6 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-11 00:35:57"
+    "scraped_at": "2026-11-11 01:36:03"
   }
 }
