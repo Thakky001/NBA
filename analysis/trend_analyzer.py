@@ -360,6 +360,8 @@ class TrendAnalyzer:
             'factors': factors,
             'summary': summary,
             'features': features,
+            'min_games_played': min_games,
+            'is_early_season': is_early_season,
             'sigma_total': sigma_ou,
             'probability_method': probability_method,
             'push_prob': push_prob if over_under_line else 0.0
@@ -576,14 +578,16 @@ class TrendAnalyzer:
             base_margin = pt_diff_gap * prior_weight
 
         # Rest Advantage Impact on Projected Margin
-        # Empirical NBA data shows B2B teams (0 rest) suffer a -2.5 to -3.0 pt penalty
+        # Empirical NBA data shows Road B2B teams (0 rest with travel) suffer -3.5 pt penalty
         home_rest = features.get('home_rest_days', 2)
         away_rest = features.get('away_rest_days', 2)
         rest_margin_adj = 0.0
         if home_rest == 0 and away_rest >= 1:
             rest_margin_adj -= 2.5
         elif away_rest == 0 and home_rest >= 1:
-            rest_margin_adj += 2.5
+            rest_margin_adj += 3.5
+        elif home_rest == 0 and away_rest == 0:
+            rest_margin_adj += 1.0  # Away team fatigued from back-to-back travel
 
         # Roster Talent / Injury Adjustment:
         # Smooth scaling calibrated to NBA Vegas spread impact (Max ±4.0 pts ceiling)
@@ -742,6 +746,8 @@ class TrendAnalyzer:
             'factors': factors,
             'summary': summary,
             'features': features,
+            'min_games_played': min_games,
+            'is_early_season': is_early_spread_gate,
             'sigma_margin': sigma if spread_line is not None else None,
             'probability_method': probability_method if spread_line is not None else 'not_calculated',
             'push_prob': push_prob if spread_line is not None else 0.0
@@ -889,7 +895,7 @@ class TrendAnalyzer:
                     # Synchronized with Asymmetric Conviction Gate:
                     # OVER: Requires >= 5.0 in early season, >= 3.0 mid-season; LEAN OVER suppressed in early season
                     # UNDER: Preserves <= -2.0 for STRONG, <= -1.0 for LEAN mid-season
-                    if edge_ou >= 4.0 and (not is_early_ou_sync or over_p >= 0.58):
+                    if (edge_ou >= 5.0 if is_early_ou_sync else edge_ou >= 4.0) and (not is_early_ou_sync or over_p >= 0.58):
                         ou_res['recommendation'] = 'STRONG OVER'
                     elif not is_early_ou_sync and edge_ou >= 3.0:
                         ou_res['recommendation'] = 'LEAN OVER'

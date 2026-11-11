@@ -204,6 +204,28 @@ class TestTrendAnalyzer(unittest.TestCase):
         # Mid-season allows LEAN / STRONG picks
         self.assertGreater(res_mid['win_prob'], 0.50)
 
+    def test_road_b2b_travel_penalty(self):
+        # Road team on B2B (away_rest = 0, home_rest >= 1)
+        self.mock_fe.compute_matchup_features.return_value = {
+            'home_games_played': 10,
+            'away_games_played': 10,
+            'home_net_rating': 0.0,
+            'away_net_rating': 0.0,
+            'home_rest_days': 1,
+            'away_rest_days': 0,
+            'home_roster_power': 80.0,
+            'away_roster_power': 80.0,
+        }
+        res_away_b2b = self.analyzer.analyze_spread('Phoenix Suns', 'LA Clippers', spread_line=-3.5)
+        # base_margin 0.0 + rest_margin_adj 3.5 = 3.5
+        self.assertEqual(res_away_b2b['raw_projected_margin'], 3.5)
+
+        # Both teams on B2B (home_rest = 0, away_rest = 0)
+        self.mock_fe.compute_matchup_features.return_value['home_rest_days'] = 0
+        self.mock_fe.compute_matchup_features.return_value['away_rest_days'] = 0
+        res_both_b2b = self.analyzer.analyze_spread('Phoenix Suns', 'LA Clippers', spread_line=-3.5)
+        self.assertEqual(res_both_b2b['raw_projected_margin'], 1.0)
+
     def test_line_movement_opposing_model_is_descriptive_only(self):
         self.mock_fe.compute_matchup_features.return_value = {
             'combined_avg_10': 230.0,

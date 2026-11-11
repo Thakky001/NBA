@@ -212,6 +212,41 @@ class TestAIResidualModel(unittest.TestCase):
             if os.path.exists(tmp_path):
                 os.remove(tmp_path)
 
+    def test_early_season_damping_and_clamp(self):
+        ou_model = OverUnderResidualModel(model_path="non_existent.cbm")
+        ou_model.is_fitted = True
+        class MockCatBoost:
+            def predict(self, df):
+                return [10.0]
+        ou_model.model = MockCatBoost()
+
+        # At min_games = 8: damping = min(1.0, max(0.25, 8/20)) = 0.40
+        # raw pred = 10.0 -> damped = 4.0 -> clamped to 3.5
+        feats = {col: 1.0 for col in OU_FEATURE_COLUMNS}
+        feats['home_team'] = 'Denver Nuggets'
+        feats['away_team'] = 'Boston Celtics'
+        feats['min_games_played'] = 8
+
+        pred_ou = ou_model.predict_residual(feats)
+        self.assertEqual(pred_ou, 3.5)
+
+        # Mid-season (min_games = 20): no damping, clamp at 15.0
+        feats['min_games_played'] = 20
+        self.assertEqual(ou_model.predict_residual(feats), 10.0)
+
+        # Spread residual
+        sp_model = SpreadResidualModel(model_path="non_existent.cbm")
+        sp_model.is_fitted = True
+        sp_model.model = MockCatBoost()
+        feats_sp = {col: 1.0 for col in SPREAD_FEATURE_COLUMNS}
+        feats_sp['home_team'] = 'Denver Nuggets'
+        feats_sp['away_team'] = 'Boston Celtics'
+        feats_sp['min_games_played'] = 8
+
+        # 10.0 * 0.40 = 4.0 -> clamped to 3.0 for spread
+        pred_sp = sp_model.predict_residual(feats_sp)
+        self.assertEqual(pred_sp, 3.0)
+
 
 if __name__ == '__main__':
     unittest.main()

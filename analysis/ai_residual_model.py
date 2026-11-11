@@ -159,6 +159,17 @@ class OverUnderResidualModel:
         ou_line = float(over_under_line) if (over_under_line is not None and pd.notna(over_under_line)) else float(comb_avg)
         line_diff = math_proj - ou_line
 
+        # Extract sample size for early-season damping
+        min_games = math_analysis.get('min_games_played')
+        if min_games is None:
+            features_dict = math_analysis.get('features', {})
+            hg = features_dict.get('home_games_played')
+            ag = features_dict.get('away_games_played')
+            if hg is not None and ag is not None:
+                min_games = min(hg, ag)
+            else:
+                min_games = 20
+
         return {
             'home_team': h_team,
             'away_team': a_team,
@@ -174,6 +185,7 @@ class OverUnderResidualModel:
             'pace_diff': float(h_pace - a_pace),
             'rolling_combined_avg': float(comb_avg),
             'line_vs_math_diff': float(line_diff),
+            'min_games_played': float(min_games),
         }
 
     def predict_residual(self, features: Dict[str, Any]) -> float:
@@ -183,7 +195,13 @@ class OverUnderResidualModel:
 
         try:
             df = pd.DataFrame([features])[OU_FEATURE_COLUMNS]
-            pred = self.model.predict(df)[0]
+            pred = float(self.model.predict(df)[0])
+            min_games = float(features.get('min_games_played', 20))
+            if min_games < 15:
+                # Dynamic Sample-Size Damping
+                damping = min(1.0, max(0.25, min_games / 20.0))
+                # Early-Season Clamping +-3.5 pts
+                return float(np.clip(pred * damping, -3.5, 3.5))
             return float(np.clip(pred, -15.0, 15.0))
         except Exception as e:
             logger.warning(f"Error predicting OU residual with CatBoost: {e}")
@@ -369,6 +387,17 @@ class SpreadResidualModel:
         market_margin = -s_line
         market_disc = float(math_proj) - market_margin
 
+        # Extract sample size for early-season damping
+        min_games = math_analysis.get('min_games_played')
+        if min_games is None:
+            features_dict = math_analysis.get('features', {})
+            hg = features_dict.get('home_games_played')
+            ag = features_dict.get('away_games_played')
+            if hg is not None and ag is not None:
+                min_games = min(hg, ag)
+            else:
+                min_games = 20
+
         return {
             'home_team': h_team,
             'away_team': a_team,
@@ -389,6 +418,7 @@ class SpreadResidualModel:
             'pt_diff_gap': float(pt_diff_gap),
             'win_pct_diff': float(h_win_pct - a_win_pct),
             'pace_diff': float(h_pace - a_pace),
+            'min_games_played': float(min_games),
         }
 
     def predict_residual(self, features: Dict[str, Any]) -> float:
@@ -398,7 +428,13 @@ class SpreadResidualModel:
 
         try:
             df = pd.DataFrame([features])[SPREAD_FEATURE_COLUMNS]
-            pred = self.model.predict(df)[0]
+            pred = float(self.model.predict(df)[0])
+            min_games = float(features.get('min_games_played', 20))
+            if min_games < 15:
+                # Dynamic Sample-Size Damping
+                damping = min(1.0, max(0.25, min_games / 20.0))
+                # Early-Season Clamping +-3.0 pts
+                return float(np.clip(pred * damping, -3.0, 3.0))
             # Safety clamp: spread residual should be within [-12.0, +12.0] points
             return float(np.clip(pred, -12.0, 12.0))
         except Exception as e:
