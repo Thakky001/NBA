@@ -174,18 +174,14 @@ class TestTrendAnalyzer(unittest.TestCase):
             'away_roster_power': 80.0,
         }
         res_early = self.analyzer.analyze_spread('Charlotte Hornets', 'Brooklyn Nets', spread_line=-1.5)
-        # Prior weight at min_games=1 is 0.35 + 0.65*(1/10) = 0.415
-        # Base margin: 14.0 * 0.415 = 5.81 pt gap (instead of 14.0)
-        # Plus HCA 2.0 = 7.81 raw margin
-        # Market anchor at 0.70 with s_line=-1.5 (market expected +1.5):
-        # projected_margin = 0.70 * 1.5 + 0.30 * 7.81 = 1.05 + 2.34 = 3.39
-        # Edge vs -1.5 is 3.39 - 1.5 = ~1.89 pt (modest, not huge 8+ pts)
-        self.assertEqual(res_early['raw_projected_margin'], 14.0)
+        # Tiered Step Shrinkage at min_games=1 (<10 GP) is prior_weight = 0.40
+        # Base margin: 14.0 * 0.40 = 5.6 pt gap
+        self.assertAlmostEqual(res_early['raw_projected_margin'], 5.6, places=2)
         self.assertEqual(res_early['sigma_margin'], 12.5)
         self.assertEqual(res_early['probability_method'], 'normal_unvalidated_sigma')
         self.assertEqual(res_early['kelly_quarter'], 0.0)
 
-        # Mid-season (20 GP)
+        # Mid-season (20 GP) -> prior_weight = 1.0
         self.mock_fe.compute_matchup_features.return_value = {
             'home_games_played': 20,
             'away_games_played': 20,
@@ -200,9 +196,52 @@ class TestTrendAnalyzer(unittest.TestCase):
             'away_roster_power': 80.0,
         }
         res_mid = self.analyzer.analyze_spread('Charlotte Hornets', 'Brooklyn Nets', spread_line=-1.5)
-        self.assertEqual(res_mid['projected_margin'], res_early['projected_margin'])
+        self.assertEqual(res_mid['raw_projected_margin'], 14.0)
         # Mid-season allows LEAN / STRONG picks
         self.assertGreater(res_mid['win_prob'], 0.50)
+
+    def test_spread_early_season_tiered_shrinkage(self):
+        # < 10 GP -> 0.40
+        self.mock_fe.compute_matchup_features.return_value = {
+            'home_games_played': 8, 'away_games_played': 8,
+            'home_net_rating': 10.0, 'away_net_rating': 0.0,
+            'home_pace': 100.0, 'away_pace': 100.0,
+            'home_rest_days': 2, 'away_rest_days': 2
+        }
+        res_under_10 = self.analyzer.analyze_spread('Boston Celtics', 'Miami Heat', spread_line=-4.5)
+        self.assertAlmostEqual(res_under_10['raw_projected_margin'], 4.0, places=2)
+
+        # 10-19 GP -> 0.70
+        self.mock_fe.compute_matchup_features.return_value['home_games_played'] = 14
+        self.mock_fe.compute_matchup_features.return_value['away_games_played'] = 14
+        res_under_20 = self.analyzer.analyze_spread('Boston Celtics', 'Miami Heat', spread_line=-4.5)
+        self.assertAlmostEqual(res_under_20['raw_projected_margin'], 7.0, places=2)
+
+        # >= 20 GP -> 1.0
+        self.mock_fe.compute_matchup_features.return_value['home_games_played'] = 22
+        self.mock_fe.compute_matchup_features.return_value['away_games_played'] = 22
+        res_over_20 = self.analyzer.analyze_spread('Boston Celtics', 'Miami Heat', spread_line=-4.5)
+        self.assertAlmostEqual(res_over_20['raw_projected_margin'], 10.0, places=2)
+
+    def test_spread_early_season_conviction_gates(self):
+        # 1. Tight spread (|s_line| <= 4.5): Edge must be >= 4.0
+        self.mock_fe.compute_matchup_features.return_value = {
+            'home_games_played': 10, 'away_games_played': 10,
+            'home_net_rating': 0.0, 'away_net_rating': 0.0,
+            'home_rest_days': 2, 'away_rest_days': 2,
+            'home_roster_power': 80.0, 'away_roster_power': 80.0,
+        }
+        # Edge = 3.5 on tight line +3.5 -> should be NEUTRAL (PASS)
+        # projected_margin = 0, line = +3.5 -> cover_edge = +3.5 < 4.0
+        res_tight = self.analyzer.analyze_spread('Denver Nuggets', 'Memphis Grizzlies', spread_line=3.5)
+        self.assertEqual(res_tight['recommendation'], 'NEUTRAL')
+
+        # 2. Road Heavy Favorite (s_line >= 9.5): requires edge <= -6.5 and prob >= 0.62
+        # If edge is only -5.0, it must be NEUTRAL (PASS)
+        # raw_margin = -14.5, s_line = +9.5 -> edge = -5.0
+        self.mock_fe.compute_matchup_features.return_value['home_net_rating'] = -14.5 / 0.70
+        res_road_fav = self.analyzer.analyze_spread('Chicago Bulls', 'San Antonio Spurs', spread_line=9.5)
+        self.assertEqual(res_road_fav['recommendation'], 'NEUTRAL')
 
     def test_road_b2b_travel_penalty(self):
         # Road team on B2B (away_rest = 0, home_rest >= 1)

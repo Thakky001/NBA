@@ -594,9 +594,9 @@
     "semantic_hash": ""
   },
   "analysis/trend_analyzer.py": {
-    "mtime": 1794399480.6355703,
-    "seen": 1794399727.3374147,
-    "ast_hash": "7cf46f0bff65421973ab9b6dcbc9ebed",
+    "mtime": 1794487460.5706787,
+    "seen": 1794487541.9495537,
+    "ast_hash": "caa31ae88613b06a5ca466af11e9ae9c",
     "semantic_hash": ""
   },
   "app.py": {
@@ -738,9 +738,9 @@
     "semantic_hash": ""
   },
   "tests/test_trend_analyzer.py": {
-    "mtime": 1794399524.7476804,
-    "seen": 1794399727.3377054,
-    "ast_hash": "bacea148ab989be85c9f11d53502f271",
+    "mtime": 1794487267.812267,
+    "seen": 1794487541.9496136,
+    "ast_hash": "89a3cd2f8f4a61386ed5b1c1eab40b9f",
     "semantic_hash": ""
   },
   ".agents/skills/deploy-to-vercel/SKILL.md": {
@@ -2118,9 +2118,9 @@
     "semantic_hash": ""
   },
   "data/raw/alerted_games.json": {
-    "mtime": 1794310519.4782078,
-    "seen": 1794311369.560125,
-    "ast_hash": "1e021adc3ac681353ce257dfa95591f1",
+    "mtime": 1794486447.1995745,
+    "seen": 1794487541.949566,
+    "ast_hash": "babf70831d150edaca43cb9c70b7baa9",
     "semantic_hash": ""
   },
   "analysis/prediction_tracker.py": {
@@ -2154,8 +2154,8 @@
     "semantic_hash": ""
   },
   "analysis/ai_residual_model.py": {
-    "mtime": 1794399480.630525,
-    "seen": 1794399727.3373942,
+    "mtime": 1794399748.718777,
+    "seen": 1794487541.9495466,
     "ast_hash": "28daf6e5b89556d208a0e4de52e038d7",
     "semantic_hash": ""
   },
@@ -2166,8 +2166,8 @@
     "semantic_hash": ""
   },
   "tests/test_ai_residual.py": {
-    "mtime": 1794399524.7471738,
-    "seen": 1794399727.3376422,
+    "mtime": 1794399748.7563949,
+    "seen": 1794487541.949591,
     "ast_hash": "e49592c5015052c29e0d341806c29e53",
     "semantic_hash": ""
   },
@@ -2178,9 +2178,9 @@
     "semantic_hash": ""
   },
   "data/raw/rotowire_lineups.json": {
-    "mtime": 1794399642.428641,
-    "seen": 1794399727.3374581,
-    "ast_hash": "334a8cd6ad2f6f98c2f9c62af5db9981",
+    "mtime": 1794486447.208528,
+    "seen": 1794487541.9495676,
+    "ast_hash": "a848b66679e47cca035170faf85f7baa",
     "semantic_hash": ""
   },
   "tests/test_rotowire_collector.py": {
@@ -2409,24 +2409,6 @@
     "mtime": 1794151295.4564457,
     "seen": 1794231872.7513657,
     "ast_hash": "44d5115df3862259cac9075ea508fabb",
-    "semantic_hash": ""
-  },
-  "scratch/add_tests.py": {
-    "mtime": 1794399520.7120078,
-    "seen": 1794399727.337601,
-    "ast_hash": "0f01387a8c678d44aedfbf95a4f75f65",
-    "semantic_hash": ""
-  },
-  "scratch/apply_plan.py": {
-    "mtime": 1794399477.1901617,
-    "seen": 1794399727.3376079,
-    "ast_hash": "80c3e49fd3faef973ff5876c953b5eef",
-    "semantic_hash": ""
-  },
-  "scratch/verify_games_impact.py": {
-    "mtime": 1794399635.1694157,
-    "seen": 1794399727.3376126,
-    "ast_hash": "1e8c9e0a79f2402e4e2d86bd2b3ce263",
     "semantic_hash": ""
   }
 }

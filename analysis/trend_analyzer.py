@@ -570,7 +570,13 @@ class TrendAnalyzer:
         avg_pace = (home_pace + away_pace) / 2 if (home_pace and away_pace) else 99.5
         pace_factor = avg_pace / 100.0
 
-        prior_weight = 1.0
+        # Tiered Step Shrinkage: regress noisy early-season net rating towards league average
+        if min_games < 10:
+            prior_weight = 0.40
+        elif min_games < 20:
+            prior_weight = 0.70
+        else:
+            prior_weight = 1.0
 
         if (home_net_rtg != 0.0 or away_net_rtg != 0.0):
             base_margin = (net_rtg_diff * pace_factor) * prior_weight
@@ -639,14 +645,38 @@ class TrendAnalyzer:
             score = (score * 0.20) + (factor_score_cover * 0.80)
 
             # Recommendations calibrated for Market-Anchored Cover Edge:
-            # Early-Season Conviction Gate (< 15 games): require cover_edge >= 4.0 pts & win_prob >= 0.58.
+            # Early-Season Conviction Gate (< 15 games):
+            # 1. Tight Spread Filter (|s_line| <= 4.5): require edge >= 4.0 pts
+            # 2. Road Heavy Favorite (s_line >= 9.5, away favorite): require edge <= -6.5 pts & win_prob >= 0.62
+            # 3. Road Underdog (s_line < 0, away underdog): require edge <= -4.5 pts & win_prob >= 0.62
+            # 4. Standard Early Season: edge >= 3.0 pts & win_prob >= 0.58
             # Suppress all LEAN picks to NEUTRAL / PASS to protect bankroll.
             is_early_spread_gate = min_games < 15
             away_win_prob = spread_probs['loss'] if spread_probs else (1.0 - win_prob)
             if is_early_spread_gate:
-                if cover_edge >= 3.0 and win_prob >= 0.58:
+                is_tight = abs(s_line) <= 4.5
+                is_road_heavy_fav = s_line >= 9.5
+                is_road_underdog = s_line < 0.0
+
+                min_edge_home = 4.0 if is_tight else 3.0
+                min_prob_home = 0.58
+
+                if is_road_heavy_fav:
+                    max_edge_away = -6.5
+                    min_prob_away = 0.62
+                elif is_road_underdog:
+                    max_edge_away = -5.5
+                    min_prob_away = 0.65
+                elif is_tight:
+                    max_edge_away = -4.0
+                    min_prob_away = 0.58
+                else:
+                    max_edge_away = -3.0
+                    min_prob_away = 0.58
+
+                if cover_edge >= min_edge_home and win_prob >= min_prob_home:
                     recommendation = 'STRONG HOME'
-                elif cover_edge <= -3.0 and away_win_prob >= 0.58:
+                elif cover_edge <= max_edge_away and away_win_prob >= min_prob_away:
                     recommendation = 'STRONG AWAY'
                 else:
                     recommendation = 'NEUTRAL'
@@ -940,9 +970,29 @@ class TrendAnalyzer:
                     away_win_sp = new_sp_probs.get('loss', 0.5)
 
                     if is_early_sp_sync:
-                        if edge_sp >= 3.0 and home_win_sp >= 0.58:
+                        is_tight = abs(spread_line) <= 4.5
+                        is_road_heavy_fav = spread_line >= 9.5
+                        is_road_underdog = spread_line < 0.0
+
+                        min_edge_home = 4.0 if is_tight else 3.0
+                        min_prob_home = 0.58
+
+                        if is_road_heavy_fav:
+                            max_edge_away = -6.5
+                            min_prob_away = 0.62
+                        elif is_road_underdog:
+                            max_edge_away = -5.5
+                            min_prob_away = 0.65
+                        elif is_tight:
+                            max_edge_away = -4.0
+                            min_prob_away = 0.58
+                        else:
+                            max_edge_away = -3.0
+                            min_prob_away = 0.58
+
+                        if edge_sp >= min_edge_home and home_win_sp >= min_prob_home:
                             sp_res['recommendation'] = 'STRONG HOME'
-                        elif edge_sp <= -3.0 and away_win_sp >= 0.58:
+                        elif edge_sp <= max_edge_away and away_win_sp >= min_prob_away:
                             sp_res['recommendation'] = 'STRONG AWAY'
                         else:
                             sp_res['recommendation'] = 'NEUTRAL'
