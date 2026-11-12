@@ -1,17 +1,17 @@
 # Graph Report - NBA  (2026-11-12)
 
 ## Corpus Check
-- 368 files · ~659,236 words
+- 368 files · ~659,562 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 25 file(s) not represented in the graph (top: .csv 15, .ico 3, .parquet 3)
 
 ## Summary
-- 3132 nodes · 5147 edges · 318 communities (180 shown, 138 thin omitted)
-- Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 206 edges (avg confidence: 0.88)
+- 3134 nodes · 5150 edges · 325 communities (182 shown, 143 thin omitted)
+- Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 207 edges (avg confidence: 0.88)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `415a2fd6`
+- Built from commit: `73a94c96`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -21,11 +21,11 @@
 - workspace-resolver.mjs
 - scripts/render-report.mjs
 - extract-claims.mjs
-- devig
+- evaluate_market_pick
 - sanitizers/index.mjs
 - OverUnderResidualModel
 - SDVCollector
-- run_alerts.py
+- pandas
 - React View Transitions
 - Commands
 - ai-application.md
@@ -37,13 +37,13 @@
 - pandas
 - verify-claim.mjs
 - collect-signals.mjs
-- verifyNextCacheComponentsRouteChainFile
+- RotoWireCollector
 - analyze_line_movement
 - citations.mjs
 - main.py
 - support-topics.mjs
 - cold-start.mjs
-- readClaimFile
+- investigation-brief.mjs
 - scripts/deep-dive.mjs
 - route-normalize.mjs
 - Step 2: Choose a Deploy Method
@@ -55,7 +55,7 @@
 - Patterns
 - CSS Animation Recipes
 - CSS Animation Recipes
-- pandas
+- display-labels.mjs
 - React Composition Patterns
 - collect-sub-agent-outputs.mjs
 - betting_math.py
@@ -103,8 +103,8 @@
 - Implementation Workflow
 - Implementation Workflow
 - app.py
-- verifyNextCacheLifetimeFreshnessSupported
-- check-docs-fresh.mjs
+- config.py
+- run_alerts.py
 - cache-components-suspense-dedupe.mjs
 - edge-heavy-import.mjs
 - turbo-force-bypass.mjs
@@ -134,7 +134,7 @@
 - Ponytail
 - external-api-slow.mjs
 - platform-bot-protection.mjs
-- investigation-brief.mjs
+- lib/reconcile-candidates.mjs
 - usage-spike-triage.mjs
 - astro-edge-middleware-scope.md
 - astro-output-mode-and-isr.md
@@ -308,26 +308,30 @@
 - .merge_game_data
 - GameReporter
 - hard-gates.mjs
-- uncached-route.mjs
+- prepare-investigation-brief.mjs
 - missing-cache-headers.mjs
 - sveltekit-prerender-missing.mjs
 - scanner-driven.mjs
 - cmd_today
 - gates/index.mjs
 - NBA Data
-- devig
+- lib/budget-summary.mjs
 - middleware-broad-matcher.mjs
 - build-minutes-fanout.mjs
 - isr-overrevalidation.mjs
 - middleware-heavy.mjs
-- observability-events-attribution.mjs
+- renderCostBreakdown
 - elo_expected_probability
-- region-misconfig.mjs
+- TestPonytailAuditFixes
+- impact-label.mjs
 - team-ids.md
 - validate_params.sh
 - OddsCollector
-- convert_odds
+- rate-limit.mjs
+- cost-coverage.mjs
+- devig
 - ESPNCollector
+- renderDataGaps
 
 ## God Nodes (most connected - your core abstractions)
 1. `ESPNCollector` - 45 edges
@@ -344,23 +348,23 @@
 ## Surprising Connections (you probably didn't know these)
 - `CRITICAL: Before Any Analysis` --references--> `devig()`  [INFERRED]
   .agents/skills/betting/SKILL.md → analysis/betting_math.py
-- `Commands` --references--> `devig()`  [INFERRED]
-  .agents/skills/betting/references/api-reference.md → analysis/betting_math.py
-- `Troubleshooting` --references--> `devig()`  [INFERRED]
-  .agents/skills/betting/SKILL.md → analysis/betting_math.py
 - `Commands that DO NOT exist — never call these` --references--> `calculate_ev()`  [INFERRED]
   .agents/skills/betting/SKILL.md → analysis/betting_math.py
 - `Error states and fallbacks` --references--> `runVercelJson()`  [INFERRED]
   .agents/skills/vercel-optimize/references/data-collection.md → .agents/skills/vercel-optimize/lib/vercel.mjs
+- `Why we avoid stderr grep` --references--> `runVercelJson()`  [INFERRED]
+  .agents/skills/vercel-optimize/references/data-collection.md → .agents/skills/vercel-optimize/lib/vercel.mjs
+- `Commands` --references--> `convert_odds()`  [INFERRED]
+  .agents/skills/betting/references/api-reference.md → analysis/betting_math.py
 
 ## Import Cycles
 - None detected.
 
-## Communities (318 total, 138 thin omitted)
+## Communities (325 total, 143 thin omitted)
 
 ### Community 0 - "lib/render-report.mjs"
-Cohesion: 0.05
-Nodes (85): buildBudgetSummary(), buildChatPreview(), buildExactChatMessage(), buildOptions(), buildPrintCheck(), buildQuestionPayload(), buildQuestionText(), renderBudgetSummaryMarkdown() (+77 more)
+Cohesion: 0.15
+Nodes (32): asArray(), assertValidObservations(), buildFinalReportMessage(), candidateForDisplay(), canonicalRefOf(), compactFinalText(), displayCandidate(), displayCandidateObject() (+24 more)
 
 ### Community 1 - "Layout"
 Cohesion: 0.06
@@ -378,25 +382,21 @@ Nodes (57): affectedFiles(), appliesAlsoEntry(), cacheLifeIntent(), dedupEditTar
 Cohesion: 0.09
 Nodes (54): asArray(), cacheRecommendationFiles(), extractClaims(), isCacheCandidate(), mentionsAuthSensitiveParallelization(), mentionsCachedNotFoundOr404(), mentionsCacheLifeCdnHeaderClaim(), mentionsCacheLifetimeChange() (+46 more)
 
-### Community 5 - "devig"
-Cohesion: 0.12
-Nodes (12): Arbitrage Detection, Betting Analysis, Commands that DO NOT exist — never call these, Compare ESPN vs Polymarket/Kalshi, CRITICAL: Before Any Analysis, Examples, Line Movement Analysis, Parlay Evaluation (+4 more)
+### Community 5 - "evaluate_market_pick"
+Cohesion: 0.13
+Nodes (5): Commands that DO NOT exist — never call these, calculate_edge(), calculate_ev(), evaluate_live_pick(), evaluate_market_pick()
 
 ### Community 6 - "sanitizers/index.mjs"
-Cohesion: 0.06
-Nodes (36): computeImpactLabel(), cwvIssue(), formatCwvIssue(), formatInteger(), joinEnglish(), parseSigNumber(), round1(), round2() (+28 more)
+Cohesion: 0.09
+Nodes (19): applyDollarStrip(), stripDollarLiterals(), metadata, STRING_FIELDS, metadata, STRING_FIELDS, metadata, STRING_FIELDS (+11 more)
 
 ### Community 7 - "OverUnderResidualModel"
-Cohesion: 0.09
-Nodes (6): OverUnderResidualModel, parse_streak_val(), SpreadResidualModel, build_evaluation_datasets(), main(), TestAIResidualModel
+Cohesion: 0.08
+Nodes (8): OverUnderResidualModel, parse_streak_val(), SpreadResidualModel, build_evaluation_datasets(), main(), simulate_ou_betting(), simulate_spread_betting(), TestAIResidualModel
 
 ### Community 8 - "SDVCollector"
 Cohesion: 0.09
 Nodes (3): SDVCollector, _fetch(), TestSDVCollector
-
-### Community 9 - "run_alerts.py"
-Cohesion: 0.10
-Nodes (9): AdvancedStatsCollector, match_team(), calculate_home_spread(), normalize_team_name(), parse_spread(), resolve_team_info(), translate_recommendation(), _parse_spread() (+1 more)
 
 ### Community 10 - "React View Transitions"
 Cohesion: 0.06
@@ -427,31 +427,23 @@ Cohesion: 0.07
 Nodes (28): A) `VERCEL_TOKEN` is already set in the environment, About `.vercel/` Directory, Authentication error, B) Token is in a `.env` file under `VERCEL_TOKEN`, Build failure, C) Token is in a `.env` file under a different name, Check project state first, CLI not installed (+20 more)
 
 ### Community 18 - "pandas"
-Cohesion: 0.07
-Nodes (16): backfill_season_history(), calculate_track_record(), get_available_ledger_dates(), grade_finished_games(), grade_over_under_pick(), grade_spread_pick(), grade_verdict_pick(), load_ledger() (+8 more)
+Cohesion: 0.09
+Nodes (12): backfill_season_history(), calculate_track_record(), get_available_ledger_dates(), grade_finished_games(), grade_over_under_pick(), grade_spread_pick(), grade_verdict_pick(), load_ledger() (+4 more)
 
 ### Community 19 - "verify-claim.mjs"
-Cohesion: 0.11
-Nodes (41): findRecContradictions(), cacheInvalidationFileCache, cleanHeaderValue(), extractHeaderValues(), formatPct(), functionStatusForRoute(), hasEmptyCacheDirective(), hasHeaderValue() (+33 more)
+Cohesion: 0.06
+Nodes (86): isKnownUrl(), findRecContradictions(), asArray(), buildScriptHasMigrationSideEffect(), cacheInvalidationFileCache, cacheLifeNeedsContentFreshnessProof(), cleanHeaderValue(), compilePattern() (+78 more)
 
 ### Community 20 - "collect-signals.mjs"
 Cohesion: 0.21
 Nodes (21): getAccountPlan(), getContract(), getMetricsSchema(), getProjectConfig(), getTeamInfo(), getUsage(), hasObservabilityPlus(), queryMetric() (+13 more)
 
-### Community 21 - "verifyNextCacheComponentsRouteChainFile"
-Cohesion: 0.15
-Nodes (15): asArray(), firstAccessiblePath(), firstDynamicRouteChainReason(), isCatchAllPlaceholder(), isDynamicPlaceholder(), layoutAppliesToCandidateRoute(), normalizeProjectRootDirectory(), normalizeRouteForLayoutMatch() (+7 more)
-
-### Community 22 - "analyze_line_movement"
-Cohesion: 0.11
-Nodes (4): analyze_line_movement(), market_anchored_projection(), TrendAnalyzer, TestLineMovementAndAnchoring
-
 ### Community 23 - "citations.mjs"
-Cohesion: 0.16
-Nodes (21): compareVersion(), HERE, isKnownUrl(), LIBRARY_PATH, libraryForStack(), loadLibrary(), lookupSkillRule(), lookupUrl() (+13 more)
+Cohesion: 0.17
+Nodes (18): compareVersion(), HERE, LIBRARY_PATH, libraryForStack(), loadLibrary(), lookupSkillRule(), lookupUrl(), matchesFrameworkVersion() (+10 more)
 
 ### Community 24 - "main.py"
-Cohesion: 0.16
+Cohesion: 0.15
 Nodes (10): ensure_dirs(), cmd_matchup(), cmd_refresh(), cmd_roster(), cmd_standings(), cmd_teams(), cmd_today(), _load_advanced_stats() (+2 more)
 
 ### Community 25 - "support-topics.mjs"
@@ -462,9 +454,9 @@ Nodes (26): citationApplies(), HERE, KNOWN_CANDIDATE_KINDS, loadSupportTopics(),
 Cohesion: 0.67
 Nodes (3): extractColdStarts(), gate(), metadata
 
-### Community 27 - "readClaimFile"
-Cohesion: 0.17
-Nodes (15): buildScriptHasMigrationSideEffect(), compilePattern(), parseJsonLike(), readClaimFile(), readOptionalJsonFile(), recSeparatesTurboBuildSideEffects(), siblingPackageJson(), snippetFoundElsewhere() (+7 more)
+### Community 27 - "investigation-brief.mjs"
+Cohesion: 0.19
+Nodes (23): absoluteBriefPath(), briefRoots(), buildBrief(), cachePolicyGuidance(), capBriefFiles(), closestAncestorLayoutFiles(), isCatchAllPlaceholder(), isDynamicPlaceholder() (+15 more)
 
 ### Community 28 - "scripts/deep-dive.mjs"
 Cohesion: 0.15
@@ -506,6 +498,10 @@ Nodes (18): Backdrop-Blur Workaround, CSS Animation Recipes, Directional Navigat
 Cohesion: 0.11
 Nodes (18): Backdrop-Blur Workaround, CSS Animation Recipes, Directional Navigation, Fade, Floating Element Isolation (popovers, menus, tooltips, control clusters), Interactivity During Transitions, No Root Cross-Fade (Live Root), Persistent Element Isolation (+10 more)
 
+### Community 39 - "display-labels.mjs"
+Cohesion: 0.15
+Nodes (20): formatCandidateLabel(), formatKind(), formatNumberLike(), formatPublicText(), formatRoute(), formatSignal(), formatSignalPart(), formatSignalValue() (+12 more)
+
 ### Community 40 - "React Composition Patterns"
 Cohesion: 0.12
 Nodes (16): 1.1 Avoid Boolean Prop Proliferation, 1.2 Use Compound Components, 1. Component Architecture, 2.1 Decouple State Management from UI, 2.2 Define Generic Context Interfaces for Dependency Injection, 2.3 Lift State into Provider Components, 2. State Management, 3.1 Create Explicit Component Variants (+8 more)
@@ -515,8 +511,8 @@ Cohesion: 0.24
 Nodes (16): collectInputFiles(), escapeRegExp(), extractFenceBlocks(), extractJsonValue(), findBalancedJsonSpans(), inferCandidateRefFromFile(), isRecordObject(), log() (+8 more)
 
 ### Community 42 - "betting_math.py"
-Cohesion: 0.08
-Nodes (17): american_to_prob(), calculate_brier_score(), calculate_clv(), calculate_cover_probability(), calculate_expected_pace(), calculate_expected_total(), calculate_log_loss(), calculate_mov_elo_multiplier() (+9 more)
+Cohesion: 0.07
+Nodes (18): calculate_brier_score(), calculate_clv(), calculate_cover_probability(), calculate_ev_with_push(), calculate_expected_pace(), calculate_expected_total(), calculate_log_loss(), calculate_mov_elo_multiplier() (+10 more)
 
 ### Community 44 - "5. Re-render Optimization"
 Cohesion: 0.12
@@ -611,8 +607,8 @@ Cohesion: 0.27
 Nodes (4): Install, Procedure, Requirements, vercel-optimize
 
 ### Community 67 - "PlayerRatingEngine"
-Cohesion: 0.05
-Nodes (4): RotoWireCollector, _load_cached_draft_history(), PlayerRatingEngine, TestRotoWireCollector
+Cohesion: 0.10
+Nodes (3): _load_cached_draft_history(), PlayerRatingEngine, TestPlayerRating
 
 ### Community 68 - "count-correct.mjs"
 Cohesion: 0.27
@@ -680,15 +676,15 @@ Nodes (8): Implementation Workflow, Step 1: Audit the App, Step 2: Add CSS Recip
 
 ### Community 86 - "app.py"
 Cohesion: 0.06
-Nodes (23): calculate_live_pace_projection(), calculate_track_record(), check_slate_status(), format_and_sort_starters(), get_available_ledger_dates(), get_cached_analysis(), get_cached_line_movement(), get_espn_position_map() (+15 more)
+Nodes (22): calculate_live_pace_projection(), calculate_track_record(), check_slate_status(), format_and_sort_starters(), get_available_ledger_dates(), get_cached_analysis(), get_cached_line_movement(), get_espn_position_map() (+14 more)
 
-### Community 87 - "verifyNextCacheLifetimeFreshnessSupported"
+### Community 87 - "config.py"
+Cohesion: 0.14
+Nodes (7): is_team_match(), match_team(), calculate_home_spread(), parse_spread(), resolve_team_info(), translate_recommendation(), _parse_spread()
+
+### Community 88 - "run_alerts.py"
 Cohesion: 0.18
-Nodes (13): cacheLifeNeedsContentFreshnessProof(), configContainsTag(), dedupeCacheTags(), escapeRegExp(), execFileP, extractCacheTags(), extractCacheTagsFromFiles(), hasConfigDrivenInvalidation() (+5 more)
-
-### Community 88 - "check-docs-fresh.mjs"
-Cohesion: 0.39
-Nodes (6): HERE, main(), REFS, renderCandidates(), renderScanners(), trimTrailingBlankLine()
+Nodes (4): is_game_already_alerted(), load_alerted_ledger(), mark_games_alerted(), save_alerted_ledger()
 
 ### Community 89 - "cache-components-suspense-dedupe.mjs"
 Cohesion: 0.48
@@ -711,8 +707,8 @@ Cohesion: 0.29
 Nodes (6): After The User Chooses, Blocker Copy, Observability Plus Stop-And-Ask, Scanner-Only Mode, User Template, Why This Check Exists
 
 ### Community 94 - "Verification"
-Cohesion: 0.29
-Nodes (6): Claim types, Dispositions, Re-gen trigger and accept criteria, Table of contents, Verification, Why mechanical verification
+Cohesion: 0.25
+Nodes (7): Claim types, Dispositions, Re-gen trigger and accept criteria, Table of contents, Verification, Verifier implementation, Why mechanical verification
 
 ### Community 95 - "1. Eliminating Waterfalls"
 Cohesion: 0.29
@@ -798,9 +794,9 @@ Nodes (4): extractCallCounts(), extractExternalApis(), gate(), metadata
 Cohesion: 0.60
 Nodes (4): computeBotShare(), gate(), metadata, totalRequestsFromSignals()
 
-### Community 118 - "investigation-brief.mjs"
-Cohesion: 0.07
-Nodes (69): absoluteBriefPath(), briefRoots(), buildBrief(), cachePolicyGuidance(), capBriefFiles(), citationSubset(), closestAncestorLayoutFiles(), inferFrameworkPlaybook() (+61 more)
+### Community 118 - "lib/reconcile-candidates.mjs"
+Cohesion: 0.16
+Nodes (31): arrayAt(), deploymentRegressionDecision(), dropWithObservation(), formatInteger(), formatMs(), formatPct(), isrOverrevalidationDecision(), numberAt() (+23 more)
 
 ### Community 119 - "usage-spike-triage.mjs"
 Cohesion: 0.60
@@ -979,8 +975,8 @@ Cohesion: 0.29
 Nodes (6): Design principles, Frontend Design, Ground your designs in the subject matter, More on writing in design, Process: plan, review against the brief, build, critique, Restraint and self-critique
 
 ### Community 164 - "withRouteShapeWarnings"
-Cohesion: 0.29
-Nodes (9): extractErrors(), extractFromStatusRows(), gate(), metadata, extractErrorRatesByRoute(), extractFunctionRoutes(), gate(), metadata (+1 more)
+Cohesion: 0.14
+Nodes (17): extractErrors(), extractFromStatusRows(), gate(), metadata, extractErrorRatesByRoute(), extractFunctionRoutes(), gate(), metadata (+9 more)
 
 ### Community 165 - "unoptimized-image.mjs"
 Cohesion: 0.53
@@ -1023,16 +1019,16 @@ Cohesion: 0.67
 Nodes (3): isApplicable(), metadata, scan()
 
 ### Community 294 - ".merge_game_data"
-Cohesion: 0.09
+Cohesion: 0.11
 Nodes (5): get_analyzer(), get_espn_collector(), get_odds_collector(), DataMerger, TestDataMerger
 
 ### Community 296 - "hard-gates.mjs"
 Cohesion: 0.33
 Nodes (9): applyHardGates(), FLAGS_ENDPOINT, flagsEndpointReason(), isFlagsEndpointCandidate(), isWorkflowRuntimeEndpointCandidate(), normalizeRoute(), VERCEL_FLAGS_PACKAGES, WORKFLOW_ENDPOINT_PREFIXES (+1 more)
 
-### Community 297 - "uncached-route.mjs"
+### Community 297 - "prepare-investigation-brief.mjs"
 Cohesion: 0.24
-Nodes (8): Candidate, CandidateScope, GateMetadata, Signals, extractCacheHitRates(), extractMethodShares(), gate(), metadata
+Nodes (15): citationSubset(), inferFrameworkPlaybook(), inferPlaybook(), candidateRefFor(), buildFanoutPlan(), buildManifest(), candidateFamilyKey(), HERE (+7 more)
 
 ### Community 298 - "missing-cache-headers.mjs"
 Cohesion: 0.67
@@ -1043,16 +1039,16 @@ Cohesion: 0.36
 Nodes (8): candidateForGroup(), gate(), groupFindings(), metadata, observedCacheHitRate(), questionFor(), SCANNER_GATES, uniqueStrings()
 
 ### Community 302 - "gates/index.mjs"
-Cohesion: 0.31
-Nodes (9): GATE_VERSION, gates, MAX_CODE_CANDIDATES, HERE, main(), REFS, renderCandidates(), renderScanners() (+1 more)
+Cohesion: 0.13
+Nodes (19): GATE_VERSION, gates, MAX_CODE_CANDIDATES, gate(), metadata, sumBilled(), metadata, HERE (+11 more)
 
 ### Community 303 - "NBA Data"
 Cohesion: 0.12
 Nodes (11): Choosing the Season, Commands, CRITICAL: Before Any Query, Error Handling, Examples, NBA Data, Quick Start, Setup (+3 more)
 
-### Community 304 - "devig"
-Cohesion: 0.14
-Nodes (4): calculate_ev_with_push(), devig(), evaluate_live_pick(), evaluate_market_pick()
+### Community 304 - "lib/budget-summary.mjs"
+Cohesion: 0.29
+Nodes (11): buildBudgetSummary(), buildChatPreview(), buildExactChatMessage(), buildOptions(), buildPrintCheck(), buildQuestionPayload(), buildQuestionText(), renderBudgetSummaryMarkdown() (+3 more)
 
 ### Community 305 - "middleware-broad-matcher.mjs"
 Cohesion: 0.67
@@ -1070,31 +1066,47 @@ Nodes (3): extractRows(), gate(), metadata
 Cohesion: 0.67
 Nodes (3): gate(), metadata, sumRows()
 
-### Community 309 - "observability-events-attribution.mjs"
-Cohesion: 0.67
-Nodes (3): gate(), metadata, sumBilled()
-
-### Community 320 - "convert_odds"
+### Community 309 - "renderCostBreakdown"
 Cohesion: 0.18
-Nodes (8): Betting Analysis — API Reference, Commands, Key Concepts, Odds Formats, Troubleshooting, convert_odds(), decimal_to_prob(), prob_to_american()
+Nodes (13): costRoundsToCents(), escape(), formatBytes(), formatGatedTargets(), formatNum(), formatUsage(), groupGbHoursByCanonicalRoute(), renderCostBreakdown() (+5 more)
+
+### Community 313 - "impact-label.mjs"
+Cohesion: 0.38
+Nodes (10): computeImpactLabel(), cwvIssue(), formatCwvIssue(), formatInteger(), joinEnglish(), parseSigNumber(), round1(), round2() (+2 more)
+
+### Community 318 - "rate-limit.mjs"
+Cohesion: 0.36
+Nodes (7): apply(), collectText(), matchConcurrency(), matchProviders(), metadata, PROVIDER_LIMITS, PROVIDER_RE
+
+### Community 319 - "cost-coverage.mjs"
+Cohesion: 0.47
+Nodes (5): classifyService(), computeCostCoverage(), escapeCell(), renderCostCoverageMarkdown(), SERVICE_DIMENSION
+
+### Community 320 - "devig"
+Cohesion: 0.09
+Nodes (19): Betting Analysis — API Reference, Commands, Key Concepts, Odds Formats, Arbitrage Detection, Betting Analysis, Compare ESPN vs Polymarket/Kalshi, CRITICAL: Before Any Analysis (+11 more)
+
+### Community 324 - "renderDataGaps"
+Cohesion: 0.50
+Nodes (4): metricState(), missingUsageSentence(), observabilityDataGap(), renderDataGaps()
 
 ## Knowledge Gaps
-- **138 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **143 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `inferPlaybook()` connect `investigation-brief.mjs` to `scoring.md`?**
+- **Why does `inferPlaybook()` connect `prepare-investigation-brief.mjs` to `investigation-brief.mjs`, `scoring.md`?**
   _High betweenness centrality (0.012) - this node is a cross-community bridge._
 - **Are the 4 inferred relationships involving `ESPNCollector` (e.g. with `get_espn_collector()` and `DataMerger`) actually correct?**
   _`ESPNCollector` has 4 INFERRED edges - model-reasoned connections that need verification._
 - **Should `lib/render-report.mjs` be split into smaller, more focused modules?**
-  _Cohesion score 0.050883898709985664 - nodes in this community are weakly interconnected._
-- **Why does `Playbook selection matrix` connect `scoring.md` to `investigation-brief.mjs`?**
+  _Cohesion score 0.14962121212121213 - nodes in this community are weakly interconnected._
+- **Why does `Playbook selection matrix` connect `scoring.md` to `prepare-investigation-brief.mjs`?**
   _High betweenness centrality (0.012) - this node is a cross-community bridge._
 - **Are the 5 inferred relationships involving `FeatureEngineer` (e.g. with `get_analyzer()` and `PlayerRatingEngine`) actually correct?**
   _`FeatureEngineer` has 5 INFERRED edges - model-reasoned connections that need verification._
 - **Should `Layout` be split into smaller, more focused modules?**
   _Cohesion score 0.06451612903225806 - nodes in this community are weakly interconnected._
-- **Why does `TrendAnalyzer` connect `analyze_line_movement` to `TrendAnalyzer`, `.merge_game_data`, `OverUnderResidualModel`, `pandas`, `betting_math.py`, `pandas`, `app.py`, `main.py`, `TestBettingMath`?**
+- **Why does `TrendAnalyzer` connect `TrendAnalyzer` to `.merge_game_data`, `OverUnderResidualModel`, `pandas`, `betting_math.py`, `FeatureEngineer`, `pandas`, `app.py`, `analyze_line_movement`, `main.py`, `run_alerts.py`, `TestBettingMath`?**
   _High betweenness centrality (0.011) - this node is a cross-community bridge._

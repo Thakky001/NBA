@@ -174,9 +174,9 @@ class TestTrendAnalyzer(unittest.TestCase):
             'away_roster_power': 80.0,
         }
         res_early = self.analyzer.analyze_spread('Charlotte Hornets', 'Brooklyn Nets', spread_line=-1.5)
-        # Tiered Step Shrinkage at min_games=1 (<10 GP) is prior_weight = 0.40
-        # Base margin: 14.0 * 0.40 = 5.6 pt gap
-        self.assertAlmostEqual(res_early['raw_projected_margin'], 5.6, places=2)
+        # Continuous smooth ramp at min_games=1: prior_weight = 0.35 + 0.65 * (1/20) = 0.3825
+        # Base margin: 14.0 * 0.3825 = 5.355 pt gap
+        self.assertAlmostEqual(res_early['raw_projected_margin'], 5.355, places=2)
         self.assertEqual(res_early['sigma_margin'], 12.5)
         self.assertEqual(res_early['probability_method'], 'normal_unvalidated_sigma')
         self.assertEqual(res_early['kelly_quarter'], 0.0)
@@ -200,24 +200,56 @@ class TestTrendAnalyzer(unittest.TestCase):
         # Mid-season allows LEAN / STRONG picks
         self.assertGreater(res_mid['win_prob'], 0.50)
 
-    def test_spread_early_season_tiered_shrinkage(self):
-        # < 10 GP -> 0.40
+    def test_spread_factor_weights_linear_blend(self):
+        """Verify linear blend of factor weights smoothly shifts from Roster Talent to Net Rating."""
+        # Game 0: Roster 60%, NR 0%
+        self.mock_fe.compute_matchup_features.return_value = {
+            'home_games_played': 0, 'away_games_played': 0,
+            'home_roster_rating': 110.0, 'away_roster_rating': 100.0,
+            'home_rest_days': 2, 'away_rest_days': 2, 'home_net_rating': 5.0, 'away_net_rating': 2.0,
+        }
+        res_0 = self.analyzer.analyze_spread('BOS', 'MIA', spread_line=-4.5)
+        weights_0 = {f['name']: f['weight'] for f in res_0['factors'] if f['name'] != 'Projected Margin vs Spread Line'}
+        self.assertAlmostEqual(weights_0['Roster Talent Gap'], 0.60, places=2)
+        self.assertAlmostEqual(weights_0['Net Rating Gap'], 0.00, places=2)
+        self.assertAlmostEqual(sum(weights_0.values()), 1.00, places=2)
+
+        # Game 10: Roster 40%, NR 10%
+        self.mock_fe.compute_matchup_features.return_value['home_games_played'] = 10
+        self.mock_fe.compute_matchup_features.return_value['away_games_played'] = 10
+        res_10 = self.analyzer.analyze_spread('BOS', 'MIA', spread_line=-4.5)
+        weights_10 = {f['name']: f['weight'] for f in res_10['factors'] if f['name'] != 'Projected Margin vs Spread Line'}
+        self.assertAlmostEqual(weights_10['Roster Talent Gap'], 0.40, places=2)
+        self.assertAlmostEqual(weights_10['Net Rating Gap'], 0.10, places=2)
+        self.assertAlmostEqual(sum(weights_10.values()), 1.00, places=2)
+
+        # Game 20: Roster 20%, NR 20%
+        self.mock_fe.compute_matchup_features.return_value['home_games_played'] = 20
+        self.mock_fe.compute_matchup_features.return_value['away_games_played'] = 20
+        res_20 = self.analyzer.analyze_spread('BOS', 'MIA', spread_line=-4.5)
+        weights_20 = {f['name']: f['weight'] for f in res_20['factors'] if f['name'] != 'Projected Margin vs Spread Line'}
+        self.assertAlmostEqual(weights_20['Roster Talent Gap'], 0.20, places=2)
+        self.assertAlmostEqual(weights_20['Net Rating Gap'], 0.20, places=2)
+        self.assertAlmostEqual(sum(weights_20.values()), 1.00, places=2)
+
+    def test_spread_early_season_continuous_shrinkage(self):
+        # min_games = 8 -> prior_weight = 0.35 + 0.65 * (8/20) = 0.61 -> margin = 10.0 * 0.61 = 6.1
         self.mock_fe.compute_matchup_features.return_value = {
             'home_games_played': 8, 'away_games_played': 8,
             'home_net_rating': 10.0, 'away_net_rating': 0.0,
             'home_pace': 100.0, 'away_pace': 100.0,
             'home_rest_days': 2, 'away_rest_days': 2
         }
-        res_under_10 = self.analyzer.analyze_spread('Boston Celtics', 'Miami Heat', spread_line=-4.5)
-        self.assertAlmostEqual(res_under_10['raw_projected_margin'], 4.0, places=2)
+        res_8 = self.analyzer.analyze_spread('Boston Celtics', 'Miami Heat', spread_line=-4.5)
+        self.assertAlmostEqual(res_8['raw_projected_margin'], 6.1, places=2)
 
-        # 10-19 GP -> 0.70
+        # min_games = 14 -> prior_weight = 0.35 + 0.65 * (14/20) = 0.805 -> margin = 10.0 * 0.805 = 8.05
         self.mock_fe.compute_matchup_features.return_value['home_games_played'] = 14
         self.mock_fe.compute_matchup_features.return_value['away_games_played'] = 14
-        res_under_20 = self.analyzer.analyze_spread('Boston Celtics', 'Miami Heat', spread_line=-4.5)
-        self.assertAlmostEqual(res_under_20['raw_projected_margin'], 7.0, places=2)
+        res_14 = self.analyzer.analyze_spread('Boston Celtics', 'Miami Heat', spread_line=-4.5)
+        self.assertAlmostEqual(res_14['raw_projected_margin'], 8.05, places=2)
 
-        # >= 20 GP -> 1.0
+        # >= 20 GP -> prior_weight = 1.0 -> margin = 10.0 * 1.0 = 10.0
         self.mock_fe.compute_matchup_features.return_value['home_games_played'] = 22
         self.mock_fe.compute_matchup_features.return_value['away_games_played'] = 22
         res_over_20 = self.analyzer.analyze_spread('Boston Celtics', 'Miami Heat', spread_line=-4.5)
@@ -245,7 +277,7 @@ class TestTrendAnalyzer(unittest.TestCase):
 
         # 2. Road Heavy Favorite (s_line >= 9.5): requires edge <= -6.5 for STRONG, <= -4.5 for LEAN
         # raw_margin = -14.5, s_line = +9.5 -> edge = -5.0 -> LEAN AWAY (not STRONG)
-        self.mock_fe.compute_matchup_features.return_value['home_net_rating'] = -14.5 / 0.70
+        self.mock_fe.compute_matchup_features.return_value['home_net_rating'] = -14.5 / 0.675
         res_road_fav = self.analyzer.analyze_spread('Chicago Bulls', 'San Antonio Spurs', spread_line=9.5)
         self.assertEqual(res_road_fav['recommendation'], 'LEAN AWAY')
 

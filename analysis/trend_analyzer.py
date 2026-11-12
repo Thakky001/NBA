@@ -403,20 +403,35 @@ class TrendAnalyzer:
         home_games = features.get('home_games_played', 20)
         away_games = features.get('away_games_played', 20)
         min_games = min(home_games, away_games) if (home_games is not None and away_games is not None) else 20
-        is_early_season = min_games < 10
+        is_early_season = min_games < 20
         
         home_roster = features.get('home_roster_rating', 0)
         away_roster = features.get('away_roster_rating', 0)
         
-        # 1. Early Season Override
+        # 1. Early Season Continuous Linear Blend (0 - 20 games)
+        # Smooth transition avoids sharp cliff jump from Roster Talent to noisy 10-game Net Rating
         if is_early_season:
-            weights['nr'] = 0.0
-            weights['pd'] = 0.0
-            weights['str'] = 0.0
-            weights['h2h'] = 0.10
-            weights['rest'] = 0.10
-            weights['sp'] = 0.20
-            weights['roster'] = 0.60
+            t = max(0.0, min(1.0, min_games / 20.0))
+            weights_early = {
+                'nr': 0.0,
+                'pd': 0.0,
+                'sp': 0.20,
+                'str': 0.0,
+                'h2h': 0.10,
+                'rest': 0.10,
+                'roster': 0.60
+            }
+            weights_full = {
+                'nr': 0.20,
+                'pd': 0.15,
+                'sp': 0.15,
+                'str': 0.10,
+                'h2h': 0.10,
+                'rest': 0.10,
+                'roster': 0.20
+            }
+            for k in weights:
+                weights[k] = weights_early[k] * (1.0 - t) + weights_full[k] * t
             
         # 2. Dynamic Star-Impact (Crisis Mode) Override
         # Assuming feature engineering provides 'home_full_roster_rating' which is 100% health
@@ -575,13 +590,9 @@ class TrendAnalyzer:
         avg_pace = (home_pace + away_pace) / 2 if (home_pace and away_pace) else 99.5
         pace_factor = avg_pace / 100.0
 
-        # Tiered Step Shrinkage: regress noisy early-season net rating towards league average
-        if min_games < 10:
-            prior_weight = 0.40
-        elif min_games < 20:
-            prior_weight = 0.70
-        else:
-            prior_weight = 1.0
+        # Continuous Smooth Ramp: regress noisy early-season net rating towards league average (0.35 -> 1.0)
+        # Smooth transition across first 20 games avoids ballooning projected margins at game 10
+        prior_weight = 0.35 + 0.65 * min(1.0, max(0.0, min_games / 20.0))
 
         if (home_net_rtg != 0.0 or away_net_rtg != 0.0):
             base_margin = (net_rtg_diff * pace_factor) * prior_weight
@@ -656,7 +667,7 @@ class TrendAnalyzer:
             # 3. Road Underdog (s_line < 0, away underdog): require edge <= -4.5 pts & win_prob >= 0.62
             # 4. Standard Early Season: edge >= 3.0 pts & win_prob >= 0.58
             # Suppress all LEAN picks to NEUTRAL / PASS to protect bankroll.
-            is_early_spread_gate = min_games < 15
+            is_early_spread_gate = min_games < 20
             away_win_prob = spread_probs['loss'] if spread_probs else (1.0 - win_prob)
             if is_early_spread_gate:
                 is_tight = abs(s_line) <= 4.5
@@ -866,10 +877,12 @@ class TrendAnalyzer:
         min_games = min(home_g, away_g)
 
         if market_weight is None:
-            if min_games < 15:
-                eff_market_weight = 0.60
-            elif min_games < 25:
-                eff_market_weight = 0.40
+            # Smooth Bayesian Market Anchoring for Early Season:
+            # 0.70 at game 0 smoothly relaxing to 0.50 at game 20, then 0.20 mid-season (game 40+)
+            if min_games < 20:
+                eff_market_weight = 0.50 + 0.20 * ((20.0 - min_games) / 20.0)
+            elif min_games < 40:
+                eff_market_weight = 0.20 + 0.30 * ((40.0 - min_games) / 20.0)
             else:
                 eff_market_weight = 0.20
         else:
@@ -925,7 +938,7 @@ class TrendAnalyzer:
                 ag_sync = 10
             min_games_sync = min(hg_sync, ag_sync)
             is_early_ou_sync = min_games_sync < 20
-            is_early_sp_sync = min_games_sync < 15
+            is_early_sp_sync = min_games_sync < 20
 
             # 1. Over/Under AI Adjustment
             if self._ai_ou_model and self._ai_ou_model.is_fitted and result.get('over_under'):
