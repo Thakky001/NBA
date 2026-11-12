@@ -224,24 +224,30 @@ class TestTrendAnalyzer(unittest.TestCase):
         self.assertAlmostEqual(res_over_20['raw_projected_margin'], 10.0, places=2)
 
     def test_spread_early_season_conviction_gates(self):
-        # 1. Tight spread (|s_line| <= 4.5): Edge must be >= 4.0
+        # 1. Early season balanced gates: Strong >= 3.0, Lean >= 2.0
         self.mock_fe.compute_matchup_features.return_value = {
             'home_games_played': 10, 'away_games_played': 10,
             'home_net_rating': 0.0, 'away_net_rating': 0.0,
             'home_rest_days': 2, 'away_rest_days': 2,
             'home_roster_power': 80.0, 'away_roster_power': 80.0,
         }
-        # Edge = 3.5 on tight line +3.5 -> should be NEUTRAL (PASS)
-        # projected_margin = 0, line = +3.5 -> cover_edge = +3.5 < 4.0
-        res_tight = self.analyzer.analyze_spread('Denver Nuggets', 'Memphis Grizzlies', spread_line=3.5)
-        self.assertEqual(res_tight['recommendation'], 'NEUTRAL')
+        # Edge = +3.5 -> STRONG HOME
+        res_strong = self.analyzer.analyze_spread('Denver Nuggets', 'Memphis Grizzlies', spread_line=3.5)
+        self.assertEqual(res_strong['recommendation'], 'STRONG HOME')
 
-        # 2. Road Heavy Favorite (s_line >= 9.5): requires edge <= -6.5 and prob >= 0.62
-        # If edge is only -5.0, it must be NEUTRAL (PASS)
-        # raw_margin = -14.5, s_line = +9.5 -> edge = -5.0
+        # Edge = +2.5 -> LEAN HOME
+        res_lean = self.analyzer.analyze_spread('Denver Nuggets', 'Memphis Grizzlies', spread_line=2.5)
+        self.assertEqual(res_lean['recommendation'], 'LEAN HOME')
+
+        # Edge = +1.0 -> NEUTRAL
+        res_neutral = self.analyzer.analyze_spread('Denver Nuggets', 'Memphis Grizzlies', spread_line=1.0)
+        self.assertEqual(res_neutral['recommendation'], 'NEUTRAL')
+
+        # 2. Road Heavy Favorite (s_line >= 9.5): requires edge <= -6.5 for STRONG, <= -4.5 for LEAN
+        # raw_margin = -14.5, s_line = +9.5 -> edge = -5.0 -> LEAN AWAY (not STRONG)
         self.mock_fe.compute_matchup_features.return_value['home_net_rating'] = -14.5 / 0.70
         res_road_fav = self.analyzer.analyze_spread('Chicago Bulls', 'San Antonio Spurs', spread_line=9.5)
-        self.assertEqual(res_road_fav['recommendation'], 'NEUTRAL')
+        self.assertEqual(res_road_fav['recommendation'], 'LEAN AWAY')
 
     def test_road_b2b_travel_penalty(self):
         # Road team on B2B (away_rest = 0, home_rest >= 1)

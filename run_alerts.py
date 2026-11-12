@@ -232,13 +232,14 @@ def format_game_card(analysis: Dict[str, Any], game_info: Dict[str, Any], odds_d
             is_confirmed = lm_pick.get('verdict') in ['CONFIRMED_ALIGNED', 'MOVE_ALIGNED', 'STABLE_MODEL']
             pick_badge = "🔥 [CONFIRMED]" if is_confirmed else "🎯"
 
+            tier_badge = "🟢 [ไม้หลัก]" if 'STRONG' in rec else "🟡 [ไม้เล็ก 0.25-0.5U]"
             if p_type == 'Spread':
                 action_text = t_rec(rec, spread_line=sp_val, home_team=home, away_team=away)
-                card_lines.append(f"{pick_badge} <b>แต้มต่อ: {action_text}</b>")
+                card_lines.append(f"{pick_badge} {tier_badge} <b>แต้มต่อ: {action_text}</b>")
             else:
                 action_text = t_rec(rec)
                 line_str = f" {ou_val:.1f}" if ou_val is not None else ""
-                card_lines.append(f"{pick_badge} <b>สูง/ต่ำ: {action_text}{line_str}</b>")
+                card_lines.append(f"{pick_badge} {tier_badge} <b>สูง/ต่ำ: {action_text}{line_str}</b>")
 
             stat_items = [
                 f"Win <code>{win_p:.1%}</code>",

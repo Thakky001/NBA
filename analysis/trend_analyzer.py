@@ -258,19 +258,19 @@ class TrendAnalyzer:
             cand_ev = calculate_ev_with_push(cand_prob, market_odds[0 if cand_dir == 'OVER' else 1], push_prob=push_prob) if market_odds else None
 
             # Asymmetric Conviction Gate:
-            # OVER: Higher threshold (edge >= 5.0 pts) to filter out high-loss 3.0-5.0 edge trap; no LEAN OVER in early season
-            # UNDER: Preserves high-performing baseline (edge <= -2.0 pts for STRONG, edge <= -1.0 pts for LEAN mid-season)
+            # OVER: Higher threshold (edge >= 5.0 pts) for STRONG OVER; LEAN OVER at edge >= 3.0 pts
+            # UNDER: Preserves edge <= -2.0 pts for STRONG UNDER; LEAN UNDER at edge <= -1.5 pts
             if cand_dir == 'OVER':
                 if total_edge >= 5.0 and cand_prob >= 0.565 and (cand_ev is None or cand_ev >= 0.05):
                     recommendation = "STRONG OVER"
-                elif not is_early_season and total_edge >= 3.0 and cand_prob >= 0.538 and (cand_ev is None or cand_ev >= 0.015):
+                elif total_edge >= 3.0 and cand_prob >= 0.538 and (cand_ev is None or cand_ev >= 0.015):
                     recommendation = "LEAN OVER"
                 else:
                     recommendation = "NEUTRAL"
             elif cand_dir == 'UNDER':
                 if abs(total_edge) >= 2.0 and cand_prob >= 0.565 and (cand_ev is None or cand_ev >= 0.05):
                     recommendation = "STRONG UNDER"
-                elif not is_early_season and abs(total_edge) >= 1.0 and cand_prob >= 0.538 and (cand_ev is None or cand_ev >= 0.015):
+                elif abs(total_edge) >= (1.5 if is_early_season else 1.0) and cand_prob >= 0.538 and (cand_ev is None or cand_ev >= 0.015):
                     recommendation = "LEAN UNDER"
                 else:
                     recommendation = "NEUTRAL"
@@ -314,6 +314,11 @@ class TrendAnalyzer:
         quarter_kelly = (eval_metrics['recommended_stake_pct'] / 100.0) if is_bet else 0.0
         if is_market_clash:
             kelly_rec = "0.0% (ข้าม - สัญญาณขัดแย้งกับกระแสเงินตลาด)"
+        elif 'STRONG' in recommendation and quarter_kelly > 0:
+            kelly_rec = f"{quarter_kelly * 100:.1f}% of bankroll 🟢 (ไม้หลัก 1.0 - 2.0 Units)"
+        elif 'LEAN' in recommendation and quarter_kelly > 0:
+            lean_stake = min(quarter_kelly, 0.005)
+            kelly_rec = f"{lean_stake * 100:.2f}% of bankroll 🟡 (ไม้เล็ก 0.25 - 0.50 Unit)"
         elif quarter_kelly > 0:
             kelly_rec = f"{quarter_kelly * 100:.1f}% of bankroll (1/4 Kelly)"
         else:
@@ -658,26 +663,42 @@ class TrendAnalyzer:
                 is_road_heavy_fav = s_line >= 9.5
                 is_road_underdog = s_line < 0.0
 
-                min_edge_home = 4.0 if is_tight else 3.0
-                min_prob_home = 0.58
+                # STRONG Thresholds
+                strong_edge_home = 3.0
+                strong_prob_home = 0.58
 
                 if is_road_heavy_fav:
-                    max_edge_away = -6.5
-                    min_prob_away = 0.62
+                    strong_edge_away = -6.5
+                    strong_prob_away = 0.62
                 elif is_road_underdog:
-                    max_edge_away = -5.5
-                    min_prob_away = 0.65
-                elif is_tight:
-                    max_edge_away = -4.0
-                    min_prob_away = 0.58
+                    strong_edge_away = -4.0
+                    strong_prob_away = 0.58
                 else:
-                    max_edge_away = -3.0
-                    min_prob_away = 0.58
+                    strong_edge_away = -3.0
+                    strong_prob_away = 0.58
 
-                if cover_edge >= min_edge_home and win_prob >= min_prob_home:
+                # LEAN Thresholds (Early Season)
+                lean_edge_home = 2.0
+                lean_prob_home = 0.538
+
+                if is_road_heavy_fav:
+                    lean_edge_away = -4.5
+                    lean_prob_away = 0.58
+                elif is_road_underdog:
+                    lean_edge_away = -2.0
+                    lean_prob_away = 0.538
+                else:
+                    lean_edge_away = -1.5
+                    lean_prob_away = 0.538
+
+                if cover_edge >= strong_edge_home and win_prob >= strong_prob_home:
                     recommendation = 'STRONG HOME'
-                elif cover_edge <= max_edge_away and away_win_prob >= min_prob_away:
+                elif cover_edge >= lean_edge_home and win_prob >= lean_prob_home:
+                    recommendation = 'LEAN HOME'
+                elif cover_edge <= strong_edge_away and away_win_prob >= strong_prob_away:
                     recommendation = 'STRONG AWAY'
+                elif cover_edge <= lean_edge_away and away_win_prob >= lean_prob_away:
+                    recommendation = 'LEAN AWAY'
                 else:
                     recommendation = 'NEUTRAL'
             else:
@@ -731,6 +752,11 @@ class TrendAnalyzer:
         quarter_kelly = (eval_metrics['recommended_stake_pct'] / 100.0) if is_bet else 0.0
         if is_market_clash:
             kelly_rec = "0.0% (ข้าม - สัญญาณขัดแย้งกับกระแสเงินตลาด)"
+        elif 'STRONG' in recommendation and quarter_kelly > 0:
+            kelly_rec = f"{quarter_kelly * 100:.1f}% of bankroll 🟢 (ไม้หลัก 1.0 - 2.0 Units)"
+        elif 'LEAN' in recommendation and quarter_kelly > 0:
+            lean_stake = min(quarter_kelly, 0.005)
+            kelly_rec = f"{lean_stake * 100:.2f}% of bankroll 🟡 (ไม้เล็ก 0.25 - 0.50 Unit)"
         elif quarter_kelly > 0:
             kelly_rec = f"{quarter_kelly * 100:.1f}% of bankroll (1/4 Kelly)"
         else:
@@ -923,15 +949,15 @@ class TrendAnalyzer:
                     under_p = new_ou_probs.get('loss', 0.5)
 
                     # Synchronized with Asymmetric Conviction Gate:
-                    # OVER: Requires >= 5.0 in early season, >= 3.0 mid-season; LEAN OVER suppressed in early season
-                    # UNDER: Preserves <= -2.0 for STRONG, <= -1.0 for LEAN mid-season
+                    # OVER: Requires >= 5.0 for STRONG, >= 3.0 for LEAN
+                    # UNDER: Preserves <= -2.5 for STRONG, <= -1.5 for LEAN
                     if (edge_ou >= 5.0 if is_early_ou_sync else edge_ou >= 4.0) and (not is_early_ou_sync or over_p >= 0.58):
                         ou_res['recommendation'] = 'STRONG OVER'
-                    elif not is_early_ou_sync and edge_ou >= 3.0:
+                    elif edge_ou >= 3.0 and (not is_early_ou_sync or over_p >= 0.538):
                         ou_res['recommendation'] = 'LEAN OVER'
                     elif edge_ou <= -2.5 and (not is_early_ou_sync or under_p >= 0.58):
                         ou_res['recommendation'] = 'STRONG UNDER'
-                    elif not is_early_ou_sync and edge_ou <= -1.0:
+                    elif edge_ou <= (-1.5 if is_early_ou_sync else -1.0) and (not is_early_ou_sync or under_p >= 0.538):
                         ou_res['recommendation'] = 'LEAN UNDER'
                     else:
                         ou_res['recommendation'] = 'NEUTRAL'
@@ -974,26 +1000,42 @@ class TrendAnalyzer:
                         is_road_heavy_fav = spread_line >= 9.5
                         is_road_underdog = spread_line < 0.0
 
-                        min_edge_home = 4.0 if is_tight else 3.0
-                        min_prob_home = 0.58
+                        # STRONG Thresholds
+                        strong_edge_home = 3.0
+                        strong_prob_home = 0.58
 
                         if is_road_heavy_fav:
-                            max_edge_away = -6.5
-                            min_prob_away = 0.62
+                            strong_edge_away = -6.5
+                            strong_prob_away = 0.62
                         elif is_road_underdog:
-                            max_edge_away = -5.5
-                            min_prob_away = 0.65
-                        elif is_tight:
-                            max_edge_away = -4.0
-                            min_prob_away = 0.58
+                            strong_edge_away = -4.0
+                            strong_prob_away = 0.58
                         else:
-                            max_edge_away = -3.0
-                            min_prob_away = 0.58
+                            strong_edge_away = -3.0
+                            strong_prob_away = 0.58
 
-                        if edge_sp >= min_edge_home and home_win_sp >= min_prob_home:
+                        # LEAN Thresholds (Early Season)
+                        lean_edge_home = 2.0
+                        lean_prob_home = 0.538
+
+                        if is_road_heavy_fav:
+                            lean_edge_away = -4.5
+                            lean_prob_away = 0.58
+                        elif is_road_underdog:
+                            lean_edge_away = -2.0
+                            lean_prob_away = 0.538
+                        else:
+                            lean_edge_away = -1.5
+                            lean_prob_away = 0.538
+
+                        if edge_sp >= strong_edge_home and home_win_sp >= strong_prob_home:
                             sp_res['recommendation'] = 'STRONG HOME'
-                        elif edge_sp <= max_edge_away and away_win_sp >= min_prob_away:
+                        elif edge_sp >= lean_edge_home and home_win_sp >= lean_prob_home:
+                            sp_res['recommendation'] = 'LEAN HOME'
+                        elif edge_sp <= strong_edge_away and away_win_sp >= strong_prob_away:
                             sp_res['recommendation'] = 'STRONG AWAY'
+                        elif edge_sp <= lean_edge_away and away_win_sp >= lean_prob_away:
+                            sp_res['recommendation'] = 'LEAN AWAY'
                         else:
                             sp_res['recommendation'] = 'NEUTRAL'
                     else:
