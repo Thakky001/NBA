@@ -56,7 +56,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-13 00:36:09"
+    "scraped_at": "2026-11-13 01:36:08"
   },
   "TOR": {
     "team": "Toronto Raptors",
@@ -115,7 +115,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-13 00:36:09"
+    "scraped_at": "2026-11-13 01:36:08"
   },
   "Philadelphia 76ers": {
     "team": "Philadelphia 76ers",
@@ -174,7 +174,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-13 00:36:09"
+    "scraped_at": "2026-11-13 01:36:08"
   },
   "PHI": {
     "team": "Philadelphia 76ers",
@@ -233,7 +233,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-13 00:36:09"
+    "scraped_at": "2026-11-13 01:36:08"
   },
   "Detroit Pistons": {
     "team": "Detroit Pistons",
@@ -282,7 +282,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-13 00:36:09"
+    "scraped_at": "2026-11-13 01:36:08"
   },
   "DET": {
     "team": "Detroit Pistons",
@@ -331,7 +331,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-13 00:36:09"
+    "scraped_at": "2026-11-13 01:36:08"
   },
   "Washington Wizards": {
     "team": "Washington Wizards",
@@ -390,7 +390,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-13 00:36:09"
+    "scraped_at": "2026-11-13 01:36:08"
   },
   "WAS": {
     "team": "Washington Wizards",
@@ -449,7 +449,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-13 00:36:09"
+    "scraped_at": "2026-11-13 01:36:08"
   },
   "Dallas Mavericks": {
     "team": "Dallas Mavericks",
@@ -503,7 +503,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-13 00:36:09"
+    "scraped_at": "2026-11-13 01:36:08"
   },
   "DAL": {
     "team": "Dallas Mavericks",
@@ -557,7 +557,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-13 00:36:09"
+    "scraped_at": "2026-11-13 01:36:08"
   },
   "Minnesota Timberwolves": {
     "team": "Minnesota Timberwolves",
@@ -606,7 +606,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-13 00:36:09"
+    "scraped_at": "2026-11-13 01:36:08"
   },
   "MIN": {
     "team": "Minnesota Timberwolves",
@@ -655,7 +655,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-13 00:36:09"
+    "scraped_at": "2026-11-13 01:36:08"
   },
   "Charlotte Hornets": {
     "team": "Charlotte Hornets",
@@ -663,8 +663,8 @@
     "opponent": "Phoenix Suns",
     "opponent_abbr": "PHX",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Coby White",
@@ -709,7 +709,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-13 00:36:09"
+    "scraped_at": "2026-11-13 01:36:08"
   },
   "CHA": {
     "team": "Charlotte Hornets",
@@ -717,8 +717,8 @@
     "opponent": "Phoenix Suns",
     "opponent_abbr": "PHX",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Coby White",
@@ -763,7 +763,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-13 00:36:09"
+    "scraped_at": "2026-11-13 01:36:08"
   },
   "Phoenix Suns": {
     "team": "Phoenix Suns",
@@ -771,8 +771,8 @@
     "opponent": "Charlotte Hornets",
     "opponent_abbr": "CHA",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Devin Booker",
@@ -807,7 +807,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-13 00:36:09"
+    "scraped_at": "2026-11-13 01:36:08"
   },
   "PHX": {
     "team": "Phoenix Suns",
@@ -815,8 +815,8 @@
     "opponent": "Charlotte Hornets",
     "opponent_abbr": "CHA",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Devin Booker",
@@ -851,6 +851,6 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-13 00:36:09"
+    "scraped_at": "2026-11-13 01:36:08"
   }
 }
