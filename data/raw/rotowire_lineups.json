@@ -5,8 +5,8 @@
     "opponent": "Philadelphia 76ers",
     "opponent_abbr": "PHI",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Immanuel Quickley",
@@ -56,7 +56,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-12 23:31:51"
+    "scraped_at": "2026-11-13 00:36:09"
   },
   "TOR": {
     "team": "Toronto Raptors",
@@ -64,8 +64,8 @@
     "opponent": "Philadelphia 76ers",
     "opponent_abbr": "PHI",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Immanuel Quickley",
@@ -115,7 +115,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-12 23:31:51"
+    "scraped_at": "2026-11-13 00:36:09"
   },
   "Philadelphia 76ers": {
     "team": "Philadelphia 76ers",
@@ -123,8 +123,8 @@
     "opponent": "Toronto Raptors",
     "opponent_abbr": "TOR",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Tyrese Maxey",
@@ -174,7 +174,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-12 23:31:51"
+    "scraped_at": "2026-11-13 00:36:09"
   },
   "PHI": {
     "team": "Philadelphia 76ers",
@@ -182,8 +182,8 @@
     "opponent": "Toronto Raptors",
     "opponent_abbr": "TOR",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Tyrese Maxey",
@@ -233,7 +233,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-12 23:31:51"
+    "scraped_at": "2026-11-13 00:36:09"
   },
   "Detroit Pistons": {
     "team": "Detroit Pistons",
@@ -241,8 +241,8 @@
     "opponent": "Washington Wizards",
     "opponent_abbr": "WAS",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Cade Cunningham",
@@ -282,7 +282,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-12 23:31:51"
+    "scraped_at": "2026-11-13 00:36:09"
   },
   "DET": {
     "team": "Detroit Pistons",
@@ -290,8 +290,8 @@
     "opponent": "Washington Wizards",
     "opponent_abbr": "WAS",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Cade Cunningham",
@@ -331,7 +331,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-12 23:31:51"
+    "scraped_at": "2026-11-13 00:36:09"
   },
   "Washington Wizards": {
     "team": "Washington Wizards",
@@ -339,8 +339,8 @@
     "opponent": "Detroit Pistons",
     "opponent_abbr": "DET",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Trae Young",
@@ -390,7 +390,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-12 23:31:51"
+    "scraped_at": "2026-11-13 00:36:09"
   },
   "WAS": {
     "team": "Washington Wizards",
@@ -398,8 +398,8 @@
     "opponent": "Detroit Pistons",
     "opponent_abbr": "DET",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Trae Young",
@@ -449,7 +449,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-12 23:31:51"
+    "scraped_at": "2026-11-13 00:36:09"
   },
   "Dallas Mavericks": {
     "team": "Dallas Mavericks",
@@ -457,8 +457,8 @@
     "opponent": "Minnesota Timberwolves",
     "opponent_abbr": "MIN",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Kyrie Irving",
@@ -503,7 +503,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-12 23:31:51"
+    "scraped_at": "2026-11-13 00:36:09"
   },
   "DAL": {
     "team": "Dallas Mavericks",
@@ -511,8 +511,8 @@
     "opponent": "Minnesota Timberwolves",
     "opponent_abbr": "MIN",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Kyrie Irving",
@@ -557,7 +557,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-12 23:31:51"
+    "scraped_at": "2026-11-13 00:36:09"
   },
   "Minnesota Timberwolves": {
     "team": "Minnesota Timberwolves",
@@ -565,8 +565,8 @@
     "opponent": "Dallas Mavericks",
     "opponent_abbr": "DAL",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "LaMelo Ball",
@@ -606,7 +606,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-12 23:31:51"
+    "scraped_at": "2026-11-13 00:36:09"
   },
   "MIN": {
     "team": "Minnesota Timberwolves",
@@ -614,8 +614,8 @@
     "opponent": "Dallas Mavericks",
     "opponent_abbr": "DAL",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "LaMelo Ball",
@@ -655,7 +655,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-12 23:31:51"
+    "scraped_at": "2026-11-13 00:36:09"
   },
   "Charlotte Hornets": {
     "team": "Charlotte Hornets",
@@ -709,7 +709,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-12 23:31:51"
+    "scraped_at": "2026-11-13 00:36:09"
   },
   "CHA": {
     "team": "Charlotte Hornets",
@@ -763,7 +763,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-12 23:31:51"
+    "scraped_at": "2026-11-13 00:36:09"
   },
   "Phoenix Suns": {
     "team": "Phoenix Suns",
@@ -807,7 +807,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-12 23:31:51"
+    "scraped_at": "2026-11-13 00:36:09"
   },
   "PHX": {
     "team": "Phoenix Suns",
@@ -851,6 +851,6 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-12 23:31:51"
+    "scraped_at": "2026-11-13 00:36:09"
   }
 }
