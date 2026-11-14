@@ -35,7 +35,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-11-14 02:36:12"
+    "scraped_at": "2026-11-14 03:11:17"
   },
   "NYK": {
     "team": "New York Knicks",
@@ -73,7 +73,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-11-14 02:36:12"
+    "scraped_at": "2026-11-14 03:11:17"
   },
   "Indiana Pacers": {
     "team": "Indiana Pacers",
@@ -112,6 +112,11 @@
     ],
     "injuries": [
       {
+        "name": "Aaron Nesmith",
+        "position": "F",
+        "status": "Very Likely To Play"
+      },
+      {
         "name": "Johnny Furphy",
         "position": "G",
         "status": "Very Unlikely To Play"
@@ -127,7 +132,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-14 02:36:12"
+    "scraped_at": "2026-11-14 03:11:17"
   },
   "IND": {
     "team": "Indiana Pacers",
@@ -166,6 +171,11 @@
     ],
     "injuries": [
       {
+        "name": "Aaron Nesmith",
+        "position": "F",
+        "status": "Very Likely To Play"
+      },
+      {
         "name": "Johnny Furphy",
         "position": "G",
         "status": "Very Unlikely To Play"
@@ -181,7 +191,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-14 02:36:12"
+    "scraped_at": "2026-11-14 03:11:17"
   },
   "Milwaukee Bucks": {
     "team": "Milwaukee Bucks",
@@ -219,7 +229,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-11-14 02:36:12"
+    "scraped_at": "2026-11-14 03:11:17"
   },
   "MIL": {
     "team": "Milwaukee Bucks",
@@ -257,7 +267,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-11-14 02:36:12"
+    "scraped_at": "2026-11-14 03:11:17"
   },
   "Orlando Magic": {
     "team": "Orlando Magic",
@@ -296,12 +306,12 @@
     ],
     "injuries": [
       {
-        "name": "Paolo Banchero",
+        "name": "Jonathan Isaac",
         "position": "F",
-        "status": "Very Unlikely To Play"
+        "status": "Very Likely To Play"
       },
       {
-        "name": "Jonathan Isaac",
+        "name": "Paolo Banchero",
         "position": "F",
         "status": "Very Unlikely To Play"
       },
@@ -316,7 +326,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-14 02:36:12"
+    "scraped_at": "2026-11-14 03:11:17"
   },
   "ORL": {
     "team": "Orlando Magic",
@@ -355,12 +365,12 @@
     ],
     "injuries": [
       {
-        "name": "Paolo Banchero",
+        "name": "Jonathan Isaac",
         "position": "F",
-        "status": "Very Unlikely To Play"
+        "status": "Very Likely To Play"
       },
       {
-        "name": "Jonathan Isaac",
+        "name": "Paolo Banchero",
         "position": "F",
         "status": "Very Unlikely To Play"
       },
@@ -375,7 +385,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-14 02:36:12"
+    "scraped_at": "2026-11-14 03:11:17"
   },
   "Memphis Grizzlies": {
     "team": "Memphis Grizzlies",
@@ -429,7 +439,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-14 02:36:12"
+    "scraped_at": "2026-11-14 03:11:17"
   },
   "MEM": {
     "team": "Memphis Grizzlies",
@@ -483,7 +493,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-14 02:36:12"
+    "scraped_at": "2026-11-14 03:11:17"
   },
   "New Orleans Pelicans": {
     "team": "New Orleans Pelicans",
@@ -547,7 +557,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-14 02:36:12"
+    "scraped_at": "2026-11-14 03:11:17"
   },
   "NOP": {
     "team": "New Orleans Pelicans",
@@ -611,7 +621,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-14 02:36:12"
+    "scraped_at": "2026-11-14 03:11:17"
   },
   "Atlanta Hawks": {
     "team": "Atlanta Hawks",
@@ -670,7 +680,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-14 02:36:12"
+    "scraped_at": "2026-11-14 03:11:17"
   },
   "ATL": {
     "team": "Atlanta Hawks",
@@ -729,7 +739,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-14 02:36:12"
+    "scraped_at": "2026-11-14 03:11:17"
   },
   "Chicago Bulls": {
     "team": "Chicago Bulls",
@@ -783,7 +793,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-14 02:36:12"
+    "scraped_at": "2026-11-14 03:11:17"
   },
   "CHI": {
     "team": "Chicago Bulls",
@@ -837,7 +847,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-14 02:36:12"
+    "scraped_at": "2026-11-14 03:11:17"
   },
   "Cleveland Cavaliers": {
     "team": "Cleveland Cavaliers",
@@ -891,7 +901,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-14 02:36:12"
+    "scraped_at": "2026-11-14 03:11:17"
   },
   "CLE": {
     "team": "Cleveland Cavaliers",
@@ -945,7 +955,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-14 02:36:12"
+    "scraped_at": "2026-11-14 03:11:17"
   },
   "Miami Heat": {
     "team": "Miami Heat",
@@ -994,7 +1004,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-14 02:36:12"
+    "scraped_at": "2026-11-14 03:11:17"
   },
   "MIA": {
     "team": "Miami Heat",
@@ -1043,7 +1053,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-14 02:36:12"
+    "scraped_at": "2026-11-14 03:11:17"
   },
   "Utah Jazz": {
     "team": "Utah Jazz",
@@ -1082,6 +1092,11 @@
     ],
     "injuries": [
       {
+        "name": "Jaxson Hayes",
+        "position": "C",
+        "status": "Very Likely To Play"
+      },
+      {
         "name": "Jaren Jackson",
         "position": "F",
         "status": "Very Unlikely To Play"
@@ -1097,7 +1112,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-14 02:36:12"
+    "scraped_at": "2026-11-14 03:11:17"
   },
   "UTA": {
     "team": "Utah Jazz",
@@ -1136,6 +1151,11 @@
     ],
     "injuries": [
       {
+        "name": "Jaxson Hayes",
+        "position": "C",
+        "status": "Very Likely To Play"
+      },
+      {
         "name": "Jaren Jackson",
         "position": "F",
         "status": "Very Unlikely To Play"
@@ -1151,7 +1171,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-14 02:36:12"
+    "scraped_at": "2026-11-14 03:11:17"
   },
   "Houston Rockets": {
     "team": "Houston Rockets",
@@ -1205,7 +1225,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-14 02:36:12"
+    "scraped_at": "2026-11-14 03:11:17"
   },
   "HOU": {
     "team": "Houston Rockets",
@@ -1259,7 +1279,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-14 02:36:12"
+    "scraped_at": "2026-11-14 03:11:17"
   },
   "Golden State Warriors": {
     "team": "Golden State Warriors",
@@ -1323,7 +1343,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-14 02:36:12"
+    "scraped_at": "2026-11-14 03:11:17"
   },
   "GSW": {
     "team": "Golden State Warriors",
@@ -1387,7 +1407,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-14 02:36:12"
+    "scraped_at": "2026-11-14 03:11:17"
   },
   "San Antonio Spurs": {
     "team": "San Antonio Spurs",
@@ -1436,7 +1456,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-14 02:36:12"
+    "scraped_at": "2026-11-14 03:11:17"
   },
   "SAS": {
     "team": "San Antonio Spurs",
@@ -1485,7 +1505,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-14 02:36:12"
+    "scraped_at": "2026-11-14 03:11:17"
   },
   "Portland Trail Blazers": {
     "team": "Portland Trail Blazers",
@@ -1544,7 +1564,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-14 02:36:12"
+    "scraped_at": "2026-11-14 03:11:17"
   },
   "POR": {
     "team": "Portland Trail Blazers",
@@ -1603,7 +1623,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-14 02:36:12"
+    "scraped_at": "2026-11-14 03:11:17"
   },
   "Sacramento Kings": {
     "team": "Sacramento Kings",
@@ -1611,8 +1631,8 @@
     "opponent": "Portland Trail Blazers",
     "opponent_abbr": "POR",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Darius Acuff",
@@ -1657,7 +1677,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-14 02:36:12"
+    "scraped_at": "2026-11-14 03:11:17"
   },
   "SAC": {
     "team": "Sacramento Kings",
@@ -1665,8 +1685,8 @@
     "opponent": "Portland Trail Blazers",
     "opponent_abbr": "POR",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Darius Acuff",
@@ -1711,7 +1731,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-14 02:36:12"
+    "scraped_at": "2026-11-14 03:11:17"
   },
   "Oklahoma City Thunder": {
     "team": "Oklahoma City Thunder",
@@ -1719,8 +1739,8 @@
     "opponent": "Los Angeles Clippers",
     "opponent_abbr": "LAC",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Shai Gilgeous-Alexander",
@@ -1733,7 +1753,7 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Alex Caruso",
+        "name": "Kenrich Williams",
         "position": "SF",
         "status": "Very Likely To Play"
       },
@@ -1780,7 +1800,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-14 02:36:12"
+    "scraped_at": "2026-11-14 03:11:17"
   },
   "OKC": {
     "team": "Oklahoma City Thunder",
@@ -1788,8 +1808,8 @@
     "opponent": "Los Angeles Clippers",
     "opponent_abbr": "LAC",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Shai Gilgeous-Alexander",
@@ -1802,7 +1822,7 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Alex Caruso",
+        "name": "Kenrich Williams",
         "position": "SF",
         "status": "Very Likely To Play"
       },
@@ -1849,7 +1869,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-14 02:36:12"
+    "scraped_at": "2026-11-14 03:11:17"
   },
   "Los Angeles Clippers": {
     "team": "Los Angeles Clippers",
@@ -1857,8 +1877,8 @@
     "opponent": "Oklahoma City Thunder",
     "opponent_abbr": "OKC",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Darius Garland",
@@ -1908,7 +1928,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-14 02:36:12"
+    "scraped_at": "2026-11-14 03:11:17"
   },
   "LAC": {
     "team": "Los Angeles Clippers",
@@ -1916,8 +1936,8 @@
     "opponent": "Oklahoma City Thunder",
     "opponent_abbr": "OKC",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Darius Garland",
@@ -1967,6 +1987,6 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-14 02:36:12"
+    "scraped_at": "2026-11-14 03:11:17"
   }
 }
