@@ -1,15 +1,15 @@
 team,conference,wins,losses,win_pct,games_behind,streak,home_record,away_record,points_for,points_against,point_diff
-Milwaukee Bucks,Eastern Conference,1.0,11.0,0.083333336,9.0,-8.0,0-0,0-0,1281.0,1456.0,-175.0
+Milwaukee Bucks,Eastern Conference,1.0,12.0,0.07692308,9.5,-9.0,0-0,0-0,1380.0,1563.0,-183.0
 Chicago Bulls,Eastern Conference,1.0,9.0,0.1,8.0,-8.0,0-0,0-0,1133.0,1288.0,-155.0
 Washington Wizards,Eastern Conference,4.0,9.0,0.30769232,6.5,-6.0,0-0,0-0,1430.0,1505.0,-75.0
 Brooklyn Nets,Eastern Conference,3.0,8.0,0.27272728,6.5,1.0,0-0,0-0,1212.0,1268.0,-56.0
 Charlotte Hornets,Eastern Conference,4.0,8.0,0.33333334,6.0,-1.0,0-0,0-0,1183.0,1315.0,-132.0
-Indiana Pacers,Eastern Conference,4.0,8.0,0.33333334,6.0,1.0,0-0,0-0,1339.0,1368.0,-29.0
-Orlando Magic,Eastern Conference,4.0,7.0,0.36363637,5.5,2.0,0-0,0-0,1193.0,1254.0,-61.0
+Indiana Pacers,Eastern Conference,5.0,8.0,0.3846154,5.5,2.0,0-0,0-0,1445.0,1472.0,-27.0
 Toronto Raptors,Eastern Conference,5.0,7.0,0.41666666,5.0,-3.0,0-0,0-0,1371.0,1354.0,17.0
+Orlando Magic,Eastern Conference,5.0,7.0,0.41666666,5.0,3.0,0-0,0-0,1300.0,1353.0,-53.0
 Miami Heat,Eastern Conference,5.0,6.0,0.45454547,4.5,2.0,0-0,0-0,1273.0,1320.0,-47.0
 Cleveland Cavaliers,Eastern Conference,6.0,6.0,0.5,4.0,1.0,0-0,0-0,1397.0,1372.0,25.0
-New York Knicks,Eastern Conference,6.0,5.0,0.54545456,3.5,-1.0,0-0,0-0,1213.0,1138.0,75.0
+New York Knicks,Eastern Conference,6.0,6.0,0.5,4.0,-2.0,0-0,0-0,1317.0,1244.0,73.0
 Atlanta Hawks,Eastern Conference,7.0,5.0,0.5833333,3.0,-1.0,0-0,0-0,1419.0,1394.0,25.0
 Detroit Pistons,Eastern Conference,8.0,3.0,0.72727275,1.5,2.0,0-0,0-0,1271.0,1186.0,85.0
 Philadelphia 76ers,Eastern Conference,10.0,3.0,0.7692308,0.5,1.0,0-0,0-0,1445.0,1422.0,23.0

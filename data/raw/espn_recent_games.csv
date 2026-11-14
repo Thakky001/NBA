@@ -1,5 +1,4 @@
 game_id,date,status,period,clock,clock_detail,season_type,home_team,home_id,home_score,away_team,away_id,away_score,spread,over_under,home_ml,away_ml,venue
-401871339,2026-05-18T00:00Z,STATUS_FINAL,4,0.0,Final,3,Detroit Pistons,8,94,Cleveland Cavaliers,5,125,,,,,Little Caesars Arena
 401873197,2026-05-19T00:30Z,STATUS_FINAL,6,0.0,Final/2OT,3,Oklahoma City Thunder,25,115,San Antonio Spurs,24,122,,,,,Paycom Center
 401873341,2026-05-20T00:00Z,STATUS_FINAL,5,0.0,Final/OT,3,New York Knicks,18,115,Cleveland Cavaliers,5,104,,,,,Madison Square Garden
 401873198,2026-05-21T00:30Z,STATUS_FINAL,4,12:00,Final,3,Oklahoma City Thunder,25,122,San Antonio Spurs,24,113,,,,,Paycom Center
@@ -257,12 +256,17 @@ game_id,date,status,period,clock,clock_detail,season_type,home_team,home_id,home
 401909977,2026-11-13T00:00Z,STATUS_FINAL,6,5:00,Final/2OT,2,Washington Wizards,27,140,Detroit Pistons,8,144,,,,,Capital One Arena
 401909978,2026-11-13T01:00Z,STATUS_FINAL,4,0.0,Final,2,Minnesota Timberwolves,16,133,Dallas Mavericks,6,94,,,,,Target Center
 401909979,2026-11-13T02:00Z,STATUS_FINAL,4,12:00,Final,2,Phoenix Suns,21,101,Charlotte Hornets,30,96,,,,,Mortgage Matchup Center
-401909296,2026-11-14T00:00Z,STATUS_SCHEDULED,0,0.0,"Fri, November 13th at 7:00 PM EST",2,Indiana Pacers,11,0,New York Knicks,18,0,NY -8.5,219.5,,,Gainbridge Fieldhouse
-401909297,2026-11-14T00:00Z,STATUS_SCHEDULED,0,0.0,"Fri, November 13th at 7:00 PM EST",2,Orlando Magic,19,0,Milwaukee Bucks,15,0,ORL -8.5,224.5,,,Kia Center
-401909298,2026-11-14T01:00Z,STATUS_SCHEDULED,0,0.0,"Fri, November 13th at 8:00 PM EST",2,Miami Heat,14,0,Cleveland Cavaliers,5,0,MIA -2.5,235.5,,,Kaseya Center
-401909299,2026-11-14T01:00Z,STATUS_SCHEDULED,0,0.0,"Fri, November 13th at 8:00 PM EST",2,Chicago Bulls,4,0,Atlanta Hawks,1,0,ATL -6.5,245.5,,,United Center
-401909300,2026-11-14T01:00Z,STATUS_SCHEDULED,0,0.0,"Fri, November 13th at 8:00 PM EST",2,New Orleans Pelicans,3,0,Memphis Grizzlies,29,0,MEM -2.5,236.5,,,Smoothie King Center
-401909301,2026-11-14T01:30Z,STATUS_SCHEDULED,0,0.0,"Fri, November 13th at 8:30 PM EST",2,Houston Rockets,10,0,Utah Jazz,26,0,HOU -15.5,219.5,,,Toyota Center (Houston)
-401909302,2026-11-14T02:30Z,STATUS_SCHEDULED,0,0.0,"Fri, November 13th at 9:30 PM EST",2,San Antonio Spurs,24,0,Golden State Warriors,9,0,SA -11.5,218.5,,,Frost Bank Center
-401909303,2026-11-14T03:00Z,STATUS_SCHEDULED,0,0.0,"Fri, November 13th at 10:00 PM EST",2,Sacramento Kings,23,0,Portland Trail Blazers,22,0,POR -9.5,228.5,,,Golden 1 Center
+401909296,2026-11-14T00:00Z,STATUS_FINAL,4,12:00,Final,2,Indiana Pacers,11,106,New York Knicks,18,104,,,,,Gainbridge Fieldhouse
+401909297,2026-11-14T00:00Z,STATUS_FINAL,4,12:00,Final,2,Orlando Magic,19,107,Milwaukee Bucks,15,99,,,,,Kia Center
+401909298,2026-11-14T01:00Z,STATUS_IN_PROGRESS,3,2:54,2:54 - 3rd Quarter,2,Miami Heat,14,84,Cleveland Cavaliers,5,79,,,,,Kaseya Center
+401909299,2026-11-14T01:00Z,STATUS_END_PERIOD,3,0.0,End of 3rd Quarter,2,Chicago Bulls,4,84,Atlanta Hawks,1,83,,,,,United Center
+401909300,2026-11-14T01:00Z,STATUS_IN_PROGRESS,3,3:19,3:19 - 3rd Quarter,2,New Orleans Pelicans,3,81,Memphis Grizzlies,29,93,,,,,Smoothie King Center
+401909301,2026-11-14T01:30Z,STATUS_HALFTIME,2,0.0,Halftime,2,Houston Rockets,10,63,Utah Jazz,26,53,,,,,Toyota Center (Houston)
+401909302,2026-11-14T02:30Z,STATUS_IN_PROGRESS,1,9:33,9:33 - 1st Quarter,2,San Antonio Spurs,24,12,Golden State Warriors,9,0,,,,,Frost Bank Center
+401909303,2026-11-14T03:00Z,STATUS_SCHEDULED,0,0.0,"Fri, November 13th at 10:00 PM EST",2,Sacramento Kings,23,0,Portland Trail Blazers,22,0,POR -10.5,229.5,,,Golden 1 Center
 401909304,2026-11-14T03:30Z,STATUS_SCHEDULED,0,0.0,"Fri, November 13th at 10:30 PM EST",2,LA Clippers,12,0,Oklahoma City Thunder,25,0,OKC -6.5,222.5,,,Intuit Dome
+401909980,2026-11-15T00:00Z,STATUS_SCHEDULED,0,0.0,"Sat, November 14th at 7:00 PM EST",2,New Orleans Pelicans,3,0,Denver Nuggets,7,0,,,,,Smoothie King Center
+401909981,2026-11-15T00:30Z,STATUS_SCHEDULED,0,0.0,"Sat, November 14th at 7:30 PM EST",2,Cleveland Cavaliers,5,0,Dallas Mavericks,6,0,,,,,Rocket Arena
+401909982,2026-11-15T01:00Z,STATUS_SCHEDULED,0,0.0,"Sat, November 14th at 8:00 PM EST",2,Miami Heat,14,0,Detroit Pistons,8,0,,,,,Kaseya Center
+401909983,2026-11-15T01:00Z,STATUS_SCHEDULED,0,0.0,"Sat, November 14th at 8:00 PM EST",2,Memphis Grizzlies,29,0,Brooklyn Nets,17,0,,,,,FedExForum
+401909984,2026-11-15T01:00Z,STATUS_SCHEDULED,0,0.0,"Sat, November 14th at 8:00 PM EST",2,Minnesota Timberwolves,16,0,Chicago Bulls,4,0,,,,,Target Center
