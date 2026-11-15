@@ -228,5 +228,30 @@ class TestFeatureEngineering(unittest.TestCase):
         self.assertGreater(sig_10, sig_30)
         self.assertGreater(sig_30, 12.5)
 
+    def test_current_season_games_played_isolation(self):
+        """Verify home_games_played strictly counts current season games and does not bleed prior season."""
+        cross_season_logs = pd.DataFrame({
+            'date': [
+                '2025-11-10', '2025-12-15', '2026-01-20', # Prior 2025-26 season
+                '2026-10-25', '2026-11-02', '2026-11-10'  # Current 2026-27 season
+            ],
+            'home_team': ['Boston Celtics'] * 6,
+            'away_team': ['Miami Heat'] * 6,
+            'home_score': [110, 105, 115, 108, 112, 120],
+            'away_score': [100, 102, 108, 100, 105, 115],
+            'over_under': [215.0] * 6,
+            'season_type': [2] * 6
+        })
+        fe = FeatureEngineer(cross_season_logs)
+        feat = fe.compute_matchup_features('Boston Celtics', 'Miami Heat', game_date='2026-11-15')
+        # Only the 3 games in Oct-Nov 2026 should be counted, NEVER the 2025 games!
+        self.assertEqual(feat['home_games_played'], 3)
+        self.assertEqual(feat['away_games_played'], 3)
+
+        # Team with 0 games in current season should return 0
+        feat_other = fe.compute_matchup_features('Golden State Warriors', 'Los Angeles Lakers', game_date='2026-11-15')
+        self.assertEqual(feat_other['home_games_played'], 0)
+        self.assertEqual(feat_other['away_games_played'], 0)
+
 if __name__ == '__main__':
     unittest.main()

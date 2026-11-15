@@ -29,6 +29,7 @@ from analysis.betting_math import (
     calculate_brier_score,
     calculate_log_loss,
     calculate_clv,
+    calibrate_win_probability,
 )
 from analysis.trend_analyzer import TrendAnalyzer
 from unittest.mock import MagicMock
@@ -517,6 +518,30 @@ class TestLivePaceProjection(unittest.TestCase):
         self.assertAlmostEqual(estimate_residual_sigma(residuals), 1.0)
         probs = empirical_line_probabilities(0.5, 0.0, residuals)
         self.assertAlmostEqual(sum(probs.values()), 1.0)
+
+    def test_calibrate_win_probability(self):
+        """Verify probability calibration maps overconfident Gaussian CDF down to empirical realities."""
+        # 1. 50% neutral coin flip stays exactly 50%
+        self.assertEqual(calibrate_win_probability(0.50), 0.50)
+
+        # 2. Overconfident ~65% probability shrinks down to ~57.7% at T=2.0
+        cal_65 = calibrate_win_probability(0.65, temperature=2.0)
+        self.assertAlmostEqual(cal_65, 0.5768, places=3)
+        self.assertLess(cal_65, 0.65)
+        self.assertGreater(cal_65, 0.53)
+
+        # 3. Symmetry around 0.50: 0.35 scales down symmetrically (0.50 - delta)
+        cal_35 = calibrate_win_probability(0.35, temperature=2.0)
+        self.assertAlmostEqual(cal_65 + cal_35, 1.0, places=4)
+
+        # 4. Push probability handling preserves total probability mass
+        cal_win = calibrate_win_probability(0.60, push_prob=0.05, temperature=2.0)
+        self.assertLess(cal_win + 0.05, 1.0)
+        self.assertGreater(cal_win, 0.50)
+
+        # 5. Platt scaling method
+        cal_platt = calibrate_win_probability(0.65, method="platt", a=0.50, b=0.0)
+        self.assertAlmostEqual(cal_platt, cal_65, places=4)
 
 
 

@@ -252,7 +252,22 @@ class AdvancedStatsCollector:
         except Exception as e:
             logger.warning(f"Unexpected error fetching game logs: {e}")
 
-        return self._load_fallback_csv('nba_api_game_logs.csv')
+        cached = self._load_fallback_csv('nba_api_game_logs.csv')
+        # Check staleness: if nba_api_game_logs is stale > 48h compared to ESPN recent games
+        try:
+            espn_cache = self._load_fallback_csv('espn_recent_games.csv')
+            if not espn_cache.empty and 'date' in espn_cache.columns:
+                espn_max = pd.to_datetime(espn_cache['date'], errors='coerce', utc=True).max()
+                cached_max = pd.to_datetime(cached['GAME_DATE'], errors='coerce', utc=True).max() if not cached.empty and 'GAME_DATE' in cached.columns else None
+                if cached_max is None or (pd.notna(espn_max) and pd.notna(cached_max) and (espn_max - cached_max).total_seconds() > 48 * 3600):
+                    logger.warning(
+                        f"nba_api_game_logs.csv is stale (latest: {cached_max}). "
+                        f"ESPN recent games is fresher (latest: {espn_max}). Falling back / supplementing with ESPN data."
+                    )
+        except Exception as ex:
+            logger.warning(f"Error checking fallback freshness: {ex}")
+
+        return cached
 
     def get_all_advanced_data(self) -> dict:
         """Fetch all advanced datasets with delays between requests.

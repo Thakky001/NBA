@@ -8,6 +8,8 @@ from analysis.prediction_tracker import (
     grade_verdict_pick,
     calculate_track_record,
     record_slate_predictions,
+    compute_game_analysis,
+    get_historical_residuals,
     load_ledger,
     grade_finished_games
 )
@@ -308,6 +310,50 @@ class TestPredictionTracker(unittest.TestCase):
         self.assertEqual(decision_away['pick_side'], 'AWAY')
         self.assertGreater(decision_away['pick_prob'], 0.50)
         self.assertEqual(decision_away['recommendation'], 'STRONG AWAY')
+
+    def test_compute_game_analysis_and_precomputed_unification(self):
+        """Test compute_game_analysis encapsulates analysis and record_slate_predictions reuses it."""
+        from unittest.mock import MagicMock, patch
+
+        mock_analyzer = MagicMock()
+        mock_analyzer.full_matchup_analysis.return_value = {
+            'spread': {'recommendation': 'STRONG HOME', 'cover_edge': 3.5, 'win_prob': 0.58, 'projected_margin': 5.0},
+            'over_under': {'recommendation': 'LEAN OVER', 'total_edge': 2.5, 'win_prob': 0.54, 'projected_total': 225.0},
+            'features': {'dq_stale_data': False}
+        }
+
+        game = {
+            'game_id': 'TEST_G1',
+            'home_team': 'Boston Celtics',
+            'away_team': 'Miami Heat',
+            'spread': -4.5,
+            'over_under': 220.0
+        }
+
+        # 1. compute_game_analysis runs cleanly
+        analysis = compute_game_analysis(game, mock_analyzer, forecast_as_of='2026-11-15T12:00:00Z')
+        self.assertIn('resolved_context', analysis)
+        self.assertEqual(analysis['resolved_context']['home_team'], 'Boston Celtics')
+        self.assertEqual(analysis['resolved_context']['spread_line'], -4.5)
+        self.assertEqual(analysis['resolved_context']['total_line'], 220.0)
+
+        # 2. record_slate_predictions reuses precomputed analysis without duplicate full_matchup_analysis call
+        mock_analyzer.reset_mock()
+        scoreboard = pd.DataFrame([game])
+        with patch('analysis.prediction_tracker.load_ledger', return_value=pd.DataFrame()):
+            with patch('analysis.prediction_tracker.save_ledger'):
+                count, analyses_dict = record_slate_predictions(
+                    '2026-11-15',
+                    scoreboard,
+                    mock_analyzer,
+                    force=True,
+                    precomputed_analyses={'TEST_G1': analysis},
+                    return_analyses=True
+                )
+                self.assertEqual(count, 1)
+                self.assertIn('TEST_G1', analyses_dict)
+                # full_matchup_analysis was NOT called again!
+                mock_analyzer.full_matchup_analysis.assert_not_called()
 
 if __name__ == '__main__':
     unittest.main()

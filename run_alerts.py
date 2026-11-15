@@ -45,6 +45,8 @@ from analysis.trend_analyzer import TrendAnalyzer
 from analysis.prediction_tracker import (
     grade_finished_games,
     record_slate_predictions,
+    compute_game_analysis,
+    get_historical_residuals,
     load_ledger,
     calculate_daily_performance_report,
 )
@@ -397,7 +399,36 @@ def run_alert_cycle(
         except Exception as e:
             logger.warning(f"Could not load AI models, falling back to pure math: {e}")
 
-    # 2. Record pre-game predictions in ledger (locks lines & picks before tip-off)
+    # 2. Build unified analysis objects for candidate games (single run, identical residuals/timestamp/lines)
+    forecast_as_of = datetime.now(timezone.utc).isoformat()
+    margin_res, total_res = get_historical_residuals(forecast_as_of)
+    candidate_analyses = {}
+    odds_data_by_gid = {}
+
+    for item in candidate_games:
+        game = item['game']
+        gid = str(game.get('game_id', ''))
+        g_dict = game.to_dict() if isinstance(game, pd.Series) else dict(game)
+        try:
+            analysis = compute_game_analysis(
+                game=g_dict,
+                analyzer=analyzer,
+                espn=espn,
+                odds_coll=odds_coll,
+                forecast_as_of=forecast_as_of,
+                margin_residuals=margin_res,
+                total_residuals=total_res
+            )
+            candidate_analyses[gid] = analysis
+            raw_h = g_dict.get('home_team', '')
+            raw_a = g_dict.get('away_team', '')
+            norm_h = normalize_team_name(raw_h) or raw_h
+            norm_a = normalize_team_name(raw_a) or raw_a
+            odds_data_by_gid[gid] = odds_coll.get_game_odds(norm_h, norm_a) if odds_coll else None
+        except Exception as exc:
+            logger.warning(f"Error computing unified analysis for game {gid}: {exc}")
+
+    # 3. Record pre-game predictions in ledger (locks lines & picks before tip-off using the exact same analyses)
     try:
         n_rec = record_slate_predictions(
             date_str,
@@ -405,84 +436,32 @@ def run_alert_cycle(
             analyzer,
             espn=espn,
             odds_coll=odds_coll,
-            max_minutes_before=window_max
+            max_minutes_before=window_max,
+            precomputed_analyses=candidate_analyses
         )
         if n_rec > 0:
             logger.info(f"Locked and recorded {n_rec} pre-game prediction(s) into ledger.")
     except Exception as exc:
         logger.warning(f"Error recording slate predictions: {exc}")
 
+    # 4. Format Telegram alert cards using the EXACT SAME analysis object
     cards = []
     alerted_gids = []
 
     for item in candidate_games:
         game = item['game']
         gid = str(game.get('game_id', ''))
-        raw_home = game.get('home_team', 'Unknown')
-        raw_away = game.get('away_team', 'Unknown')
-        home = normalize_team_name(raw_home) or raw_home
-        away = normalize_team_name(raw_away) or raw_away
-
+        analysis = candidate_analyses.get(gid)
+        if not analysis:
+            continue
         try:
-            # Odds & Line movement
-            odds_data = odds_coll.get_game_odds(home, away)
-            c_spread, c_total = odds_coll.get_consensus_lines(odds_data)
-            spread_odds = total_odds = None
-            if odds_data:
-                for book in odds_data.get('spreads', {}).values():
-                    if book.get('home') == c_spread and book.get('home_price') is not None and book.get('away_price') is not None:
-                        spread_odds = [book['home_price'], book['away_price']]
-                        break
-                for book in odds_data.get('totals', {}).values():
-                    if book.get('over') == c_total and book.get('over_price') is not None and book.get('under_price') is not None:
-                        total_odds = [book['over_price'], book['under_price']]
-                        break
-
-            raw_spread = game.get('spread')
-            raw_ou = game.get('over_under')
-
-            sp_val = calculate_home_spread(raw_spread, home, away)
-            ou_val = float(raw_ou) if pd.notna(raw_ou) else None
-            if c_spread is not None:
-                sp_val = c_spread
-            if c_total is not None:
-                ou_val = c_total
-
-            lm_data = espn.get_game_line_movement(gid) if gid else {}
-            open_total = lm_data.get('open_total')
-            open_spread = lm_data.get('open_spread')
-
-            # Fallback to ESPN pickcenter if still None
-            if sp_val is None:
-                if lm_data.get('current_spread') is not None:
-                    sp_val = lm_data.get('current_spread')
-                elif lm_data.get('open_spread') is not None:
-                    sp_val = lm_data.get('open_spread')
-            if ou_val is None:
-                if lm_data.get('current_total') is not None:
-                    ou_val = lm_data.get('current_total')
-                elif lm_data.get('open_total') is not None:
-                    ou_val = lm_data.get('open_total')
-
-            analysis = analyzer.full_matchup_analysis(
-                home_team=home,
-                away_team=away,
-                spread_line=sp_val,
-                over_under_line=ou_val,
-                open_spread=open_spread,
-                open_line=open_total,
-                game_date=date_str,
-                spread_odds=spread_odds,
-                total_odds=total_odds
-            )
-
-            # Analysis already uses single unified decision gate (analysis/recommendation.py)
-            # Any future AI residual adjustments are applied within full_matchup_analysis, eliminating duplicate overrides.
-            card = format_game_card(analysis, game.to_dict(), odds_data)
+            g_dict = game.to_dict() if isinstance(game, pd.Series) else dict(game)
+            odds_data = odds_data_by_gid.get(gid)
+            card = format_game_card(analysis, g_dict, odds_data)
             cards.append(card)
             alerted_gids.append(gid)
         except Exception as game_err:
-            logger.error(f"Failed to analyze game {gid} ({away} @ {home}): {game_err}", exc_info=True)
+            logger.error(f"Failed to format card for game {gid}: {game_err}", exc_info=True)
             continue
 
     # Compose wave message

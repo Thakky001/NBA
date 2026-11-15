@@ -325,13 +325,19 @@ class TrendAnalyzer:
         
         # Pure Raw Mode: Use pure unconstrained cand_prob for raw diagnostics
         raw_win_prob = cand_prob
-            
-        confidence = abs(pick_win_prob - 0.5) * 2.0
         
-        # Value and sizing are unavailable without actual market odds.
+        from analysis.betting_math import calibrate_win_probability
+        if recommendation != 'NEUTRAL' and over_under_line:
+            calibrated_pick_prob = calibrate_win_probability(pick_win_prob, push_prob=push_prob)
+        else:
+            calibrated_pick_prob = 0.50
+            
+        confidence = abs(calibrated_pick_prob - 0.5) * 2.0
+        
+        # Value and sizing are calculated with calibrated probabilities.
         market_odds_str = market_odds
         pick_idx = 0 if 'OVER' in recommendation else 1
-        eval_metrics = evaluate_market_pick(pick_win_prob, book_odds=market_odds_str, pick_idx=pick_idx, kelly_fraction=0.25, max_stake_cap=0.020, push_prob=push_prob if over_under_line else 0.0)
+        eval_metrics = evaluate_market_pick(calibrated_pick_prob, book_odds=market_odds_str, pick_idx=pick_idx, kelly_fraction=0.25, max_stake_cap=0.020, push_prob=push_prob if over_under_line else 0.0)
         
         # Line movement is not validated as a bet-selection rule.
         is_market_clash = False
@@ -370,7 +376,7 @@ class TrendAnalyzer:
         return {
             'recommendation': recommendation,
             'confidence': confidence,
-            'win_prob': pick_win_prob,
+            'win_prob': calibrated_pick_prob,
             'raw_win_prob': raw_win_prob,
             'is_anomaly': is_anomaly,
             'anomaly_warning': anomaly_warning,
@@ -758,15 +764,21 @@ class TrendAnalyzer:
         else:
             cand_prob = 0.50
         raw_win_prob = cand_prob
+        
+        from analysis.betting_math import calibrate_win_probability
+        if recommendation != 'NEUTRAL' and spread_line is not None:
+            calibrated_pick_prob = calibrate_win_probability(pick_win_prob, push_prob=push_prob)
+        else:
+            calibrated_pick_prob = 0.50
             
-        confidence = abs(pick_win_prob - 0.5) * 2.0
+        confidence = abs(calibrated_pick_prob - 0.5) * 2.0
 
-        # Value and sizing are unavailable without actual market odds.
+        # Value and sizing are calculated with calibrated probabilities.
         from analysis.betting_math import evaluate_market_pick
         
         market_odds_str = market_odds
         pick_idx = 0 if 'HOME' in recommendation else 1
-        eval_metrics = evaluate_market_pick(pick_win_prob, book_odds=market_odds_str, pick_idx=pick_idx, kelly_fraction=0.25, push_prob=push_prob if spread_line is not None else 0.0)
+        eval_metrics = evaluate_market_pick(calibrated_pick_prob, book_odds=market_odds_str, pick_idx=pick_idx, kelly_fraction=0.25, push_prob=push_prob if spread_line is not None else 0.0)
         
         # Line movement is not validated as a bet-selection rule.
         is_market_clash = False
@@ -804,7 +816,7 @@ class TrendAnalyzer:
         return {
             'recommendation': recommendation,
             'confidence': confidence,
-            'win_prob': pick_win_prob,
+            'win_prob': calibrated_pick_prob,
             'raw_win_prob': raw_win_prob,
             'is_anomaly': is_anomaly,
             'anomaly_warning': anomaly_warning,

@@ -8,7 +8,7 @@ and backfill historical records.
 import os
 import json
 import logging
-from typing import Dict, List, Optional, Any
+from typing import Dict, List, Optional, Any, Tuple, Union
 from datetime import datetime, timezone, timedelta
 import pandas as pd
 import numpy as np
@@ -122,6 +122,126 @@ def save_ledger(df: pd.DataFrame) -> None:
         logger.error(f"Failed to save predictions ledger to {LEDGER_PATH}: {exc}")
 
 
+def get_historical_residuals(
+    as_of: Optional[str] = None
+) -> Tuple[Optional[List[float]], Optional[List[float]]]:
+    """Extract historical margin and total residuals from graded ledger predictions."""
+    prior = load_ledger()
+    margin_residuals, total_residuals = [], []
+    if not prior.empty and {'forecast_as_of', 'model_version', 'status', 'actual_margin', 'actual_total', 'projected_margin', 'projected_total'}.issubset(prior.columns):
+        prior_df = prior.copy()
+        prior_df['forecast_as_of'] = pd.to_datetime(prior_df['forecast_as_of'], utc=True, errors='coerce')
+        cutoff = pd.Timestamp(as_of) if as_of else pd.Timestamp.now(timezone.utc)
+        eligible = prior_df[(prior_df['model_version'] == 'nba-baseline-v2') & (prior_df['status'] == 'GRADED') & (prior_df['forecast_as_of'] < cutoff)]
+        for _, prior_row in eligible.iterrows():
+            if pd.notna(prior_row['actual_margin']) and pd.notna(prior_row['projected_margin']):
+                margin_residuals.append(float(prior_row['actual_margin']) - float(prior_row['projected_margin']))
+            if pd.notna(prior_row['actual_total']) and pd.notna(prior_row['projected_total']):
+                total_residuals.append(float(prior_row['actual_total']) - float(prior_row['projected_total']))
+    m_res = margin_residuals if len(margin_residuals) >= 2 else None
+    t_res = total_residuals if len(total_residuals) >= 2 else None
+    return m_res, t_res
+
+
+def compute_game_analysis(
+    game: Dict[str, Any],
+    analyzer: Any,
+    espn: Optional[Any] = None,
+    odds_coll: Optional[Any] = None,
+    forecast_as_of: Optional[str] = None,
+    margin_residuals: Optional[List[float]] = None,
+    total_residuals: Optional[List[float]] = None
+) -> Dict[str, Any]:
+    """Compute matchup analysis for a game with consistent odds, lines, and residual inputs.
+    
+    Ensures identical lines, odds, and residuals are used between pre-game ledger locking
+    and alerting cards without divergent duplicate computation.
+    """
+    raw_home = game.get('home_team', 'Unknown')
+    raw_away = game.get('away_team', 'Unknown')
+    home = normalize_team_name(raw_home) or raw_home
+    away = normalize_team_name(raw_away) or raw_away
+    gid = str(game.get('game_id', ''))
+
+    # 1. Odds API consensus lines
+    c_spread, c_total = None, None
+    spread_odds = total_odds = None
+    if odds_coll:
+        try:
+            odds_data = odds_coll.get_game_odds(home, away)
+            c_spread, c_total = odds_coll.get_consensus_lines(odds_data)
+            for book in odds_data.get('spreads', {}).values():
+                if book.get('home') == c_spread and book.get('home_price') is not None and book.get('away_price') is not None:
+                    spread_odds = [book['home_price'], book['away_price']]
+                    break
+            for book in odds_data.get('totals', {}).values():
+                if book.get('over') == c_total and book.get('over_price') is not None and book.get('under_price') is not None:
+                    total_odds = [book['over_price'], book['under_price']]
+                    break
+        except Exception:
+            pass
+
+    # 2. Scoreboard lines
+    raw_spread = game.get('spread')
+    raw_ou = game.get('over_under')
+    sp_val = calculate_home_spread(raw_spread, home, away)
+    ou_val = float(raw_ou) if pd.notna(raw_ou) else None
+
+    if c_spread is not None: sp_val = c_spread
+    if c_total is not None: ou_val = c_total
+
+    # 3. ESPN pickcenter line movement fallback
+    lm_data = {}
+    if espn and hasattr(espn, 'get_game_line_movement'):
+        try:
+            lm_data = espn.get_game_line_movement(str(gid))
+        except Exception:
+            pass
+
+    open_total = lm_data.get('open_total')
+    open_spread = lm_data.get('open_spread')
+
+    if sp_val is None:
+        sp_val = lm_data.get('current_spread') or lm_data.get('open_spread')
+    if ou_val is None:
+        ou_val = lm_data.get('current_total') or lm_data.get('open_total')
+
+    as_of = forecast_as_of or datetime.now(timezone.utc).isoformat()
+    if margin_residuals is None or total_residuals is None:
+        hist_m, hist_t = get_historical_residuals(as_of)
+        if margin_residuals is None:
+            margin_residuals = hist_m
+        if total_residuals is None:
+            total_residuals = hist_t
+
+    analysis = analyzer.full_matchup_analysis(
+        home_team=home,
+        away_team=away,
+        spread_line=sp_val,
+        over_under_line=ou_val,
+        open_spread=open_spread,
+        open_line=open_total,
+        game_date=as_of,
+        spread_odds=spread_odds,
+        total_odds=total_odds,
+        margin_residuals=margin_residuals,
+        total_residuals=total_residuals
+    )
+    analysis['resolved_context'] = {
+        'game_id': gid,
+        'home_team': home,
+        'away_team': away,
+        'spread_line': sp_val,
+        'total_line': ou_val,
+        'open_spread': open_spread,
+        'open_total': open_total,
+        'spread_odds': spread_odds,
+        'total_odds': total_odds,
+        'forecast_as_of': as_of
+    }
+    return analysis
+
+
 def record_slate_predictions(
     date_str: str,
     scoreboard_df: pd.DataFrame,
@@ -129,8 +249,10 @@ def record_slate_predictions(
     espn: Optional[Any] = None,
     odds_coll: Optional[Any] = None,
     max_minutes_before: Optional[float] = 60.0,
-    force: bool = False
-) -> int:
+    force: bool = False,
+    precomputed_analyses: Optional[Dict[str, Dict[str, Any]]] = None,
+    return_analyses: bool = False
+) -> Union[int, Tuple[int, Dict[str, Dict[str, Any]]]]:
     """Record pre-game predictions for games in the slate within the pre-game window.
 
     Locks in official pre-game predictions and closing lines before tip-off.
@@ -145,12 +267,14 @@ def record_slate_predictions(
         max_minutes_before: Only record games within N minutes before tip-off (default: 60 min).
             If None, records all scheduled games for today regardless of tip-off time.
         force: If True, bypass timing filters (used in tests or offline grading).
+        precomputed_analyses: Optional mapping of game_id -> pre-computed analysis dict.
+        return_analyses: If True, return (count, analyses_dict).
 
     Returns:
-        int: Number of new predictions recorded.
+        int or (int, dict): Number of new predictions recorded (and analyses dict if return_analyses=True).
     """
     if scoreboard_df is None or scoreboard_df.empty:
-        return 0
+        return (0, {}) if return_analyses else 0
 
     now_thai = datetime.now(THAI_TZ)
     today_thai_str = now_thai.strftime('%Y-%m-%d')
@@ -161,15 +285,17 @@ def record_slate_predictions(
             f"Bypassing prediction recording for future date {date_str} (today is {today_thai_str}). "
             f"Pre-game predictions will lock on game day within the pre-game window."
         )
-        return 0
+        return (0, {}) if return_analyses else 0
 
     ledger_df = load_ledger()
     existing_gids = set(ledger_df['game_id'].astype(str).tolist()) if not ledger_df.empty else set()
 
     new_rows = []
+    analyses_by_gid = {}
+
     for _, game in scoreboard_df.iterrows():
         gid = str(game.get('game_id', '')).strip()
-        if not gid or gid in existing_gids:
+        if not gid:
             continue
 
         status_str = str(game.get('status', '')).upper()
@@ -206,85 +332,34 @@ def record_slate_predictions(
                     if minutes_until < -5.0:
                         continue
 
-        raw_home = game.get('home_team', 'Unknown')
-        raw_away = game.get('away_team', 'Unknown')
-        home = normalize_team_name(raw_home) or raw_home
-        away = normalize_team_name(raw_away) or raw_away
-
-        # 1. Odds API consensus lines
-        c_spread, c_total = None, None
-        spread_odds = total_odds = None
-        if odds_coll:
-            try:
-                odds_data = odds_coll.get_game_odds(home, away)
-                c_spread, c_total = odds_coll.get_consensus_lines(odds_data)
-                for book in odds_data.get('spreads', {}).values():
-                    if book.get('home') == c_spread and book.get('home_price') is not None and book.get('away_price') is not None:
-                        spread_odds = [book['home_price'], book['away_price']]
-                        break
-                for book in odds_data.get('totals', {}).values():
-                    if book.get('over') == c_total and book.get('over_price') is not None and book.get('under_price') is not None:
-                        total_odds = [book['over_price'], book['under_price']]
-                        break
-            except Exception:
-                pass
-
-        # 2. Scoreboard lines
-        raw_spread = game.get('spread')
-        raw_ou = game.get('over_under')
-        sp_val = calculate_home_spread(raw_spread, home, away)
-        ou_val = float(raw_ou) if pd.notna(raw_ou) else None
-
-        if c_spread is not None: sp_val = c_spread
-        if c_total is not None: ou_val = c_total
-
-        # 3. ESPN pickcenter line movement fallback
-        lm_data = {}
-        if espn and hasattr(espn, 'get_game_line_movement'):
-            try:
-                lm_data = espn.get_game_line_movement(str(gid))
-            except Exception:
-                pass
-
-        open_total = lm_data.get('open_total')
-        open_spread = lm_data.get('open_spread')
-
-        if sp_val is None:
-            sp_val = lm_data.get('current_spread') or lm_data.get('open_spread')
-        if ou_val is None:
-            ou_val = lm_data.get('current_total') or lm_data.get('open_total')
-
-        # Run analysis
+        # Run or reuse analysis
         try:
-            forecast_as_of = datetime.now(timezone.utc).isoformat()
-            prior = load_ledger()
-            margin_residuals, total_residuals = [], []
-            if not prior.empty and {'forecast_as_of', 'model_version', 'status', 'actual_margin', 'actual_total', 'projected_margin', 'projected_total'}.issubset(prior.columns):
-                prior['forecast_as_of'] = pd.to_datetime(prior['forecast_as_of'], utc=True, errors='coerce')
-                eligible = prior[(prior['model_version'] == 'nba-baseline-v2') & (prior['status'] == 'GRADED') & (prior['forecast_as_of'] < pd.Timestamp(forecast_as_of))]
-                for _, prior_row in eligible.iterrows():
-                    if pd.notna(prior_row['actual_margin']) and pd.notna(prior_row['projected_margin']):
-                        margin_residuals.append(float(prior_row['actual_margin']) - float(prior_row['projected_margin']))
-                    if pd.notna(prior_row['actual_total']) and pd.notna(prior_row['projected_total']):
-                        total_residuals.append(float(prior_row['actual_total']) - float(prior_row['projected_total']))
-            margin_residuals = margin_residuals if len(margin_residuals) >= 2 else None
-            total_residuals = total_residuals if len(total_residuals) >= 2 else None
-            analysis = analyzer.full_matchup_analysis(
-                home_team=home,
-                away_team=away,
-                spread_line=sp_val,
-                over_under_line=ou_val,
-                open_spread=open_spread,
-                open_line=open_total,
-                game_date=forecast_as_of,
-                spread_odds=spread_odds,
-                total_odds=total_odds,
-                margin_residuals=margin_residuals,
-                total_residuals=total_residuals
-            )
+            if precomputed_analyses and gid in precomputed_analyses:
+                analysis = precomputed_analyses[gid]
+            else:
+                g_dict = game.to_dict() if isinstance(game, pd.Series) else dict(game)
+                analysis = compute_game_analysis(
+                    game=g_dict,
+                    analyzer=analyzer,
+                    espn=espn,
+                    odds_coll=odds_coll
+                )
+            analyses_by_gid[gid] = analysis
         except Exception as exc:
-            logger.warning(f"Error analyzing game {gid} ({away} @ {home}): {exc}")
+            logger.warning(f"Error analyzing game {gid}: {exc}")
             continue
+
+        if gid in existing_gids:
+            continue
+
+        ctx = analysis.get('resolved_context') or {}
+        home = ctx.get('home_team') or normalize_team_name(game.get('home_team', '')) or game.get('home_team', '')
+        away = ctx.get('away_team') or normalize_team_name(game.get('away_team', '')) or game.get('away_team', '')
+        sp_val = ctx.get('spread_line')
+        ou_val = ctx.get('total_line')
+        spread_odds = ctx.get('spread_odds')
+        total_odds = ctx.get('total_odds')
+        forecast_as_of = ctx.get('forecast_as_of') or datetime.now(timezone.utc).isoformat()
 
         ou_res = analysis.get('over_under') or {}
         sp_res = analysis.get('spread') or {}
@@ -360,7 +435,7 @@ def record_slate_predictions(
         save_ledger(ledger_df)
         logger.info(f"Recorded {len(new_rows)} new predictions to ledger.")
 
-    return len(new_rows)
+    return (len(new_rows), analyses_by_gid) if return_analyses else len(new_rows)
 
 
 def grade_finished_games(scoreboard_df: pd.DataFrame) -> int:

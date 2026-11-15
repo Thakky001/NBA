@@ -651,42 +651,29 @@ class FeatureEngineer:
         home_form_all = self.get_team_recent_form(home_team, 100, before_date=game_date)
         away_form_all = self.get_team_recent_form(away_team, 100, before_date=game_date)
         
-        # If game_date is provided, strictly count current regular season games
-        if game_date:
-            g_dt = pd.to_datetime(game_date)
-            season_year = g_dt.year if g_dt.month >= 10 else g_dt.year - 1
-            season_start = pd.Timestamp(year=season_year, month=10, day=1)
-            
-            h_games = self._get_team_games(home_team, before_date=g_dt)
-            if not h_games.empty:
-                h_dates = pd.to_datetime(h_games['date'])
-                if hasattr(h_dates.dt, 'tz') and h_dates.dt.tz is not None:
-                    h_dates = h_dates.dt.tz_localize(None)
-                h_mask = (h_dates >= season_start)
-                if 'season_type' in h_games.columns:
-                    h_mask = h_mask & ((h_games['season_type'] == 2) | (h_games['season_type'].isna()))
-                if 'home_score' in h_games.columns:
-                    h_mask = h_mask & (h_games['home_score'].notna()) & (h_games['home_score'] > 0)
-                result['home_games_played'] = int(h_mask.sum())
-            else:
-                result['home_games_played'] = home_form_all.get('wins', 0) + home_form_all.get('losses', 0)
-                
-            a_games = self._get_team_games(away_team, before_date=g_dt)
-            if not a_games.empty:
-                a_dates = pd.to_datetime(a_games['date'])
-                if hasattr(a_dates.dt, 'tz') and a_dates.dt.tz is not None:
-                    a_dates = a_dates.dt.tz_localize(None)
-                a_mask = (a_dates >= season_start)
-                if 'season_type' in a_games.columns:
-                    a_mask = a_mask & ((a_games['season_type'] == 2) | (a_games['season_type'].isna()))
-                if 'home_score' in a_games.columns:
-                    a_mask = a_mask & (a_games['home_score'].notna()) & (a_games['home_score'] > 0)
-                result['away_games_played'] = int(a_mask.sum())
-            else:
-                result['away_games_played'] = away_form_all.get('wins', 0) + away_form_all.get('losses', 0)
+        # Strictly count current regular season games (from Oct 1 of current season)
+        ref_date = game_date or pd.Timestamp.now()
+        g_dt = pd.to_datetime(ref_date)
+        if hasattr(g_dt, 'tz') and g_dt.tz is not None:
+            g_dt = g_dt.tz_convert(None)
+        season_year = g_dt.year if g_dt.month >= 10 else g_dt.year - 1
+        season_start = pd.Timestamp(year=season_year, month=10, day=1)
+        
+        h_games = self._get_team_games(home_team, before_date=g_dt, current_season_only=True, regular_season_only=True)
+        if not h_games.empty:
+            if 'home_score' in h_games.columns:
+                h_games = h_games[(h_games['home_score'].notna()) & (h_games['home_score'] > 0)]
+            result['home_games_played'] = len(h_games)
         else:
-            result['home_games_played'] = home_form_all.get('wins', 0) + home_form_all.get('losses', 0)
-            result['away_games_played'] = away_form_all.get('wins', 0) + away_form_all.get('losses', 0)
+            result['home_games_played'] = 0
+            
+        a_games = self._get_team_games(away_team, before_date=g_dt, current_season_only=True, regular_season_only=True)
+        if not a_games.empty:
+            if 'home_score' in a_games.columns:
+                a_games = a_games[(a_games['home_score'].notna()) & (a_games['home_score'] > 0)]
+            result['away_games_played'] = len(a_games)
+        else:
+            result['away_games_played'] = 0
         
         # Add Player-Based Valuation (Roster Ratings)
         roster_data = self.get_roster_ratings(home_team, away_team)
