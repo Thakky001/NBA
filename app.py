@@ -2426,9 +2426,12 @@ def _render_spread_analysis_card(home, away, sp_val, open_spread, sp_res, rec_te
 
     metrics_html = ""
     if proj_margin is not None:
-        ai_val_str = f"{ai_res:+.1f} PTS" if (ai_res is not None and ai_res != 0.0) else "0.0 PTS"
+        ai_val_str = f"{ai_res:+.1f} PTS" if (ai_res is not None and ai_res != 0.0) else "0.0 PTS (ปิดชั่วคราว)"
         raw_val_str = f"{raw_margin:+.1f} PTS" if raw_margin is not None else "-"
-        metrics_html = f'''<div class="model-metrics-grid"><div class="model-metric-item"><span class="model-metric-label">Market-Anchored</span><span class="model-metric-val pos">{proj_margin:+.1f} PTS</span><span class="model-metric-sub">เปิด {anchor_sp:+.1f}×65% + ดิบ×35%</span></div><div class="model-metric-item"><span class="model-metric-label">AI Tuned (CatBoost)</span><span class="model-metric-val">{ai_val_str}</span><span class="model-metric-sub">ปรับความล้า / B2B / ฟอร์ม</span></div><div class="model-metric-item"><span class="model-metric-label">Raw Model</span><span class="model-metric-val">{raw_val_str}</span><span class="model-metric-sub">โมเดลสถิติดั้งเดิม</span></div></div>'''
+        m_w = sp_res.get('market_weight', 0.65)
+        m_pct = int(round(m_w * 100))
+        raw_pct = 100 - m_pct
+        metrics_html = f'''<div class="model-metrics-grid"><div class="model-metric-item"><span class="model-metric-label">Market-Anchored</span><span class="model-metric-val pos">{proj_margin:+.1f} PTS</span><span class="model-metric-sub">ตลาด {anchor_sp:+.1f}×{m_pct}% + ดิบ×{raw_pct}%</span></div><div class="model-metric-item"><span class="model-metric-label">AI Tuned (CatBoost)</span><span class="model-metric-val">{ai_val_str}</span><span class="model-metric-sub">ปรับความล้า / B2B / ฟอร์ม</span></div><div class="model-metric-item"><span class="model-metric-label">Raw Model</span><span class="model-metric-val">{raw_val_str}</span><span class="model-metric-sub">โมเดลสถิติดั้งเดิม</span></div></div>'''
 
     # 7. Factors Drawer (embedded inside card)
     factors_html = ""
@@ -2568,9 +2571,12 @@ def _render_ou_analysis_card(ou_val, open_total, ou_res, rec_text, t_edge, win_p
 
     metrics_html = ""
     if proj_total is not None:
-        ai_val_str = f"{ai_res:+.1f} PTS" if (ai_res is not None and ai_res != 0.0) else "0.0 PTS"
+        ai_val_str = f"{ai_res:+.1f} PTS" if (ai_res is not None and ai_res != 0.0) else "0.0 PTS (ปิดชั่วคราว)"
         raw_val_str = f"{raw_total:.1f} PTS" if raw_total is not None else "-"
-        metrics_html = f'''<div class="model-metrics-grid"><div class="model-metric-item"><span class="model-metric-label">Market-Anchored</span><span class="model-metric-val pos">{proj_total:.1f} PTS</span><span class="model-metric-sub">เปิด {anchor_used:.1f}×65% + ดิบ×35%</span></div><div class="model-metric-item"><span class="model-metric-label">AI Tuned (CatBoost)</span><span class="model-metric-val">{ai_val_str}</span><span class="model-metric-sub">ปรับความล้า / B2B / สปีด</span></div><div class="model-metric-item"><span class="model-metric-label">Raw Model</span><span class="model-metric-val">{raw_val_str}</span><span class="model-metric-sub">โมเดลสถิติดั้งเดิม</span></div></div>'''
+        m_w = ou_res.get('market_weight', 0.65)
+        m_pct = int(round(m_w * 100))
+        raw_pct = 100 - m_pct
+        metrics_html = f'''<div class="model-metrics-grid"><div class="model-metric-item"><span class="model-metric-label">Market-Anchored</span><span class="model-metric-val pos">{proj_total:.1f} PTS</span><span class="model-metric-sub">ตลาด {anchor_used:.1f}×{m_pct}% + ดิบ×{raw_pct}%</span></div><div class="model-metric-item"><span class="model-metric-label">AI Tuned (CatBoost)</span><span class="model-metric-val">{ai_val_str}</span><span class="model-metric-sub">ปรับความล้า / B2B / สปีด</span></div><div class="model-metric-item"><span class="model-metric-label">Raw Model</span><span class="model-metric-val">{raw_val_str}</span><span class="model-metric-sub">โมเดลสถิติดั้งเดิม</span></div></div>'''
 
     # 7. Factors Drawer (embedded inside card)
     factors_html = ""
