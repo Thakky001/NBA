@@ -41,7 +41,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 00:11:16"
+    "scraped_at": "2026-11-15 00:36:10"
   },
   "DEN": {
     "team": "Denver Nuggets",
@@ -85,7 +85,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 00:11:16"
+    "scraped_at": "2026-11-15 00:36:10"
   },
   "New Orleans Pelicans": {
     "team": "New Orleans Pelicans",
@@ -149,7 +149,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 00:11:16"
+    "scraped_at": "2026-11-15 00:36:10"
   },
   "NOP": {
     "team": "New Orleans Pelicans",
@@ -213,7 +213,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 00:11:16"
+    "scraped_at": "2026-11-15 00:36:10"
   },
   "Dallas Mavericks": {
     "team": "Dallas Mavericks",
@@ -221,8 +221,8 @@
     "opponent": "Cleveland Cavaliers",
     "opponent_abbr": "CLE",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Kyrie Irving",
@@ -272,7 +272,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 00:11:16"
+    "scraped_at": "2026-11-15 00:36:10"
   },
   "DAL": {
     "team": "Dallas Mavericks",
@@ -280,8 +280,8 @@
     "opponent": "Cleveland Cavaliers",
     "opponent_abbr": "CLE",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Kyrie Irving",
@@ -331,7 +331,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 00:11:16"
+    "scraped_at": "2026-11-15 00:36:10"
   },
   "Cleveland Cavaliers": {
     "team": "Cleveland Cavaliers",
@@ -405,7 +405,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 00:11:16"
+    "scraped_at": "2026-11-15 00:36:10"
   },
   "CLE": {
     "team": "Cleveland Cavaliers",
@@ -479,7 +479,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 00:11:16"
+    "scraped_at": "2026-11-15 00:36:10"
   },
   "Detroit Pistons": {
     "team": "Detroit Pistons",
@@ -528,7 +528,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 00:11:16"
+    "scraped_at": "2026-11-15 00:36:10"
   },
   "DET": {
     "team": "Detroit Pistons",
@@ -577,7 +577,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 00:11:16"
+    "scraped_at": "2026-11-15 00:36:10"
   },
   "Miami Heat": {
     "team": "Miami Heat",
@@ -585,8 +585,8 @@
     "opponent": "Detroit Pistons",
     "opponent_abbr": "DET",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Davion Mitchell",
@@ -621,7 +621,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 00:11:16"
+    "scraped_at": "2026-11-15 00:36:10"
   },
   "MIA": {
     "team": "Miami Heat",
@@ -629,8 +629,8 @@
     "opponent": "Detroit Pistons",
     "opponent_abbr": "DET",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Davion Mitchell",
@@ -665,7 +665,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 00:11:16"
+    "scraped_at": "2026-11-15 00:36:10"
   },
   "Chicago Bulls": {
     "team": "Chicago Bulls",
@@ -724,7 +724,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 00:11:16"
+    "scraped_at": "2026-11-15 00:36:10"
   },
   "CHI": {
     "team": "Chicago Bulls",
@@ -783,7 +783,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 00:11:16"
+    "scraped_at": "2026-11-15 00:36:10"
   },
   "Minnesota Timberwolves": {
     "team": "Minnesota Timberwolves",
@@ -832,7 +832,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 00:11:16"
+    "scraped_at": "2026-11-15 00:36:10"
   },
   "MIN": {
     "team": "Minnesota Timberwolves",
@@ -881,7 +881,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 00:11:16"
+    "scraped_at": "2026-11-15 00:36:10"
   },
   "Brooklyn Nets": {
     "team": "Brooklyn Nets",
@@ -922,10 +922,10 @@
       {
         "name": "Michael Porter",
         "position": "F",
-        "status": "Very Likely To Play"
+        "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 00:11:16"
+    "scraped_at": "2026-11-15 00:36:10"
   },
   "BKN": {
     "team": "Brooklyn Nets",
@@ -966,10 +966,10 @@
       {
         "name": "Michael Porter",
         "position": "F",
-        "status": "Very Likely To Play"
+        "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 00:11:16"
+    "scraped_at": "2026-11-15 00:36:10"
   },
   "Memphis Grizzlies": {
     "team": "Memphis Grizzlies",
@@ -1015,7 +1015,7 @@
       {
         "name": "Jerami Grant",
         "position": "F",
-        "status": "Toss Up To Play"
+        "status": "Very Unlikely To Play"
       },
       {
         "name": "Ty Jerome",
@@ -1033,7 +1033,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 00:11:16"
+    "scraped_at": "2026-11-15 00:36:10"
   },
   "MEM": {
     "team": "Memphis Grizzlies",
@@ -1079,7 +1079,7 @@
       {
         "name": "Jerami Grant",
         "position": "F",
-        "status": "Toss Up To Play"
+        "status": "Very Unlikely To Play"
       },
       {
         "name": "Ty Jerome",
@@ -1097,6 +1097,6 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 00:11:16"
+    "scraped_at": "2026-11-15 00:36:10"
   }
 }
