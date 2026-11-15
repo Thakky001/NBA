@@ -80,8 +80,8 @@ class TrendAnalyzer:
             weights['trend'] += 0.15
 
         # Check if historical O/U records exist in cache; if not, safely redistribute weight
-        home_ou = features.get('home_ou_record', (0, 0))
-        away_ou = features.get('away_ou_record', (0, 0))
+        home_ou = features.get('home_ou_record') or (0, 0)
+        away_ou = features.get('away_ou_record') or (0, 0)
         total_games = sum(home_ou) + sum(away_ou)
         if total_games == 0 and weights['ou'] > 0:
             ou_w = weights['ou']
@@ -515,8 +515,8 @@ class TrendAnalyzer:
         score += factor_score_pd * weights['pd']
 
         # Factor 3: home/away splits
-        home_rec = features.get('home_home_record', (0,0))
-        away_rec = features.get('away_away_record', (0,0))
+        home_rec = features.get('home_home_record') or (0, 0)
+        away_rec = features.get('away_away_record') or (0, 0)
         home_home_win_pct = home_rec[0] / (home_rec[0] + home_rec[1]) if sum(home_rec) > 0 else 0.5
         away_away_win_pct = away_rec[0] / (away_rec[0] + away_rec[1]) if sum(away_rec) > 0 else 0.5
         split_diff = home_home_win_pct - away_away_win_pct
@@ -548,9 +548,9 @@ class TrendAnalyzer:
         score += factor_score_str * weights['str']
 
         # Factor 5: h2h record
-        h2h_rec = features.get('h2h_record', (0,0))
-        h2h_home_wins = h2h_rec[0]
-        h2h_games = sum(h2h_rec)
+        h2h_rec = features.get('h2h_record') or (0, 0)
+        h2h_home_wins = h2h_rec[0] if len(h2h_rec) > 0 else 0
+        h2h_games = sum(h2h_rec) if len(h2h_rec) > 0 else 0
         if h2h_games > 0:
             h2h_pct = h2h_home_wins / h2h_games
             factor_score_h2h = (h2h_pct - 0.5) * 2
@@ -559,7 +559,7 @@ class TrendAnalyzer:
         direction_h2h = 'home' if factor_score_h2h > 0 else ('away' if factor_score_h2h < 0 else 'neutral')
         factors.append({
             'name': 'Head-to-Head Record',
-            'value': f'Home won {h2h_home_wins}/{h2h_games}',
+            'value': f'Home won {h2h_home_wins}/{h2h_games}' if h2h_games > 0 else 'ยังไม่เคยเจอกันฤดูกาลนี้',
             'direction': direction_h2h,
             'weight': weights['h2h'],
             'score': factor_score_h2h
@@ -622,8 +622,8 @@ class TrendAnalyzer:
 
         # Rest Advantage Impact on Projected Margin
         # Empirical NBA data shows Road B2B teams (0 rest with travel) suffer -3.5 pt penalty
-        home_rest = features.get('home_rest_days', 2)
-        away_rest = features.get('away_rest_days', 2)
+        home_rest = features.get('home_rest_days') if features.get('home_rest_days') is not None else 2
+        away_rest = features.get('away_rest_days') if features.get('away_rest_days') is not None else 2
         rest_margin_adj = 0.0
         if home_rest == 0 and away_rest >= 1:
             rest_margin_adj -= 2.5
