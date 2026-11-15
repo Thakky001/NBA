@@ -350,7 +350,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 4431823,Miles McBride,2,Guard,"6' 2""",195 lbs,26,6.0,West Virginia,18,New York Knicks
 4838721,Tyler Nickel,55,Forward,"6' 8""",217 lbs,23,0.0,Vanderbilt,18,New York Knicks
 3914044,Landry Shamet,44,Guard,"6' 5""",190 lbs,29,9.0,Wichita State,18,New York Knicks
-3136195,Karl-Anthony Towns,32,Center,"7' 0""",248 lbs,30,12.0,Kentucky,18,New York Knicks
+3136195,Karl-Anthony Towns,32,Center,"7' 0""",248 lbs,31,12.0,Kentucky,18,New York Knicks
 4432808,James Wiseman,35,Center,"6' 11""",240 lbs,25,7.0,Memphis,18,New York Knicks
 4684208,Brooks Barnhizer,23,Forward,"6' 6""",226 lbs,24,2.0,Northwestern,25,Oklahoma City Thunder
 2991350,Alex Caruso,9,Guard,"6' 5""",186 lbs,32,10.0,Texas A&M,25,Oklahoma City Thunder
@@ -456,7 +456,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 5106058,Emanuel Sharp,34,Guard,"6' 3""",208 lbs,22,0.0,Houston,23,Sacramento Kings
 3907387,Ben Simmons,25,Guard,"6' 10""",240 lbs,30,10.0,LSU,23,Sacramento Kings
 6578,Harrison Barnes,40,Forward,"6' 8""",225 lbs,34,15.0,North Carolina,24,San Antonio Spurs
-5105337,Maliq Brown,15,Forward,"6' 9""",235 lbs,22,0.0,Duke,24,San Antonio Spurs
+5105337,Maliq Brown,15,Forward,"6' 9""",235 lbs,23,0.0,Duke,24,San Antonio Spurs
 5061568,Carter Bryant,11,Forward,"6' 7""",230 lbs,20,2.0,Arizona,24,San Antonio Spurs
 4845367,Stephon Castle,5,Guard,"6' 6""",220 lbs,22,3.0,UConn,24,San Antonio Spurs
 4592479,Julian Champagnie,30,Forward,"6' 7""",215 lbs,25,5.0,St. John's,24,San Antonio Spurs
