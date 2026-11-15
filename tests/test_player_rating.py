@@ -8,6 +8,16 @@ from processing.player_rating import PlayerRatingEngine
 class TestPlayerRating(unittest.TestCase):
     """Tests for PlayerRatingEngine and team resolution addressing Bug 4."""
 
+    def setUp(self):
+        self.inj_patch = patch('collectors.espn_collector.ESPNCollector.get_injuries', return_value=pd.DataFrame())
+        self.inj_patch.start()
+        self.rw_patch = patch('collectors.rotowire_collector.RotoWireCollector.get_todays_lineups', return_value={})
+        self.rw_patch.start()
+
+    def tearDown(self):
+        self.inj_patch.stop()
+        self.rw_patch.stop()
+
     def test_all_30_teams_resolution(self):
         """Ensure all 30 NBA teams resolve properly from full name, abbrev, and common aliases."""
         for abbrev, info in TEAMS.items():

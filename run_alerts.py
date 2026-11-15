@@ -42,7 +42,12 @@ from collectors.odds_collector import OddsCollector
 from processing.data_merger import DataMerger
 from processing.feature_engineering import FeatureEngineer
 from analysis.trend_analyzer import TrendAnalyzer
-from analysis.prediction_tracker import grade_finished_games, record_slate_predictions, load_ledger
+from analysis.prediction_tracker import (
+    grade_finished_games,
+    record_slate_predictions,
+    load_ledger,
+    calculate_daily_performance_report,
+)
 from notifications.telegram_bot import TelegramNotifier
 
 # Configure logging
@@ -56,6 +61,7 @@ THAI_TZ = timezone(timedelta(hours=7))
 ALERT_LEDGER_PATH = os.path.join(RAW_DIR, 'alerted_games.json')
 DEFAULT_DASHBOARD_URL = os.getenv('STREAMLIT_APP_URL', 'https://hetu8dr75jdcavumnqk6jz.streamlit.app/')
 ENABLE_AI_RESIDUAL = False  # Disabled during early season: base math outperforms residual model (MAE 13.62 vs 14.39)
+BETTING_PAUSED = os.getenv('NBA_BETTING_PAUSED', 'true').lower() in ('true', '1', 'yes')  # Paper mode until go-live criteria met
 
 
 def load_alerted_ledger() -> Dict[str, List[str]]:
@@ -233,7 +239,10 @@ def format_game_card(analysis: Dict[str, Any], game_info: Dict[str, Any], odds_d
             is_confirmed = lm_pick.get('verdict') in ['CONFIRMED_ALIGNED', 'MOVE_ALIGNED', 'STABLE_MODEL']
             pick_badge = "🔥 [CONFIRMED]" if is_confirmed else "🎯"
 
-            tier_badge = "🟢 [ไม้หลัก]" if 'STRONG' in rec else "🟡 [ไม้เล็ก 0.25-0.5U]"
+            if BETTING_PAUSED:
+                tier_badge = "🧪 [Paper Strong]" if 'STRONG' in rec else "📝 [Paper Lean]"
+            else:
+                tier_badge = "🟢 [ไม้หลัก]" if 'STRONG' in rec else "🟡 [ไม้เล็ก 0.25-0.5U]"
             if p_type == 'Spread':
                 action_text = t_rec(rec, spread_line=sp_val, home_team=home, away_team=away)
                 card_lines.append(f"{pick_badge} {tier_badge} <b>แต้มต่อ: {action_text}</b>")
@@ -301,6 +310,15 @@ def run_alert_cycle(
                 g_count += grade_finished_games(yesterday_sb)
         if g_count > 0:
             logger.info(f"Auto-graded {g_count} finished prediction(s) in ledger.")
+            try:
+                perf_report = calculate_daily_performance_report()
+                logger.info(
+                    f"Daily performance report updated: as_of={perf_report.get('as_of_date')}, "
+                    f"7d_wr={perf_report.get('rolling_7d', {}).get('win_rate')}%, "
+                    f"7d_roi={perf_report.get('rolling_7d', {}).get('roi_pct')}%"
+                )
+            except Exception as rpt_err:
+                logger.warning(f"Failed to generate daily performance report: {rpt_err}")
     except Exception as exc:
         logger.warning(f"Error auto-grading predictions: {exc}")
 
@@ -405,56 +423,82 @@ def run_alert_cycle(
         home = normalize_team_name(raw_home) or raw_home
         away = normalize_team_name(raw_away) or raw_away
 
-        # Odds & Line movement
-        odds_data = odds_coll.get_game_odds(home, away)
-        c_spread, c_total = odds_coll.get_consensus_lines(odds_data)
-        raw_spread = game.get('spread')
-        raw_ou = game.get('over_under')
+        try:
+            # Odds & Line movement
+            odds_data = odds_coll.get_game_odds(home, away)
+            c_spread, c_total = odds_coll.get_consensus_lines(odds_data)
+            spread_odds = total_odds = None
+            if odds_data:
+                for book in odds_data.get('spreads', {}).values():
+                    if book.get('home') == c_spread and book.get('home_price') is not None and book.get('away_price') is not None:
+                        spread_odds = [book['home_price'], book['away_price']]
+                        break
+                for book in odds_data.get('totals', {}).values():
+                    if book.get('over') == c_total and book.get('over_price') is not None and book.get('under_price') is not None:
+                        total_odds = [book['over_price'], book['under_price']]
+                        break
 
-        sp_val = calculate_home_spread(raw_spread, home, away)
-        ou_val = float(raw_ou) if pd.notna(raw_ou) else None
-        if c_spread is not None:
-            sp_val = c_spread
-        if c_total is not None:
-            ou_val = c_total
+            raw_spread = game.get('spread')
+            raw_ou = game.get('over_under')
 
-        lm_data = espn.get_game_line_movement(gid) if gid else {}
-        open_total = lm_data.get('open_total')
-        open_spread = lm_data.get('open_spread')
+            sp_val = calculate_home_spread(raw_spread, home, away)
+            ou_val = float(raw_ou) if pd.notna(raw_ou) else None
+            if c_spread is not None:
+                sp_val = c_spread
+            if c_total is not None:
+                ou_val = c_total
 
-        # Fallback to ESPN pickcenter if still None
-        if sp_val is None:
-            if lm_data.get('current_spread') is not None:
-                sp_val = lm_data.get('current_spread')
-            elif lm_data.get('open_spread') is not None:
-                sp_val = lm_data.get('open_spread')
-        if ou_val is None:
-            if lm_data.get('current_total') is not None:
-                ou_val = lm_data.get('current_total')
-            elif lm_data.get('open_total') is not None:
-                ou_val = lm_data.get('open_total')
+            lm_data = espn.get_game_line_movement(gid) if gid else {}
+            open_total = lm_data.get('open_total')
+            open_spread = lm_data.get('open_spread')
 
-        analysis = analyzer.full_matchup_analysis(
-            home_team=home,
-            away_team=away,
-            spread_line=sp_val,
-            over_under_line=ou_val,
-            open_spread=open_spread,
-            open_line=open_total
-        )
+            # Fallback to ESPN pickcenter if still None
+            if sp_val is None:
+                if lm_data.get('current_spread') is not None:
+                    sp_val = lm_data.get('current_spread')
+                elif lm_data.get('open_spread') is not None:
+                    sp_val = lm_data.get('open_spread')
+            if ou_val is None:
+                if lm_data.get('current_total') is not None:
+                    ou_val = lm_data.get('current_total')
+                elif lm_data.get('open_total') is not None:
+                    ou_val = lm_data.get('open_total')
 
-        # Analysis already uses single unified decision gate (analysis/recommendation.py)
-        # Any future AI residual adjustments are applied within full_matchup_analysis, eliminating duplicate overrides.
-        card = format_game_card(analysis, game.to_dict(), odds_data)
-        cards.append(card)
-        alerted_gids.append(gid)
+            analysis = analyzer.full_matchup_analysis(
+                home_team=home,
+                away_team=away,
+                spread_line=sp_val,
+                over_under_line=ou_val,
+                open_spread=open_spread,
+                open_line=open_total,
+                game_date=date_str,
+                spread_odds=spread_odds,
+                total_odds=total_odds
+            )
+
+            # Analysis already uses single unified decision gate (analysis/recommendation.py)
+            # Any future AI residual adjustments are applied within full_matchup_analysis, eliminating duplicate overrides.
+            card = format_game_card(analysis, game.to_dict(), odds_data)
+            cards.append(card)
+            alerted_gids.append(gid)
+        except Exception as game_err:
+            logger.error(f"Failed to analyze game {gid} ({away} @ {home}): {game_err}", exc_info=True)
+            continue
 
     # Compose wave message
-    header = (
-        f"🔔 <b>[NBA PRE-GAME INTELLIGENCE]</b>\n"
-        f"📅 ข้อมูลวิเคราะห์ล่วงหน้า 30 นาทีก่อนเริ่มแข่งขัน\n"
-        f"━━━━━━━━━━━━━━━━━━━━\n"
-    )
+    if BETTING_PAUSED:
+        header = (
+            f"⚠️ <b>[PAPER TEST ONLY / BETTING PAUSED]</b>\n"
+            f"🧪 โมเดลอยู่ในโหมดจำลองกระดาษ (งดวางเงินจริงจนกว่าจะผ่านเกณฑ์ Go-Live)\n"
+            f"📅 ข้อมูลวิเคราะห์ล่วงหน้า 30 นาทีก่อนเริ่มแข่งขัน\n"
+            f"━━━━━━━━━━━━━━━━━━━━\n"
+        )
+    else:
+        header = (
+            f"🔔 <b>[NBA PRE-GAME INTELLIGENCE]</b>\n"
+            f"📅 ข้อมูลวิเคราะห์ล่วงหน้า 30 นาทีก่อนเริ่มแข่งขัน\n"
+            f"━━━━━━━━━━━━━━━━━━━━\n"
+        )
     separator = "\n────────────────────\n"
     footer = (
         f"\n━━━━━━━━━━━━━━━━━━━━\n"

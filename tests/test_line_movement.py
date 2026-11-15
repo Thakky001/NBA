@@ -84,8 +84,10 @@ class TestLineMovementAndAnchoring(unittest.TestCase):
         """Verify full_matchup_analysis accepts open lines and returns anchored & line movement metrics."""
         mock_fe = MagicMock()
         mock_fe.compute_matchup_features.return_value = {
-            'combined_avg_10': 210.0,
-            'combined_avg_season': 212.0,
+            'home_games_played': 20,
+            'away_games_played': 20,
+            'combined_avg_10': 228.0,
+            'combined_avg_season': 228.0,
             'home_pace': 99.0,
             'away_pace': 99.0,
             'avg_pace': 99.0,

@@ -1,6 +1,7 @@
 """Unit tests verifying all 8 bug fixes and improvements from the Ponytail Audit."""
 
 import unittest
+from unittest.mock import patch, MagicMock
 import pandas as pd
 import numpy as np
 
@@ -18,6 +19,16 @@ from processing.data_merger import DataMerger
 
 class TestPonytailAuditFixes(unittest.TestCase):
     """Test suite covering fixes for items #1 to #8 from ponytail audit."""
+
+    def setUp(self):
+        self.inj_patch = patch('collectors.espn_collector.ESPNCollector.get_injuries', return_value=pd.DataFrame())
+        self.inj_patch.start()
+        self.rw_patch = patch('collectors.rotowire_collector.RotoWireCollector.get_todays_lineups', return_value={})
+        self.rw_patch.start()
+
+    def tearDown(self):
+        self.inj_patch.stop()
+        self.rw_patch.stop()
 
     def test_item1_team_normalization_no_substring_collision(self):
         """Fix #1: Substring 'la' or short abbrs must not match 'Atlanta Hawks'."""

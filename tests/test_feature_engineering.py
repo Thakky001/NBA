@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch, MagicMock
 import pandas as pd
 import numpy as np
 from processing.feature_engineering import FeatureEngineer
@@ -8,6 +9,11 @@ class TestFeatureEngineering(unittest.TestCase):
     """Tests for FeatureEngineer addressing Bug 1, Bug 3, and Bug 8."""
 
     def setUp(self):
+        self.inj_patch = patch('collectors.espn_collector.ESPNCollector.get_injuries', return_value=pd.DataFrame())
+        self.inj_patch.start()
+        self.rw_patch = patch('collectors.rotowire_collector.RotoWireCollector.get_todays_lineups', return_value={})
+        self.rw_patch.start()
+
         self.sample_logs = pd.DataFrame({
             'date': [
                 '2026-01-10T20:00Z',
@@ -22,6 +28,10 @@ class TestFeatureEngineering(unittest.TestCase):
             'away_score': [100, 108, 105, 99, 112],
             'over_under': [215.0, 210.0, 218.0, 205.0, 222.0]
         })
+
+    def tearDown(self):
+        self.inj_patch.stop()
+        self.rw_patch.stop()
 
     def test_mixed_date_formats_bug1(self):
         """Bug 1: Mixed date formats should parse without producing NaT."""
@@ -206,10 +216,10 @@ class TestFeatureEngineering(unittest.TestCase):
         w_20 = dynamic_early_season_market_weight(20)
         w_40 = dynamic_early_season_market_weight(40)
         
-        self.assertEqual(w_0, 0.70)
-        self.assertEqual(w_10, 0.45)
-        self.assertEqual(w_20, 0.20)
-        self.assertEqual(w_40, 0.20)
+        self.assertEqual(w_0, 0.85)
+        self.assertEqual(w_10, 0.65)
+        self.assertEqual(w_20, 0.45)
+        self.assertEqual(w_40, 0.25)
         
         sig_0 = dynamic_early_season_sigma(12.5, 0)
         sig_10 = dynamic_early_season_sigma(12.5, 10)

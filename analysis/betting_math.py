@@ -464,14 +464,20 @@ def market_anchored_projection(raw_model_val: float,
 
 def dynamic_early_season_market_weight(games_played: int) -> float:
     """Calculate dynamic market weight prior based on games played in season.
-    Option A Early Season:
-        w(N) = max(0.20, 0.70 - 0.025 * N)
-    At N = 0 games: 0.70 (strong market prior)
-    At N = 10 games: 0.45
-    At N = 20 games: 0.20 (standard in-season model weight)
+    Conservative Bayesian market prior curve:
+    At N = 0 games: 0.85 (market dominates)
+    At N = 5 games: 0.75
+    At N = 10 games: 0.65
+    At N = 15 games: 0.55
+    At N = 20 games: 0.45
+    At N = 30+ games: 0.25 (standard model weight)
     """
+    if games_played is None:
+        return 0.85
     n = max(0, int(games_played))
-    return round(max(0.20, min(0.85, 0.70 - 0.025 * n)), 4)
+    if n >= 30:
+        return 0.25
+    return round(max(0.25, min(0.85, 0.85 - 0.02 * n)), 4)
 
 
 def dynamic_early_season_sigma(base_sigma: float, games_played: int) -> float:

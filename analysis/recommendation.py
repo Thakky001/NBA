@@ -11,7 +11,7 @@ from typing import Any, Dict, Optional, Tuple
 
 logger = logging.getLogger(__name__)
 
-GATE_VERSION = "gate-v2.1"
+GATE_VERSION = "gate-v2.2-rigorous"
 
 
 def decide_pick(
@@ -40,7 +40,7 @@ def decide_pick(
         - open_line: open line
         - edge_vs_current: edge against current line
         - edge_vs_open: edge against open line
-        - is_actionable: bool
+        - is_actionable: bool (True ONLY for STRONG on mature samples)
         - suppressed_reason: None or str reason for suppression/veto/cap
         - gate_version: GATE_VERSION
         - data_quality_flags: dict
@@ -82,6 +82,16 @@ def decide_pick(
     else:
         edge_vs_op = edge_vs_curr
 
+    # Extract sample size
+    h_g = dq.get('home_games_played')
+    a_g = dq.get('away_games_played')
+    min_games = None
+    if h_g is not None and a_g is not None:
+        try:
+            min_games = min(int(h_g), int(a_g))
+        except (ValueError, TypeError):
+            pass
+
     # Guard 1: Data Freshness Check (Phase 1.4 Safe Veto)
     if dq.get('dq_stale_data') is True:
         fallback.update({
@@ -91,12 +101,14 @@ def decide_pick(
         })
         return fallback
 
-    # Guard 2: Data Quality Reliability Veto (Phase 5 of Stabilization)
-    if dq.get('dq_is_reliable') is False and abs(edge_vs_curr) >= 6.0:
+    # Guard 2: Unconditional Data Quality & Low Sample Veto
+    is_reliable = dq.get('dq_is_reliable', True)
+    low_sample = dq.get('dq_low_sample', False) or (min_games is not None and min_games < 5)
+    if is_reliable is False or low_sample is True:
         fallback.update({
             'edge_vs_current': edge_vs_curr,
             'edge_vs_open': edge_vs_op,
-            'suppressed_reason': 'VETO_UNRELIABLE_DATA_QUALITY'
+            'suppressed_reason': 'VETO_UNRELIABLE_DATA_QUALITY' if is_reliable is False else 'VETO_LOW_SAMPLE_SIZE'
         })
         return fallback
 
@@ -114,6 +126,17 @@ def decide_pick(
     rec = 'NEUTRAL'
     pick_side = None
     pick_prob = 0.50
+
+    abs_edge = abs(edge_vs_curr)
+
+    # Guard 4: Hard Cap on Model Anomalies (|edge| > 8.0 pts on Spread or Total)
+    if abs_edge > 8.0:
+        fallback.update({
+            'edge_vs_current': edge_vs_curr,
+            'edge_vs_open': edge_vs_op,
+            'suppressed_reason': 'EXTREME_EDGE_MODEL_ANOMALY'
+        })
+        return fallback
 
     if m_type in ['spread', 'sp']:
         # edge = projected_margin + current_spread
@@ -164,11 +187,6 @@ def decide_pick(
             pick_side = cand_side
             pick_prob = cand_prob
 
-        # Phase 2.5: Extreme Edge Soft Cap (|edge| > 8.0 capped to LEAN)
-        if abs_edge > 8.0 and 'STRONG' in rec:
-            rec = f"LEAN {cand_side}"
-            suppressed_reason = 'EXTREME_EDGE_SOFT_CAPPED_TO_LEAN'
-
     else:
         # Over/Under
         # edge = projected_total - current_total
@@ -197,13 +215,14 @@ def decide_pick(
                 pick_side = 'UNDER'
                 pick_prob = cand_prob
 
-        # Phase 2.5: Extreme Edge Soft Cap (|edge| > 8.0 capped to LEAN)
-        if abs(edge_vs_curr) > 8.0 and 'STRONG' in rec:
-            rec = f"LEAN {cand_side}"
-            suppressed_reason = 'EXTREME_EDGE_SOFT_CAPPED_TO_LEAN'
+    # Early season sample guard: Forbidden from issuing STRONG tier when sample < 15 games
+    if min_games is not None and min_games < 15 and 'STRONG' in rec:
+        rec = f"LEAN {pick_side}"
+        suppressed_reason = 'EARLY_SEASON_SAMPLE_RESTRICTION'
 
-    is_act = (rec != 'NEUTRAL')
-    if not is_act:
+    # LEAN is strictly paper/monitoring; only STRONG on mature sample is actionable
+    is_act = ('STRONG' in rec)
+    if rec == 'NEUTRAL':
         pick_side = None
         pick_prob = 0.50
     else:

@@ -301,6 +301,7 @@ class TrendAnalyzer:
         else:
             push_prob = 0.0
             win_prob = 0.50
+            cand_prob = 0.50
             recommendation = 'NEUTRAL'
             from analysis.recommendation import decide_pick
             ou_decision = decide_pick(
@@ -322,8 +323,8 @@ class TrendAnalyzer:
         is_anomaly = abs(total_edge) > 8.0 if over_under_line else False
         anomaly_warning = "⚠️ Extreme Discrepancy (>8 pts): Potential data anomaly / volatile line" if is_anomaly else None
         
-        # Pure Raw Mode: Use pure win_prob directly without artificial clamping
-        raw_win_prob = pick_win_prob
+        # Pure Raw Mode: Use pure unconstrained cand_prob for raw diagnostics
+        raw_win_prob = cand_prob
             
         confidence = abs(pick_win_prob - 0.5) * 2.0
         
@@ -751,8 +752,12 @@ class TrendAnalyzer:
         is_anomaly = abs(cover_edge) > 6.0 if spread_line is not None else False
         anomaly_warning = "⚠️ Extreme Spread Discrepancy (>6 pts): Potential data anomaly / early season distortion" if is_anomaly else None
         
-        # Pure Raw Mode: Use pure win_prob directly without artificial clamping
-        raw_win_prob = pick_win_prob
+        # Pure Raw Mode: Use pure unconstrained cand_prob for raw diagnostics
+        if spread_line is not None:
+            cand_prob = win_prob if cover_edge >= 0 else max(0.0, 1.0 - win_prob - push_prob)
+        else:
+            cand_prob = 0.50
+        raw_win_prob = cand_prob
             
         confidence = abs(pick_win_prob - 0.5) * 2.0
 

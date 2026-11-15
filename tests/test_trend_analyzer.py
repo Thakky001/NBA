@@ -196,10 +196,11 @@ class TestTrendAnalyzer(unittest.TestCase):
             'home_roster_power': 80.0,
             'away_roster_power': 80.0,
         }
-        res_mid = self.analyzer.analyze_spread('Charlotte Hornets', 'Brooklyn Nets', spread_line=-1.5)
+        res_mid = self.analyzer.analyze_spread('Charlotte Hornets', 'Brooklyn Nets', spread_line=-10.0)
         self.assertEqual(res_mid['raw_projected_margin'], 14.0)
-        # Mid-season allows LEAN / STRONG picks
+        # Margin 14.0 vs line -10.0 -> edge = +4.0 (<= 8.0) -> STRONG HOME on mature sample (20 GP)
         self.assertGreater(res_mid['win_prob'], 0.50)
+        self.assertIn('STRONG', res_mid['recommendation'])
 
     def test_spread_factor_weights_linear_blend(self):
         """Verify linear blend of factor weights smoothly shifts from Roster Talent to Net Rating."""
@@ -257,16 +258,25 @@ class TestTrendAnalyzer(unittest.TestCase):
         self.assertAlmostEqual(res_over_20['raw_projected_margin'], 10.0, places=2)
 
     def test_spread_early_season_conviction_gates(self):
-        # 1. Early season balanced gates: Strong >= 3.0, Lean >= 2.0
+        # 1. Early season sample restriction (< 15 games): demotes STRONG to LEAN
         self.mock_fe.compute_matchup_features.return_value = {
             'home_games_played': 10, 'away_games_played': 10,
             'home_net_rating': 0.0, 'away_net_rating': 0.0,
             'home_rest_days': 2, 'away_rest_days': 2,
             'home_roster_power': 80.0, 'away_roster_power': 80.0,
         }
-        # Edge = +3.5 -> STRONG HOME
+        # Edge = +3.5 at 10 GP -> demoted to LEAN HOME due to early season sample guard
+        res_lean_rest = self.analyzer.analyze_spread('Denver Nuggets', 'Memphis Grizzlies', spread_line=3.5)
+        self.assertEqual(res_lean_rest['recommendation'], 'LEAN HOME')
+        self.assertEqual(res_lean_rest['suppressed_reason'], 'EARLY_SEASON_SAMPLE_RESTRICTION')
+        self.assertFalse(res_lean_rest['is_actionable'])
+
+        # Edge = +3.5 at 18 GP (mature sample >= 15 GP) -> STRONG HOME
+        self.mock_fe.compute_matchup_features.return_value['home_games_played'] = 18
+        self.mock_fe.compute_matchup_features.return_value['away_games_played'] = 18
         res_strong = self.analyzer.analyze_spread('Denver Nuggets', 'Memphis Grizzlies', spread_line=3.5)
         self.assertEqual(res_strong['recommendation'], 'STRONG HOME')
+        self.assertTrue(res_strong['is_actionable'])
 
         # Edge = +2.5 -> LEAN HOME
         res_lean = self.analyzer.analyze_spread('Denver Nuggets', 'Memphis Grizzlies', spread_line=2.5)
@@ -277,8 +287,9 @@ class TestTrendAnalyzer(unittest.TestCase):
         self.assertEqual(res_neutral['recommendation'], 'NEUTRAL')
 
         # 2. Road Heavy Favorite (s_line >= 9.5): requires edge <= -6.5 for STRONG, <= -4.5 for LEAN
-        # raw_margin = -14.5, s_line = +9.5 -> edge = -5.0 -> LEAN AWAY (not STRONG)
-        self.mock_fe.compute_matchup_features.return_value['home_net_rating'] = -14.5 / 0.675
+        # raw_margin = -14.4, s_line = +9.5 -> edge = -4.92 -> LEAN AWAY (not STRONG)
+        self.mock_fe.compute_matchup_features.return_value['home_net_rating'] = -8.5
+        self.mock_fe.compute_matchup_features.return_value['away_net_rating'] = 7.0
         res_road_fav = self.analyzer.analyze_spread('Chicago Bulls', 'San Antonio Spurs', spread_line=9.5)
         self.assertEqual(res_road_fav['recommendation'], 'LEAN AWAY')
 
@@ -351,23 +362,39 @@ class TestTrendAnalyzer(unittest.TestCase):
         self.assertEqual(res_ou_lean['recommendation'], 'NEUTRAL')
         self.assertEqual(res_ou_lean['kelly_quarter'], 0.0)
 
-        # 2. Early season O/U with strong edge (>= 5.0 and <= 8.0 pts) -> fires STRONG OVER
+        # 2. Low sample size (< 5 games) -> VETOED to NEUTRAL
         self.mock_fe.compute_matchup_features.return_value = {
             'home_games_played': 2,
             'away_games_played': 2,
             'home_pace': 100.0,
             'away_pace': 100.0,
-            'combined_avg_season': 228.5
+            'combined_avg_season': 226.5
         }
+        res_ou_low = self.analyzer.analyze_over_under('BOS', 'MIA', over_under_line=220.0, open_line=220.0, market_weight=0.0)
+        self.assertEqual(res_ou_low['recommendation'], 'NEUTRAL')
+        self.assertEqual(res_ou_low['suppressed_reason'], 'VETO_LOW_SAMPLE_SIZE')
+
+        # 2b. Early season sample restriction (5 <= GP < 15) -> Demoted to LEAN OVER, forbidden from STRONG
+        self.mock_fe.compute_matchup_features.return_value['home_games_played'] = 10
+        self.mock_fe.compute_matchup_features.return_value['away_games_played'] = 10
+        res_ou_sample_rest = self.analyzer.analyze_over_under('BOS', 'MIA', over_under_line=220.0, open_line=220.0, market_weight=0.0)
+        self.assertEqual(res_ou_sample_rest['recommendation'], 'LEAN OVER')
+        self.assertEqual(res_ou_sample_rest['suppressed_reason'], 'EARLY_SEASON_SAMPLE_RESTRICTION')
+        self.assertFalse(res_ou_sample_rest['is_actionable'])
+
+        # 2c. Mature sample (>= 15 games) with strong edge -> fires STRONG OVER
+        self.mock_fe.compute_matchup_features.return_value['home_games_played'] = 20
+        self.mock_fe.compute_matchup_features.return_value['away_games_played'] = 20
         res_ou_strong = self.analyzer.analyze_over_under('BOS', 'MIA', over_under_line=220.0, open_line=220.0, market_weight=0.0)
         self.assertEqual(res_ou_strong['recommendation'], 'STRONG OVER')
-        self.assertEqual(res_ou_strong['kelly_quarter'], 0.0)
-        self.assertIsNone(res_ou_strong['ev'])
+        self.assertTrue(res_ou_strong['is_actionable'])
 
-        # 2b. Phase 2.5: Swollen edge (> 8.0 pts) soft-capped to LEAN OVER
+        # 2d. Swollen edge (> 8.0 pts) -> Hard VETO to NEUTRAL (Model Anomaly Guard)
         self.mock_fe.compute_matchup_features.return_value['combined_avg_season'] = 232.0
         res_ou_swollen = self.analyzer.analyze_over_under('BOS', 'MIA', over_under_line=220.0, open_line=220.0, market_weight=0.0)
-        self.assertEqual(res_ou_swollen['recommendation'], 'LEAN OVER')
+        self.assertEqual(res_ou_swollen['recommendation'], 'NEUTRAL')
+        self.assertEqual(res_ou_swollen['suppressed_reason'], 'EXTREME_EDGE_MODEL_ANOMALY')
+        self.assertFalse(res_ou_swollen['is_actionable'])
 
         # 3. Mid-season O/U with moderate edge (>= 3.0 pts) -> allows LEAN OVER
         self.mock_fe.compute_matchup_features.return_value = {
@@ -381,7 +408,7 @@ class TestTrendAnalyzer(unittest.TestCase):
         self.assertEqual(res_ou_mid['recommendation'], 'NEUTRAL')
 
     def test_data_quality_veto_and_extreme_edge_guard(self):
-        # 1. Unreliable data with edge >= 6.0 is VETOED to NEUTRAL
+        # 1. Unreliable data is unconditionally VETOED to NEUTRAL
         self.mock_fe.compute_matchup_features.return_value = {
             'home_games_played': 10, 'away_games_played': 10,
             'home_net_rating': 10.0, 'away_net_rating': 0.0,
@@ -391,12 +418,15 @@ class TestTrendAnalyzer(unittest.TestCase):
         }
         res_veto = self.analyzer.analyze_spread('DEN', 'MEM', spread_line=3.5)
         self.assertEqual(res_veto['recommendation'], 'NEUTRAL')
-        self.assertTrue(res_veto['is_vetoed'])
+        self.assertEqual(res_veto['suppressed_reason'], 'VETO_UNRELIABLE_DATA_QUALITY')
+        self.assertFalse(res_veto['is_actionable'])
 
-        # 2. Extreme edge >= 8.0 on reliable data is demoted from STRONG to LEAN
+        # 2. Extreme edge > 8.0 on reliable data is hard-vetoed to NEUTRAL (Model Anomaly Guard)
         self.mock_fe.compute_matchup_features.return_value['dq_is_reliable'] = True
         res_extreme = self.analyzer.analyze_spread('DEN', 'MEM', spread_line=8.5)
-        self.assertEqual(res_extreme['recommendation'], 'LEAN HOME')
+        self.assertEqual(res_extreme['recommendation'], 'NEUTRAL')
+        self.assertEqual(res_extreme['suppressed_reason'], 'EXTREME_EDGE_MODEL_ANOMALY')
+        self.assertFalse(res_extreme['is_actionable'])
 
     def test_enable_ai_residual_disabled_by_default(self):
         self.assertFalse(self.analyzer.ENABLE_AI_RESIDUAL)
@@ -427,6 +457,50 @@ class TestTrendAnalyzer(unittest.TestCase):
             ou_res = self.analyzer.analyze_over_under('BOS', 'MIA', over_under_line=215.5)
             self.assertIsNotNone(ou_res)
             self.assertIn('recommendation', ou_res)
+
+    def test_minnesota_chicago_integration_h2h_none_and_dq_unreliable(self):
+        """Integration test addressing User Bug 1 & 5:
+        Matchup with h2h_record=None must not raise TypeError,
+        and dq_is_reliable=False must unconditionally veto to NEUTRAL (PASS).
+        """
+        self.mock_fe.compute_matchup_features.return_value = {
+            'home_games_played': 11,
+            'away_games_played': 11,
+            'h2h_record': None,
+            'h2h_avg_total': None,
+            'home_ou_record': None,
+            'away_ou_record': None,
+            'home_home_record': None,
+            'away_away_record': None,
+            'dq_is_reliable': False,
+            'dq_low_sample': False,
+            'home_pace': 98.0,
+            'away_pace': 101.0,
+            'combined_avg_10': 235.0,
+            'home_net_rating': 4.5,
+            'away_net_rating': -5.0,
+            'home_roster_power': 85.0,
+            'away_roster_power': 75.0,
+        }
+        res = self.analyzer.full_matchup_analysis(
+            'Minnesota Timberwolves', 'Chicago Bulls',
+            spread_line=-16.5, over_under_line=237.5,
+            open_spread=-15.0, open_line=236.0,
+            game_date='2026-11-15'
+        )
+        self.assertIsNotNone(res)
+        self.assertIn('spread', res)
+        self.assertIn('over_under', res)
+
+        sp = res['spread']
+        ou = res['over_under']
+        self.assertEqual(sp['recommendation'], 'NEUTRAL')
+        self.assertEqual(sp['suppressed_reason'], 'VETO_UNRELIABLE_DATA_QUALITY')
+        self.assertFalse(sp['is_actionable'])
+
+        self.assertEqual(ou['recommendation'], 'NEUTRAL')
+        self.assertEqual(ou['suppressed_reason'], 'VETO_UNRELIABLE_DATA_QUALITY')
+        self.assertFalse(ou['is_actionable'])
 
 if __name__ == '__main__':
     unittest.main()

@@ -14,18 +14,14 @@ import json
 import math
 import logging
 from typing import Dict, Any, List, Optional
+from unittest.mock import MagicMock
 import pandas as pd
 import numpy as np
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from config import RAW_DIR
-from analysis.recommendation import decide_pick, GATE_VERSION
-from analysis.betting_math import (
-    calculate_spread_probabilities,
-    dynamic_early_season_market_weight,
-    dynamic_early_season_sigma,
-    market_anchored_projection
-)
+from analysis.trend_analyzer import TrendAnalyzer
+from analysis.betting_math import dynamic_early_season_market_weight
 from analysis.backtesting import calibration_bins, regression_metrics, probability_metrics
 
 logger = logging.getLogger('replay_backtest')
@@ -48,13 +44,16 @@ def run_replay_backtest(ledger_path: Optional[str] = None) -> Dict[str, Any]:
         raise FileNotFoundError(f"Ledger file not found: {path}")
 
     df = pd.read_csv(path)
-    # Filter to graded games with final scores
-    graded = df[(df['status'] == 'GRADED') & (df['actual_margin'].notna()) & (df['actual_total'].notna())].copy()
+    # Filter to graded games with final scores and features snapshot
+    graded = df[(df['status'] == 'GRADED') & (df['actual_margin'].notna()) & (df['actual_total'].notna()) & (df['features_snapshot'].notna())].copy()
     graded.sort_values(by='date', inplace=True)
     graded.reset_index(drop=True, inplace=True)
 
     sp_records = []
     ou_records = []
+
+    mock_fe = MagicMock()
+    analyzer = TrendAnalyzer(mock_fe)
 
     for idx, row in graded.iterrows():
         gid = str(row['game_id'])
@@ -69,44 +68,20 @@ def run_replay_backtest(ledger_path: Optional[str] = None) -> Dict[str, Any]:
 
         # Parse features snapshot
         features = {}
-        if pd.notna(row.get('features_snapshot')):
-            try:
-                features = json.loads(str(row['features_snapshot']))
-            except Exception:
-                features = {}
+        try:
+            features = json.loads(str(row['features_snapshot']))
+        except Exception:
+            features = {}
 
+        mock_fe.compute_matchup_features.return_value = features
         min_games = min(features.get('home_games_played', 10), features.get('away_games_played', 10))
-        is_early = min_games < 20
+        eff_weight = dynamic_early_season_market_weight(min_games)
 
-        # --- Replay Spread Pick ---
+        # --- Replay Spread Pick (Raw Math with Single Anchoring) ---
         if sp_line is not None:
-            # Raw projected margin
-            raw_margin = float(row.get('projected_margin')) if pd.notna(row.get('projected_margin')) else 0.0
-            eff_weight = dynamic_early_season_market_weight(min_games)
-            market_exp_margin = -sp_line
-            anchored_margin = market_anchored_projection(raw_margin, market_exp_margin, market_weight=eff_weight)
-            cover_edge = round(anchored_margin + sp_line, 2)
-
-            sigma = dynamic_early_season_sigma(12.5, min_games)
-            probs = calculate_spread_probabilities(sp_line, anchored_margin, sigma)
-            win_prob_home = probs['win']
-
-            decision = decide_pick(
-                market_type='spread',
-                current_line=sp_line,
-                projected_val=anchored_margin,
-                edge=cover_edge,
-                fair_prob=win_prob_home,
-                home_team=home,
-                away_team=away,
-                data_quality_flags=features,
-                is_early_season=is_early,
-                push_prob=probs.get('push', 0.0)
-            )
-
-            rec = decision['recommendation']
+            sp_res = analyzer.analyze_spread(home, away, spread_line=sp_line, market_weight=eff_weight)
+            rec = sp_res.get('recommendation', 'NEUTRAL')
             if rec != 'NEUTRAL':
-                # Grade outcome
                 # Spread cover formula: actual_margin + spread_line
                 ats_diff = act_margin + sp_line
                 if abs(ats_diff) < 1e-6:
@@ -136,9 +111,9 @@ def run_replay_backtest(ledger_path: Optional[str] = None) -> Dict[str, Any]:
                     'market': 'SPREAD',
                     'tier': 'STRONG' if 'STRONG' in rec else 'LEAN',
                     'rec': rec,
-                    'pick_side': decision['pick_side'],
-                    'pick_prob': decision['pick_prob'],
-                    'edge': cover_edge,
+                    'pick_side': sp_res.get('pick_side'),
+                    'pick_prob': sp_res.get('win_prob', 0.5),
+                    'edge': sp_res.get('cover_edge', 0.0),
                     'line': sp_line,
                     'actual': act_margin,
                     'result': res,
@@ -146,31 +121,10 @@ def run_replay_backtest(ledger_path: Optional[str] = None) -> Dict[str, Any]:
                     'binary_win': 1 if res == 'WIN' else (0 if res == 'LOSS' else None)
                 })
 
-        # --- Replay O/U Pick ---
+        # --- Replay O/U Pick (Raw Math with Single Anchoring) ---
         if ou_line is not None and ou_line > 0:
-            raw_total = float(row.get('projected_total')) if pd.notna(row.get('projected_total')) else ou_line
-            eff_weight = dynamic_early_season_market_weight(min_games)
-            anchored_total = market_anchored_projection(raw_total, ou_line, market_weight=eff_weight)
-            ou_edge = round(anchored_total - ou_line, 2)
-
-            sigma_ou = dynamic_early_season_sigma(12.5, min_games)
-            probs_ou = calculate_spread_probabilities(-ou_line, anchored_total, sigma_ou)
-            win_prob_over = probs_ou['win']
-
-            decision_ou = decide_pick(
-                market_type='total',
-                current_line=ou_line,
-                projected_val=anchored_total,
-                edge=ou_edge,
-                fair_prob=win_prob_over,
-                home_team=home,
-                away_team=away,
-                data_quality_flags=features,
-                is_early_season=is_early,
-                push_prob=probs_ou.get('push', 0.0)
-            )
-
-            rec_ou = decision_ou['recommendation']
+            ou_res = analyzer.analyze_over_under(home, away, over_under_line=ou_line, market_weight=eff_weight)
+            rec_ou = ou_res.get('recommendation', 'NEUTRAL')
             if rec_ou != 'NEUTRAL':
                 ou_diff = act_total - ou_line
                 if abs(ou_diff) < 1e-6:
@@ -200,9 +154,9 @@ def run_replay_backtest(ledger_path: Optional[str] = None) -> Dict[str, Any]:
                     'market': 'TOTAL',
                     'tier': 'STRONG' if 'STRONG' in rec_ou else 'LEAN',
                     'rec': rec_ou,
-                    'pick_side': decision_ou['pick_side'],
-                    'pick_prob': decision_ou['pick_prob'],
-                    'edge': ou_edge,
+                    'pick_side': ou_res.get('pick_side'),
+                    'pick_prob': ou_res.get('win_prob', 0.5),
+                    'edge': ou_res.get('total_edge', 0.0),
                     'line': ou_line,
                     'actual': act_total,
                     'result': res,
@@ -259,16 +213,16 @@ def run_replay_backtest(ledger_path: Optional[str] = None) -> Dict[str, Any]:
     spread_slice = evaluate_slice(sp_records)
     ou_slice = evaluate_slice(ou_records)
 
-    # Go-Live Verification Criteria (Phase 3.4)
-    # 1. Total picks >= 100
+    # Go-Live Verification Criteria (Phase 3.4 - Evaluated strictly on Actionable STRONG Tier)
+    # 1. Total Actionable picks >= 100
     # 2. ROI after vig > +2%
     # 3. Calibration error < 5%
     # 4. Max drawdown < 10 units
     go_live_checks = {
-        'criterion_1_min_100_picks': overall['total_picks'] >= 100,
-        'criterion_2_roi_above_2pct': overall['roi_pct'] > 2.0,
-        'criterion_3_calibration_under_5pct': overall['calibration_error_pct'] < 5.0,
-        'criterion_4_max_dd_under_10u': overall['max_drawdown_units'] < 10.0
+        'criterion_1_min_100_strong_picks': strong_slice['total_picks'] >= 100,
+        'criterion_2_strong_roi_above_2pct': strong_slice['roi_pct'] > 2.0,
+        'criterion_3_strong_calibration_under_5pct': strong_slice['calibration_error_pct'] < 5.0,
+        'criterion_4_strong_max_dd_under_10u': strong_slice['max_drawdown_units'] < 10.0
     }
     go_live_checks['all_passed'] = all(go_live_checks.values())
 

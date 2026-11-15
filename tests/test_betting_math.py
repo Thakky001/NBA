@@ -127,10 +127,12 @@ class TestBettingMath(unittest.TestCase):
         """Verify TrendAnalyzer includes EV, Kelly, and Fair Prob in outputs."""
         mock_fe = MagicMock()
         mock_fe.compute_matchup_features.return_value = {
+            'home_games_played': 20,
+            'away_games_played': 20,
             'home_avg_points_scored': 118.0,
             'away_avg_points_scored': 114.0,
-            'combined_avg_10': 232.0,
-            'combined_avg_season': 230.0,
+            'combined_avg_10': 220.0,
+            'combined_avg_season': 220.0,
             'home_pace': 102.0,
             'away_pace': 100.0,
             'avg_pace': 101.0,
@@ -201,7 +203,7 @@ class TestBettingMath(unittest.TestCase):
         self.assertAlmostEqual(sigma_40, 12.70, delta=0.5)
 
     def test_anomaly_detection_and_raw_prob(self):
-        """Verify extreme edge (>8.0 pts) triggers anomaly flag while preserving unconstrained win_prob."""
+        """Verify extreme edge (>8.0 pts) triggers anomaly flag & hard-vetoes to NEUTRAL while preserving raw_win_prob."""
         mock_fe = MagicMock()
         mock_fe.compute_matchup_features.return_value = {
             'home_games_played': 20,
@@ -213,17 +215,20 @@ class TestBettingMath(unittest.TestCase):
             'avg_pace': 100.0,
         }
         analyzer = TrendAnalyzer(mock_fe)
-        # Default is the raw model (market blending is opt-in): edge is +30 pts.
+        # Default is the raw model (market blending is opt-in): edge is +30 pts -> Anomaly Hard Cap
         ou_res = analyzer.analyze_over_under('Boston Celtics', 'Miami Heat', over_under_line=220.0)
         self.assertTrue(ou_res['is_anomaly'])
         self.assertIsNotNone(ou_res['anomaly_warning'])
-        self.assertGreater(ou_res['win_prob'], 0.75)
-        self.assertEqual(ou_res['win_prob'], ou_res['raw_win_prob'])
+        self.assertEqual(ou_res['recommendation'], 'NEUTRAL')
+        self.assertEqual(ou_res['suppressed_reason'], 'EXTREME_EDGE_MODEL_ANOMALY')
+        self.assertFalse(ou_res['is_actionable'])
+        self.assertEqual(ou_res['win_prob'], 0.50)
+        self.assertGreater(ou_res['raw_win_prob'], 0.75)
         self.assertIn('ANOMALY', ou_res['summary'].upper())
 
-        # When testing unanchored (market_weight=0.0): edge is +30 pts and win_prob > 0.85
+        # When testing unanchored (market_weight=0.0): edge is +30 pts and raw_win_prob > 0.85
         ou_unanchored = analyzer.analyze_over_under('Boston Celtics', 'Miami Heat', over_under_line=220.0, market_weight=0.0)
-        self.assertGreater(ou_unanchored['win_prob'], 0.85)
+        self.assertGreater(ou_unanchored['raw_win_prob'], 0.85)
 
 
 class TestLivePaceProjection(unittest.TestCase):

@@ -31,9 +31,10 @@ class RotoWireCollector:
     CACHE_FILENAME = "rotowire_lineups.json"
     CACHE_TTL_SECONDS = 1200  # 20 minutes
 
-    def __init__(self, cache_ttl: int = CACHE_TTL_SECONDS, timeout: int = 10):
+    def __init__(self, cache_ttl: int = CACHE_TTL_SECONDS, timeout: int = 10, cache_dir: Optional[str] = None):
         self.cache_ttl = cache_ttl
         self.timeout = timeout
+        self.cache_dir = cache_dir
         self.session = requests.Session()
         self.session.headers.update({
             "User-Agent": (
@@ -49,6 +50,8 @@ class RotoWireCollector:
 
     def _resolve_raw_dir(self) -> str:
         """Resolve path to data/raw directory robustly across local and cloud environments."""
+        if self.cache_dir:
+            return self.cache_dir
         try:
             from config import RAW_DIR
             if os.path.isdir(RAW_DIR):

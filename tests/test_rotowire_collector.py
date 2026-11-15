@@ -1,4 +1,5 @@
 import os
+import tempfile
 import unittest
 from unittest.mock import patch, MagicMock
 from collectors.rotowire_collector import RotoWireCollector
@@ -75,7 +76,11 @@ class TestRotoWireCollector(unittest.TestCase):
     """Unit tests for RotoWireCollector."""
 
     def setUp(self):
-        self.collector = RotoWireCollector(cache_ttl=60, timeout=5)
+        self.temp_dir = tempfile.TemporaryDirectory()
+        self.collector = RotoWireCollector(cache_ttl=60, timeout=5, cache_dir=self.temp_dir.name)
+
+    def tearDown(self):
+        self.temp_dir.cleanup()
 
     def test_parse_html_structure(self):
         """Test HTML parsing of matchup boxes, confirmed/expected status, and starters."""

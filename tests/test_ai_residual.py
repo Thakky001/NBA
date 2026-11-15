@@ -1,6 +1,7 @@
 """Unit tests for the AI CatBoost Residual Models for Over/Under and Spread."""
 
 import unittest
+from unittest.mock import patch, MagicMock
 import os
 import tempfile
 import pandas as pd
@@ -21,6 +22,11 @@ from analysis.trend_analyzer import TrendAnalyzer
 class TestAIResidualModel(unittest.TestCase):
 
     def setUp(self):
+        self.inj_patch = patch('collectors.espn_collector.ESPNCollector.get_injuries', return_value=pd.DataFrame())
+        self.inj_patch.start()
+        self.rw_patch = patch('collectors.rotowire_collector.RotoWireCollector.get_todays_lineups', return_value={})
+        self.rw_patch.start()
+
         # Create minimal synthetic game logs
         dates = pd.date_range('2026-01-01', periods=15, freq='D')
         self.mock_games = pd.DataFrame({
@@ -36,6 +42,10 @@ class TestAIResidualModel(unittest.TestCase):
         })
         self.fe = FeatureEngineer(game_logs=self.mock_games)
         self.analyzer = TrendAnalyzer(self.fe)
+
+    def tearDown(self):
+        self.inj_patch.stop()
+        self.rw_patch.stop()
 
     def test_streak_parsing(self):
         self.assertEqual(parse_streak_val('W3'), 3.0)
