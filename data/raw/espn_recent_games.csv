@@ -1,5 +1,4 @@
 game_id,date,status,period,clock,clock_detail,season_type,home_team,home_id,home_score,away_team,away_id,away_score,spread,over_under,home_ml,away_ml,venue
-401873197,2026-05-19T00:30Z,STATUS_FINAL,6,0.0,Final/2OT,3,Oklahoma City Thunder,25,115,San Antonio Spurs,24,122,,,,,Paycom Center
 401873341,2026-05-20T00:00Z,STATUS_FINAL,5,0.0,Final/OT,3,New York Knicks,18,115,Cleveland Cavaliers,5,104,,,,,Madison Square Garden
 401873198,2026-05-21T00:30Z,STATUS_FINAL,4,12:00,Final,3,Oklahoma City Thunder,25,122,San Antonio Spurs,24,113,,,,,Paycom Center
 401873342,2026-05-22T00:00Z,STATUS_FINAL,4,12:00,Final,3,New York Knicks,18,109,Cleveland Cavaliers,5,93,,,,,Madison Square Garden
@@ -265,8 +264,17 @@ game_id,date,status,period,clock,clock_detail,season_type,home_team,home_id,home
 401909302,2026-11-14T02:30Z,STATUS_FINAL,4,12:00,Final,2,San Antonio Spurs,24,123,Golden State Warriors,9,85,,,,,Frost Bank Center
 401909303,2026-11-14T03:00Z,STATUS_FINAL,4,12:00,Final,2,Sacramento Kings,23,107,Portland Trail Blazers,22,120,,,,,Golden 1 Center
 401909304,2026-11-14T03:30Z,STATUS_FINAL,4,12:00,Final,2,LA Clippers,12,113,Oklahoma City Thunder,25,112,,,,,Intuit Dome
-401909980,2026-11-15T00:00Z,STATUS_SCHEDULED,0,0.0,"Sat, November 14th at 7:00 PM EST",2,New Orleans Pelicans,3,0,Denver Nuggets,7,0,DEN -12.5,235.5,,,Smoothie King Center
-401909981,2026-11-15T00:30Z,STATUS_SCHEDULED,0,0.0,"Sat, November 14th at 7:30 PM EST",2,Cleveland Cavaliers,5,0,Dallas Mavericks,6,0,CLE -1.5,231.5,,,Rocket Arena
-401909982,2026-11-15T01:00Z,STATUS_SCHEDULED,0,0.0,"Sat, November 14th at 8:00 PM EST",2,Miami Heat,14,0,Detroit Pistons,8,0,DET -5.5,229.5,,,Kaseya Center
-401909983,2026-11-15T01:00Z,STATUS_SCHEDULED,0,0.0,"Sat, November 14th at 8:00 PM EST",2,Memphis Grizzlies,29,0,Brooklyn Nets,17,0,MEM -3.5,227.5,,,FedExForum
-401909984,2026-11-15T01:00Z,STATUS_SCHEDULED,0,0.0,"Sat, November 14th at 8:00 PM EST",2,Minnesota Timberwolves,16,0,Chicago Bulls,4,0,MIN -14.5,234.5,,,Target Center
+401909980,2026-11-15T00:00Z,STATUS_IN_PROGRESS,4,4:25,4:25 - 4th Quarter,2,New Orleans Pelicans,3,93,Denver Nuggets,7,106,,,,,Smoothie King Center
+401909981,2026-11-15T00:30Z,STATUS_IN_PROGRESS,3,2:25,2:25 - 3rd Quarter,2,Cleveland Cavaliers,5,95,Dallas Mavericks,6,83,,,,,Rocket Arena
+401909982,2026-11-15T01:00Z,STATUS_IN_PROGRESS,2,26.0,26.0 - 2nd Quarter,2,Miami Heat,14,64,Detroit Pistons,8,60,,,,,Kaseya Center
+401909983,2026-11-15T01:00Z,STATUS_HALFTIME,2,0.0,Halftime,2,Memphis Grizzlies,29,71,Brooklyn Nets,17,54,,,,,FedExForum
+401909984,2026-11-15T01:00Z,STATUS_HALFTIME,2,0.0,Halftime,2,Minnesota Timberwolves,16,45,Chicago Bulls,4,58,,,,,Target Center
+401909985,2026-11-15T18:00Z,STATUS_SCHEDULED,0,0.0,"Sun, November 15th at 1:00 PM EST",2,Philadelphia 76ers,20,0,Indiana Pacers,11,0,PHI -6.5,222.5,,,Xfinity Mobile Arena
+401909986,2026-11-15T21:00Z,STATUS_SCHEDULED,0,0.0,"Sun, November 15th at 4:00 PM EST",2,Phoenix Suns,21,0,Los Angeles Lakers,13,0,,,,,Mortgage Matchup Center
+401909987,2026-11-15T21:30Z,STATUS_SCHEDULED,0,0.0,"Sun, November 15th at 4:30 PM EST",2,LA Clippers,12,0,Charlotte Hornets,30,0,,,,,Intuit Dome
+401909988,2026-11-15T22:00Z,STATUS_SCHEDULED,0,0.0,"Sun, November 15th at 5:00 PM EST",2,Utah Jazz,26,0,San Antonio Spurs,24,0,SA -17.5,224.5,,,Delta Center
+401909989,2026-11-15T23:00Z,STATUS_SCHEDULED,0,0.0,"Sun, November 15th at 6:00 PM EST",2,Boston Celtics,2,0,Dallas Mavericks,6,0,,,,,TD Garden
+401909990,2026-11-15T23:00Z,STATUS_SCHEDULED,0,0.0,"Sun, November 15th at 6:00 PM EST",2,Toronto Raptors,28,0,New York Knicks,18,0,NY -4.5,217.5,,,Scotiabank Arena
+401909991,2026-11-16T00:00Z,STATUS_SCHEDULED,0,0.0,"Sun, November 15th at 7:00 PM EST",2,Washington Wizards,27,0,Houston Rockets,10,0,HOU -8.5,222.5,,,Capital One Arena
+401909992,2026-11-16T01:00Z,STATUS_SCHEDULED,0,0.0,"Sun, November 15th at 8:00 PM EST",2,Milwaukee Bucks,15,0,Atlanta Hawks,1,0,,,,,Fiserv Forum
+401909993,2026-11-16T02:00Z,STATUS_SCHEDULED,0,0.0,"Sun, November 15th at 9:00 PM EST",2,Sacramento Kings,23,0,Oklahoma City Thunder,25,0,,,,,Golden 1 Center
