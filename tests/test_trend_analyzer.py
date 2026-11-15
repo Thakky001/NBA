@@ -402,30 +402,31 @@ class TestTrendAnalyzer(unittest.TestCase):
         self.assertFalse(self.analyzer.ENABLE_AI_RESIDUAL)
 
     def test_none_h2h_record_and_splits_graceful_handling(self):
-        """When h2h_record, home_ou_record, or home_home_record are None, analyzer must not raise TypeError."""
-        self.mock_fe.compute_matchup_features.return_value = {
-            'home_games_played': 10, 'away_games_played': 10,
-            'h2h_record': None,
-            'h2h_avg_total': None,
-            'home_ou_record': None,
-            'away_ou_record': None,
-            'home_home_record': None,
-            'away_away_record': None,
-            'home_rest_days': None,
-            'away_rest_days': None,
-            'home_net_rating': 5.0,
-            'away_net_rating': -2.0,
-            'dq_is_reliable': True
-        }
-        # Spread analysis
-        sp_res = self.analyzer.analyze_spread('BOS', 'MIA', spread_line=-4.5)
-        self.assertIsNotNone(sp_res)
-        self.assertIn('recommendation', sp_res)
+        """When h2h_record, home_ou_record, or home_home_record are None, sets, or odd types, analyzer must not raise TypeError."""
+        for odd_h2h in [None, {1, 2}, set(), (None, None), float('nan'), 1, 'invalid', [2, 1], (2, 1)]:
+            self.mock_fe.compute_matchup_features.return_value = {
+                'home_games_played': 10, 'away_games_played': 10,
+                'h2h_record': odd_h2h,
+                'h2h_avg_total': None,
+                'home_ou_record': odd_h2h,
+                'away_ou_record': odd_h2h,
+                'home_home_record': odd_h2h,
+                'away_away_record': odd_h2h,
+                'home_rest_days': None,
+                'away_rest_days': None,
+                'home_net_rating': 5.0,
+                'away_net_rating': -2.0,
+                'dq_is_reliable': True
+            }
+            # Spread analysis
+            sp_res = self.analyzer.analyze_spread('BOS', 'MIA', spread_line=-4.5)
+            self.assertIsNotNone(sp_res)
+            self.assertIn('recommendation', sp_res)
 
-        # O/U analysis
-        ou_res = self.analyzer.analyze_over_under('BOS', 'MIA', over_under_line=215.5)
-        self.assertIsNotNone(ou_res)
-        self.assertIn('recommendation', ou_res)
+            # O/U analysis
+            ou_res = self.analyzer.analyze_over_under('BOS', 'MIA', over_under_line=215.5)
+            self.assertIsNotNone(ou_res)
+            self.assertIn('recommendation', ou_res)
 
 if __name__ == '__main__':
     unittest.main()

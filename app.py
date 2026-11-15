@@ -2794,13 +2794,14 @@ def get_cached_analysis(_analyzer, home_team, away_team, spread_line, over_under
             open_spread=open_spread, open_line=open_line,
             is_live=is_live
         )
-    except TypeError:
-        # Fallback if _analyzer is an in-memory cached instance from prior code version
-        return _analyzer.full_matchup_analysis(
-            home_team=home_team, away_team=away_team, 
-            spread_line=spread_line, over_under_line=over_under_line,
-            open_spread=open_spread, open_line=open_line
-        )
+    except TypeError as e:
+        if "unexpected keyword argument 'is_live'" in str(e):
+            return _analyzer.full_matchup_analysis(
+                home_team=home_team, away_team=away_team, 
+                spread_line=spread_line, over_under_line=over_under_line,
+                open_spread=open_spread, open_line=open_line
+            )
+        raise
 
 try:
     analyzer = get_analyzer()

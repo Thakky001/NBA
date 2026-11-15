@@ -32,6 +32,21 @@ class TrendAnalyzer:
             return -int(s_str[1:]) if len(s_str) > 1 and s_str[1:].isdigit() else -1
         return 0
 
+    @staticmethod
+    def _safe_record(val) -> tuple:
+        """Safely parses any record (tuple, list, set, dict, null, float) into an (int, int) tuple."""
+        if val is None:
+            return (0, 0)
+        try:
+            items = [int(v) for v in val if v is not None and not (isinstance(v, float) and np.isnan(v))]
+            if len(items) >= 2:
+                return (items[0], items[1])
+            elif len(items) == 1:
+                return (items[0], 0)
+        except Exception:
+            pass
+        return (0, 0)
+
     def __init__(self, feature_engineer):
         """
         Args:
@@ -80,8 +95,8 @@ class TrendAnalyzer:
             weights['trend'] += 0.15
 
         # Check if historical O/U records exist in cache; if not, safely redistribute weight
-        home_ou = features.get('home_ou_record') or (0, 0)
-        away_ou = features.get('away_ou_record') or (0, 0)
+        home_ou = self._safe_record(features.get('home_ou_record'))
+        away_ou = self._safe_record(features.get('away_ou_record'))
         total_games = sum(home_ou) + sum(away_ou)
         if total_games == 0 and weights['ou'] > 0:
             ou_w = weights['ou']
@@ -515,8 +530,8 @@ class TrendAnalyzer:
         score += factor_score_pd * weights['pd']
 
         # Factor 3: home/away splits
-        home_rec = features.get('home_home_record') or (0, 0)
-        away_rec = features.get('away_away_record') or (0, 0)
+        home_rec = self._safe_record(features.get('home_home_record'))
+        away_rec = self._safe_record(features.get('away_away_record'))
         home_home_win_pct = home_rec[0] / (home_rec[0] + home_rec[1]) if sum(home_rec) > 0 else 0.5
         away_away_win_pct = away_rec[0] / (away_rec[0] + away_rec[1]) if sum(away_rec) > 0 else 0.5
         split_diff = home_home_win_pct - away_away_win_pct
@@ -548,9 +563,14 @@ class TrendAnalyzer:
         score += factor_score_str * weights['str']
 
         # Factor 5: h2h record
-        h2h_rec = features.get('h2h_record') or (0, 0)
-        h2h_home_wins = h2h_rec[0] if len(h2h_rec) > 0 else 0
-        h2h_games = sum(h2h_rec) if len(h2h_rec) > 0 else 0
+        raw_h2h = features.get('h2h_record')
+        if raw_h2h is None:
+            h2h_home_wins = 0
+            h2h_games = 0
+        else:
+            h2h_rec = self._safe_record(raw_h2h)
+            h2h_home_wins = h2h_rec[0]
+            h2h_games = sum(h2h_rec)
         if h2h_games > 0:
             h2h_pct = h2h_home_wins / h2h_games
             factor_score_h2h = (h2h_pct - 0.5) * 2
