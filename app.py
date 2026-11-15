@@ -104,22 +104,15 @@ def render_html(html_str: str):
         st.markdown(cleaned, unsafe_allow_html=True)
 
 # Resilient imports with auto-recovery for Streamlit Cloud hot-reloading race conditions
-try:
-    from collectors.espn_collector import ESPNCollector
-    from collectors.odds_collector import OddsCollector
-    from processing.feature_engineering import FeatureEngineer
-    from analysis.trend_analyzer import TrendAnalyzer
-    from processing.player_rating import normalize_name
-except (ImportError, KeyError, AttributeError):
-    for mod in ['collectors', 'collectors.espn_collector', 'collectors.odds_collector',
-                'processing', 'processing.feature_engineering', 'processing.player_rating',
-                'analysis', 'analysis.trend_analyzer']:
-        sys.modules.pop(mod, None)
-    from collectors.espn_collector import ESPNCollector
-    from collectors.odds_collector import OddsCollector
-    from processing.feature_engineering import FeatureEngineer
-    from analysis.trend_analyzer import TrendAnalyzer
-    from processing.player_rating import normalize_name
+for mod in ['analysis', 'analysis.trend_analyzer', 'analysis.recommendation', 'analysis.betting_math',
+            'processing', 'processing.feature_engineering', 'processing.player_rating']:
+    sys.modules.pop(mod, None)
+
+from collectors.espn_collector import ESPNCollector
+from collectors.odds_collector import OddsCollector
+from processing.feature_engineering import FeatureEngineer
+from analysis.trend_analyzer import TrendAnalyzer
+from processing.player_rating import normalize_name
 
 try:
     from analysis.betting_math import calculate_live_pace_projection, evaluate_live_pick
@@ -2755,10 +2748,14 @@ if st.sidebar.button("🔄 อัปเดตฐานข้อมูลสถ�
         st.sidebar.error(f"อัปเดตข้อมูลล้มเหลว: {exc}")
 
 # Load Data with Streamlit Caching
-CACHE_VERSION_KEY = "v13_ai_residual_disabled_and_dynamic_prior"
+CACHE_VERSION_KEY = "v14_force_fresh_module_bytecode"
 
 @st.cache_resource
 def get_analyzer(cache_version: str = CACHE_VERSION_KEY):
+    for mod in ['analysis', 'analysis.trend_analyzer', 'analysis.recommendation',
+                'processing', 'processing.feature_engineering']:
+        sys.modules.pop(mod, None)
+
     from processing.data_merger import DataMerger
     from processing.feature_engineering import FeatureEngineer
     from analysis.trend_analyzer import TrendAnalyzer
