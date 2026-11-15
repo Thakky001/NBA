@@ -2755,8 +2755,10 @@ if st.sidebar.button("🔄 อัปเดตฐานข้อมูลสถ�
         st.sidebar.error(f"อัปเดตข้อมูลล้มเหลว: {exc}")
 
 # Load Data with Streamlit Caching
+CACHE_VERSION_KEY = "v13_ai_residual_disabled_and_dynamic_prior"
+
 @st.cache_resource
-def get_analyzer(cache_version: str = "v12_normalized_advanced_stats"):
+def get_analyzer(cache_version: str = CACHE_VERSION_KEY):
     from processing.data_merger import DataMerger
     from processing.feature_engineering import FeatureEngineer
     from analysis.trend_analyzer import TrendAnalyzer
@@ -2783,7 +2785,7 @@ def get_cached_line_movement(game_id: str):
     return espn.get_game_line_movement(str(game_id))
 
 @st.cache_data(ttl=300)
-def get_cached_analysis(_analyzer, home_team, away_team, spread_line, over_under_line, open_spread, open_line, is_live=False, cache_version="v12_normalized_advanced_stats"):
+def get_cached_analysis(_analyzer, home_team, away_team, spread_line, over_under_line, open_spread, open_line, is_live=False, cache_version=CACHE_VERSION_KEY):
     """Cache computationally heavy matchup simulation for 5 minutes."""
     try:
         return _analyzer.full_matchup_analysis(
@@ -2920,7 +2922,7 @@ def render_game_slate(selected_date, is_live_refresh):
                     spread_line=sp_val, over_under_line=ou_val,
                     open_spread=open_spread, open_line=open_total,
                     is_live=is_live,
-                    cache_version="v12_normalized_advanced_stats"
+                    cache_version=CACHE_VERSION_KEY
                 )
             
                 sp_feat = (analysis.get('spread') or {}).get('features') or {}
