@@ -374,6 +374,26 @@ class TestTrendAnalyzer(unittest.TestCase):
         res_ou_mid = self.analyzer.analyze_over_under('BOS', 'MIA', over_under_line=220.0, open_line=220.0, market_weight=0.0)
         self.assertEqual(res_ou_mid['recommendation'], 'NEUTRAL')
 
+    def test_data_quality_veto_and_extreme_edge_guard(self):
+        # 1. Unreliable data with edge >= 6.0 is VETOED to NEUTRAL
+        self.mock_fe.compute_matchup_features.return_value = {
+            'home_games_played': 10, 'away_games_played': 10,
+            'home_net_rating': 10.0, 'away_net_rating': 0.0,
+            'home_rest_days': 2, 'away_rest_days': 2,
+            'home_roster_power': 80.0, 'away_roster_power': 80.0,
+            'dq_is_reliable': False
+        }
+        res_veto = self.analyzer.analyze_spread('DEN', 'MEM', spread_line=3.5)
+        self.assertEqual(res_veto['recommendation'], 'NEUTRAL')
+        self.assertTrue(res_veto['is_vetoed'])
+
+        # 2. Extreme edge >= 8.0 on reliable data is demoted from STRONG to LEAN
+        self.mock_fe.compute_matchup_features.return_value['dq_is_reliable'] = True
+        res_extreme = self.analyzer.analyze_spread('DEN', 'MEM', spread_line=8.5)
+        self.assertEqual(res_extreme['recommendation'], 'LEAN HOME')
+
+    def test_enable_ai_residual_disabled_by_default(self):
+        self.assertFalse(self.analyzer.ENABLE_AI_RESIDUAL)
 
 if __name__ == '__main__':
     unittest.main()

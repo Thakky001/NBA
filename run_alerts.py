@@ -55,6 +55,7 @@ logger = logging.getLogger('nba_alerts')
 THAI_TZ = timezone(timedelta(hours=7))
 ALERT_LEDGER_PATH = os.path.join(RAW_DIR, 'alerted_games.json')
 DEFAULT_DASHBOARD_URL = os.getenv('STREAMLIT_APP_URL', 'https://hetu8dr75jdcavumnqk6jz.streamlit.app/')
+ENABLE_AI_RESIDUAL = False  # Disabled during early season: base math outperforms residual model (MAE 13.62 vs 14.39)
 
 
 def load_alerted_ledger() -> Dict[str, List[str]]:
@@ -369,13 +370,14 @@ def run_alert_cycle(
     # Load AI Residual Models with Graceful Fallback
     ai_ou_model = None
     ai_sp_model = None
-    try:
-        from analysis.ai_residual_model import OverUnderResidualModel, SpreadResidualModel
-        ai_ou_model = OverUnderResidualModel()
-        ai_sp_model = SpreadResidualModel()
-        logger.info(f"AI Residual Models loaded (OU fitted: {ai_ou_model.is_fitted}, Spread fitted: {ai_sp_model.is_fitted})")
-    except Exception as e:
-        logger.warning(f"Could not load AI models, falling back to pure math: {e}")
+    if ENABLE_AI_RESIDUAL:
+        try:
+            from analysis.ai_residual_model import OverUnderResidualModel, SpreadResidualModel
+            ai_ou_model = OverUnderResidualModel()
+            ai_sp_model = SpreadResidualModel()
+            logger.info(f"AI Residual Models loaded (OU fitted: {ai_ou_model.is_fitted}, Spread fitted: {ai_sp_model.is_fitted})")
+        except Exception as e:
+            logger.warning(f"Could not load AI models, falling back to pure math: {e}")
 
     # 2. Record pre-game predictions in ledger (locks lines & picks before tip-off)
     try:
@@ -455,7 +457,7 @@ def run_alert_cycle(
         is_early_ou_alert = min_g_alert < 20
         is_early_sp_alert = min_g_alert < 15
 
-        if ai_ou_model and ai_ou_model.is_fitted and analysis.get('over_under'):
+        if ENABLE_AI_RESIDUAL and ai_ou_model and ai_ou_model.is_fitted and analysis.get('over_under'):
             ou_res = analysis['over_under']
             # Only compute if not already computed inside full_matchup_analysis
             if 'ai_residual' not in ou_res:
@@ -483,7 +485,7 @@ def run_alert_cycle(
                 except Exception as e:
                     logger.warning(f"AI OU adjustment failed gracefully: {e}")
 
-        if ai_sp_model and ai_sp_model.is_fitted and analysis.get('spread'):
+        if ENABLE_AI_RESIDUAL and ai_sp_model and ai_sp_model.is_fitted and analysis.get('spread'):
             sp_res = analysis['spread']
             if 'ai_residual' not in sp_res:
                 try:

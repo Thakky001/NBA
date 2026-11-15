@@ -635,5 +635,25 @@ class FeatureEngineer:
         a_def = roster_data.get('away_def_loss', 0.0)
         net_injury_impact = -(h_off + a_off) * 0.20 + (h_def + a_def) * 0.16
         result['injury_net_total_impact'] = round(net_injury_impact, 2)
+
+        # Data-Quality Flags (Phase 2 Stabilization)
+        h_roster = roster_data.get('home_roster_rating', 0.0) or 0.0
+        a_roster = roster_data.get('away_roster_rating', 0.0) or 0.0
+        roster_gap = abs(h_roster - a_roster) if (h_roster > 0 and a_roster > 0) else 0.0
+
+        dq_unconfirmed_lineup = not roster_data.get('is_lineup_confirmed', False)
+        dq_missing_net_rating = (result.get('home_net_rating') is None or result.get('away_net_rating') is None)
+        dq_extreme_roster_gap = roster_gap >= 30.0
+        dq_low_sample = min(result.get('home_games_played', 20), result.get('away_games_played', 20)) < 5
+
+        # Matchup is unreliable if extreme roster gap is paired with missing net rating or unconfirmed lineups
+        dq_is_reliable = not (dq_extreme_roster_gap and (dq_unconfirmed_lineup or dq_missing_net_rating))
+
+        result['dq_unconfirmed_lineup'] = dq_unconfirmed_lineup
+        result['dq_missing_net_rating'] = dq_missing_net_rating
+        result['dq_extreme_roster_gap'] = dq_extreme_roster_gap
+        result['dq_low_sample'] = dq_low_sample
+        result['dq_roster_gap'] = round(roster_gap, 1)
+        result['dq_is_reliable'] = dq_is_reliable
         
         return result

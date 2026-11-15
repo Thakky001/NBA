@@ -17,6 +17,7 @@ class TrendAnalyzer:
     # Confidence thresholds
     STRONG_THRESHOLD = 0.7
     LEAN_THRESHOLD = 0.55
+    ENABLE_AI_RESIDUAL = False  # Disabled during early season: base math outperforms residual model (MAE 13.62 vs 14.39)
 
     @staticmethod
     def parse_streak(s):
@@ -730,6 +731,19 @@ class TrendAnalyzer:
             projected_margin = raw_projected_margin
             recommendation = 'NEUTRAL'
 
+        # Data Quality Veto Guard & Anomaly Edge Guard:
+        is_dq_reliable = features.get('dq_is_reliable', True)
+        is_vetoed = False
+        if not is_dq_reliable and abs(cover_edge) >= 6.0:
+            recommendation = 'NEUTRAL'
+            is_vetoed = True
+
+        # Extreme Edge Guard:
+        # In NBA ATS betting, cover edges >= 8.0 pts are statistical illusions (45.5% win rate).
+        # Demote to LEAN to prevent large capital commitments.
+        if abs(cover_edge) >= 8.0 and 'STRONG' in recommendation:
+            recommendation = recommendation.replace('STRONG', 'LEAN')
+
         # Probability for the recommended side
         pick_win_prob = win_prob if 'HOME' in recommendation else (spread_probs['loss'] if spread_probs and 'AWAY' in recommendation else (1.0 - win_prob if 'AWAY' in recommendation else 0.50))
         
@@ -817,7 +831,9 @@ class TrendAnalyzer:
             'is_early_season': is_early_spread_gate,
             'sigma_margin': sigma if spread_line is not None else None,
             'probability_method': probability_method if spread_line is not None else 'not_calculated',
-            'push_prob': push_prob if spread_line is not None else 0.0
+            'push_prob': push_prob if spread_line is not None else 0.0,
+            'dq_is_reliable': is_dq_reliable,
+            'is_vetoed': is_vetoed
         }
 
     def full_matchup_analysis(self, home_team: str, away_team: str,
@@ -919,6 +935,19 @@ class TrendAnalyzer:
             result['spread'] = None
 
         # AI CatBoost Residual Adjustments (Unified across Web Dashboard, Alerts & Ledger)
+        if not getattr(self, 'ENABLE_AI_RESIDUAL', False):
+            if result.get('over_under'):
+                ou_res = result['over_under']
+                ou_res['ai_residual'] = 0.0
+                ou_res['base_math_total'] = ou_res.get('projected_total')
+                ou_res['adjusted_total'] = ou_res.get('projected_total')
+            if result.get('spread'):
+                sp_res = result['spread']
+                sp_res['ai_residual'] = 0.0
+                sp_res['base_math_margin'] = sp_res.get('projected_margin')
+                sp_res['adjusted_margin'] = sp_res.get('projected_margin')
+            return result
+
         try:
             from analysis.ai_residual_model import OverUnderResidualModel, SpreadResidualModel
             if not hasattr(self, '_ai_ou_model'):

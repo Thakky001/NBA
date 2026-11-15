@@ -133,5 +133,14 @@ class TestFeatureEngineering(unittest.TestCase):
         self.assertEqual(len(fe.game_logs), 2)
         self.assertTrue((fe.game_logs['home_score'].isin([120, 125])).all())
 
+    def test_data_quality_flags(self):
+        """Verify data quality flags in compute_matchup_features."""
+        fe = FeatureEngineer(self.sample_logs)
+        features = fe.compute_matchup_features('Boston Celtics', 'Miami Heat', game_date='2026-01-22')
+        self.assertIn('dq_is_reliable', features)
+        self.assertIn('dq_extreme_roster_gap', features)
+        self.assertIn('dq_missing_net_rating', features)
+        self.assertIn('dq_unconfirmed_lineup', features)
+
 if __name__ == '__main__':
     unittest.main()

@@ -514,8 +514,6 @@ class PlayerRatingEngine:
             max_injury_loss = 22.0
             if full_roster_rating > 0 and (full_roster_rating - active_roster_rating) > max_injury_loss:
                 active_roster_rating = full_roster_rating - max_injury_loss
-            # NBA Team Floor: Prevent active roster rating collapsing below professional 8-man rotation minimum
-            active_roster_rating = max(active_roster_rating, 108.0)
 
             s_act_off_avg = sum(s.get('active_off_eff', s['active_eff'] * 0.65) for s in active_starter_players) / s_act_n
             b_act_off_avg = sum(b.get('active_off_eff', b['active_eff'] * 0.65) for b in bench_top_3) / b_n
