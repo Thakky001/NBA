@@ -258,37 +258,49 @@ class TrendAnalyzer:
             # Candidate EV against standard -110 bookmaker line (breakeven 52.38%)
             cand_ev = calculate_ev_with_push(cand_prob, market_odds[0 if cand_dir == 'OVER' else 1], push_prob=push_prob) if market_odds else None
 
-            # Asymmetric Conviction Gate:
-            # OVER: Higher threshold (edge >= 5.0 pts) for STRONG OVER; LEAN OVER at edge >= 3.0 pts
-            # UNDER: Preserves edge <= -2.0 pts for STRONG UNDER; LEAN UNDER at edge <= -1.5 pts
-            if cand_dir == 'OVER':
-                if total_edge >= 5.0 and cand_prob >= 0.565 and (cand_ev is None or cand_ev >= 0.05):
-                    recommendation = "STRONG OVER"
-                elif total_edge >= 3.0 and cand_prob >= 0.538 and (cand_ev is None or cand_ev >= 0.015):
-                    recommendation = "LEAN OVER"
-                else:
-                    recommendation = "NEUTRAL"
-            elif cand_dir == 'UNDER':
-                if abs(total_edge) >= 2.0 and cand_prob >= 0.565 and (cand_ev is None or cand_ev >= 0.05):
-                    recommendation = "STRONG UNDER"
-                elif abs(total_edge) >= (1.5 if is_early_season else 1.0) and cand_prob >= 0.538 and (cand_ev is None or cand_ev >= 0.015):
-                    recommendation = "LEAN UNDER"
-                else:
-                    recommendation = "NEUTRAL"
-            else:
-                recommendation = "NEUTRAL"
+            # Preliminary line movement analysis
+            from analysis.betting_math import analyze_line_movement
+            pre_line_mv = analyze_line_movement(open_line, over_under_line, market_type='total', recommendation='NEUTRAL', is_live=is_live)
 
+            # Single unified recommendation gate (Phase 2.1 & 2.5)
+            from analysis.recommendation import decide_pick
+            ou_decision = decide_pick(
+                market_type='total',
+                current_line=over_under_line,
+                projected_val=projected_total,
+                edge=total_edge,
+                fair_prob=win_prob_over,
+                line_movement=pre_line_mv,
+                open_line=open_line,
+                home_team=home_team,
+                away_team=away_team,
+                data_quality_flags=features,
+                is_early_season=is_early_season,
+                push_prob=push_prob,
+                ev=cand_ev
+            )
+            recommendation = ou_decision['recommendation']
+            pick_win_prob = ou_decision['pick_prob']
             win_prob = win_prob_over
             win_prob_under = total_probs['loss']
         else:
             push_prob = 0.0
             win_prob = 0.50
             recommendation = 'NEUTRAL'
+            from analysis.recommendation import decide_pick
+            ou_decision = decide_pick(
+                market_type='total',
+                current_line=over_under_line,
+                projected_val=raw_projected_total,
+                edge=0.0,
+                fair_prob=0.50,
+                open_line=open_line,
+                data_quality_flags=features
+            )
+            pick_win_prob = 0.50
 
-        # Probability for the recommended side
-        pick_win_prob = win_prob if 'OVER' in recommendation else (win_prob_under if 'UNDER' in recommendation else 0.50)
-        
-        # Line movement is descriptive and does not identify betting flow.
+        # Line movement finalized with recommendation
+        from analysis.betting_math import analyze_line_movement
         line_mv = analyze_line_movement(open_line, over_under_line, market_type='total', recommendation=recommendation, is_live=is_live)
         
         # Anomaly Detection (flagging extreme discrepancies without clamping)
@@ -370,7 +382,15 @@ class TrendAnalyzer:
             'is_early_season': is_early_season,
             'sigma_total': sigma_ou,
             'probability_method': probability_method,
-            'push_prob': push_prob if over_under_line else 0.0
+            'push_prob': push_prob if over_under_line else 0.0,
+            'decision': ou_decision,
+            'pick_side': ou_decision.get('pick_side'),
+            'pick_prob': ou_decision.get('pick_prob'),
+            'is_actionable': ou_decision.get('is_actionable'),
+            'suppressed_reason': ou_decision.get('suppressed_reason'),
+            'edge_vs_open': ou_decision.get('edge_vs_open'),
+            'edge_vs_current': ou_decision.get('edge_vs_current'),
+            'gate_version': ou_decision.get('gate_version')
         }
 
     def analyze_spread(self, home_team: str, away_team: str,
@@ -637,13 +657,15 @@ class TrendAnalyzer:
             market_weight_spread = max(0.0, min(1.0, float(market_weight if market_weight is not None else 0.0)))
 
             from analysis.betting_math import market_anchored_projection, analyze_line_movement
-            anchor_spread = open_spread if (open_spread is not None) else s_line
-            market_expected_margin = -float(anchor_spread)
+            # Phase 2.4: Anchor projection to current line to avoid line movement leakage
+            anchor_spread = s_line
+            market_expected_margin = -float(s_line)
             projected_margin = market_anchored_projection(raw_projected_margin, market_expected_margin, market_weight=market_weight_spread)
             cover_edge = projected_margin + s_line
 
-            from analysis.betting_math import estimate_residual_sigma, empirical_line_probabilities, calculate_spread_probabilities
-            sigma = estimate_residual_sigma(training_residuals) if training_residuals and len(training_residuals) >= 2 else 12.5
+            from analysis.betting_math import estimate_residual_sigma, empirical_line_probabilities, calculate_spread_probabilities, dynamic_early_season_sigma
+            base_sigma = estimate_residual_sigma(training_residuals) if training_residuals and len(training_residuals) >= 2 else 12.5
+            sigma = dynamic_early_season_sigma(base_sigma, min_games)
             probability_method = 'empirical_training_residuals' if training_residuals is not None and len(training_residuals) >= 2 else 'normal_unvalidated_sigma'
             spread_probs = (empirical_line_probabilities(s_line, projected_margin, training_residuals)
                             if training_residuals else calculate_spread_probabilities(s_line, projected_margin, sigma))
@@ -661,94 +683,48 @@ class TrendAnalyzer:
             # Combine team dominance (20%) with ATS cover edge (80%)
             score = (score * 0.20) + (factor_score_cover * 0.80)
 
-            # Recommendations calibrated for Market-Anchored Cover Edge:
-            # Early-Season Conviction Gate (< 15 games):
-            # 1. Tight Spread Filter (|s_line| <= 4.5): require edge >= 4.0 pts
-            # 2. Road Heavy Favorite (s_line >= 9.5, away favorite): require edge <= -6.5 pts & win_prob >= 0.62
-            # 3. Road Underdog (s_line < 0, away underdog): require edge <= -4.5 pts & win_prob >= 0.62
-            # 4. Standard Early Season: edge >= 3.0 pts & win_prob >= 0.58
-            # Suppress all LEAN picks to NEUTRAL / PASS to protect bankroll.
             is_early_spread_gate = min_games < 20
-            away_win_prob = spread_probs['loss'] if spread_probs else (1.0 - win_prob)
-            if is_early_spread_gate:
-                is_tight = abs(s_line) <= 4.5
-                is_road_heavy_fav = s_line >= 9.5
-                is_road_underdog = s_line < 0.0
+            pre_line_mv = analyze_line_movement(open_spread, spread_line, market_type='spread', recommendation='NEUTRAL', home_team=home_team, away_team=away_team, is_live=is_live)
 
-                # STRONG Thresholds
-                strong_edge_home = 3.0
-                strong_prob_home = 0.58
-
-                if is_road_heavy_fav:
-                    strong_edge_away = -6.5
-                    strong_prob_away = 0.62
-                elif is_road_underdog:
-                    strong_edge_away = -4.0
-                    strong_prob_away = 0.58
-                else:
-                    strong_edge_away = -3.0
-                    strong_prob_away = 0.58
-
-                # LEAN Thresholds (Early Season)
-                lean_edge_home = 2.0
-                lean_prob_home = 0.538
-
-                if is_road_heavy_fav:
-                    lean_edge_away = -4.5
-                    lean_prob_away = 0.58
-                elif is_road_underdog:
-                    lean_edge_away = -2.0
-                    lean_prob_away = 0.538
-                else:
-                    lean_edge_away = -1.5
-                    lean_prob_away = 0.538
-
-                if cover_edge >= strong_edge_home and win_prob >= strong_prob_home:
-                    recommendation = 'STRONG HOME'
-                elif cover_edge >= lean_edge_home and win_prob >= lean_prob_home:
-                    recommendation = 'LEAN HOME'
-                elif cover_edge <= strong_edge_away and away_win_prob >= strong_prob_away:
-                    recommendation = 'STRONG AWAY'
-                elif cover_edge <= lean_edge_away and away_win_prob >= lean_prob_away:
-                    recommendation = 'LEAN AWAY'
-                else:
-                    recommendation = 'NEUTRAL'
-            else:
-                if cover_edge >= 2.0:
-                    recommendation = 'STRONG HOME'
-                elif cover_edge >= 0.8:
-                    recommendation = 'LEAN HOME'
-                elif cover_edge <= -2.0:
-                    recommendation = 'STRONG AWAY'
-                elif cover_edge <= -0.8:
-                    recommendation = 'LEAN AWAY'
-                else:
-                    recommendation = 'NEUTRAL'
+            from analysis.recommendation import decide_pick
+            sp_decision = decide_pick(
+                market_type='spread',
+                current_line=s_line,
+                projected_val=projected_margin,
+                edge=cover_edge,
+                fair_prob=win_prob,
+                line_movement=pre_line_mv,
+                open_line=open_spread,
+                home_team=home_team,
+                away_team=away_team,
+                data_quality_flags=features,
+                is_early_season=is_early_spread_gate,
+                push_prob=push_prob
+            )
+            recommendation = sp_decision['recommendation']
+            pick_win_prob = sp_decision['pick_prob']
         else:
             sigma = None
             push_prob = 0.0
             probability_method = 'not_calculated'
             projected_margin = raw_projected_margin
             recommendation = 'NEUTRAL'
+            from analysis.recommendation import decide_pick
+            sp_decision = decide_pick(
+                market_type='spread',
+                current_line=spread_line,
+                projected_val=projected_margin,
+                edge=0.0,
+                fair_prob=0.50,
+                open_line=open_spread,
+                data_quality_flags=features
+            )
+            pick_win_prob = 0.50
 
-        # Data Quality Veto Guard & Anomaly Edge Guard:
         is_dq_reliable = features.get('dq_is_reliable', True)
-        is_vetoed = False
-        if not is_dq_reliable and abs(cover_edge) >= 6.0:
-            recommendation = 'NEUTRAL'
-            is_vetoed = True
+        is_vetoed = sp_decision.get('suppressed_reason') == 'VETO_UNRELIABLE_DATA_QUALITY'
 
-        # Extreme Edge Guard:
-        # In NBA ATS betting, cover edges >= 8.0 pts are statistical illusions (45.5% win rate).
-        # Demote to LEAN to prevent large capital commitments.
-        if abs(cover_edge) >= 8.0 and 'STRONG' in recommendation:
-            recommendation = recommendation.replace('STRONG', 'LEAN')
-
-        # Probability for the recommended side
-        pick_win_prob = win_prob if 'HOME' in recommendation else (spread_probs['loss'] if spread_probs and 'AWAY' in recommendation else (1.0 - win_prob if 'AWAY' in recommendation else 0.50))
-        
-        # Line movement is descriptive and does not identify betting flow.
-        from analysis.betting_math import analyze_line_movement
+        # Line movement finalized with recommendation
         line_mv = analyze_line_movement(open_spread, spread_line, market_type='spread', recommendation=recommendation, home_team=home_team, away_team=away_team, is_live=is_live)
         
         # Anomaly Detection (flagging extreme discrepancies without clamping)
@@ -833,7 +809,15 @@ class TrendAnalyzer:
             'probability_method': probability_method if spread_line is not None else 'not_calculated',
             'push_prob': push_prob if spread_line is not None else 0.0,
             'dq_is_reliable': is_dq_reliable,
-            'is_vetoed': is_vetoed
+            'is_vetoed': is_vetoed,
+            'decision': sp_decision,
+            'pick_side': sp_decision.get('pick_side'),
+            'pick_prob': sp_decision.get('pick_prob'),
+            'is_actionable': sp_decision.get('is_actionable'),
+            'suppressed_reason': sp_decision.get('suppressed_reason'),
+            'edge_vs_open': sp_decision.get('edge_vs_open'),
+            'edge_vs_current': sp_decision.get('edge_vs_current'),
+            'gate_version': sp_decision.get('gate_version')
         }
 
     def full_matchup_analysis(self, home_team: str, away_team: str,
@@ -893,14 +877,8 @@ class TrendAnalyzer:
         min_games = min(home_g, away_g)
 
         if market_weight is None:
-            # Smooth Bayesian Market Anchoring for Early Season:
-            # 0.70 at game 0 smoothly relaxing to 0.50 at game 20, then 0.20 mid-season (game 40+)
-            if min_games < 20:
-                eff_market_weight = 0.50 + 0.20 * ((20.0 - min_games) / 20.0)
-            elif min_games < 40:
-                eff_market_weight = 0.20 + 0.30 * ((40.0 - min_games) / 20.0)
-            else:
-                eff_market_weight = 0.20
+            from analysis.betting_math import dynamic_early_season_market_weight
+            eff_market_weight = dynamic_early_season_market_weight(min_games)
         else:
             eff_market_weight = float(market_weight)
 

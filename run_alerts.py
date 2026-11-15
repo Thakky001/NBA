@@ -443,83 +443,8 @@ def run_alert_cycle(
             open_line=open_total
         )
 
-        # Apply AI CatBoost adjustments (synchronized with trend_analyzer, prevent double-adjustment)
-        feat_alert = analysis.get('features') or (analysis.get('over_under') or {}).get('features') or {}
-        try:
-            hg_alert = int(feat_alert.get('home_games_played', 10))
-        except Exception:
-            hg_alert = 10
-        try:
-            ag_alert = int(feat_alert.get('away_games_played', 10))
-        except Exception:
-            ag_alert = 10
-        min_g_alert = min(hg_alert, ag_alert)
-        is_early_ou_alert = min_g_alert < 20
-        is_early_sp_alert = min_g_alert < 15
-
-        if ENABLE_AI_RESIDUAL and ai_ou_model and ai_ou_model.is_fitted and analysis.get('over_under'):
-            ou_res = analysis['over_under']
-            # Only compute if not already computed inside full_matchup_analysis
-            if 'ai_residual' not in ou_res:
-                try:
-                    adj_ou = ai_ou_model.get_adjusted_projection(
-                        home, away, fe, analyzer, game_date=date_str, over_under_line=ou_val
-                    )
-                    ou_res['ai_residual'] = adj_ou['ai_residual']
-                    ou_res['base_math_total'] = adj_ou['base_math_total']
-                    ou_res['adjusted_total'] = adj_ou['adjusted_total']
-                    if isinstance(adj_ou.get('ai_residual'), (int, float)) and adj_ou['ai_residual'] != 0.0 and isinstance(ou_val, (int, float)):
-                        ou_res['projected_total'] = adj_ou['adjusted_total']
-                        ou_res['total_edge'] = round(adj_ou['adjusted_total'] - ou_val, 1)
-                        edge_ou = ou_res['total_edge']
-                        if edge_ou >= 5.0:
-                            ou_res['recommendation'] = 'STRONG OVER'
-                        elif not is_early_ou_alert and edge_ou >= 3.0:
-                            ou_res['recommendation'] = 'LEAN OVER'
-                        elif edge_ou <= -2.0:
-                            ou_res['recommendation'] = 'STRONG UNDER'
-                        elif not is_early_ou_alert and edge_ou <= -1.0:
-                            ou_res['recommendation'] = 'LEAN UNDER'
-                        else:
-                            ou_res['recommendation'] = 'NEUTRAL'
-                except Exception as e:
-                    logger.warning(f"AI OU adjustment failed gracefully: {e}")
-
-        if ENABLE_AI_RESIDUAL and ai_sp_model and ai_sp_model.is_fitted and analysis.get('spread'):
-            sp_res = analysis['spread']
-            if 'ai_residual' not in sp_res:
-                try:
-                    adj_sp = ai_sp_model.get_adjusted_spread_projection(
-                        home, away, fe, analyzer, game_date=date_str, spread_line=sp_val
-                    )
-                    sp_res['ai_residual'] = adj_sp['ai_residual']
-                    sp_res['base_math_margin'] = adj_sp['base_math_margin']
-                    sp_res['adjusted_margin'] = adj_sp['adjusted_margin']
-                    if isinstance(adj_sp.get('ai_residual'), (int, float)) and adj_sp['ai_residual'] != 0.0 and isinstance(sp_val, (int, float)):
-                        sp_res['projected_margin'] = adj_sp['adjusted_margin']
-                        sp_res['cover_edge'] = round(adj_sp['adjusted_margin'] + sp_val, 1)
-                        edge_sp = sp_res['cover_edge']
-                        if is_early_sp_alert:
-                            if edge_sp >= 4.0:
-                                sp_res['recommendation'] = 'STRONG HOME'
-                            elif edge_sp <= -4.0:
-                                sp_res['recommendation'] = 'STRONG AWAY'
-                            else:
-                                sp_res['recommendation'] = 'NEUTRAL'
-                        else:
-                            if edge_sp >= 2.0:
-                                sp_res['recommendation'] = 'STRONG HOME'
-                            elif edge_sp >= 0.8:
-                                sp_res['recommendation'] = 'LEAN HOME'
-                            elif edge_sp <= -2.0:
-                                sp_res['recommendation'] = 'STRONG AWAY'
-                            elif edge_sp <= -0.8:
-                                sp_res['recommendation'] = 'LEAN AWAY'
-                            else:
-                                sp_res['recommendation'] = 'NEUTRAL'
-                except Exception as e:
-                    logger.warning(f"AI Spread adjustment failed gracefully: {e}")
-
+        # Analysis already uses single unified decision gate (analysis/recommendation.py)
+        # Any future AI residual adjustments are applied within full_matchup_analysis, eliminating duplicate overrides.
         card = format_game_card(analysis, game.to_dict(), odds_data)
         cards.append(card)
         alerted_gids.append(gid)

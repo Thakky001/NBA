@@ -462,10 +462,35 @@ def market_anchored_projection(raw_model_val: float,
     return round(anchored, 2)
 
 
+def dynamic_early_season_market_weight(games_played: int) -> float:
+    """Calculate dynamic market weight prior based on games played in season.
+    Option A Early Season:
+        w(N) = max(0.20, 0.70 - 0.025 * N)
+    At N = 0 games: 0.70 (strong market prior)
+    At N = 10 games: 0.45
+    At N = 20 games: 0.20 (standard in-season model weight)
+    """
+    n = max(0, int(games_played))
+    return round(max(0.20, min(0.85, 0.70 - 0.025 * n)), 4)
+
+
+def dynamic_early_season_sigma(base_sigma: float, games_played: int) -> float:
+    """Expand residual variance for small samples:
+        sigma_adj = base_sigma * (1.0 + 1.0 / sqrt(N + 1))
+    When N is small, uncertainty is higher, which widens the Normal CDF and
+    naturally suppresses extreme, unearned win probabilities without arbitrary clipping.
+    """
+    if base_sigma <= 0:
+        raise ValueError("base_sigma must be positive")
+    n = max(0, int(games_played))
+    factor = 1.0 + (1.0 / math.sqrt(n + 1.0))
+    return round(base_sigma * factor, 4)
+
+
 def analyze_line_movement(open_line: Optional[float],
                           current_line: Optional[float],
                           market_type: str,
-                          recommendation: str,
+                          recommendation: str = 'NEUTRAL',
                           home_team: Optional[str] = None,
                           away_team: Optional[str] = None,
                           is_live: bool = False) -> Dict[str, Any]:

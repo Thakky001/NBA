@@ -49,14 +49,35 @@ LEDGER_COLUMNS = [
     'projected_margin',
     'projected_total',
     'spread_odds',
-    'total_odds'
+    'total_odds',
+    # Phase 2.2 Schema Extensions (Game-Level Prefix)
+    'sp_pick_side',
+    'sp_pick_prob',
+    'sp_anchor_line',
+    'sp_current_line',
+    'sp_edge_vs_open',
+    'sp_edge_vs_current',
+    'sp_is_actionable',
+    'sp_suppressed_reason',
+    'ou_pick_side',
+    'ou_pick_prob',
+    'ou_anchor_line',
+    'ou_current_line',
+    'ou_edge_vs_open',
+    'ou_edge_vs_current',
+    'ou_is_actionable',
+    'ou_suppressed_reason',
+    'gate_version',
+    'data_quality_flags'
 ]
 
 
 STRING_COLUMNS = [
     'game_id', 'date', 'home_team', 'away_team',
     'ou_recommendation', 'ou_verdict', 'sp_recommendation', 'sp_verdict',
-    'ou_result', 'sp_result', 'verdict_result', 'status'
+    'ou_result', 'sp_result', 'verdict_result', 'status',
+    'sp_pick_side', 'sp_suppressed_reason', 'ou_pick_side', 'ou_suppressed_reason',
+    'gate_version', 'data_quality_flags'
 ]
 
 
@@ -268,19 +289,18 @@ def record_slate_predictions(
         ou_res = analysis.get('over_under') or {}
         sp_res = analysis.get('spread') or {}
 
+        ou_decision = ou_res.get('decision') or {}
+        sp_decision = sp_res.get('decision') or {}
+
         ou_lm = ou_res.get('line_movement') or {}
         sp_lm = sp_res.get('line_movement') or {}
 
-        # Synchronize ledger actionable picks with Telegram Alert filter
-        CLASH_VERDICTS = {'CAPITAL_PRESERVATION', 'PASS', 'MOVE_CONFLICT'}
-        ou_rec_raw = ou_res.get('recommendation')
-        sp_rec_raw = sp_res.get('recommendation')
+        eff_ou_rec = ou_res.get('recommendation', 'NEUTRAL')
+        eff_sp_rec = sp_res.get('recommendation', 'NEUTRAL')
 
-        ou_clash = ou_res.get('is_market_clash', False) or (ou_lm.get('verdict') in CLASH_VERDICTS)
-        sp_clash = sp_res.get('is_market_clash', False) or (sp_lm.get('verdict') in CLASH_VERDICTS)
-
-        eff_ou_rec = 'NEUTRAL' if ou_clash else ou_rec_raw
-        eff_sp_rec = 'NEUTRAL' if sp_clash else sp_rec_raw
+        dq_summary = {
+            k: v for k, v in analysis.get('features', {}).items() if str(k).startswith('dq_')
+        }
 
         new_rows.append({
             'game_id': gid,
@@ -311,7 +331,26 @@ def record_slate_predictions(
             'projected_margin': sp_res.get('projected_margin'),
             'projected_total': ou_res.get('projected_total'),
             'spread_odds': json.dumps(spread_odds),
-            'total_odds': json.dumps(total_odds)
+            'total_odds': json.dumps(total_odds),
+            # Phase 2.2 Schema Extensions (Game-Level Prefix)
+            'sp_pick_side': sp_decision.get('pick_side'),
+            'sp_pick_prob': sp_decision.get('pick_prob'),
+            'sp_anchor_line': sp_decision.get('anchor_line') or sp_val,
+            'sp_current_line': sp_val,
+            'sp_edge_vs_open': sp_decision.get('edge_vs_open'),
+            'sp_edge_vs_current': sp_decision.get('edge_vs_current') if sp_decision.get('edge_vs_current') is not None else sp_res.get('cover_edge'),
+            'sp_is_actionable': sp_decision.get('is_actionable', eff_sp_rec != 'NEUTRAL'),
+            'sp_suppressed_reason': sp_decision.get('suppressed_reason'),
+            'ou_pick_side': ou_decision.get('pick_side'),
+            'ou_pick_prob': ou_decision.get('pick_prob'),
+            'ou_anchor_line': ou_decision.get('anchor_line') or ou_val,
+            'ou_current_line': ou_val,
+            'ou_edge_vs_open': ou_decision.get('edge_vs_open'),
+            'ou_edge_vs_current': ou_decision.get('edge_vs_current') if ou_decision.get('edge_vs_current') is not None else ou_res.get('total_edge'),
+            'ou_is_actionable': ou_decision.get('is_actionable', eff_ou_rec != 'NEUTRAL'),
+            'ou_suppressed_reason': ou_decision.get('suppressed_reason'),
+            'gate_version': sp_decision.get('gate_version') or ou_decision.get('gate_version') or 'gate-v2.1',
+            'data_quality_flags': json.dumps(dq_summary)
         })
         existing_gids.add(gid)
 
@@ -682,3 +721,64 @@ def backfill_season_history(analyzer: Any) -> int:
         logger.info(f"Backfilled {count_new} completed games into predictions ledger.")
 
     return count_new
+
+
+def calculate_daily_performance_report(ledger_df: Optional[pd.DataFrame] = None) -> Dict[str, Any]:
+    """Calculate rolling daily performance metrics (Rolling 7d, 14d, 30d, Tier breakdown - Phase 4.2)."""
+    df = ledger_df if ledger_df is not None else load_ledger()
+    if df.empty:
+        return {'status': 'EMPTY_LEDGER', 'rolling_7d': {}, 'rolling_14d': {}, 'rolling_30d': {}}
+
+    graded = df[df['status'] == 'GRADED'].copy()
+    if graded.empty:
+        return {'status': 'NO_GRADED_GAMES', 'rolling_7d': {}, 'rolling_14d': {}, 'rolling_30d': {}}
+
+    graded['dt'] = pd.to_datetime(graded['date'], errors='coerce')
+    graded.sort_values(by='dt', inplace=True)
+    latest_dt = graded['dt'].max()
+
+    def _eval_period(period_df: pd.DataFrame) -> Dict[str, Any]:
+        results = []
+        pnl_units = 0.0
+        for _, r in period_df.iterrows():
+            for res_col in ['sp_result', 'ou_result']:
+                val = r.get(res_col)
+                if val in ('WIN', 'LOSS', 'PUSH'):
+                    results.append(val)
+                    if val == 'WIN': pnl_units += 0.909
+                    elif val == 'LOSS': pnl_units -= 1.0
+        n_graded = len([x for x in results if x in ('WIN', 'LOSS')])
+        n_wins = results.count('WIN')
+        wr = round(n_wins / n_graded * 100.0, 1) if n_graded > 0 else 0.0
+        roi = round(pnl_units / n_graded * 100.0, 1) if n_graded > 0 else 0.0
+        return {
+            'total_bets': len(results),
+            'graded_bets': n_graded,
+            'wins': n_wins,
+            'losses': results.count('LOSS'),
+            'pushes': results.count('PUSH'),
+            'win_rate': wr,
+            'pnl_units': round(pnl_units, 2),
+            'roi_pct': roi
+        }
+
+    cutoff_7d = latest_dt - pd.Timedelta(days=7)
+    cutoff_14d = latest_dt - pd.Timedelta(days=14)
+    cutoff_30d = latest_dt - pd.Timedelta(days=30)
+
+    report_7d = _eval_period(graded[graded['dt'] >= cutoff_7d])
+    report_14d = _eval_period(graded[graded['dt'] >= cutoff_14d])
+    report_30d = _eval_period(graded[graded['dt'] >= cutoff_30d])
+
+    track_all = calculate_track_record(graded)
+
+    return {
+        'status': 'OK',
+        'as_of_date': latest_dt.strftime('%Y-%m-%d') if pd.notna(latest_dt) else None,
+        'rolling_7d': report_7d,
+        'rolling_14d': report_14d,
+        'rolling_30d': report_30d,
+        'strong_tier': track_all.get('strong', {}),
+        'lean_tier': track_all.get('lean', {}),
+        'overall': track_all.get('overall', {})
+    }

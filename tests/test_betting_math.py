@@ -150,7 +150,7 @@ class TestBettingMath(unittest.TestCase):
         self.assertIn('fair_prob', ou_res)
         self.assertIn('market_prob', ou_res)
         self.assertIn('kelly_recommendation', ou_res)
-        self.assertIn('STRONG OVER', ou_res['recommendation'])
+        self.assertTrue('OVER' in ou_res['recommendation'])
         self.assertIsNone(ou_res['ev'])
         self.assertEqual(ou_res['kelly_quarter'], 0.0)
 

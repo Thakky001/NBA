@@ -270,5 +270,44 @@ class TestPredictionTracker(unittest.TestCase):
         dates = get_available_ledger_dates(mock_ledger)
         self.assertEqual(dates, ['2026-10-22', '2026-10-21'])
 
+    def test_phase2_schema_and_actionable_pick_probability(self):
+        """Phase 2.2 & 2.3: Verify ledger schema includes new columns and pick_prob != 0.50 for actionable picks."""
+        from analysis.prediction_tracker import LEDGER_COLUMNS
+        expected_cols = [
+            'sp_pick_side', 'sp_pick_prob', 'sp_anchor_line', 'sp_current_line',
+            'sp_edge_vs_open', 'sp_edge_vs_current', 'sp_is_actionable', 'sp_suppressed_reason',
+            'ou_pick_side', 'ou_pick_prob', 'ou_anchor_line', 'ou_current_line',
+            'ou_edge_vs_open', 'ou_edge_vs_current', 'ou_is_actionable', 'ou_suppressed_reason',
+            'gate_version', 'data_quality_flags'
+        ]
+        for col in expected_cols:
+            self.assertIn(col, LEDGER_COLUMNS)
+
+        from analysis.recommendation import decide_pick
+        decision = decide_pick(
+            market_type='spread',
+            current_line=-3.5,
+            projected_val=7.5,
+            edge=4.0,
+            fair_prob=0.62
+        )
+        self.assertTrue(decision['is_actionable'])
+        self.assertNotEqual(decision['pick_prob'], 0.50)
+        self.assertEqual(decision['pick_side'], 'HOME')
+        self.assertEqual(decision['recommendation'], 'STRONG HOME')
+
+        # Away pick should record away probability, not home probability
+        decision_away = decide_pick(
+            market_type='spread',
+            current_line=-3.5,
+            projected_val=-8.0,
+            edge=-4.5,
+            fair_prob=0.36
+        )
+        self.assertTrue(decision_away['is_actionable'])
+        self.assertEqual(decision_away['pick_side'], 'AWAY')
+        self.assertGreater(decision_away['pick_prob'], 0.50)
+        self.assertEqual(decision_away['recommendation'], 'STRONG AWAY')
+
 if __name__ == '__main__':
     unittest.main()

@@ -141,6 +141,82 @@ class TestFeatureEngineering(unittest.TestCase):
         self.assertIn('dq_extreme_roster_gap', features)
         self.assertIn('dq_missing_net_rating', features)
         self.assertIn('dq_unconfirmed_lineup', features)
+        self.assertIn('dq_stale_data', features)
+
+    def test_cross_season_form_isolation_phoenix_case(self):
+        """Phase 1.1: Ensure previous season games (e.g. May 2026) are not leaked into current season form."""
+        df_cross_season = pd.DataFrame({
+            'date': [
+                '2026-05-15',  # Prior season playoffs/May
+                '2026-05-18',  # Prior season playoffs/May
+                '2026-10-25',  # Current season regular season
+                '2026-10-28',  # Current season regular season
+                '2026-11-02'   # Current season regular season
+            ],
+            'home_team': ['Phoenix Suns', 'Phoenix Suns', 'Phoenix Suns', 'Denver Nuggets', 'Phoenix Suns'],
+            'away_team': ['Minnesota Timberwolves', 'Minnesota Timberwolves', 'Golden State Warriors', 'Phoenix Suns', 'LA Clippers'],
+            'home_score': [118, 120, 110, 105, 115],
+            'away_score': [100, 105, 108, 112, 102],
+            'season_type': [3, 3, 2, 2, 2]  # 3 = playoffs, 2 = regular season
+        })
+        fe = FeatureEngineer(df_cross_season)
+        form = fe.get_team_recent_form('Phoenix Suns', n_games=10, before_date='2026-11-15')
+        # Only 3 current regular season games should be included
+        self.assertEqual(form['wins'] + form['losses'], 3)
+        # Scores from May 2026 (118, 120) should NOT be in the average
+        # Current games: 110 (W), 112 (W away), 115 (W) -> 3 wins, avg points scored = (110 + 112 + 115) / 3 = 112.33
+        self.assertAlmostEqual(form['avg_points_scored'], 112.3, places=1)
+
+    def test_h2h_missing_returns_none(self):
+        """Phase 1.3: h2h_record should be None, not [0,0] when no h2h games exist."""
+        fe = FeatureEngineer(self.sample_logs)
+        h2h = fe.get_head_to_head('Boston Celtics', 'Utah Jazz')
+        self.assertEqual(h2h['total_games'], 0)
+        self.assertIsNone(h2h['team_a_wins'])
+        self.assertIsNone(h2h['avg_point_diff'])
+        
+        spread_feat = fe.compute_spread_features('Boston Celtics', 'Utah Jazz')
+        self.assertIsNone(spread_feat['h2h_record'])
+        self.assertIsNone(spread_feat['h2h_avg_margin'])
+
+    def test_net_rating_and_power_gap_fallback(self):
+        """Phase 1.3: net_rating and power_gap fallback from game logs when advanced stats are missing."""
+        fe = FeatureEngineer(self.sample_logs, team_advanced=None)
+        spread_feat = fe.compute_spread_features('Boston Celtics', 'Miami Heat', game_date='2026-01-22')
+        # Should be derived from game logs
+        self.assertIsNotNone(spread_feat['home_net_rating'])
+        self.assertIsNotNone(spread_feat['away_net_rating'])
+        self.assertIsNotNone(spread_feat['power_gap'])
+        # Aliases present
+        self.assertIn('home_last10_record', spread_feat)
+        self.assertIn('away_last10_record', spread_feat)
+
+    def test_matchup_pace_style_fallback_from_league(self):
+        """Phase 1.3: matchup_pace_style falls back gracefully instead of UNKNOWN."""
+        fe = FeatureEngineer(self.sample_logs, team_advanced=None)
+        features = fe.compute_matchup_features('Boston Celtics', 'Miami Heat', game_date='2026-01-22')
+        self.assertNotEqual(features['matchup_pace_style'], 'UNKNOWN')
+        self.assertIn(features['matchup_pace_style'], ['BALANCED_PACE', 'FAST_VS_FAST', 'SLOW_VS_SLOW', 'FAST_VS_SLOW'])
+
+    def test_dynamic_early_season_math(self):
+        """Phase 1.2: Verify dynamic market shrinkage and dynamic sigma."""
+        from analysis.betting_math import dynamic_early_season_market_weight, dynamic_early_season_sigma
+        w_0 = dynamic_early_season_market_weight(0)
+        w_10 = dynamic_early_season_market_weight(10)
+        w_20 = dynamic_early_season_market_weight(20)
+        w_40 = dynamic_early_season_market_weight(40)
+        
+        self.assertEqual(w_0, 0.70)
+        self.assertEqual(w_10, 0.45)
+        self.assertEqual(w_20, 0.20)
+        self.assertEqual(w_40, 0.20)
+        
+        sig_0 = dynamic_early_season_sigma(12.5, 0)
+        sig_10 = dynamic_early_season_sigma(12.5, 10)
+        sig_30 = dynamic_early_season_sigma(12.5, 30)
+        self.assertGreater(sig_0, sig_10)
+        self.assertGreater(sig_10, sig_30)
+        self.assertGreater(sig_30, 12.5)
 
 if __name__ == '__main__':
     unittest.main()

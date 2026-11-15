@@ -80,7 +80,9 @@ class FeatureEngineer:
                 from config import normalize_team_name
                 self.team_advanced['team'] = self.team_advanced['team'].apply(lambda t: normalize_team_name(str(t)) or t)
 
-    def _get_team_games(self, team: str, before_date: Optional[pd.Timestamp] = None) -> pd.DataFrame:
+    def _get_team_games(self, team: str, before_date: Optional[pd.Timestamp] = None,
+                        current_season_only: bool = False,
+                        regular_season_only: bool = False) -> pd.DataFrame:
         """Helper to get all games for a specific team, sorted by date."""
         from config import normalize_team_name
         norm_team = normalize_team_name(team) or team
@@ -93,6 +95,19 @@ class FeatureEngineer:
             if hasattr(b_date, 'tz') and b_date.tz is not None:
                 b_date = b_date.tz_convert(None)
             df = df[df['date'] < b_date]
+            ref_date = b_date
+        else:
+            ref_date = df['date'].max() if not df.empty else None
+
+        if current_season_only and ref_date is not None and pd.notna(ref_date):
+            ref_dt = pd.to_datetime(ref_date)
+            season_year = ref_dt.year if ref_dt.month >= 10 else ref_dt.year - 1
+            season_start = pd.Timestamp(year=season_year, month=10, day=1)
+            season_end = pd.Timestamp(year=season_year + 1, month=9, day=30)
+            df = df[(df['date'] >= season_start) & (df['date'] <= season_end)]
+
+        if regular_season_only and 'season_type' in df.columns:
+            df = df[~df['season_type'].isin([1, 1.0, '1', '1.0', 3, 3.0, '3', '3.0'])]
             
         return df.sort_values('date')
 
@@ -121,14 +136,14 @@ class FeatureEngineer:
         return games['temp_stat'].rolling(window=n_games, min_periods=1).mean()
 
     def get_team_recent_form(self, team: str, n_games: int = 10, before_date: Optional[str] = None) -> dict:
-        """Get comprehensive recent form stats for a team."""
+        """Get comprehensive recent form stats for a team (strictly current regular season)."""
         if before_date:
             target_date = pd.to_datetime(before_date)
             if hasattr(target_date, 'tz') and target_date.tz is not None:
                 target_date = target_date.tz_convert(None)
         else:
             target_date = None
-        games = self._get_team_games(team, before_date=target_date).tail(n_games)
+        games = self._get_team_games(team, before_date=target_date, current_season_only=True, regular_season_only=True).tail(n_games)
         
         LEAGUE_BASELINE_PTS = 114.5
         result = {
@@ -313,12 +328,13 @@ class FeatureEngineer:
                     'winner': team_a if a_score > b_score else team_b if b_score > a_score else 'Tie'
                 })
                 
+        total_games = len(last_results)
         return {
-            'total_games': len(last_results),
-            'team_a_wins': a_wins,
-            'team_b_wins': b_wins,
-            'avg_total_points': float(np.mean(totals)) if totals else 0.0,
-            'avg_point_diff': float(np.mean(diffs)) if diffs else 0.0,
+            'total_games': total_games,
+            'team_a_wins': a_wins if total_games > 0 else None,
+            'team_b_wins': b_wins if total_games > 0 else None,
+            'avg_total_points': float(np.mean(totals)) if totals else None,
+            'avg_point_diff': float(np.mean(diffs)) if diffs else None,
             'last_n_results': last_results
         }
 
@@ -450,15 +466,31 @@ class FeatureEngineer:
         h_net = self._get_team_adv_stat(home_team, 'net_rating', game_date)
         a_net = self._get_team_adv_stat(away_team, 'net_rating', game_date)
         
+        # Fallback to current season game logs point differential if advanced net rating is missing
+        if h_net is None:
+            home_season_form = self.get_team_recent_form(home_team, 100, before_date=game_date)
+            if home_season_form.get('wins', 0) + home_season_form.get('losses', 0) > 0:
+                h_net = home_season_form.get('avg_point_diff')
+                
+        if a_net is None:
+            away_season_form = self.get_team_recent_form(away_team, 100, before_date=game_date)
+            if away_season_form.get('wins', 0) + away_season_form.get('losses', 0) > 0:
+                a_net = away_season_form.get('avg_point_diff')
+
         power_gap = None
         if h_net is not None and a_net is not None:
-            power_gap = h_net - a_net
+            power_gap = round(float(h_net - a_net), 2)
             
         proj_margin = home_form_10['avg_point_diff'] - away_form_10['avg_point_diff']
         # Incorporate empirical home court advantage (modern NBA baseline 1.8 pts)
         # The raw point-differential features already contain home/away effects.
         
         line_vs_proj = spread_line - proj_margin if spread_line is not None else None
+        
+        has_h2h = h2h['total_games'] > 0 and h2h['team_a_wins'] is not None and h2h['team_b_wins'] is not None
+        h2h_rec = (h2h['team_a_wins'], h2h['team_b_wins']) if has_h2h else None
+        last10_h = (home_form_10['wins'], home_form_10['losses'])
+        last10_a = (away_form_10['wins'], away_form_10['losses'])
         
         return {
             'home_point_diff_5': home_form_5['avg_point_diff'],
@@ -469,8 +501,10 @@ class FeatureEngineer:
             'home_net_rating': h_net,
             'away_net_rating': a_net,
             
-            'home_record': (home_form_10['wins'], home_form_10['losses']), # using last 10 as proxy for record
-            'away_record': (away_form_10['wins'], away_form_10['losses']),
+            'home_record': last10_h, # backward-compatible alias
+            'away_record': last10_a,
+            'home_last10_record': last10_h,
+            'away_last10_record': last10_a,
             
             'home_home_record': (home_splits['home_wins'], home_splits['home_losses']),
             'away_away_record': (away_splits['away_wins'], away_splits['away_losses']),
@@ -478,7 +512,7 @@ class FeatureEngineer:
             'home_streak': home_form_10['current_streak'],
             'away_streak': away_form_10['current_streak'],
             
-            'h2h_record': (h2h['team_a_wins'], h2h['team_b_wins']),
+            'h2h_record': h2h_rec,
             'h2h_avg_margin': h2h['avg_point_diff'],
             
             'power_gap': power_gap,
@@ -543,6 +577,32 @@ class FeatureEngineer:
             }
         return {}
 
+    def is_data_fresh(self, as_of: Optional[str] = None, max_stale_hours: float = 36.0) -> Tuple[bool, str]:
+        """Check if game logs and scoreboard data are reasonably fresh.
+        In the regular season, NBA games are played almost daily.
+        If data has not updated in > max_stale_hours, returns (False, reason).
+        """
+        if self.game_logs.empty or 'date' not in self.game_logs.columns:
+            return False, "Game logs empty or missing date column"
+            
+        latest_game_date = self.game_logs['date'].max()
+        if pd.isna(latest_game_date):
+            return False, "Latest game date is NaT"
+            
+        ref_dt = pd.to_datetime(as_of) if as_of else pd.Timestamp.now()
+        if hasattr(ref_dt, 'tz') and ref_dt.tz is not None:
+            ref_dt = ref_dt.tz_convert(None)
+            
+        # If reference date is during NBA offseason (July - September), freshness check does not apply
+        if 7 <= ref_dt.month <= 9:
+            return True, "Off-season period"
+            
+        diff_hours = (ref_dt - latest_game_date).total_seconds() / 3600.0
+        if diff_hours > max_stale_hours:
+            return False, f"Latest game in logs is {diff_hours:.1f} hours old (threshold: {max_stale_hours}h)"
+            
+        return True, "Data fresh"
+
     def compute_matchup_features(self, home_team: str, away_team: str,
                                    over_under_line: float = None,
                                    spread_line: float = None,
@@ -560,12 +620,19 @@ class FeatureEngineer:
         
         home_pace = ou_feat.get('home_pace')
         away_pace = ou_feat.get('away_pace')
+        league_pace = self.get_league_avg_pace(as_of=game_date)
         
-        style = 'UNKNOWN'
-        if home_pace is not None and away_pace is not None:
-            if home_pace > 100 and away_pace > 100: style = 'FAST_VS_FAST'
-            elif home_pace < 97 and away_pace < 97: style = 'SLOW_VS_SLOW'
-            else: style = 'FAST_VS_SLOW' # Or some mixed variant
+        eff_home_pace = home_pace if home_pace is not None else league_pace
+        eff_away_pace = away_pace if away_pace is not None else league_pace
+        
+        if eff_home_pace > 100.5 and eff_away_pace > 100.5:
+            style = 'FAST_VS_FAST'
+        elif eff_home_pace < 98.5 and eff_away_pace < 98.5:
+            style = 'SLOW_VS_SLOW'
+        elif (eff_home_pace > 100.5 and eff_away_pace < 98.5) or (eff_home_pace < 98.5 and eff_away_pace > 100.5):
+            style = 'FAST_VS_SLOW'
+        else:
+            style = 'BALANCED_PACE'
             
         fatigue = False
         if home_rest == 0 or away_rest == 0:
@@ -636,19 +703,24 @@ class FeatureEngineer:
         net_injury_impact = -(h_off + a_off) * 0.20 + (h_def + a_def) * 0.16
         result['injury_net_total_impact'] = round(net_injury_impact, 2)
 
-        # Data-Quality Flags (Phase 2 Stabilization)
+        # Data-Quality Flags (Phase 1 & Phase 2 Stabilization)
         h_roster = roster_data.get('home_roster_rating', 0.0) or 0.0
         a_roster = roster_data.get('away_roster_rating', 0.0) or 0.0
         roster_gap = abs(h_roster - a_roster) if (h_roster > 0 and a_roster > 0) else 0.0
 
+        is_fresh, freshness_reason = self.is_data_fresh(as_of=game_date)
+        dq_stale_data = not is_fresh
         dq_unconfirmed_lineup = not roster_data.get('is_lineup_confirmed', False)
         dq_missing_net_rating = (result.get('home_net_rating') is None or result.get('away_net_rating') is None)
         dq_extreme_roster_gap = roster_gap >= 30.0
         dq_low_sample = min(result.get('home_games_played', 20), result.get('away_games_played', 20)) < 5
 
-        # Matchup is unreliable if extreme roster gap is paired with missing net rating or unconfirmed lineups
-        dq_is_reliable = not (dq_extreme_roster_gap and (dq_unconfirmed_lineup or dq_missing_net_rating))
+        # Matchup is unreliable if data is stale, or if extreme roster gap is paired with missing net rating or unconfirmed lineups
+        dq_is_reliable = not (dq_stale_data or (dq_extreme_roster_gap and (dq_unconfirmed_lineup or dq_missing_net_rating)))
 
+        result['data_freshness'] = is_fresh
+        result['data_freshness_detail'] = freshness_reason
+        result['dq_stale_data'] = dq_stale_data
         result['dq_unconfirmed_lineup'] = dq_unconfirmed_lineup
         result['dq_missing_net_rating'] = dq_missing_net_rating
         result['dq_extreme_roster_gap'] = dq_extreme_roster_gap

@@ -177,7 +177,8 @@ class TestTrendAnalyzer(unittest.TestCase):
         # Continuous smooth ramp at min_games=1: prior_weight = 0.35 + 0.65 * (1/20) = 0.3825
         # Base margin: 14.0 * 0.3825 = 5.355 pt gap
         self.assertAlmostEqual(res_early['raw_projected_margin'], 5.355, places=2)
-        self.assertEqual(res_early['sigma_margin'], 12.5)
+        # Phase 1.2: Sigma expands dynamically for small samples (min_games=1)
+        self.assertGreater(res_early['sigma_margin'], 12.5)
         self.assertEqual(res_early['probability_method'], 'normal_unvalidated_sigma')
         self.assertEqual(res_early['kelly_quarter'], 0.0)
 
@@ -350,18 +351,23 @@ class TestTrendAnalyzer(unittest.TestCase):
         self.assertEqual(res_ou_lean['recommendation'], 'NEUTRAL')
         self.assertEqual(res_ou_lean['kelly_quarter'], 0.0)
 
-        # 2. Early season O/U with strong edge (>= 5.0 pts after shrinkage) -> fires STRONG OVER
+        # 2. Early season O/U with strong edge (>= 5.0 and <= 8.0 pts) -> fires STRONG OVER
         self.mock_fe.compute_matchup_features.return_value = {
             'home_games_played': 2,
             'away_games_played': 2,
             'home_pace': 100.0,
             'away_pace': 100.0,
-            'combined_avg_season': 230.0
+            'combined_avg_season': 228.5
         }
         res_ou_strong = self.analyzer.analyze_over_under('BOS', 'MIA', over_under_line=220.0, open_line=220.0, market_weight=0.0)
         self.assertEqual(res_ou_strong['recommendation'], 'STRONG OVER')
         self.assertEqual(res_ou_strong['kelly_quarter'], 0.0)
         self.assertIsNone(res_ou_strong['ev'])
+
+        # 2b. Phase 2.5: Swollen edge (> 8.0 pts) soft-capped to LEAN OVER
+        self.mock_fe.compute_matchup_features.return_value['combined_avg_season'] = 232.0
+        res_ou_swollen = self.analyzer.analyze_over_under('BOS', 'MIA', over_under_line=220.0, open_line=220.0, market_weight=0.0)
+        self.assertEqual(res_ou_swollen['recommendation'], 'LEAN OVER')
 
         # 3. Mid-season O/U with moderate edge (>= 3.0 pts) -> allows LEAN OVER
         self.mock_fe.compute_matchup_features.return_value = {
