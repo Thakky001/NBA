@@ -56,7 +56,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 21:11:18"
+    "scraped_at": "2026-11-15 21:36:01"
   },
   "IND": {
     "team": "Indiana Pacers",
@@ -115,7 +115,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 21:11:18"
+    "scraped_at": "2026-11-15 21:36:01"
   },
   "Philadelphia 76ers": {
     "team": "Philadelphia 76ers",
@@ -174,7 +174,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 21:11:18"
+    "scraped_at": "2026-11-15 21:36:01"
   },
   "PHI": {
     "team": "Philadelphia 76ers",
@@ -233,7 +233,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 21:11:18"
+    "scraped_at": "2026-11-15 21:36:01"
   },
   "Los Angeles Lakers": {
     "team": "Los Angeles Lakers",
@@ -282,7 +282,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 21:11:18"
+    "scraped_at": "2026-11-15 21:36:01"
   },
   "LAL": {
     "team": "Los Angeles Lakers",
@@ -331,7 +331,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 21:11:18"
+    "scraped_at": "2026-11-15 21:36:01"
   },
   "Phoenix Suns": {
     "team": "Phoenix Suns",
@@ -375,7 +375,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 21:11:18"
+    "scraped_at": "2026-11-15 21:36:01"
   },
   "PHX": {
     "team": "Phoenix Suns",
@@ -419,7 +419,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 21:11:18"
+    "scraped_at": "2026-11-15 21:36:01"
   },
   "Charlotte Hornets": {
     "team": "Charlotte Hornets",
@@ -468,7 +468,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 21:11:18"
+    "scraped_at": "2026-11-15 21:36:01"
   },
   "CHA": {
     "team": "Charlotte Hornets",
@@ -517,7 +517,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 21:11:18"
+    "scraped_at": "2026-11-15 21:36:01"
   },
   "Los Angeles Clippers": {
     "team": "Los Angeles Clippers",
@@ -576,7 +576,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 21:11:18"
+    "scraped_at": "2026-11-15 21:36:01"
   },
   "LAC": {
     "team": "Los Angeles Clippers",
@@ -635,7 +635,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 21:11:18"
+    "scraped_at": "2026-11-15 21:36:01"
   },
   "San Antonio Spurs": {
     "team": "San Antonio Spurs",
@@ -689,7 +689,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 21:11:18"
+    "scraped_at": "2026-11-15 21:36:01"
   },
   "SAS": {
     "team": "San Antonio Spurs",
@@ -743,7 +743,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 21:11:18"
+    "scraped_at": "2026-11-15 21:36:01"
   },
   "Utah Jazz": {
     "team": "Utah Jazz",
@@ -802,7 +802,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 21:11:18"
+    "scraped_at": "2026-11-15 21:36:01"
   },
   "UTA": {
     "team": "Utah Jazz",
@@ -861,7 +861,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 21:11:18"
+    "scraped_at": "2026-11-15 21:36:01"
   },
   "Dallas Mavericks": {
     "team": "Dallas Mavericks",
@@ -873,7 +873,7 @@
     "is_confirmed": false,
     "starters": [
       {
-        "name": "Kyrie Irving",
+        "name": "Marcus Sasser",
         "position": "PG",
         "status": "Very Likely To Play"
       },
@@ -905,16 +905,6 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Kyrie Irving",
-        "position": "G",
-        "status": "Very Likely To Play"
-      },
-      {
-        "name": "Max Christie",
-        "position": "G",
-        "status": "Toss Up To Play"
-      },
-      {
         "name": "Daniel Gafford",
         "position": "C",
         "status": "Toss Up To Play"
@@ -925,7 +915,17 @@
         "status": "Very Unlikely To Play"
       },
       {
+        "name": "Max Christie",
+        "position": "G",
+        "status": "Very Unlikely To Play"
+      },
+      {
         "name": "Sergio de Larrea",
+        "position": "G",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Kyrie Irving",
         "position": "G",
         "status": "Very Unlikely To Play"
       },
@@ -935,7 +935,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 21:11:18"
+    "scraped_at": "2026-11-15 21:36:01"
   },
   "DAL": {
     "team": "Dallas Mavericks",
@@ -947,7 +947,7 @@
     "is_confirmed": false,
     "starters": [
       {
-        "name": "Kyrie Irving",
+        "name": "Marcus Sasser",
         "position": "PG",
         "status": "Very Likely To Play"
       },
@@ -979,16 +979,6 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Kyrie Irving",
-        "position": "G",
-        "status": "Very Likely To Play"
-      },
-      {
-        "name": "Max Christie",
-        "position": "G",
-        "status": "Toss Up To Play"
-      },
-      {
         "name": "Daniel Gafford",
         "position": "C",
         "status": "Toss Up To Play"
@@ -999,7 +989,17 @@
         "status": "Very Unlikely To Play"
       },
       {
+        "name": "Max Christie",
+        "position": "G",
+        "status": "Very Unlikely To Play"
+      },
+      {
         "name": "Sergio de Larrea",
+        "position": "G",
+        "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Kyrie Irving",
         "position": "G",
         "status": "Very Unlikely To Play"
       },
@@ -1009,7 +1009,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 21:11:18"
+    "scraped_at": "2026-11-15 21:36:01"
   },
   "Boston Celtics": {
     "team": "Boston Celtics",
@@ -1047,7 +1047,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-11-15 21:11:18"
+    "scraped_at": "2026-11-15 21:36:01"
   },
   "BOS": {
     "team": "Boston Celtics",
@@ -1085,7 +1085,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-11-15 21:11:18"
+    "scraped_at": "2026-11-15 21:36:01"
   },
   "New York Knicks": {
     "team": "New York Knicks",
@@ -1123,7 +1123,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-11-15 21:11:18"
+    "scraped_at": "2026-11-15 21:36:01"
   },
   "NYK": {
     "team": "New York Knicks",
@@ -1161,7 +1161,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-11-15 21:11:18"
+    "scraped_at": "2026-11-15 21:36:01"
   },
   "Toronto Raptors": {
     "team": "Toronto Raptors",
@@ -1215,7 +1215,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 21:11:18"
+    "scraped_at": "2026-11-15 21:36:01"
   },
   "TOR": {
     "team": "Toronto Raptors",
@@ -1269,7 +1269,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 21:11:18"
+    "scraped_at": "2026-11-15 21:36:01"
   },
   "Houston Rockets": {
     "team": "Houston Rockets",
@@ -1323,7 +1323,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 21:11:18"
+    "scraped_at": "2026-11-15 21:36:01"
   },
   "HOU": {
     "team": "Houston Rockets",
@@ -1377,7 +1377,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 21:11:18"
+    "scraped_at": "2026-11-15 21:36:01"
   },
   "Washington Wizards": {
     "team": "Washington Wizards",
@@ -1441,7 +1441,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 21:11:18"
+    "scraped_at": "2026-11-15 21:36:01"
   },
   "WAS": {
     "team": "Washington Wizards",
@@ -1505,7 +1505,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 21:11:18"
+    "scraped_at": "2026-11-15 21:36:01"
   },
   "Atlanta Hawks": {
     "team": "Atlanta Hawks",
@@ -1574,7 +1574,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 21:11:18"
+    "scraped_at": "2026-11-15 21:36:01"
   },
   "ATL": {
     "team": "Atlanta Hawks",
@@ -1643,7 +1643,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 21:11:18"
+    "scraped_at": "2026-11-15 21:36:01"
   },
   "Milwaukee Bucks": {
     "team": "Milwaukee Bucks",
@@ -1692,7 +1692,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 21:11:18"
+    "scraped_at": "2026-11-15 21:36:01"
   },
   "MIL": {
     "team": "Milwaukee Bucks",
@@ -1741,7 +1741,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 21:11:18"
+    "scraped_at": "2026-11-15 21:36:01"
   },
   "Oklahoma City Thunder": {
     "team": "Oklahoma City Thunder",
@@ -1810,7 +1810,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 21:11:18"
+    "scraped_at": "2026-11-15 21:36:01"
   },
   "OKC": {
     "team": "Oklahoma City Thunder",
@@ -1879,7 +1879,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 21:11:18"
+    "scraped_at": "2026-11-15 21:36:01"
   },
   "Sacramento Kings": {
     "team": "Sacramento Kings",
@@ -1933,7 +1933,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 21:11:18"
+    "scraped_at": "2026-11-15 21:36:01"
   },
   "SAC": {
     "team": "Sacramento Kings",
@@ -1987,6 +1987,6 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-15 21:11:18"
+    "scraped_at": "2026-11-15 21:36:01"
   }
 }
