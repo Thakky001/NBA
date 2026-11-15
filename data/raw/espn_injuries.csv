@@ -1,5 +1,5 @@
 team_name,player_name,status,detail,side,type,return_date
-Atlanta Hawks,Jock Landale,Day-To-Day,Inflammation,Right,Hip,2026-11-15
+Atlanta Hawks,Jock Landale,Out,Inflammation,Right,Hip,2026-11-18
 Atlanta Hawks,Kingston Flemings,Out,Strain,,Back,2026-11-18
 Atlanta Hawks,Mouhamed Gueye,Out,Fracture,Left,Foot,2026-12-12
 Atlanta Hawks,Keshon Gilbert,Out,Inflammation,Left,Knee,2026-11-20
@@ -26,6 +26,7 @@ Detroit Pistons,Duncan Robinson,Day-To-Day,Soreness,Left,Thigh,2026-11-17
 Detroit Pistons,Ugonna Onyenso,Day-To-Day,,Left,Foot,2026-11-14
 Detroit Pistons,Isaiah Joe,Out,Bruise,Right,Hip,2026-11-17
 Detroit Pistons,Jalen Duren,Out,Strain,Right,Hamstring,2026-11-24
+Golden State Warriors,Gui Santos,Day-To-Day,Inflammation,Right,Ankle,2026-11-16
 Golden State Warriors,Stephen Curry,Out,,Right,Abdomen,2026-12-12
 Golden State Warriors,Brandon Williams,Out,Not Specified,Left,Hamstring,2026-11-22
 Golden State Warriors,Kristaps Porzingis,Out,,,Illness,2027-01-02
@@ -51,15 +52,15 @@ Memphis Grizzlies,Zach Edey,Day-To-Day,,Left,Ankle,2026-11-16
 Memphis Grizzlies,Scotty Pippen Jr.,Out,Soreness,,Back,2026-11-21
 Memphis Grizzlies,Richie Saunders,Out,Surgery,Right,Knee,2026-12-01
 Miami Heat,Pelle Larsson,Day-To-Day,,,Illness,2026-11-16
+Milwaukee Bucks,Ryan Rollins,Out,,,Illness,2026-11-18
 Milwaukee Bucks,Ousmane Dieng,Out,Fracture,Left,Finger,2026-11-18
-Milwaukee Bucks,Ryan Rollins,Day-To-Day,,,Illness,2026-11-15
-Minnesota Timberwolves,Jaylen Clark,Day-To-Day,Not Specified,Right,Hamstring,2026-11-16
+Minnesota Timberwolves,Jaylen Clark,Out,Not Specified,Right,Hamstring,2026-11-29
 Minnesota Timberwolves,Anthony Edwards,Out,Surgery,Right,Knee,2026-12-21
 Minnesota Timberwolves,Donte DiVincenzo,Out,Surgery,Right,Achilles,2027-04-02
 New Orleans Pelicans,Bryce McGowens,Out,Infection,Left,Elbow,2026-11-18
 New Orleans Pelicans,Bennedict Mathurin,Out,Plantar Fasciitis,Left,Foot,2026-11-18
-New Orleans Pelicans,Trendon Watford,Out,Sprain,Right,Ankle,2026-11-18
 New Orleans Pelicans,Trey Murphy III,Out,Tendinitis,Not Specified,Knee,2026-11-18
+New Orleans Pelicans,Trendon Watford,Out,Sprain,Right,Ankle,2026-11-18
 New Orleans Pelicans,Dejounte Murray,Out,,,Ankle,2026-11-20
 Oklahoma City Thunder,Jaylin Williams,Out,Spasms,,Back,2026-11-18
 Oklahoma City Thunder,Ajay Mitchell,Day-To-Day,Sprain,Left,Ankle,2026-11-15
@@ -77,7 +78,7 @@ Philadelphia 76ers,Adem Bona,Out,Sprain,,Back,2026-11-18
 Philadelphia 76ers,Ariel Hukporti,Out,Surgery,Right,Achilles,2027-10-01
 Phoenix Suns,Drew Timme,Day-To-Day,,Right,Hand,2026-11-15
 Phoenix Suns,Mark Williams,Out,Surgery,Left,Shoulder,2027-02-03
-Portland Trail Blazers,Chris Youngblood,Day-To-Day,Bruise,Right,Foot,2026-11-16
+Portland Trail Blazers,Chris Youngblood,Out,Bruise,Right,Foot,2026-11-17
 Portland Trail Blazers,Vit Krejci,Out,,Left,Ankle,2027-01-12
 Portland Trail Blazers,Ja Morant,Out,Not Specified,Left,Hamstring,2026-12-01
 Portland Trail Blazers,Shaedon Sharpe,Out,Surgery,Right,Knee,2027-03-02
@@ -87,7 +88,6 @@ Sacramento Kings,Ben Simmons,Out,Surgery,Right,Achilles,2027-10-01
 San Antonio Spurs,De'Aaron Fox,Out,,Left,Hip,2026-11-17
 San Antonio Spurs,Tobias Harris,Out,Strain,Left,Calf,2026-11-19
 San Antonio Spurs,Jayden Quaintance,Out,Surgery,Right,Knee,2026-12-03
-Toronto Raptors,Scottie Barnes,Out,,,,
 Toronto Raptors,Nate Bittle,Out,Fracture,Right,Foot,2026-11-23
 Toronto Raptors,Kevin McCullar Jr.,Day-To-Day,,,Illness,2026-11-16
 Toronto Raptors,Kawhi Leonard,Out,Inflammation,Left,Knee,2026-11-23
@@ -96,7 +96,7 @@ Utah Jazz,Trey Alexander,Out,Sprain,Right,Ankle,2026-11-16
 Utah Jazz,Lauri Markkanen,Out,Fracture,Right,Hand,2027-01-04
 Utah Jazz,Jusuf Nurkic,Out,Strain,Right,Foot,2026-11-20
 Utah Jazz,Jaren Jackson Jr.,Out,Not Specified,Right,Knee,2026-12-14
-Washington Wizards,Tre Johnson,Day-To-Day,,,Back,2026-11-15
+Washington Wizards,Tre Johnson,Out,,,Back,2026-11-16
 Washington Wizards,Tristan Vukcevic,Out,Pinched Nerve,Left,Hip,2026-11-16
 Washington Wizards,Reece Beekman,Out,,,Shoulder,2026-12-03
 Washington Wizards,Justin Champagnie,Out,Not Specified,Right,Foot,2027-02-25
