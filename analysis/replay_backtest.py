@@ -244,8 +244,18 @@ if __name__ == '__main__':
     print("\n" + "=" * 60)
     print("REPLAY BACKTEST RESULTS (MODERNIZED PHASE 1 & 2 PIPELINE)")
     print("=" * 60)
-    print(f"Total Games Evaluated: {res['total_games_replayed']}")
-    print(f"Total Evaluated Model Picks: {res['overall']['total_picks']} (Actionable STRONG: {res['strong_tier']['total_picks']}, Paper LEAN: {res['lean_tier']['total_picks']})")
+    # Check historical ledger baseline
+    try:
+        from analysis.prediction_tracker import load_ledger
+        raw_ledger = load_ledger()
+        raw_sp_strong = raw_ledger['sp_recommendation'].astype(str).str.contains('STRONG').sum()
+        raw_ou_strong = raw_ledger['ou_recommendation'].astype(str).str.contains('STRONG').sum()
+        raw_tot_strong = raw_sp_strong + raw_ou_strong
+        print(f"Historical Ledger Baseline: {len(raw_ledger)} games | {raw_tot_strong} Recorded STRONG picks (Spread: {raw_sp_strong}, Total: {raw_ou_strong})")
+    except Exception:
+        pass
+    print(f"Total Games Replayed: {res['total_games_replayed']} (with valid feature snapshots)")
+    print(f"Rigorous Model Picks: {res['overall']['total_picks']} (Actionable STRONG: {res['strong_tier']['total_picks']}, Paper LEAN: {res['lean_tier']['total_picks']})")
     print(f"Total Graded Picks: {res['overall']['graded_picks']} (W: {res['overall']['wins']}, L: {res['overall']['losses']}, P: {res['overall']['pushes']})")
     print(f"Overall Model Win Rate: {res['overall']['win_rate']}%")
     print(f"Overall Model PnL: {res['overall']['pnl_units']:+.2f} Units")
