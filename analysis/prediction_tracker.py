@@ -166,6 +166,7 @@ def compute_game_analysis(
     # 1. Odds API consensus lines
     c_spread, c_total = None, None
     spread_odds = total_odds = None
+    odds_data = None
     if odds_coll:
         try:
             odds_data = odds_coll.get_game_odds(home, away)
@@ -239,6 +240,7 @@ def compute_game_analysis(
         'total_odds': total_odds,
         'forecast_as_of': as_of
     }
+    analysis['odds_data'] = odds_data
     return analysis
 
 
@@ -296,6 +298,10 @@ def record_slate_predictions(
     for _, game in scoreboard_df.iterrows():
         gid = str(game.get('game_id', '')).strip()
         if not gid:
+            continue
+
+        # Fast bypass: if already recorded in ledger and caller didn't ask for analyses, skip immediately
+        if not return_analyses and gid in existing_gids:
             continue
 
         status_str = str(game.get('status', '')).upper()

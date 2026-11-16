@@ -264,6 +264,60 @@ class AdvancedStatsCollector:
                         f"nba_api_game_logs.csv is stale (latest: {cached_max}). "
                         f"ESPN recent games is fresher (latest: {espn_max}). Falling back / supplementing with ESPN data."
                     )
+                    # Convert newer finished ESPN games into NBA API game log format
+                    espn_clean = espn_cache.copy()
+                    espn_clean['dt'] = pd.to_datetime(espn_clean['date'], errors='coerce', utc=True)
+                    if cached_max is not None:
+                        new_games = espn_clean[espn_clean['dt'] > cached_max]
+                    else:
+                        new_games = espn_clean
+
+                    # Filter for finished games with scores
+                    new_games = new_games.dropna(subset=['home_score', 'away_score'])
+                    new_games = new_games[(new_games['home_score'] > 0) | (new_games['away_score'] > 0)]
+
+                    supplemental_rows = []
+                    for _, row in new_games.iterrows():
+                        gid = str(row.get('game_id', ''))
+                        gdate = str(row.get('date', ''))[:10]
+                        h_team = str(row.get('home_team', ''))
+                        a_team = str(row.get('away_team', ''))
+                        try:
+                            h_score = float(row.get('home_score', 0))
+                            a_score = float(row.get('away_score', 0))
+                        except (ValueError, TypeError):
+                            continue
+
+                        # Home row
+                        h_wl = 'W' if h_score > a_score else ('L' if h_score < a_score else 'T')
+                        supplemental_rows.append({
+                            'GAME_ID': gid,
+                            'GAME_DATE': gdate,
+                            'TEAM_NAME': h_team,
+                            'MATCHUP': f"{h_team} vs. {a_team}",
+                            'WL': h_wl,
+                            'PTS': h_score,
+                            'PLUS_MINUS': h_score - a_score
+                        })
+                        # Away row
+                        a_wl = 'W' if a_score > h_score else ('L' if a_score < h_score else 'T')
+                        supplemental_rows.append({
+                            'GAME_ID': gid,
+                            'GAME_DATE': gdate,
+                            'TEAM_NAME': a_team,
+                            'MATCHUP': f"{a_team} @ {h_team}",
+                            'WL': a_wl,
+                            'PTS': a_score,
+                            'PLUS_MINUS': a_score - h_score
+                        })
+
+                    if supplemental_rows:
+                        supp_df = pd.DataFrame(supplemental_rows)
+                        if not cached.empty:
+                            cached = pd.concat([cached, supp_df], ignore_index=True)
+                        else:
+                            cached = supp_df
+                        logger.info(f"Successfully supplemented {len(supplemental_rows) // 2} finished games from ESPN into game logs.")
         except Exception as ex:
             logger.warning(f"Error checking fallback freshness: {ex}")
 

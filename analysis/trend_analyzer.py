@@ -260,31 +260,38 @@ class TrendAnalyzer:
                 win_prob_under = total_probs['loss']
                 push_prob = total_probs['push']
 
+            from analysis.betting_math import calibrate_win_probability
+            cal_win_prob_over = calibrate_win_probability(win_prob_over, push_prob=push_prob)
+            cal_win_prob_under = calibrate_win_probability(win_prob_under, push_prob=push_prob)
+
             if total_edge > 0:
                 cand_dir = 'OVER'
                 cand_prob = win_prob_over
+                cand_cal_prob = cal_win_prob_over
             elif total_edge < 0:
                 cand_dir = 'UNDER'
                 cand_prob = win_prob_under
+                cand_cal_prob = cal_win_prob_under
             else:
                 cand_dir = 'NEUTRAL'
                 cand_prob = 0.50
+                cand_cal_prob = 0.50
 
-            # Candidate EV against standard -110 bookmaker line (breakeven 52.38%)
-            cand_ev = calculate_ev_with_push(cand_prob, market_odds[0 if cand_dir == 'OVER' else 1], push_prob=push_prob) if market_odds else None
+            # Candidate EV against standard -110 bookmaker line (breakeven 52.38%) computed with calibrated prob
+            cand_ev = calculate_ev_with_push(cand_cal_prob, market_odds[0 if cand_dir == 'OVER' else 1], push_prob=push_prob) if market_odds else None
 
             # Preliminary line movement analysis
             from analysis.betting_math import analyze_line_movement
             pre_line_mv = analyze_line_movement(open_line, over_under_line, market_type='total', recommendation='NEUTRAL', is_live=is_live)
 
-            # Single unified recommendation gate (Phase 2.1 & 2.5)
+            # Single unified recommendation gate (Phase 2.1 & 2.5) with calibrated win probability
             from analysis.recommendation import decide_pick
             ou_decision = decide_pick(
                 market_type='total',
                 current_line=over_under_line,
                 projected_val=projected_total,
                 edge=total_edge,
-                fair_prob=win_prob_over,
+                fair_prob=cal_win_prob_over,
                 line_movement=pre_line_mv,
                 open_line=open_line,
                 home_team=home_team,
@@ -302,6 +309,7 @@ class TrendAnalyzer:
             push_prob = 0.0
             win_prob = 0.50
             cand_prob = 0.50
+            cand_cal_prob = 0.50
             recommendation = 'NEUTRAL'
             from analysis.recommendation import decide_pick
             ou_decision = decide_pick(
@@ -325,13 +333,7 @@ class TrendAnalyzer:
         
         # Pure Raw Mode: Use pure unconstrained cand_prob for raw diagnostics
         raw_win_prob = cand_prob
-        
-        from analysis.betting_math import calibrate_win_probability
-        if recommendation != 'NEUTRAL' and over_under_line:
-            calibrated_pick_prob = calibrate_win_probability(pick_win_prob, push_prob=push_prob)
-        else:
-            calibrated_pick_prob = 0.50
-            
+        calibrated_pick_prob = pick_win_prob if recommendation != 'NEUTRAL' else 0.50
         confidence = abs(calibrated_pick_prob - 0.5) * 2.0
         
         # Value and sizing are calculated with calibrated probabilities.
@@ -690,7 +692,7 @@ class TrendAnalyzer:
             projected_margin = market_anchored_projection(raw_projected_margin, market_expected_margin, market_weight=market_weight_spread)
             cover_edge = projected_margin + s_line
 
-            from analysis.betting_math import estimate_residual_sigma, empirical_line_probabilities, calculate_spread_probabilities, dynamic_early_season_sigma
+            from analysis.betting_math import estimate_residual_sigma, empirical_line_probabilities, calculate_spread_probabilities, dynamic_early_season_sigma, calibrate_win_probability
             base_sigma = estimate_residual_sigma(training_residuals) if training_residuals and len(training_residuals) >= 2 else 12.5
             sigma = dynamic_early_season_sigma(base_sigma, min_games)
             probability_method = 'empirical_training_residuals' if training_residuals is not None and len(training_residuals) >= 2 else 'normal_unvalidated_sigma'
@@ -698,11 +700,13 @@ class TrendAnalyzer:
                             if training_residuals else calculate_spread_probabilities(s_line, projected_margin, sigma))
             win_prob = spread_probs['win']
             push_prob = spread_probs['push']
+            cal_win_prob = calibrate_win_probability(win_prob, push_prob=push_prob)
+
             factor_score_cover = min(max(cover_edge / 5.0, -1.0), 1.0)
             direction_cover = 'home' if factor_score_cover > 0 else ('away' if factor_score_cover < 0 else 'neutral')
             factors.append({
                 'name': 'Projected Margin vs Spread Line',
-                'value': f'Proj Margin {projected_margin:+.1f} vs Line {s_line:+.1f} (Cover Edge: {cover_edge:+.1f} pts | Win Prob: {win_prob:.1%})',
+                'value': f'Proj Margin {projected_margin:+.1f} vs Line {s_line:+.1f} (Cover Edge: {cover_edge:+.1f} pts | Win Prob: {cal_win_prob:.1%})',
                 'direction': direction_cover,
                 'weight': 0.60,
                 'score': factor_score_cover
@@ -719,7 +723,7 @@ class TrendAnalyzer:
                 current_line=s_line,
                 projected_val=projected_margin,
                 edge=cover_edge,
-                fair_prob=win_prob,
+                fair_prob=cal_win_prob,
                 line_movement=pre_line_mv,
                 open_line=open_spread,
                 home_team=home_team,
@@ -765,12 +769,8 @@ class TrendAnalyzer:
             cand_prob = 0.50
         raw_win_prob = cand_prob
         
-        from analysis.betting_math import calibrate_win_probability
-        if recommendation != 'NEUTRAL' and spread_line is not None:
-            calibrated_pick_prob = calibrate_win_probability(pick_win_prob, push_prob=push_prob)
-        else:
-            calibrated_pick_prob = 0.50
-            
+        # Recommendation already used calibrated probability in decide_pick
+        calibrated_pick_prob = pick_win_prob if recommendation != 'NEUTRAL' else 0.50
         confidence = abs(calibrated_pick_prob - 0.5) * 2.0
 
         # Value and sizing are calculated with calibrated probabilities.

@@ -403,7 +403,6 @@ def run_alert_cycle(
     forecast_as_of = datetime.now(timezone.utc).isoformat()
     margin_res, total_res = get_historical_residuals(forecast_as_of)
     candidate_analyses = {}
-    odds_data_by_gid = {}
 
     for item in candidate_games:
         game = item['game']
@@ -420,11 +419,6 @@ def run_alert_cycle(
                 total_residuals=total_res
             )
             candidate_analyses[gid] = analysis
-            raw_h = g_dict.get('home_team', '')
-            raw_a = g_dict.get('away_team', '')
-            norm_h = normalize_team_name(raw_h) or raw_h
-            norm_a = normalize_team_name(raw_a) or raw_a
-            odds_data_by_gid[gid] = odds_coll.get_game_odds(norm_h, norm_a) if odds_coll else None
         except Exception as exc:
             logger.warning(f"Error computing unified analysis for game {gid}: {exc}")
 
@@ -456,7 +450,7 @@ def run_alert_cycle(
             continue
         try:
             g_dict = game.to_dict() if isinstance(game, pd.Series) else dict(game)
-            odds_data = odds_data_by_gid.get(gid)
+            odds_data = analysis.get('odds_data')
             card = format_game_card(analysis, g_dict, odds_data)
             cards.append(card)
             alerted_gids.append(gid)
