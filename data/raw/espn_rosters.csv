@@ -1,12 +1,12 @@
 player_id,name,jersey,position,height,weight,age,experience,college,team_id,team_name
 4278039,Nickeil Alexander-Walker,7,Guard,"6' 5""",205 lbs,28,8.0,Virginia Tech,1,Atlanta Hawks
+4684443,Rafael Castro,,Forward,"6' 9""",224 lbs,23,0.0,George Washington,1,Atlanta Hawks
 4869342,Dyson Daniels,5,Guard,"6' 7""",199 lbs,23,5.0,,1,Atlanta Hawks
 4431941,RayJ Dennis,10,Guard,"6' 2""",180 lbs,25,3.0,Baylor,1,Atlanta Hawks
 4397020,Luguentz Dort,0,Guard,"6' 4""",220 lbs,27,8.0,Arizona State,1,Atlanta Hawks
 5106262,Zuby Ejiofor,20,Forward,"6' 8""",245 lbs,22,0.0,St. John's,1,Atlanta Hawks
 2578185,Dorian Finney-Smith,8,Forward,"6' 7""",220 lbs,33,11.0,Florida,1,Atlanta Hawks
 5149077,Kingston Flemings,4,Guard,"6' 3""",183 lbs,19,0.0,Houston,1,Atlanta Hawks
-4585618,Keshon Gilbert,00,Guard,"6' 4""",200 lbs,23,2.0,Iowa State,1,Atlanta Hawks
 4712863,Mouhamed Gueye,18,Forward,"6' 11""",210 lbs,24,4.0,Washington State,1,Atlanta Hawks
 4701230,Jalen Johnson,1,Forward,"6' 8""",219 lbs,24,6.0,Duke,1,Atlanta Hawks
 4280151,Corey Kispert,24,Forward,"6' 6""",224 lbs,27,6.0,Gonzaga,1,Atlanta Hawks
@@ -439,7 +439,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 4066211,Robert Williams III,35,Center,"6' 9""",249 lbs,29,9.0,Texas A&M,22,Portland Trail Blazers
 4706557,Chris Youngblood,11,Guard,"6' 4""",221 lbs,24,2.0,Alabama,22,Portland Trail Blazers
 4431679,Precious Achiuwa,9,Forward,"6' 8""",243 lbs,27,7.0,Memphis,23,Sacramento Kings
-5142620,Darius Acuff Jr.,5,Guard,"6' 2""",186 lbs,19,0.0,Arkansas,23,Sacramento Kings
+5142620,Darius Acuff Jr.,5,Guard,"6' 2""",186 lbs,20,0.0,Arkansas,23,Sacramento Kings
 4395650,Leaky Black,19,Forward,"6' 6""",209 lbs,27,3.0,North Carolina,23,Sacramento Kings
 4433174,Dylan Cardwell,32,Center,"6' 10""",255 lbs,24,2.0,Auburn,23,Sacramento Kings
 4065732,De'Andre Hunter,15,Forward,"6' 7""",221 lbs,28,8.0,Virginia,23,Sacramento Kings
@@ -450,7 +450,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 4594327,Keegan Murray,13,Forward,"6' 8""",225 lbs,26,5.0,Iowa,23,Sacramento Kings
 4709131,Sean Pedulla,3,Guard,"6' 1""",195 lbs,24,2.0,Ole Miss,23,Sacramento Kings
 4279318,Daeqwon Plowden,29,Guard,"6' 6""",216 lbs,28,3.0,Bowling Green,23,Sacramento Kings
-2488653,Mason Plumlee,,Center,"7' 0""",254 lbs,36,13.0,Duke,23,Sacramento Kings
+2488653,Mason Plumlee,24,Center,"7' 0""",254 lbs,36,13.0,Duke,23,Sacramento Kings
 4898371,Maxime Raynaud,42,Center,"7' 1""",250 lbs,23,2.0,Stanford,23,Sacramento Kings
 3155942,Domantas Sabonis,11,Forward,"6' 10""",240 lbs,30,11.0,Gonzaga,23,Sacramento Kings
 5106058,Emanuel Sharp,34,Guard,"6' 3""",208 lbs,22,0.0,Houston,23,Sacramento Kings

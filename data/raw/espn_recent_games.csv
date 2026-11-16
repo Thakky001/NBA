@@ -274,14 +274,14 @@ game_id,date,status,period,clock,clock_detail,season_type,home_team,home_id,home
 401909988,2026-11-15T22:00Z,STATUS_FINAL,4,0.0,Final,2,Utah Jazz,26,102,San Antonio Spurs,24,110,,,,,Delta Center
 401909989,2026-11-15T23:00Z,STATUS_FINAL,4,0.0,Final,2,Boston Celtics,2,131,Dallas Mavericks,6,94,,,,,TD Garden
 401909990,2026-11-15T23:00Z,STATUS_FINAL,5,5:00,Final/OT,2,Toronto Raptors,28,108,New York Knicks,18,112,,,,,Scotiabank Arena
-401909991,2026-11-16T00:00Z,STATUS_IN_PROGRESS,4,5.6,5.6 - 4th Quarter,2,Washington Wizards,27,119,Houston Rockets,10,147,,,,,Capital One Arena
-401909992,2026-11-16T01:00Z,STATUS_IN_PROGRESS,3,6:09,6:09 - 3rd Quarter,2,Milwaukee Bucks,15,58,Atlanta Hawks,1,68,,,,,Fiserv Forum
-401909993,2026-11-16T02:00Z,STATUS_IN_PROGRESS,1,2:10,2:10 - 1st Quarter,2,Sacramento Kings,23,18,Oklahoma City Thunder,25,29,,,,,Golden 1 Center
-401909994,2026-11-17T00:00Z,STATUS_SCHEDULED,0,0.0,"Mon, November 16th at 7:00 PM EST",2,Boston Celtics,2,0,Orlando Magic,19,0,,,,,TD Garden
-401909995,2026-11-17T00:00Z,STATUS_SCHEDULED,0,0.0,"Mon, November 16th at 7:00 PM EST",2,Cleveland Cavaliers,5,0,Chicago Bulls,4,0,,,,,Rocket Arena
-401909996,2026-11-17T00:00Z,STATUS_SCHEDULED,0,0.0,"Mon, November 16th at 7:00 PM EST",2,Washington Wizards,27,0,Memphis Grizzlies,29,0,,,,,Capital One Arena
-401909997,2026-11-17T00:30Z,STATUS_SCHEDULED,0,0.0,"Mon, November 16th at 7:30 PM EST",2,Brooklyn Nets,17,0,Philadelphia 76ers,20,0,,,,,Barclays Center
-401909998,2026-11-17T00:30Z,STATUS_SCHEDULED,0,0.0,"Mon, November 16th at 7:30 PM EST",2,Miami Heat,14,0,Houston Rockets,10,0,,,,,Kaseya Center
-401909999,2026-11-17T01:00Z,STATUS_SCHEDULED,0,0.0,"Mon, November 16th at 8:00 PM EST",2,Minnesota Timberwolves,16,0,Portland Trail Blazers,22,0,MIN -2.5,228.5,,,Target Center
-401910000,2026-11-17T01:00Z,STATUS_SCHEDULED,0,0.0,"Mon, November 16th at 8:00 PM EST",2,New Orleans Pelicans,3,0,Golden State Warriors,9,0,GS -2.5,226.5,,,Smoothie King Center
-401910001,2026-11-17T02:00Z,STATUS_SCHEDULED,0,0.0,"Mon, November 16th at 9:00 PM EST",2,Denver Nuggets,7,0,Phoenix Suns,21,0,,,,,Ball Arena
+401909991,2026-11-16T00:00Z,STATUS_FINAL,4,12:00,Final,2,Washington Wizards,27,119,Houston Rockets,10,147,,,,,Capital One Arena
+401909992,2026-11-16T01:00Z,STATUS_FINAL,4,12:00,Final,2,Milwaukee Bucks,15,106,Atlanta Hawks,1,113,,,,,Fiserv Forum
+401909993,2026-11-16T02:00Z,STATUS_FINAL,4,12:00,Final,2,Sacramento Kings,23,103,Oklahoma City Thunder,25,125,,,,,Golden 1 Center
+401909994,2026-11-17T00:00Z,STATUS_SCHEDULED,0,0.0,"Mon, November 16th at 7:00 PM EST",2,Boston Celtics,2,0,Orlando Magic,19,0,BOS -8.5,212.5,,,TD Garden
+401909995,2026-11-17T00:00Z,STATUS_SCHEDULED,0,0.0,"Mon, November 16th at 7:00 PM EST",2,Cleveland Cavaliers,5,0,Chicago Bulls,4,0,CLE -8.5,241.5,,,Rocket Arena
+401909996,2026-11-17T00:00Z,STATUS_SCHEDULED,0,0.0,"Mon, November 16th at 7:00 PM EST",2,Washington Wizards,27,0,Memphis Grizzlies,29,0,MEM -3.5,232.5,,,Capital One Arena
+401909997,2026-11-17T00:30Z,STATUS_SCHEDULED,0,0.0,"Mon, November 16th at 7:30 PM EST",2,Brooklyn Nets,17,0,Philadelphia 76ers,20,0,PHI -5.5,226.5,,,Barclays Center
+401909998,2026-11-17T00:30Z,STATUS_SCHEDULED,0,0.0,"Mon, November 16th at 7:30 PM EST",2,Miami Heat,14,0,Houston Rockets,10,0,HOU -2.5,231.5,,,Kaseya Center
+401909999,2026-11-17T01:00Z,STATUS_SCHEDULED,0,0.0,"Mon, November 16th at 8:00 PM EST",2,Minnesota Timberwolves,16,0,Portland Trail Blazers,22,0,MIN -2.5,227.5,,,Target Center
+401910000,2026-11-17T01:00Z,STATUS_SCHEDULED,0,0.0,"Mon, November 16th at 8:00 PM EST",2,New Orleans Pelicans,3,0,Golden State Warriors,9,0,GS -3.5,223.5,,,Smoothie King Center
+401910001,2026-11-17T02:00Z,STATUS_SCHEDULED,0,0.0,"Mon, November 16th at 9:00 PM EST",2,Denver Nuggets,7,0,Phoenix Suns,21,0,DEN -9.5,228.5,,,Ball Arena
