@@ -41,6 +41,7 @@ from collectors.espn_collector import ESPNCollector
 from collectors.odds_collector import OddsCollector
 from processing.data_merger import DataMerger
 from processing.feature_engineering import FeatureEngineer
+from processing.snapshot_archive import archive_daily_snapshot
 from analysis.trend_analyzer import TrendAnalyzer
 from analysis.prediction_tracker import (
     grade_finished_games,
@@ -373,6 +374,15 @@ def run_alert_cycle(
         RotoWireCollector().get_todays_lineups(force_refresh=True)
     except Exception as rw_err:
         logger.warning(f"Could not force refresh RotoWire lineups: {rw_err}")
+
+    # Archive today's injury/lineup/roster inputs so a future replay can avoid lookahead bias.
+    # Best-effort: failures are logged inside the helper and never block alerts.
+    try:
+        archived = archive_daily_snapshot(today_thai_date)
+        if archived:
+            logger.info(f"Daily snapshot archived: {sorted(archived)}")
+    except Exception as snap_err:
+        logger.warning(f"Could not archive daily snapshot: {snap_err}")
 
     # Lazy load heavy models only when games qualify
     merger = DataMerger()

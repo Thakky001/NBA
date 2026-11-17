@@ -291,7 +291,8 @@ class TestPredictionTracker(unittest.TestCase):
             current_line=-3.5,
             projected_val=7.5,
             edge=4.0,
-            fair_prob=0.62
+            fair_prob=0.62,
+            data_quality_flags={'home_games_played': 20, 'away_games_played': 20}
         )
         self.assertTrue(decision['is_actionable'])
         self.assertNotEqual(decision['pick_prob'], 0.50)
@@ -304,7 +305,8 @@ class TestPredictionTracker(unittest.TestCase):
             current_line=-3.5,
             projected_val=-8.0,
             edge=-4.5,
-            fair_prob=0.36
+            fair_prob=0.36,
+            data_quality_flags={'home_games_played': 20, 'away_games_played': 20}
         )
         self.assertTrue(decision_away['is_actionable'])
         self.assertEqual(decision_away['pick_side'], 'AWAY')

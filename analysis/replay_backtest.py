@@ -6,9 +6,11 @@ the modernized Phase 1 & Phase 2 pipeline:
 - Calibrated probability gating with empirical thresholds (-110 breakeven = 52.38%)
 - Current line anchor (Phase 2.4)
 - Dynamic early-season market weight and sigma (Phase 1.2)
-- Unified decision gate with DQ veto and graduated early-season gating
+- Unified decision gate with DQ veto and strict >=15-game sample floor for STRONG
 - In-Sample (pre-Nov 6) vs Out-of-Sample (Nov 6+) split evaluation
+- Go-live checks on POST-split STRONG only; metrics are N/A until sample is sufficient
 - Full metrics: MAE, ATS Win Rate, ROI after vig, Calibration Error (ECE), Max Drawdown
+- Known lookahead limitations are reported explicitly (see REPLAY_LIMITATIONS)
 """
 
 import os
@@ -26,10 +28,29 @@ from analysis.trend_analyzer import TrendAnalyzer
 from analysis.backtesting import calibration_bins, regression_metrics, probability_metrics
 from processing.data_merger import DataMerger
 from processing.feature_engineering import FeatureEngineer
+from processing.snapshot_archive import snapshot_coverage
 
 logger = logging.getLogger('replay_backtest')
 
 SPLIT_DATE = '2026-11-06'
+
+# Minimum graded picks required before a metric (ROI, ECE, drawdown) is
+# considered statistically meaningful. Below this the metric is reported as N/A
+# and can never satisfy a go-live criterion.
+MIN_METRIC_SAMPLE = 30
+
+# Known lookahead / validity limitations of this replay. Reported in the CLI and
+# included in the result payload so downstream consumers cannot treat the
+# numbers as a clean out-of-sample estimate.
+REPLAY_LIMITATIONS = [
+    "Roster ratings, injuries and lineups are loaded from the CURRENT data files, "
+    "not from an as-of-game-date snapshot, so pre-split (PRIOR) results carry lookahead bias.",
+    "Daily injury/lineup/roster snapshots are archived going forward, but replay does not "
+    "consume them yet, so no replayed game is currently free of this bias.",
+    "The ledger itself was produced by older gate versions (v2.2), so early rows do not "
+    "represent picks the current gate would have made.",
+    "Calibration temperature is fitted in-sample (T=2.0); ECE is not a pure out-of-sample metric.",
+]
 
 
 def calculate_max_drawdown(pnl_series: List[float]) -> float:
@@ -43,42 +64,60 @@ def calculate_max_drawdown(pnl_series: List[float]) -> float:
 
 
 def evaluate_slice(records: List[Dict[str, Any]]) -> Dict[str, Any]:
-    """Compute quantitative metrics for a slice of picks."""
+    """Compute quantitative metrics for a slice of picks.
+
+    Metrics are only populated when the slice has at least MIN_METRIC_SAMPLE
+    graded picks. Otherwise they are None so an empty/small slice can never
+    silently satisfy a go-live threshold.
+    """
     valid = [r for r in records if r['result'] in ('WIN', 'LOSS')]
     n_total = len(records)
     n_graded = len(valid)
     n_wins = sum(1 for r in valid if r['result'] == 'WIN')
     n_losses = sum(1 for r in valid if r['result'] == 'LOSS')
     n_pushes = sum(1 for r in records if r['result'] == 'PUSH')
-    win_rate = (n_wins / n_graded * 100.0) if n_graded > 0 else 0.0
     pnl_units = sum(r['pnl'] for r in records)
-    roi_pct = (pnl_units / n_graded * 100.0) if n_graded > 0 else 0.0
-    max_dd = calculate_max_drawdown([r['pnl'] for r in records])
+    sufficient_sample = n_graded >= MIN_METRIC_SAMPLE
 
-    # Probability calibration metrics
-    brier = 0.0
-    ece_cal = 0.0
-    ece_raw = 0.0
-    mean_cal_p = 0.0
-    mean_raw_p = 0.0
-    if valid:
+    win_rate = None
+    roi_pct = None
+    max_dd = None
+    brier = None
+    ece_cal = None
+    ece_raw = None
+    mean_cal_p = None
+    mean_raw_p = None
+
+    if sufficient_sample:
+        win_rate = round(n_wins / n_graded * 100.0, 2)
+        roi_pct = round(pnl_units / n_graded * 100.0, 2)
+        max_dd = round(calculate_max_drawdown([r['pnl'] for r in records]), 2)
+
         cal_probs = [r['cal_prob'] for r in valid]
         raw_probs = [r['raw_prob'] for r in valid]
         outcomes = [r['binary_win'] for r in valid]
-        mean_cal_p = float(np.mean(cal_probs) * 100.0)
-        mean_raw_p = float(np.mean(raw_probs) * 100.0)
+        mean_cal_p = round(float(np.mean(cal_probs) * 100.0), 2)
+        mean_raw_p = round(float(np.mean(raw_probs) * 100.0), 2)
 
         prob_metrics = probability_metrics(cal_probs, outcomes)
-        brier = prob_metrics['brier']
+        brier = round(prob_metrics['brier'], 4)
 
         # Weighted average calibration error: sum |p_bar - y_bar| * n_b / N
         bins_cal = calibration_bins(cal_probs, outcomes, bins=5)
         tot_cal_n = sum(b['count'] for b in bins_cal)
-        ece_cal = sum(abs(b['mean_probability'] - b['observed_rate']) * b['count'] for b in bins_cal) / tot_cal_n if tot_cal_n > 0 else 0.0
+        ece_cal = round(
+            (sum(abs(b['mean_probability'] - b['observed_rate']) * b['count'] for b in bins_cal) / tot_cal_n * 100.0)
+            if tot_cal_n > 0 else 0.0,
+            2
+        )
 
         bins_raw = calibration_bins(raw_probs, outcomes, bins=5)
         tot_raw_n = sum(b['count'] for b in bins_raw)
-        ece_raw = sum(abs(b['mean_probability'] - b['observed_rate']) * b['count'] for b in bins_raw) / tot_raw_n if tot_raw_n > 0 else 0.0
+        ece_raw = round(
+            (sum(abs(b['mean_probability'] - b['observed_rate']) * b['count'] for b in bins_raw) / tot_raw_n * 100.0)
+            if tot_raw_n > 0 else 0.0,
+            2
+        )
 
     return {
         'total_picks': n_total,
@@ -86,16 +125,49 @@ def evaluate_slice(records: List[Dict[str, Any]]) -> Dict[str, Any]:
         'wins': n_wins,
         'losses': n_losses,
         'pushes': n_pushes,
-        'win_rate': round(win_rate, 2),
+        'sufficient_sample': sufficient_sample,
+        'min_metric_sample': MIN_METRIC_SAMPLE,
+        'win_rate': win_rate,
         'pnl_units': round(pnl_units, 2),
-        'roi_pct': round(roi_pct, 2),
-        'max_drawdown_units': round(max_dd, 2),
-        'mean_cal_prob': round(mean_cal_p, 2),
-        'mean_raw_prob': round(mean_raw_p, 2),
-        'brier_score': round(brier, 4),
-        'calibration_error_pct': round(ece_cal * 100.0, 2),
-        'raw_calibration_error_pct': round(ece_raw * 100.0, 2)
+        'roi_pct': roi_pct,
+        'max_drawdown_units': max_dd,
+        'mean_cal_prob': mean_cal_p,
+        'mean_raw_prob': mean_raw_p,
+        'brier_score': brier,
+        'calibration_error_pct': ece_cal,
+        'raw_calibration_error_pct': ece_raw
     }
+
+
+def compute_go_live_checks(post_strong: Dict[str, Any]) -> Dict[str, Optional[bool]]:
+    """Evaluate go-live criteria on POST-split actionable STRONG picks only.
+
+    Rules:
+    - The sample criterion uses POST STRONG graded picks, never the overall tier.
+    - Metric criteria return None (N/A) when the slice has fewer than
+      MIN_METRIC_SAMPLE graded picks, so an empty slice cannot pass by default.
+    - all_passed is True only when every criterion is explicitly True.
+    """
+    n_graded = int(post_strong.get('graded_picks') or 0)
+    has_metrics = bool(post_strong.get('sufficient_sample')) and n_graded >= MIN_METRIC_SAMPLE
+
+    checks: Dict[str, Optional[bool]] = {
+        'criterion_1_min_100_strong_picks': n_graded >= 100,
+        'criterion_2_strong_roi_above_2pct': (
+            float(post_strong['roi_pct']) > 2.0 if has_metrics and post_strong.get('roi_pct') is not None else None
+        ),
+        'criterion_3_strong_calibration_under_5pct': (
+            float(post_strong['calibration_error_pct']) < 5.0
+            if has_metrics and post_strong.get('calibration_error_pct') is not None else None
+        ),
+        'criterion_4_strong_max_dd_under_10u': (
+            float(post_strong['max_drawdown_units']) < 10.0
+            if has_metrics and post_strong.get('max_drawdown_units') is not None else None
+        ),
+    }
+    checks['all_passed'] = all(v is True for v in checks.values())
+
+    return checks
 
 
 def run_replay_backtest(ledger_path: Optional[str] = None, use_dynamic_features: bool = True) -> Dict[str, Any]:
@@ -284,14 +356,8 @@ def run_replay_backtest(ledger_path: Optional[str] = None, use_dynamic_features:
     spread_slice = evaluate_slice(sp_records)
     ou_slice = evaluate_slice(ou_records)
 
-    # Go-Live Verification Criteria (Evaluated on Actionable STRONG Tier)
-    go_live_checks = {
-        'criterion_1_min_100_strong_picks': strong_overall['total_picks'] >= 100,
-        'criterion_2_strong_roi_above_2pct': strong_overall['roi_pct'] > 2.0,
-        'criterion_3_strong_calibration_under_5pct': strong_overall['calibration_error_pct'] < 5.0,
-        'criterion_4_strong_max_dd_under_10u': strong_overall['max_drawdown_units'] < 10.0
-    }
-    go_live_checks['all_passed'] = all(go_live_checks.values())
+    # Go-Live Verification Criteria (Evaluated on POST-split actionable STRONG picks only)
+    go_live_checks = compute_go_live_checks(post_strong)
 
     return {
         'total_games_replayed': len(graded),
@@ -308,7 +374,10 @@ def run_replay_backtest(ledger_path: Optional[str] = None, use_dynamic_features:
         'recent_sample': recent_eval,
         'spread_market': spread_slice,
         'total_market': ou_slice,
+        'go_live_basis': f'POST STRONG (date >= {SPLIT_DATE})',
         'go_live_checks': go_live_checks,
+        'limitations': list(REPLAY_LIMITATIONS),
+        'snapshot_coverage': snapshot_coverage([r['date'] for r in all_records]),
         'records': all_records
     }
 
@@ -330,43 +399,51 @@ if __name__ == '__main__':
     except Exception:
         pass
 
+    def _num(value, spec, suffix=''):
+        return 'N/A' if value is None else f"{format(value, spec)}{suffix}"
+
+    def _slice_lines(label, sl):
+        print(f"  {label} - {sl['total_picks']} picks (graded: {sl['graded_picks']}):")
+        if not sl.get('sufficient_sample'):
+            print(f"    Metrics: N/A (need >= {sl['min_metric_sample']} graded picks)")
+            return
+        print(f"    Win Rate: {_num(sl['win_rate'], '.2f', '%')} (W: {sl['wins']}, L: {sl['losses']}, P: {sl['pushes']})")
+        print(f"    PnL: {sl['pnl_units']:+.2f} Units | ROI: {_num(sl['roi_pct'], '+.2f', '%')}")
+        print(f"    Mean Prob: Calibrated {_num(sl['mean_cal_prob'], '.1f', '%')} vs Raw {_num(sl['mean_raw_prob'], '.1f', '%')}")
+        print(f"    ECE: Calibrated {_num(sl['calibration_error_pct'], '.2f', '%')} vs Raw {_num(sl['raw_calibration_error_pct'], '.2f', '%')}")
+
     print(f"Total Games Replayed: {res['total_games_replayed']} (dynamically reconstructed as-of date)")
     print(f"Total Model Picks: {res['overall']['total_picks']} (STRONG: {res['strong_tier']['total_picks']}, LEAN: {res['lean_tier']['total_picks']})")
     print(f"Total Graded Picks: {res['overall']['graded_picks']} (W: {res['overall']['wins']}, L: {res['overall']['losses']}, P: {res['overall']['pushes']})")
-    print(f"Overall Model Win Rate: {res['overall']['win_rate']}%")
-    print(f"Overall Model PnL: {res['overall']['pnl_units']:+.2f} Units | ROI: {res['overall']['roi_pct']:+.2f}%")
-    print(f"Overall Max Drawdown: {res['overall']['max_drawdown_units']:.2f} Units")
-    print(f"Overall Calibration Error (ECE): Calibrated {res['overall']['calibration_error_pct']:.2f}% vs Raw {res['overall']['raw_calibration_error_pct']:.2f}%")
     print("-" * 70)
     print("EXPANDING WINDOW SPLIT: IN-SAMPLE (PRIOR) vs OUT-OF-SAMPLE (POST)")
-    print(f"  PRIOR (Before Nov 6) - {res['prior_in_sample']['total_picks']} picks:")
-    print(f"    Win Rate: {res['prior_in_sample']['win_rate']}% (W: {res['prior_in_sample']['wins']}, L: {res['prior_in_sample']['losses']}, P: {res['prior_in_sample']['pushes']})")
-    print(f"    PnL: {res['prior_in_sample']['pnl_units']:+.2f} Units | ROI: {res['prior_in_sample']['roi_pct']:+.2f}%")
-    print(f"    Mean Prob: Calibrated {res['prior_in_sample']['mean_cal_prob']:.1f}% vs Raw {res['prior_in_sample']['mean_raw_prob']:.1f}%")
-    print(f"    ECE: Calibrated {res['prior_in_sample']['calibration_error_pct']:.2f}% vs Raw {res['prior_in_sample']['raw_calibration_error_pct']:.2f}%")
-    print(f"  POST (Nov 6 onwards - Out-of-Sample) - {res['post_out_of_sample']['total_picks']} picks:")
-    print(f"    Win Rate: {res['post_out_of_sample']['win_rate']}% (W: {res['post_out_of_sample']['wins']}, L: {res['post_out_of_sample']['losses']}, P: {res['post_out_of_sample']['pushes']})")
-    print(f"    PnL: {res['post_out_of_sample']['pnl_units']:+.2f} Units | ROI: {res['post_out_of_sample']['roi_pct']:+.2f}%")
-    print(f"    Mean Prob: Calibrated {res['post_out_of_sample']['mean_cal_prob']:.1f}% vs Raw {res['post_out_of_sample']['mean_raw_prob']:.1f}%")
-    print(f"    ECE: Calibrated {res['post_out_of_sample']['calibration_error_pct']:.2f}% vs Raw {res['post_out_of_sample']['raw_calibration_error_pct']:.2f}%")
+    _slice_lines("PRIOR (Before Nov 6)", res['prior_in_sample'])
+    _slice_lines("POST (Nov 6 onwards - Out-of-Sample)", res['post_out_of_sample'])
     print("-" * 70)
     print(f"ACTIONABLE PERFORMANCE (STRONG TIER - {res['strong_tier']['total_picks']} PICKS):")
-    print(f"  Win Rate: {res['strong_tier']['win_rate']}% (W: {res['strong_tier']['wins']}, L: {res['strong_tier']['losses']}, P: {res['strong_tier']['pushes']})")
-    print(f"  PnL: {res['strong_tier']['pnl_units']:+.2f} Units | ROI: {res['strong_tier']['roi_pct']:+.2f}%")
-    print(f"  Max Drawdown: {res['strong_tier']['max_drawdown_units']:.2f} Units")
-    print(f"  Mean Prob: Calibrated {res['strong_tier']['mean_cal_prob']:.1f}% vs Raw {res['strong_tier']['mean_raw_prob']:.1f}%")
-    print(f"  ECE: Calibrated {res['strong_tier']['calibration_error_pct']:.2f}% vs Raw {res['strong_tier']['raw_calibration_error_pct']:.2f}%")
+    _slice_lines("Overall STRONG reference", res['strong_tier'])
+    _slice_lines("POST STRONG (go-live basis)", res['post_strong'])
     print("-" * 70)
     print(f"PAPER MONITORING PERFORMANCE (LEAN TIER - {res['lean_tier']['total_picks']} PICKS):")
-    print(f"  Win Rate: {res['lean_tier']['win_rate']}% (W: {res['lean_tier']['wins']}, L: {res['lean_tier']['losses']}, P: {res['lean_tier']['pushes']})")
-    print(f"  PnL: {res['lean_tier']['pnl_units']:+.2f} Units | ROI: {res['lean_tier']['roi_pct']:+.2f}%")
-    print(f"  Max Drawdown: {res['lean_tier']['max_drawdown_units']:.2f} Units")
-    print(f"  Mean Prob: Calibrated {res['lean_tier']['mean_cal_prob']:.1f}% vs Raw {res['lean_tier']['mean_raw_prob']:.1f}%")
-    print(f"  ECE: Calibrated {res['lean_tier']['calibration_error_pct']:.2f}% vs Raw {res['lean_tier']['raw_calibration_error_pct']:.2f}%")
+    _slice_lines("LEAN", res['lean_tier'])
     print("-" * 70)
-    print("GO-LIVE GATES VERIFICATION:")
+    print(f"GO-LIVE GATES VERIFICATION (basis: {res['go_live_basis']}):")
     for k, v in res['go_live_checks'].items():
-        status_icon = "✅ PASS" if v else "❌ FAIL"
+        if v is None:
+            status_icon = "N/A (insufficient sample)"
+        elif v:
+            status_icon = "✅ PASS"
+        else:
+            status_icon = "❌ FAIL"
         print(f"  {k}: {status_icon}")
-    print(f"Safety Gate Status: BETTING_PAUSED = {not res['go_live_checks']['all_passed']} (All criteria strictly enforced)")
+    overlap = res['snapshot_coverage']
+    print(
+        f"Snapshot coverage: {overlap['dates_with_snapshot']}/{overlap['dates_replayed']} replayed dates "
+        f"have an archived injury/lineup snapshot"
+    )
+    print("KNOWN REPLAY LIMITATIONS (numbers above are NOT a clean out-of-sample estimate):")
+    for limitation in res['limitations']:
+        print(f"  - {limitation}")
+    print(f"Safety Gate Status: BETTING_PAUSED = {not res['go_live_checks']['all_passed']} "
+          f"(go-live passed: {res['go_live_checks']['all_passed']})")
     print("=" * 70)

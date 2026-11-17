@@ -11,7 +11,12 @@ from typing import Any, Dict, Optional, Tuple
 
 logger = logging.getLogger(__name__)
 
-GATE_VERSION = "gate-v2.3-graduated"
+GATE_VERSION = "gate-v2.4-strict-sample"
+
+# Minimum current-season games per team before a STRONG pick becomes actionable.
+# Graduated 8-14 band was reverted (v2.4) because there is no out-of-sample
+# evidence that early-season conviction is well calibrated.
+STRONG_MIN_GAMES = 15
 
 
 def decide_pick(
@@ -214,20 +219,18 @@ def decide_pick(
                 pick_side = 'UNDER'
                 pick_prob = cand_prob
 
-    # Graduated Early-Season Gating:
-    # 1. Games 1-7 (min_games < 8): Strictly LEAN only (zero STRONG allowed)
-    # 2. Games 8-14 (8 <= min_games < 15): STRONG allowed ONLY for ultra-high conviction (Edge >= 4.0 & Cal Prob >= 0.550)
-    # 3. Games 15+ (min_games >= 15): Standard mature criteria apply
-    if min_games is not None:
-        if min_games < 8 and 'STRONG' in rec:
+    # Strict Sample Gating (gate v2.4):
+    # STRONG requires a verified current-season sample of >= STRONG_MIN_GAMES for
+    # BOTH teams. The graduated 8-14 band was reverted because there is no
+    # out-of-sample evidence it is safe; anything below the floor is LEAN only.
+    # Unknown sample size fails closed (never actionable).
+    if 'STRONG' in rec:
+        if min_games is None:
+            rec = f"LEAN {pick_side}"
+            suppressed_reason = 'SAMPLE_SIZE_UNVERIFIED'
+        elif min_games < STRONG_MIN_GAMES:
             rec = f"LEAN {pick_side}"
             suppressed_reason = 'EARLY_SEASON_SAMPLE_RESTRICTION'
-        elif 8 <= min_games < 15 and 'STRONG' in rec:
-            is_ou = m_type in ['total', 'ou']
-            req_edge = 6.0 if (is_ou and 'OVER' in rec) else (3.0 if (is_ou and 'UNDER' in rec) else 4.0)
-            if abs_edge < req_edge or cand_prob < 0.550:
-                rec = f"LEAN {pick_side}"
-                suppressed_reason = 'EARLY_SEASON_SAMPLE_RESTRICTION'
 
     # LEAN is strictly paper/monitoring; only STRONG on mature sample is actionable
     is_act = ('STRONG' in rec)
