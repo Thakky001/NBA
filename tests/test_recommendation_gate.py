@@ -1,6 +1,8 @@
 """Tests for the unified decision gate (strict-sample gate v2.4)."""
 
+import os
 import unittest
+from unittest.mock import patch
 
 from analysis.recommendation import GATE_VERSION, STRONG_MIN_GAMES, decide_pick
 
@@ -168,6 +170,90 @@ class TestStrictSampleGate(unittest.TestCase):
         )
         self.assertEqual(res['recommendation'], 'NEUTRAL')
         self.assertEqual(res['suppressed_reason'], 'VETO_LOW_SAMPLE_SIZE')
+
+
+def _strong_total(**overrides):
+    kwargs = dict(
+        market_type='total',
+        current_line=220.0,
+        projected_val=225.5,
+        edge=5.5,
+        fair_prob=0.54,
+        data_quality_flags=_flags(20, 20),
+    )
+    kwargs.update(overrides)
+    return decide_pick(**kwargs)
+
+
+class TestSelectiveGate(unittest.TestCase):
+    """The selective gate is off by default and can only suppress picks."""
+
+    def test_disabled_by_default(self):
+        with patch.dict(os.environ, {'NBA_OU_SELECTIVE_GATE': 'false'}):
+            res = _strong_total()
+        self.assertFalse(res['selective_gate_enabled'])
+        self.assertEqual(res['recommendation'], 'STRONG OVER')
+        self.assertIsNone(res['selective_rule'])
+
+    def test_enabled_without_profile_fails_closed(self):
+        with patch.dict(os.environ, {'NBA_OU_SELECTIVE_GATE': 'true'}):
+            res = _strong_total()
+        self.assertTrue(res['selective_gate_enabled'])
+        self.assertEqual(res['recommendation'], 'NEUTRAL')
+        self.assertEqual(res['suppressed_reason'], 'SELECTIVE_GATE_NO_MATCH')
+        self.assertFalse(res['is_actionable'])
+
+    def test_matching_rule_keeps_pick(self):
+        with patch.dict(os.environ, {'NBA_OU_SELECTIVE_GATE': 'true'}):
+            res = _strong_total(
+                selective_profile={
+                    'version': 'ou-selective-v1.0',
+                    'allowed_rules': ['strong_gp15'],
+                }
+            )
+        self.assertEqual(res['recommendation'], 'STRONG OVER')
+        self.assertEqual(res['selective_rule'], 'strong_gp15')
+        self.assertTrue(res['is_actionable'])
+
+    def test_rule_cannot_rescue_demoted_sample(self):
+        with patch.dict(os.environ, {'NBA_OU_SELECTIVE_GATE': 'true'}):
+            res = _strong_total(
+                data_quality_flags=_flags(14, 14),
+                selective_profile={'allowed_rules': ['strong_gp15']},
+            )
+        self.assertEqual(res['recommendation'], 'NEUTRAL')
+        self.assertEqual(res['suppressed_reason'], 'SELECTIVE_GATE_NO_MATCH')
+
+    def test_side_specific_rule_suppresses_other_side(self):
+        with patch.dict(os.environ, {'NBA_OU_SELECTIVE_GATE': 'true'}):
+            res = _strong_total(
+                selective_profile={'allowed_rules': ['under_only']},
+            )
+        self.assertEqual(res['recommendation'], 'NEUTRAL')
+
+    def test_profile_thresholds_apply(self):
+        with patch.dict(os.environ, {'NBA_OU_SELECTIVE_GATE': 'true'}):
+            res = _strong_total(
+                selective_profile={
+                    'allowed_rules': ['all_picks'],
+                    'min_edge': 6.0,
+                }
+            )
+        self.assertEqual(res['recommendation'], 'NEUTRAL')
+        self.assertEqual(res['suppressed_reason'], 'SELECTIVE_GATE_NO_MATCH')
+
+    def test_spread_is_not_affected_by_ou_gate(self):
+        with patch.dict(os.environ, {'NBA_OU_SELECTIVE_GATE': 'true'}):
+            res = decide_pick(
+                market_type='spread',
+                current_line=-3.5,
+                projected_val=8.0,
+                edge=4.5,
+                fair_prob=0.56,
+                data_quality_flags=_flags(20, 20),
+            )
+        self.assertEqual(res['recommendation'], 'STRONG HOME')
+        self.assertIsNone(res['selective_rule'])
 
 
 if __name__ == '__main__':

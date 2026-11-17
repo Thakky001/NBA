@@ -8,6 +8,7 @@ travel, style matchups, market discrepancies) from historical residual errors:
 """
 
 import os
+import json
 import logging
 from typing import Dict, Any, List, Optional, Tuple
 import numpy as np
@@ -522,4 +523,226 @@ class SpreadResidualModel:
             'ai_residual_mae': round(model_mae, 3),
             'mae_improvement': round(base_mae - model_mae, 3),
             'pct_improvement': round(((base_mae - model_mae) / base_mae) * 100, 2) if base_mae > 0 else 0.0
+        }
+
+
+# ---------------------------------------------------------------------------
+# Market-anchored O/U residual model
+# ---------------------------------------------------------------------------
+# The legacy CatBoost residual models target ``actual - math_projection``. That
+# can look skilful while still being worse than simply using the market line.
+# This model instead uses the market total as the base forecast and learns only
+# the residual ``actual_total - market_total``. A ridge penalty keeps the tiny
+# historical samples from memorising noise, and coefficients are fitted inside
+# walk-forward folds only.
+
+MARKET_OU_FEATURE_COLUMNS = [
+    'market_line',
+    'model_edge',
+    'line_minus_combined10',
+    'line_minus_combined5',
+    'line_minus_season',
+    'avg5_minus_avg10',
+    'avg10_minus_season',
+    'rest_diff',
+    'fatigue',
+    'injury_impact',
+    'point_diff_gap',
+    'roster_gap',
+    'days_into_season',
+    'fast_vs_fast',
+    'slow_vs_slow',
+]
+
+
+def _safe_float(value: Any, default: Optional[float] = None) -> Optional[float]:
+    try:
+        if value is None or pd.isna(value):
+            return default
+        return float(value)
+    except (TypeError, ValueError):
+        return default
+
+
+def build_market_residual_features(
+    total_line: Any,
+    projected_total: Any,
+    features: Any,
+    game_date: Any = None,
+) -> Dict[str, Optional[float]]:
+    """Build leakage-free features for ``actual_total - market_total``.
+
+    ``features`` is the pre-game feature snapshot stored in the ledger. Missing
+    inputs stay ``None`` and are median-imputed by the model, so a damaged
+    snapshot cannot silently become a zero.
+    """
+    line = _safe_float(total_line)
+    projection = _safe_float(projected_total)
+    if line is None or line <= 0 or projection is None:
+        raise ValueError("total_line and projected_total are required")
+
+    if isinstance(features, str):
+        try:
+            features = json.loads(features)
+        except Exception as exc:
+            raise ValueError(f"features snapshot is not valid JSON: {exc}") from exc
+    if not isinstance(features, dict):
+        features = {}
+
+    def _feature(key: str) -> Optional[float]:
+        return _safe_float(features.get(key))
+
+    combined10 = _feature('combined_avg_10')
+    combined5 = _feature('combined_avg_5')
+    combined_season = _feature('combined_avg_season')
+    home_rest = _feature('home_rest_days')
+    away_rest = _feature('away_rest_days')
+    home_diff = _feature('home_point_diff_10')
+    away_diff = _feature('away_point_diff_10')
+    home_roster = _feature('home_roster_rating')
+    away_roster = _feature('away_roster_rating')
+    style = str(features.get('matchup_pace_style', '') or '').upper()
+
+    days_into_season = None
+    if game_date is not None:
+        try:
+            date = pd.to_datetime(game_date)
+            season_year = date.year if date.month >= 10 else date.year - 1
+            season_start = pd.Timestamp(year=season_year, month=10, day=1)
+            days_into_season = float(max(0, (date.normalize() - season_start).days))
+        except (TypeError, ValueError):
+            days_into_season = None
+
+    return {
+        'market_line': line,
+        'model_edge': projection - line,
+        'line_minus_combined10': line - combined10 if combined10 is not None else None,
+        'line_minus_combined5': line - combined5 if combined5 is not None else None,
+        'line_minus_season': line - combined_season if combined_season is not None else None,
+        'avg5_minus_avg10': (
+            combined5 - combined10
+            if combined5 is not None and combined10 is not None else None
+        ),
+        'avg10_minus_season': (
+            combined10 - combined_season
+            if combined10 is not None and combined_season is not None else None
+        ),
+        'rest_diff': (
+            max(-10.0, min(10.0, home_rest - away_rest))
+            if home_rest is not None and away_rest is not None else None
+        ),
+        'fatigue': 1.0 if features.get('fatigue_flag') else 0.0,
+        'injury_impact': _feature('injury_net_total_impact'),
+        'point_diff_gap': (
+            home_diff - away_diff
+            if home_diff is not None and away_diff is not None else None
+        ),
+        'roster_gap': (
+            home_roster - away_roster
+            if home_roster is not None and away_roster is not None else None
+        ),
+        'days_into_season': days_into_season,
+        'fast_vs_fast': 1.0 if style == 'FAST_VS_FAST' else 0.0,
+        'slow_vs_slow': 1.0 if style == 'SLOW_VS_SLOW' else 0.0,
+    }
+
+
+class MarketAnchoredResidualModel:
+    """Ridge regression on the market residual, with train-only preprocessing.
+
+    Design choices are deliberately conservative:
+
+    - The market total is the base forecast; the model only predicts an
+      adjustment.
+    - Features are median-imputed and standardised using training rows only.
+    - A ridge penalty (default 10.0) is strong relative to the sample size.
+    - Predictions are clipped to a plausible total adjustment.
+    - ``fit`` never mutates the input frame and never sees rows passed to
+      ``predict`` during walk-forward evaluation.
+    """
+
+    def __init__(self, alpha: float = 10.0, clip: float = 12.0):
+        if alpha < 0:
+            raise ValueError("alpha must be non-negative")
+        if clip <= 0:
+            raise ValueError("clip must be positive")
+        self.alpha = float(alpha)
+        self.clip = float(clip)
+        self.feature_columns = list(MARKET_OU_FEATURE_COLUMNS)
+        self.coef_ = np.zeros(len(self.feature_columns), dtype=float)
+        self.intercept_ = 0.0
+        self.feature_medians_ = np.zeros(len(self.feature_columns), dtype=float)
+        self.feature_mean_ = np.zeros(len(self.feature_columns), dtype=float)
+        self.feature_std_ = np.ones(len(self.feature_columns), dtype=float)
+        self.is_fitted = False
+
+    def _matrix(self, df: pd.DataFrame) -> np.ndarray:
+        if isinstance(df, dict):
+            df = pd.DataFrame([df])
+        if not isinstance(df, pd.DataFrame):
+            df = pd.DataFrame(df)
+        missing = [c for c in self.feature_columns if c not in df.columns]
+        if missing:
+            raise ValueError(f"missing market-residual features: {missing}")
+        matrix = df[self.feature_columns].apply(pd.to_numeric, errors='coerce')
+        matrix = matrix.replace([np.inf, -np.inf], np.nan)
+        return matrix.to_numpy(dtype=float)
+
+    def fit(self, df: pd.DataFrame, target_col: str = 'target_residual') -> Dict[str, Any]:
+        if target_col not in df.columns:
+            raise ValueError(f"target column '{target_col}' is required")
+        if len(df) < 2:
+            raise ValueError("at least two training rows are required")
+
+        X_raw = self._matrix(df)
+        y = pd.to_numeric(df[target_col], errors='coerce').to_numpy(dtype=float)
+        valid = np.isfinite(y)
+        if valid.sum() < 2:
+            raise ValueError("at least two finite target values are required")
+        X_raw = X_raw[valid]
+        y = y[valid]
+
+        self.feature_medians_ = np.nanmedian(X_raw, axis=0)
+        self.feature_medians_ = np.where(
+            np.isfinite(self.feature_medians_), self.feature_medians_, 0.0
+        )
+        X = np.where(np.isfinite(X_raw), X_raw, self.feature_medians_)
+        self.feature_mean_ = X.mean(axis=0)
+        self.feature_std_ = X.std(axis=0)
+        self.feature_std_ = np.where(self.feature_std_ > 1e-9, self.feature_std_, 1.0)
+        Z = (X - self.feature_mean_) / self.feature_std_
+
+        self.intercept_ = float(y.mean())
+        centered = y - self.intercept_
+        penalty = self.alpha * np.eye(Z.shape[1])
+        self.coef_ = np.linalg.solve(Z.T @ Z + penalty, Z.T @ centered)
+
+        self.is_fitted = True
+        fitted = self.intercept_ + Z @ self.coef_
+        return {
+            'train_samples': int(len(y)),
+            'alpha': self.alpha,
+            'train_mae': round(float(np.mean(np.abs(y - fitted))), 4),
+            'market_mae': round(float(np.mean(np.abs(y))), 4),
+            'mae_improvement': round(
+                float(np.mean(np.abs(y)) - np.mean(np.abs(y - fitted))), 4
+            ),
+        }
+
+    def predict_residuals(self, df: pd.DataFrame) -> np.ndarray:
+        if not self.is_fitted:
+            raise RuntimeError("model is not fitted")
+        X_raw = self._matrix(df)
+        X = np.where(np.isfinite(X_raw), X_raw, self.feature_medians_)
+        Z = (X - self.feature_mean_) / self.feature_std_
+        predicted = self.intercept_ + Z @ self.coef_
+        return np.clip(predicted, -self.clip, self.clip)
+
+    def predict_residual(self, features: Dict[str, Any]) -> float:
+        return float(self.predict_residuals(pd.DataFrame([features]))[0])
+
+    def coefficients(self) -> Dict[str, float]:
+        return {
+            name: round(float(value), 5)
+            for name, value in zip(self.feature_columns, self.coef_)
         }

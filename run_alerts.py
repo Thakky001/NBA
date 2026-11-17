@@ -41,7 +41,12 @@ from collectors.espn_collector import ESPNCollector
 from collectors.odds_collector import OddsCollector
 from processing.data_merger import DataMerger
 from processing.feature_engineering import FeatureEngineer
-from processing.snapshot_archive import archive_daily_snapshot
+from processing.snapshot_archive import (
+    archive_daily_snapshot,
+    record_injury_event,
+    record_lineup_event,
+    record_odds_event,
+)
 from analysis.trend_analyzer import TrendAnalyzer
 from analysis.prediction_tracker import (
     grade_finished_games,
@@ -329,6 +334,26 @@ def run_alert_cycle(
         logger.info("No games scheduled on scoreboard today.")
         return 0
 
+    # 1b. Append a cheap timestamped odds observation for every scheduled game.
+    # This is what makes earlier line movement measurable later; it never blocks
+    # the alert cycle if the log is unavailable.
+    for _, game in scoreboard.iterrows():
+        status_str = str(game.get('status', '')).upper()
+        if any(s in status_str for s in ['FINAL', 'PROGRESS', 'LIVE', 'HALFTIME']):
+            continue
+        if pd.isna(game.get('over_under')) and pd.isna(game.get('spread')):
+            continue
+        try:
+            record_odds_event(
+                game_id=game.get('game_id'),
+                total_line=game.get('over_under'),
+                spread_line=game.get('spread'),
+                source='espn_scoreboard',
+                commence_time=game.get('thai_datetime'),
+            )
+        except Exception as event_err:
+            logger.debug(f"Could not record scoreboard odds event: {event_err}")
+
     candidate_games = []
 
     for _, game in scoreboard.iterrows():
@@ -431,6 +456,65 @@ def run_alert_cycle(
             candidate_analyses[gid] = analysis
         except Exception as exc:
             logger.warning(f"Error computing unified analysis for game {gid}: {exc}")
+
+    # 2b. Append timestamped odds/injury/lineup observations from the unified
+    # analysis. These records are the only way to study injury/lineup latency
+    # later; daily snapshots alone cannot recover within-day timing.
+    commence_by_gid = {
+        str(item['game'].get('game_id', '')): item.get('game_time')
+        for item in candidate_games
+    }
+    for gid, analysis in candidate_analyses.items():
+        try:
+            ctx = analysis.get('resolved_context') or {}
+            feat = analysis.get('features') or {}
+            commence = commence_by_gid.get(gid)
+            if ctx.get('line_source') != 'espn_scoreboard' and ctx.get('total_line') is not None:
+                record_odds_event(
+                    game_id=gid,
+                    total_line=ctx.get('total_line'),
+                    open_total=ctx.get('open_total'),
+                    spread_line=ctx.get('spread_line'),
+                    source=ctx.get('line_source') or 'analysis',
+                    commence_time=commence,
+                )
+            for side in ('home', 'away'):
+                team = analysis.get(f'{side}_team') or feat.get(f'{side}_team')
+                team_name = ctx.get(f'{side}_team') or team
+                for injury in (feat.get(f'{side}_injuries') or [])[:8]:
+                    if isinstance(injury, dict):
+                        player = injury.get('player') or injury.get('name')
+                        status = injury.get('status')
+                    else:
+                        text = str(injury)
+                        player = text.split('(')[0].strip() or None
+                        status = (
+                            text.split('[', 1)[1].split(']', 1)[0].strip()
+                            if '[' in text and ']' in text else None
+                        )
+                    record_injury_event(
+                        game_id=gid,
+                        team=team_name,
+                        player=player,
+                        status=status,
+                        source='feature_snapshot',
+                        commence_time=commence,
+                    )
+                starters = feat.get(f'{side}_starters') or []
+                if starters:
+                    record_lineup_event(
+                        game_id=gid,
+                        team=team_name,
+                        starters=[
+                            s.get('name') if isinstance(s, dict) else str(s)
+                            for s in starters
+                        ],
+                        status=feat.get(f'{side}_lineup_status'),
+                        source='feature_snapshot',
+                        commence_time=commence,
+                    )
+        except Exception as event_err:
+            logger.debug(f"Could not record analysis events for game {gid}: {event_err}")
 
     # 3. Record pre-game predictions in ledger (locks lines & picks before tip-off using the exact same analyses)
     try:

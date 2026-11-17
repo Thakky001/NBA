@@ -224,11 +224,16 @@ class TrendAnalyzer:
             min_games = 20
             is_early_season = False
 
-        # Early-season shrinkage: empirical data shows actual scoring runs -3.06 pts below market line
-        # Smoothly deflate projected total by up to -2.5 pts when min_games < 20
-        if is_early_season:
-            early_season_total_shrinkage = 2.5 * max(0.0, (20.0 - min_games) / 20.0)
-            raw_projected_total = raw_projected_total - early_season_total_shrinkage
+        # Early-season point shrinkage was removed in model v3.0.
+        #
+        # The old fixed -2.5 adjustment was justified with a contaminated sample
+        # that mixed seasons, and it contradicted the current-season data: teams
+        # with 9-14 games played were scoring *above* the closing line, not
+        # below it. Early-season uncertainty is handled by the dynamic market
+        # anchoring weight and the widened residual sigma instead. Any future
+        # adjustment must be fitted out-of-sample and must beat the market
+        # baseline before it can be enabled.
+        early_season_total_shrinkage = 0.0
 
         effective_market_weight = max(0.0, min(1.0, float(market_weight if market_weight is not None else 0.0)))
 
@@ -285,7 +290,7 @@ class TrendAnalyzer:
             pre_line_mv = analyze_line_movement(open_line, over_under_line, market_type='total', recommendation='NEUTRAL', is_live=is_live)
 
             # Single unified recommendation gate (Phase 2.1 & 2.5) with calibrated win probability
-            from analysis.recommendation import decide_pick
+            from analysis.recommendation import decide_pick, load_selective_profile
             ou_decision = decide_pick(
                 market_type='total',
                 current_line=over_under_line,
@@ -299,7 +304,8 @@ class TrendAnalyzer:
                 data_quality_flags=features,
                 is_early_season=is_early_season,
                 push_prob=push_prob,
-                ev=cand_ev
+                ev=cand_ev,
+                selective_profile=load_selective_profile()
             )
             recommendation = ou_decision['recommendation']
             pick_win_prob = ou_decision['pick_prob']
@@ -404,6 +410,9 @@ class TrendAnalyzer:
             'features': features,
             'min_games_played': min_games,
             'is_early_season': is_early_season,
+            'early_season_total_shrinkage': early_season_total_shrinkage,
+            'model_version': 'ou-base-v3.0-no-shrink',
+            'calibration_version': 'temperature-2.0',
             'sigma_total': sigma_ou,
             'probability_method': probability_method,
             'push_prob': push_prob if over_under_line else 0.0,

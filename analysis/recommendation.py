@@ -6,17 +6,119 @@ and prediction_tracker.py.
 
 from __future__ import annotations
 
+import json
 import logging
+import os
 from typing import Any, Dict, Optional, Tuple
 
 logger = logging.getLogger(__name__)
 
 GATE_VERSION = "gate-v2.4-strict-sample"
+SELECTIVE_GATE_VERSION = "ou-selective-v1.0"
+SELECTIVE_GATE_ENV = "NBA_OU_SELECTIVE_GATE"
+SELECTIVE_PROFILE_ENV = "NBA_OU_SELECTIVE_PROFILE"
+_TRUTHY = {"true", "1", "yes", "on"}
 
 # Minimum current-season games per team before a STRONG pick becomes actionable.
 # Graduated 8-14 band was reverted (v2.4) because there is no out-of-sample
 # evidence that early-season conviction is well calibrated.
 STRONG_MIN_GAMES = 15
+
+
+def selective_gate_enabled(environ: Optional[Dict[str, str]] = None) -> bool:
+    """Return whether the O/U selective gate is enabled (default: off)."""
+    env = os.environ if environ is None else environ
+    return str(env.get(SELECTIVE_GATE_ENV, "false")).strip().lower() in _TRUTHY
+
+
+def load_selective_profile(
+    environ: Optional[Dict[str, str]] = None,
+) -> Optional[Dict[str, Any]]:
+    """Load the selective profile from ``NBA_OU_SELECTIVE_PROFILE``.
+
+    The value is inline JSON or a path to a JSON file. Any malformed value
+    returns ``None`` so the gate fails closed instead of guessing a profile.
+    """
+    env = os.environ if environ is None else environ
+    raw = env.get(SELECTIVE_PROFILE_ENV)
+    if not raw:
+        return None
+    text = str(raw).strip()
+    try:
+        if text.startswith("{"):
+            profile = json.loads(text)
+        else:
+            with open(text, "r", encoding="utf-8") as handle:
+                profile = json.load(handle)
+    except Exception as exc:
+        logger.warning(f"Could not load selective O/U profile: {exc}")
+        return None
+    if not isinstance(profile, dict):
+        logger.warning("Selective O/U profile must be a JSON object")
+        return None
+    return profile
+
+
+def _selective_rule_match(
+    profile: Optional[Dict[str, Any]],
+    recommendation: str,
+    abs_edge: float,
+    pick_prob: float,
+    min_games: Optional[int],
+) -> Optional[str]:
+    """Return the first matching pre-registered rule, or ``None``.
+
+    The selector only downgrades. It can never upgrade a LEAN to STRONG and it
+    never invents a pick that the base gate rejected.
+    """
+    if not isinstance(profile, dict):
+        return None
+    allowed = profile.get("allowed_rules")
+    if not isinstance(allowed, list) or not allowed:
+        return None
+
+    if "STRONG" in recommendation:
+        tier = "STRONG"
+    elif "LEAN" in recommendation:
+        tier = "LEAN"
+    else:
+        return None
+    side = "OVER" if "OVER" in recommendation else ("UNDER" if "UNDER" in recommendation else None)
+    if side is None:
+        return None
+
+    min_edge = profile.get("min_edge")
+    if min_edge is not None and abs_edge < float(min_edge):
+        return None
+    min_prob = profile.get("min_prob")
+    if min_prob is not None and pick_prob < float(min_prob):
+        return None
+    required_games = profile.get("min_games")
+    if required_games is not None:
+        if min_games is None or int(min_games) < int(required_games):
+            return None
+    gp15 = min_games is not None and int(min_games) >= STRONG_MIN_GAMES
+    prob = pick_prob
+
+    for rule in allowed:
+        rule = str(rule)
+        if rule == "all_picks":
+            return rule
+        if rule == "strong_only" and tier == "STRONG":
+            return rule
+        if rule == "strong_gp15" and tier == "STRONG" and gp15:
+            return rule
+        if rule == "under_only" and side == "UNDER":
+            return rule
+        if rule == "strong_under" and tier == "STRONG" and side == "UNDER":
+            return rule
+        if rule == "edge_ge_2" and abs_edge >= 2.0:
+            return rule
+        if rule == "prob_ge_053" and prob >= 0.53:
+            return rule
+        if rule == "edge_ge_2_prob_ge_053" and abs_edge >= 2.0 and prob >= 0.53:
+            return rule
+    return None
 
 
 def decide_pick(
@@ -32,7 +134,8 @@ def decide_pick(
     data_quality_flags: Optional[Dict[str, Any]] = None,
     is_early_season: bool = False,
     push_prob: float = 0.0,
-    ev: Optional[float] = None
+    ev: Optional[float] = None,
+    selective_profile: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     """Unified decision gate for Spread and Over/Under bets.
     
@@ -52,6 +155,7 @@ def decide_pick(
     """
     m_type = str(market_type).lower().strip()
     dq = data_quality_flags or {}
+    gate_on = selective_gate_enabled()
     
     # Base fallback response for unanalyzable matchups
     fallback = {
@@ -66,6 +170,9 @@ def decide_pick(
         'is_actionable': False,
         'suppressed_reason': None,
         'gate_version': GATE_VERSION,
+        'selective_gate_version': SELECTIVE_GATE_VERSION if gate_on else None,
+        'selective_gate_enabled': gate_on,
+        'selective_rule': None,
         'data_quality_flags': dq
     }
 
@@ -232,6 +339,24 @@ def decide_pick(
             rec = f"LEAN {pick_side}"
             suppressed_reason = 'EARLY_SEASON_SAMPLE_RESTRICTION'
 
+    # Selective betting gate (method 4). Disabled by default. When enabled it
+    # can only suppress picks that fail the pre-registered profile; it can never
+    # upgrade a pick or rescue a NEUTRAL decision.
+    selective_rule = None
+    if gate_on and m_type not in ('spread', 'sp') and ('OVER' in rec or 'UNDER' in rec):
+        selective_rule = _selective_rule_match(
+            selective_profile,
+            rec,
+            abs_edge=abs(edge_vs_curr),
+            pick_prob=pick_prob,
+            min_games=min_games,
+        )
+        if selective_rule is None:
+            rec = 'NEUTRAL'
+            pick_side = None
+            pick_prob = 0.50
+            suppressed_reason = 'SELECTIVE_GATE_NO_MATCH'
+
     # LEAN is strictly paper/monitoring; only STRONG on mature sample is actionable
     is_act = ('STRONG' in rec)
     if rec == 'NEUTRAL':
@@ -259,5 +384,8 @@ def decide_pick(
         'is_actionable': is_act,
         'suppressed_reason': suppressed_reason,
         'gate_version': GATE_VERSION,
+        'selective_gate_version': SELECTIVE_GATE_VERSION if gate_on else None,
+        'selective_gate_enabled': gate_on,
+        'selective_rule': selective_rule,
         'data_quality_flags': dq
     }

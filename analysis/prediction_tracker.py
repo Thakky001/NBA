@@ -68,7 +68,19 @@ LEDGER_COLUMNS = [
     'ou_is_actionable',
     'ou_suppressed_reason',
     'gate_version',
-    'data_quality_flags'
+    'data_quality_flags',
+    # Research / reproducibility extensions (Phase 0 of the O/U programme).
+    # These are additive: old ledgers simply receive None when loaded.
+    'feature_version',
+    'calibration_version',
+    'experiment_id',
+    'line_source',
+    'line_captured_at',
+    'closing_line',
+    'closing_captured_at',
+    'clv',
+    'snapshot_id',
+    'execution_mode',
 ]
 
 
@@ -77,8 +89,26 @@ STRING_COLUMNS = [
     'ou_recommendation', 'ou_verdict', 'sp_recommendation', 'sp_verdict',
     'ou_result', 'sp_result', 'verdict_result', 'status',
     'sp_pick_side', 'sp_suppressed_reason', 'ou_pick_side', 'ou_suppressed_reason',
-    'gate_version', 'data_quality_flags'
+    'gate_version', 'data_quality_flags',
+    'feature_version', 'calibration_version', 'experiment_id',
+    'line_source', 'line_captured_at', 'closing_captured_at',
+    'snapshot_id', 'execution_mode'
 ]
+
+# Reproducibility defaults. These are intentionally environment-overridable so
+# experiments can be tagged without changing production data.
+DEFAULT_FEATURE_VERSION = os.getenv('NBA_FEATURE_VERSION', 'features-v1')
+DEFAULT_CALIBRATION_VERSION = os.getenv('NBA_CALIBRATION_VERSION', 'temperature-2.0')
+DEFAULT_EXPERIMENT_ID = os.getenv('NBA_EXPERIMENT_ID', 'production')
+DEFAULT_MODEL_VERSION = os.getenv('NBA_MODEL_VERSION', 'nba-baseline-v2')
+
+
+def _default_execution_mode() -> str:
+    """PAPER unless the operator explicitly disables the pause flag."""
+    paused = os.getenv('NBA_BETTING_PAUSED', 'true').lower() in ('true', '1', 'yes')
+    if paused:
+        return 'PAPER'
+    return os.getenv('NBA_EXECUTION_MODE', 'LIVE').upper()
 
 
 def load_ledger() -> pd.DataFrame:
@@ -207,6 +237,17 @@ def compute_game_analysis(
     if ou_val is None:
         ou_val = lm_data.get('current_total') or lm_data.get('open_total')
 
+    # Record where the locked line came from. This matters for CLV research:
+    # an Odds API consensus line and an ESPN scoreboard line are not equivalent.
+    if c_total is not None:
+        line_source = 'odds_api_consensus'
+    elif pd.notna(raw_ou):
+        line_source = 'espn_scoreboard'
+    elif lm_data.get('current_total') is not None or lm_data.get('open_total') is not None:
+        line_source = 'espn_pickcenter'
+    else:
+        line_source = 'unknown'
+
     as_of = forecast_as_of or datetime.now(timezone.utc).isoformat()
     if margin_residuals is None or total_residuals is None:
         hist_m, hist_t = get_historical_residuals(as_of)
@@ -238,7 +279,9 @@ def compute_game_analysis(
         'open_total': open_total,
         'spread_odds': spread_odds,
         'total_odds': total_odds,
-        'forecast_as_of': as_of
+        'forecast_as_of': as_of,
+        'line_source': line_source,
+        'line_captured_at': as_of,
     }
     analysis['odds_data'] = odds_data
     return analysis
@@ -253,7 +296,8 @@ def record_slate_predictions(
     max_minutes_before: Optional[float] = 60.0,
     force: bool = False,
     precomputed_analyses: Optional[Dict[str, Dict[str, Any]]] = None,
-    return_analyses: bool = False
+    return_analyses: bool = False,
+    execution_mode: Optional[str] = None,
 ) -> Union[int, Tuple[int, Dict[str, Dict[str, Any]]]]:
     """Record pre-game predictions for games in the slate within the pre-game window.
 
@@ -383,6 +427,8 @@ def record_slate_predictions(
             k: v for k, v in analysis.get('features', {}).items() if str(k).startswith('dq_')
         }
 
+        effective_execution_mode = (execution_mode or _default_execution_mode()).upper()
+
         new_rows.append({
             'game_id': gid,
             'date': date_str,
@@ -407,7 +453,7 @@ def record_slate_predictions(
             'verdict_result': None,
             'status': 'PENDING',
             'forecast_as_of': forecast_as_of,
-            'model_version': 'nba-baseline-v2',
+            'model_version': ou_res.get('model_version') or DEFAULT_MODEL_VERSION,
             'features_snapshot': json.dumps(analysis.get('features', {}), default=str, sort_keys=True),
             'projected_margin': sp_res.get('projected_margin'),
             'projected_total': ou_res.get('projected_total'),
@@ -431,7 +477,17 @@ def record_slate_predictions(
             'ou_is_actionable': ou_decision.get('is_actionable', eff_ou_rec != 'NEUTRAL'),
             'ou_suppressed_reason': ou_decision.get('suppressed_reason'),
             'gate_version': sp_decision.get('gate_version') or ou_decision.get('gate_version') or 'gate-v2.1',
-            'data_quality_flags': json.dumps(dq_summary)
+            'data_quality_flags': json.dumps(dq_summary),
+            'feature_version': DEFAULT_FEATURE_VERSION,
+            'calibration_version': ou_res.get('calibration_version') or DEFAULT_CALIBRATION_VERSION,
+            'experiment_id': DEFAULT_EXPERIMENT_ID,
+            'line_source': ctx.get('line_source'),
+            'line_captured_at': ctx.get('line_captured_at') or forecast_as_of,
+            'closing_line': None,
+            'closing_captured_at': None,
+            'clv': None,
+            'snapshot_id': date_str,
+            'execution_mode': effective_execution_mode,
         })
         existing_gids.add(gid)
 
@@ -442,6 +498,27 @@ def record_slate_predictions(
         logger.info(f"Recorded {len(new_rows)} new predictions to ledger.")
 
     return (len(new_rows), analyses_by_gid) if return_analyses else len(new_rows)
+
+
+def calculate_ou_clv(recommendation: Any, bet_line: Any, closing_line: Any) -> Optional[float]:
+    """Point-based closing-line value for an O/U bet.
+
+    Positive means the bettor beat the closing line: for OVER a lower number is
+    better, for UNDER a higher number is better.
+    """
+    try:
+        if pd.isna(recommendation) or pd.isna(bet_line) or pd.isna(closing_line):
+            return None
+        rec = str(recommendation).upper()
+        bet = float(bet_line)
+        close = float(closing_line)
+        if 'OVER' in rec:
+            return round(close - bet, 3)
+        if 'UNDER' in rec:
+            return round(bet - close, 3)
+    except (TypeError, ValueError):
+        return None
+    return None
 
 
 def grade_finished_games(scoreboard_df: pd.DataFrame) -> int:
@@ -470,7 +547,12 @@ def grade_finished_games(scoreboard_df: pd.DataFrame) -> int:
             a_score = game.get('away_score')
             if pd.notna(h_score) and pd.notna(a_score) and str(h_score).strip() != '' and str(a_score).strip() != '':
                 try:
-                    final_games[gid] = (float(h_score), float(a_score))
+                    closing_total = game.get('over_under')
+                    try:
+                        closing_total = float(closing_total) if pd.notna(closing_total) else None
+                    except (TypeError, ValueError):
+                        closing_total = None
+                    final_games[gid] = (float(h_score), float(a_score), closing_total)
                 except (ValueError, TypeError):
                     pass
 
@@ -485,7 +567,7 @@ def grade_finished_games(scoreboard_df: pd.DataFrame) -> int:
     for idx, row in ledger_df.iterrows():
         gid = str(row['game_id'])
         if gid in final_games and (row['status'] != 'GRADED' or pd.isna(row['ou_result'])):
-            h_pts, a_pts = final_games[gid]
+            h_pts, a_pts, closing_total = final_games[gid]
             act_total = h_pts + a_pts
             act_margin = h_pts - a_pts  # Home - Away
 
@@ -495,6 +577,14 @@ def grade_finished_games(scoreboard_df: pd.DataFrame) -> int:
             ou_res = grade_over_under_pick(row['ou_recommendation'], t_line, act_total)
             sp_res = grade_spread_pick(row['sp_recommendation'], s_line, act_margin)
             v_res = grade_verdict_pick(row['ou_verdict'], row['ou_recommendation'], t_line, act_total)
+
+            # Best-effort closing-line capture. The final scoreboard often keeps
+            # the last pre-tip total; if so, record it and derive point CLV.
+            if closing_total is not None:
+                if pd.isna(row.get('closing_line')):
+                    ledger_df.at[idx, 'closing_line'] = closing_total
+                    ledger_df.at[idx, 'closing_captured_at'] = datetime.now(timezone.utc).isoformat()
+                ledger_df.at[idx, 'clv'] = calculate_ou_clv(row['ou_recommendation'], t_line, closing_total)
 
             ledger_df.at[idx, 'home_score'] = h_pts
             ledger_df.at[idx, 'away_score'] = a_pts
