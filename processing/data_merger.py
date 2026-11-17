@@ -40,10 +40,28 @@ class DataMerger:
                     a_rows = df_std[df_std[matchup_col].astype(str).str.contains('@', case=False, na=False)].copy()
                     if not h_rows.empty and not a_rows.empty:
                         m_box = pd.merge(h_rows, a_rows, on=gid_col, suffixes=('_h', '_a'))
-                        # Extract paired fields
-                        date_col_h = next((c for c in m_box.columns if 'game_date' in str(c).lower() or 'date' in str(c).lower()), None)
-                        team_col_h = next((c for c in m_box.columns if 'team_name_h' in str(c).lower() or 'team_h' in str(c).lower()), None)
-                        team_col_a = next((c for c in m_box.columns if 'team_name_a' in str(c).lower() or 'team_a' in str(c).lower()), None)
+                        # Extract paired fields. Match exact suffixed names first: a
+                        # loose ``'team_a' in column`` check incorrectly matched
+                        # TEAM_ABBREVIATION_h and put the home team in both slots.
+                        def _paired_col(candidates, suffix):
+                            for candidate in candidates:
+                                if candidate in m_box.columns:
+                                    return candidate
+                            return next(
+                                (
+                                    c for c in m_box.columns
+                                    if str(c).lower().startswith('team_name')
+                                    and str(c).lower().endswith(f'_{suffix}')
+                                ),
+                                None,
+                            )
+
+                        date_col_h = next(
+                            (c for c in m_box.columns if 'game_date' in str(c).lower()),
+                            next((c for c in m_box.columns if 'date' in str(c).lower()), None),
+                        )
+                        team_col_h = _paired_col(('TEAM_NAME_h', 'team_name_h', 'TEAM_h', 'team_h'), 'h')
+                        team_col_a = _paired_col(('TEAM_NAME_a', 'team_name_a', 'TEAM_a', 'team_a'), 'a')
                         pts_col_h = next((c for c in m_box.columns if 'pts_h' in str(c).lower()), None)
                         pts_col_a = next((c for c in m_box.columns if 'pts_a' in str(c).lower()), None)
                         
@@ -128,6 +146,21 @@ class DataMerger:
             if col not in combined.columns:
                 combined[col] = None
                 
+        # Fail closed on corrupted pairings. A team cannot play itself, and a
+        # silently duplicated home/away column would poison every downstream
+        # feature (this exact bug produced 1,225 self-matchups in the cache).
+        if 'home_team' in combined.columns and 'away_team' in combined.columns:
+            same_team = (
+                combined['home_team'].astype(str).str.strip()
+                == combined['away_team'].astype(str).str.strip()
+            )
+            if same_team.any():
+                logger.warning(
+                    f"Dropping {int(same_team.sum())} game row(s) with identical "
+                    "home and away teams (corrupt source pairing)."
+                )
+                combined = combined[~same_team].copy()
+
         # Filter out preseason (1) and postseason/playoff (3) games to ensure only regular season form
         if 'season_type' in combined.columns:
             combined = combined[~combined['season_type'].isin([1, 1.0, '1', '1.0', 3, 3.0, '3', '3.0'])].copy()
