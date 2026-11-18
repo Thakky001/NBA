@@ -103,10 +103,11 @@ def render_html(html_str: str):
     else:
         st.markdown(cleaned, unsafe_allow_html=True)
 
-# Resilient imports with auto-recovery for Streamlit Cloud hot-reloading race conditions
-for mod in ['analysis', 'analysis.trend_analyzer', 'analysis.recommendation', 'analysis.betting_math',
-            'processing', 'processing.feature_engineering', 'processing.player_rating']:
-    sys.modules.pop(mod, None)
+# NOTE: Do not evict analysis/processing modules from sys.modules here.
+# Doing so left the parent packages cached with stale submodule attributes and
+# made the re-import below raise ``KeyError: 'processing.feature_engineering'``
+# on Python 3.14 after a Streamlit hot reload. A code push restarts the app, so
+# explicit module eviction buys nothing and breaks the import.
 
 from collectors.espn_collector import ESPNCollector
 from collectors.odds_collector import OddsCollector
@@ -2753,7 +2754,7 @@ if st.sidebar.button("🔄 อัปเดตฐานข้อมูลสถ�
         st.sidebar.error(f"อัปเดตข้อมูลล้มเหลว: {exc}")
 
 # Load Data with Streamlit Caching
-CACHE_VERSION_KEY = "v14_force_fresh_module_bytecode"
+CACHE_VERSION_KEY = "v15_injury_ttl"
 
 @st.cache_resource
 def get_analyzer(cache_version: str = CACHE_VERSION_KEY, day_key: str = ""):
@@ -2762,10 +2763,6 @@ def get_analyzer(cache_version: str = CACHE_VERSION_KEY, day_key: str = ""):
     The engine snapshots ESPN injuries and rosters, so reusing it across days
     serves yesterday's report. ``day_key`` forces a rebuild at the date boundary.
     """
-    for mod in ['analysis', 'analysis.trend_analyzer', 'analysis.recommendation',
-                'processing', 'processing.feature_engineering']:
-        sys.modules.pop(mod, None)
-
     from processing.data_merger import DataMerger
     from processing.feature_engineering import FeatureEngineer
     from analysis.trend_analyzer import TrendAnalyzer
