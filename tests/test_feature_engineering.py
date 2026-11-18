@@ -152,6 +152,7 @@ class TestFeatureEngineering(unittest.TestCase):
         self.assertIn('dq_missing_net_rating', features)
         self.assertIn('dq_unconfirmed_lineup', features)
         self.assertIn('dq_stale_data', features)
+        self.assertIn('dq_injury_cap_bound', features)
 
     def test_cross_season_form_isolation_phoenix_case(self):
         """Phase 1.1: Ensure previous season games (e.g. May 2026) are not leaked into current season form."""

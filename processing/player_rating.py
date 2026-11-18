@@ -279,6 +279,10 @@ class PlayerRatingEngine:
             'team_name': team_name,
             'roster_rating': 0.0,
             'full_roster_rating': 0.0,
+            #: The active rating before MAX_INJURY_LOSS is applied. Without it
+            #: the cap destroys the only evidence that could tune the cap.
+            'uncapped_roster_rating': 0.0,
+            'injury_cap_bound': False,
             'off_loss': 0.0,
             'def_loss': 0.0,
             'full_off_rating': 0.0,
@@ -690,7 +694,14 @@ class PlayerRatingEngine:
         # without a RotoWire lineup (GSW on 2026-11-18: 28.8) were penalised past
         # the ceiling. Scaling the offence/defence ratings keeps
         # off_loss + def_loss equal to the capped total.
-        if full_roster_rating > 0 and (full_roster_rating - active_roster_rating) > self.MAX_INJURY_LOSS:
+        # The pre-cap value is kept so the cap's cost can be measured later;
+        # once clipped it is unrecoverable.
+        uncapped_active_rating = active_roster_rating
+        cap_bound = (
+            full_roster_rating > 0
+            and (full_roster_rating - active_roster_rating) > self.MAX_INJURY_LOSS
+        )
+        if cap_bound:
             capped_active = full_roster_rating - self.MAX_INJURY_LOSS
             shrink = capped_active / active_roster_rating if active_roster_rating > 0 else 0.0
             active_roster_rating = capped_active
@@ -718,6 +729,8 @@ class PlayerRatingEngine:
 
         result['roster_rating'] = float(round(active_roster_rating, 2))
         result['full_roster_rating'] = float(round(full_roster_rating, 2))
+        result['uncapped_roster_rating'] = float(round(uncapped_active_rating, 2))
+        result['injury_cap_bound'] = bool(cap_bound)
         result['off_loss'] = float(round(off_loss, 2))
         result['def_loss'] = float(round(def_loss, 2))
         result['full_off_rating'] = float(round(full_off_rating, 2))

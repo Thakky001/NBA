@@ -561,6 +561,15 @@ class FeatureEngineer:
                 'away_roster_rating': away_data.get('roster_rating', 0.0),
                 'home_full_roster_rating': home_data.get('full_roster_rating', 0.0),
                 'away_full_roster_rating': away_data.get('full_roster_rating', 0.0),
+                # Pre-cap ratings: the difference from the fields above is how
+                # much MAX_INJURY_LOSS is hiding, which is what a future cap
+                # study needs.
+                'home_uncapped_roster_rating': home_data.get('uncapped_roster_rating', 0.0),
+                'away_uncapped_roster_rating': away_data.get('uncapped_roster_rating', 0.0),
+                'dq_injury_cap_bound': bool(
+                    home_data.get('injury_cap_bound', False)
+                    or away_data.get('injury_cap_bound', False)
+                ),
                 'home_off_loss': home_data.get('off_loss', 0.0),
                 'home_def_loss': home_data.get('def_loss', 0.0),
                 'away_off_loss': away_data.get('off_loss', 0.0),

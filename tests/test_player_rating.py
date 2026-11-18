@@ -487,6 +487,26 @@ class TestRosterRatingBaselines(unittest.TestCase):
         # No RotoWire lineup: same formula, same ceiling.
         self.assertAlmostEqual(res['full_roster_rating'] - res['roster_rating'], 22.0, delta=0.05)
 
+    def test_cap_is_reported_with_its_uncapped_value(self):
+        """The pre-cap rating must survive, or the cap can never be tuned."""
+        stats = dict(self.STATS)
+        stats['Star'] = 40.0
+        capped = self._rate(self._mk_engine(
+            [], stats=stats,
+            injuries=[{'player_name': 'Star', 'status': 'Out', 'detail': 'Knee'}]))
+
+        self.assertTrue(capped['injury_cap_bound'])
+        # full 164.8 - uncapped 131.5 = 33.3, clipped to 22.0
+        self.assertAlmostEqual(
+            capped['full_roster_rating'] - capped['uncapped_roster_rating'], 33.28, delta=0.1)
+        self.assertAlmostEqual(
+            capped['full_roster_rating'] - capped['roster_rating'], 22.0, delta=0.05)
+
+        healthy = self._rate(self._mk_engine([]))
+        self.assertFalse(healthy['injury_cap_bound'])
+        self.assertAlmostEqual(
+            healthy['uncapped_roster_rating'], healthy['roster_rating'], delta=0.01)
+
     def test_off_and_def_add_up_to_eff(self):
         """off_loss + def_loss must equal the real EFF drop, with no inflation."""
         engine = self._mk_engine(

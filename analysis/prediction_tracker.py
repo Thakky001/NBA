@@ -20,6 +20,13 @@ logger = logging.getLogger('prediction_tracker')
 LEDGER_PATH = os.path.join(RAW_DIR, 'predictions_ledger.csv')
 THAI_TZ = timezone(timedelta(hours=7))
 
+#: Bumped whenever the projection changes enough that rows from before and
+#: after are not the same model. The ledger stores it on every row and the
+#: residual history only reads rows that match, so a bump both marks the
+#: cut-over and refuses to train on the previous scale.
+#: v3: one 70/30 rating formula for every team, RotoWire lineup removed.
+MODEL_VERSION = "nba-baseline-v3"
+
 LEDGER_COLUMNS = [
     'game_id',
     'date',
@@ -132,7 +139,7 @@ def get_historical_residuals(
         prior_df = prior.copy()
         prior_df['forecast_as_of'] = pd.to_datetime(prior_df['forecast_as_of'], utc=True, errors='coerce')
         cutoff = pd.Timestamp(as_of) if as_of else pd.Timestamp.now(timezone.utc)
-        eligible = prior_df[(prior_df['model_version'] == 'nba-baseline-v2') & (prior_df['status'] == 'GRADED') & (prior_df['forecast_as_of'] < cutoff)]
+        eligible = prior_df[(prior_df['model_version'] == MODEL_VERSION) & (prior_df['status'] == 'GRADED') & (prior_df['forecast_as_of'] < cutoff)]
         for _, prior_row in eligible.iterrows():
             if pd.notna(prior_row['actual_margin']) and pd.notna(prior_row['projected_margin']):
                 margin_residuals.append(float(prior_row['actual_margin']) - float(prior_row['projected_margin']))
@@ -407,7 +414,7 @@ def record_slate_predictions(
             'verdict_result': None,
             'status': 'PENDING',
             'forecast_as_of': forecast_as_of,
-            'model_version': 'nba-baseline-v2',
+            'model_version': MODEL_VERSION,
             'features_snapshot': json.dumps(analysis.get('features', {}), default=str, sort_keys=True),
             'projected_margin': sp_res.get('projected_margin'),
             'projected_total': ou_res.get('projected_total'),
