@@ -354,5 +354,71 @@ class TestPlayerRating(unittest.TestCase):
             self.assertIn('Cameron Thomas', names)
 
 
+class TestInjurySnapshotRefresh(unittest.TestCase):
+    """The engine must not serve one load-once injury report for its whole life.
+
+    The web app caches a single analyzer per process, so a frozen snapshot is how
+    lineups end up built from a two-day-old injury report.
+    """
+
+    def _mk_engine(self, injuries):
+        mock_rw = MagicMock()
+        mock_rw.get_lineup_for_team.return_value = None
+        with patch('collectors.espn_collector.ESPNCollector.get_injuries', return_value=injuries):
+            return PlayerRatingEngine(rotowire_collector=mock_rw)
+
+    def test_snapshot_is_not_refetched_inside_ttl(self):
+        initial = pd.DataFrame([{'player_name': 'Star Guy', 'status': 'Out', 'detail': 'Knee'}])
+        engine = self._mk_engine(initial)
+
+        with patch('collectors.espn_collector.ESPNCollector.get_injuries',
+                   return_value=pd.DataFrame()) as fetch:
+            engine._refresh_injuries()
+            fetch.assert_not_called()
+        self.assertEqual(engine.injuries_df.iloc[0]['player_name'], 'Star Guy')
+
+    def test_snapshot_refreshes_after_ttl(self):
+        initial = pd.DataFrame([{'player_name': 'Star Guy', 'status': 'Out', 'detail': 'Knee'}])
+        updated = pd.DataFrame([{'player_name': 'Star Guy', 'status': 'Day-To-Day', 'detail': 'Knee'}])
+        engine = self._mk_engine(initial)
+
+        engine._injuries_ts -= engine.INJURY_REFRESH_TTL_SECONDS + 1
+        with patch('collectors.espn_collector.ESPNCollector.get_injuries',
+                   return_value=updated) as fetch:
+            engine._refresh_injuries()
+            fetch.assert_called_once()
+        self.assertEqual(engine.injuries_df.iloc[0]['status'], 'Day-To-Day')
+
+    def test_failed_refresh_keeps_last_good_snapshot(self):
+        initial = pd.DataFrame([{'player_name': 'Star Guy', 'status': 'Out', 'detail': 'Knee'}])
+        engine = self._mk_engine(initial)
+
+        engine._injuries_ts -= engine.INJURY_REFRESH_TTL_SECONDS + 1
+        with patch('collectors.espn_collector.ESPNCollector.get_injuries',
+                   return_value=pd.DataFrame()) as fetch:
+            engine._refresh_injuries()
+            fetch.assert_called_once()
+        self.assertEqual(len(engine.injuries_df), 1)
+
+    def test_rating_reports_injury_timestamp_and_refreshes(self):
+        initial = pd.DataFrame([{'player_name': 'Star Guy', 'status': 'Out', 'detail': 'Knee'}])
+        engine = self._mk_engine(initial)
+        engine._roster_cache[321] = pd.DataFrame([{'name': 'Star Guy'}])
+        engine.draft_history = pd.DataFrame()
+        engine.player_stats = pd.DataFrame([{'PLAYER_NAME': 'Star Guy', 'GP': 10, 'EFF_PG': 20.0}])
+        engine._injuries_ts -= engine.INJURY_REFRESH_TTL_SECONDS + 1
+
+        with patch('config.resolve_team_info', return_value={'espn_id': 321}), \
+                patch('collectors.espn_collector.ESPNCollector.get_injuries',
+                      return_value=pd.DataFrame([{'player_name': 'Other Guy', 'status': 'Out',
+                                                  'detail': 'Ankle'}])) as fetch:
+            res = engine.calculate_team_roster_rating("Mock Team")
+
+        fetch.assert_called_once()
+        self.assertRegex(res['injuries_as_of'], r'^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$')
+        # The stale OUT tag cleared once the fresh report arrived.
+        self.assertEqual(res['injuries'], [])
+
+
 if __name__ == '__main__':
     unittest.main()

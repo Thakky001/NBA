@@ -253,5 +253,32 @@ class TestFeatureEngineering(unittest.TestCase):
         self.assertEqual(feat_other['home_games_played'], 0)
         self.assertEqual(feat_other['away_games_played'], 0)
 
+class TestRosterRatingProvenance(unittest.TestCase):
+    """Roster features must carry the timestamp of the injury snapshot they used."""
+
+    def test_injuries_as_of_is_propagated(self):
+        fe = object.__new__(FeatureEngineer)
+        stub = MagicMock()
+        stub.calculate_team_roster_rating.return_value = {
+            'roster_rating': 100.0,
+            'full_roster_rating': 110.0,
+            'off_loss': 0.0,
+            'def_loss': 0.0,
+            'top_players': [],
+            'starters': [],
+            'lineup_status': 'Confirmed',
+            'is_lineup_confirmed': True,
+            'injuries': ['Star Guy [OUT - Knee]'],
+            'injuries_as_of': '2026-11-18 09:30',
+        }
+        fe._player_engine = stub
+
+        out = fe.get_roster_ratings('Boston Celtics', 'Miami Heat')
+
+        self.assertEqual(out['home_injuries_as_of'], '2026-11-18 09:30')
+        self.assertEqual(out['away_injuries_as_of'], '2026-11-18 09:30')
+        self.assertEqual(out['home_injuries'], ['Star Guy [OUT - Knee]'])
+
+
 if __name__ == '__main__':
     unittest.main()

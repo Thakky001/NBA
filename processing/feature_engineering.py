@@ -573,7 +573,9 @@ class FeatureEngineer:
                 'away_lineup_status': away_data.get('lineup_status', 'Unconfirmed'),
                 'is_lineup_confirmed': home_data.get('is_lineup_confirmed', False) and away_data.get('is_lineup_confirmed', False),
                 'home_injuries': home_data.get('injuries', []),
-                'away_injuries': away_data.get('injuries', [])
+                'away_injuries': away_data.get('injuries', []),
+                'home_injuries_as_of': home_data.get('injuries_as_of', ''),
+                'away_injuries_as_of': away_data.get('injuries_as_of', '')
             }
         return {}
 

@@ -51,7 +51,12 @@ def normalize_name(name: str) -> str:
 
 class PlayerRatingEngine:
     """Evaluates team strength based on individual player ratings (EFF/PIE)."""
-    
+
+    #: A cached injury snapshot is only trustworthy for this long. The web app
+    #: keeps one engine alive for the whole process, so a load-once snapshot can
+    #: otherwise survive for days and drive lineups from a stale report.
+    INJURY_REFRESH_TTL_SECONDS = 600
+
     def __init__(self, season=None, rotowire_collector=None):
         from config import NBA_API_SEASON
         self.season = season or NBA_API_SEASON
@@ -62,6 +67,8 @@ class PlayerRatingEngine:
         self.player_stats = self._load_player_stats()
         self.draft_history = self._load_draft_history()
         self.injuries_df = self._load_injuries()
+        # An empty first load must not be trusted for a full TTL cycle.
+        self._injuries_ts = time.time() if not self.injuries_df.empty else 0.0
 
     def _load_injuries(self) -> pd.DataFrame:
         """Load injury data from ESPN collector or fallback cache."""
@@ -70,6 +77,19 @@ class PlayerRatingEngine:
         except Exception as e:
             logger.warning(f"Could not load injuries: {e}")
             return pd.DataFrame()
+
+    def _refresh_injuries(self, force: bool = False) -> None:
+        """Re-fetch the injury report once the snapshot is older than the TTL.
+
+        Keeps the last good report when a fetch fails, so a transient network
+        error cannot silently mark every player healthy.
+        """
+        if not force and (time.time() - self._injuries_ts) < self.INJURY_REFRESH_TTL_SECONDS:
+            return
+        fresh = self._load_injuries()
+        if fresh is not None and not fresh.empty:
+            self.injuries_df = fresh
+        self._injuries_ts = time.time()
 
     def _load_draft_history(self) -> pd.DataFrame:
         """Load draft history for evaluating rookies (in-memory cached)."""
@@ -153,6 +173,13 @@ class PlayerRatingEngine:
         Calculates a team's power rating by aggregating the EFF_PG of its top 8 
         active players based on current ESPN roster.
         """
+        self._refresh_injuries()
+
+        injuries_as_of = (
+            time.strftime('%Y-%m-%d %H:%M', time.localtime(self._injuries_ts))
+            if self._injuries_ts else ""
+        )
+
         # Default rating for fallback
         result = {
             'team_name': team_name,
@@ -169,6 +196,7 @@ class PlayerRatingEngine:
             'lineup_status': 'Unconfirmed',
             'is_lineup_confirmed': False,
             'injuries': [],
+            'injuries_as_of': injuries_as_of,
             'status': 'fallback'
         }
         

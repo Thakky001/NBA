@@ -2159,8 +2159,13 @@ def get_espn_position_map():
             pass
     return pos_map
 
-@st.cache_data(ttl=3600)
-def get_player_stats_and_injuries_map():
+@st.cache_data(ttl=300)
+def get_player_stats_and_injuries_map(as_of: str = ""):
+    """Player stats plus the current injury map.
+
+    ``as_of`` is only a cache key: pass the injury snapshot timestamp so the
+    per-player badges can never be newer than the report the lineup came from.
+    """
     stats_map = {}
     injuries_map = {}
     data_dir = globals().get('DATA_DIR') or os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
@@ -2751,7 +2756,12 @@ if st.sidebar.button("🔄 อัปเดตฐานข้อมูลสถ�
 CACHE_VERSION_KEY = "v14_force_fresh_module_bytecode"
 
 @st.cache_resource
-def get_analyzer(cache_version: str = CACHE_VERSION_KEY):
+def get_analyzer(cache_version: str = CACHE_VERSION_KEY, day_key: str = ""):
+    """Build the analyzer once per process *and* per calendar day.
+
+    The engine snapshots ESPN injuries and rosters, so reusing it across days
+    serves yesterday's report. ``day_key`` forces a rebuild at the date boundary.
+    """
     for mod in ['analysis', 'analysis.trend_analyzer', 'analysis.recommendation',
                 'processing', 'processing.feature_engineering']:
         sys.modules.pop(mod, None)
@@ -2801,7 +2811,7 @@ def get_cached_analysis(_analyzer, home_team, away_team, spread_line, over_under
         raise
 
 try:
-    analyzer = get_analyzer()
+    analyzer = get_analyzer(CACHE_VERSION_KEY, datetime.now(THAI_TZ).strftime('%Y-%m-%d'))
 except Exception as e:
     st.warning("⚠️ ไม่พบฐานข้อมูลสถิติ กรุณากด 'อัปเดตฐานข้อมูลสถิติ' ที่แถบด้านซ้ายก่อนใช้งานครับ")
     st.stop()
@@ -2920,7 +2930,7 @@ def render_game_slate(selected_date, is_live_refresh):
                     spread_line=sp_val, over_under_line=ou_val,
                     open_spread=open_spread, open_line=open_total,
                     is_live=is_live,
-                    cache_version=CACHE_VERSION_KEY
+                    cache_version=f"{CACHE_VERSION_KEY}:{datetime.now(THAI_TZ).strftime('%Y-%m-%d')}",
                 )
             
                 sp_feat = (analysis.get('spread') or {}).get('features') or {}
@@ -3043,20 +3053,40 @@ def render_game_slate(selected_date, is_live_refresh):
                     # Lineup status & 5 starters
                     h_lineup_st = feat.get('home_lineup_status', 'Unconfirmed')
                     a_lineup_st = feat.get('away_lineup_status', 'Unconfirmed')
+                    h_inj_as_of = feat.get('home_injuries_as_of', '')
+                    a_inj_as_of = feat.get('away_injuries_as_of', '')
+
+                    # Warn when an unconfirmed projection is also missing several
+                    # players: that combination is where bench names get shown as
+                    # starters while the real five are still being decided.
+                    unconfirmed_teams = [
+                        f"{label} ({l_status}, {len(inj)} คน)"
+                        for label, l_status, inj in (
+                            (away, a_lineup_st, a_inj),
+                            (home, h_lineup_st, h_inj),
+                        )
+                        if l_status != 'Confirmed' and len(inj) >= 3
+                    ]
+                    if unconfirmed_teams:
+                        st.warning(
+                            "⚠️ ตัวจริงยังไม่ยืนยันและมีผู้เล่นบาดเจ็บหลายคน: "
+                            + ", ".join(unconfirmed_teams)
+                            + " — ชุดที่แสดงอยู่อาจเปลี่ยนก่อนเกมเริ่ม"
+                        )
 
                     h_starters = feat.get('home_starters', [])
                     a_starters = feat.get('away_starters', [])
                     if h_starters or a_starters:
                         pos_map = get_espn_position_map()
 
-                        stats_map, injuries_map = get_player_stats_and_injuries_map()
+                        stats_map, injuries_map = get_player_stats_and_injuries_map(h_inj_as_of or a_inj_as_of)
 
                         sorted_a = format_and_sort_starters(a_starters, pos_map, stats_map, injuries_map) if a_starters else []
 
                         sorted_h = format_and_sort_starters(h_starters, pos_map, stats_map, injuries_map) if h_starters else []
 
 
-                        def _render_starter_card(team_label, s_list, l_status):
+                        def _render_starter_card(team_label, s_list, l_status, injuries_as_of=""):
 
                             if not s_list: return ""
 
@@ -3066,7 +3096,12 @@ def render_game_slate(selected_date, is_live_refresh):
 
                             pill_html = f'<span style="font-size:0.7rem; padding:1px 6px; border-radius:4px; background:{pill_color}; color:{pill_text_color}; font-weight:700;">{l_status}</span>'
 
-                            
+                            as_of_html = (
+                                f'<div style="margin-top:6px; font-size:0.68rem; color:#94A3B8;">'
+                                f'🕒 ข้อมูลบาดเจ็บ ณ {injuries_as_of}</div>'
+                                if injuries_as_of else ""
+                            )
+
 
                             rows_html = "".join(
                                 f'<div class="starter-row">'
@@ -3077,15 +3112,15 @@ def render_game_slate(selected_date, is_live_refresh):
                                 for s in s_list
                             )
 
-                            return f'<div class="starting5-card"><div class="starting5-header"><span>🏀 5 ตัวจริง {team_label}</span>{pill_html}</div><div class="starting5-list">{rows_html}</div></div>'
+                            return f'<div class="starting5-card"><div class="starting5-header"><span>🏀 5 ตัวจริง {team_label}</span>{pill_html}</div><div class="starting5-list">{rows_html}</div>{as_of_html}</div>'
 
                         sc_col1, sc_col2 = st.columns(2)
                         with sc_col1:
                             if sorted_a:
-                                render_html(_render_starter_card(away, sorted_a, a_lineup_st))
+                                render_html(_render_starter_card(away, sorted_a, a_lineup_st, a_inj_as_of))
                         with sc_col2:
                             if sorted_h:
-                                render_html(_render_starter_card(home, sorted_h, h_lineup_st))
+                                render_html(_render_starter_card(home, sorted_h, h_lineup_st, h_inj_as_of))
                 
                     st.divider()
 
