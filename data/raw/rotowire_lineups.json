@@ -35,7 +35,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-11-18 00:36:07"
+    "scraped_at": "2026-11-18 03:11:05"
   },
   "NYK": {
     "team": "New York Knicks",
@@ -73,7 +73,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-11-18 00:36:07"
+    "scraped_at": "2026-11-18 03:11:05"
   },
   "Toronto Raptors": {
     "team": "Toronto Raptors",
@@ -122,7 +122,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-18 00:36:07"
+    "scraped_at": "2026-11-18 03:11:05"
   },
   "TOR": {
     "team": "Toronto Raptors",
@@ -171,7 +171,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-18 00:36:07"
+    "scraped_at": "2026-11-18 03:11:05"
   },
   "Portland Trail Blazers": {
     "team": "Portland Trail Blazers",
@@ -179,8 +179,8 @@
     "opponent": "Minnesota Timberwolves",
     "opponent_abbr": "MIN",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Damian Lillard",
@@ -188,7 +188,7 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Jrue Holiday",
+        "name": "Jayson Kent",
         "position": "SG",
         "status": "Very Likely To Play"
       },
@@ -235,7 +235,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-18 00:36:07"
+    "scraped_at": "2026-11-18 03:11:05"
   },
   "POR": {
     "team": "Portland Trail Blazers",
@@ -243,8 +243,8 @@
     "opponent": "Minnesota Timberwolves",
     "opponent_abbr": "MIN",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Damian Lillard",
@@ -252,7 +252,7 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Jrue Holiday",
+        "name": "Jayson Kent",
         "position": "SG",
         "status": "Very Likely To Play"
       },
@@ -299,7 +299,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-18 00:36:07"
+    "scraped_at": "2026-11-18 03:11:05"
   },
   "Minnesota Timberwolves": {
     "team": "Minnesota Timberwolves",
@@ -307,8 +307,8 @@
     "opponent": "Portland Trail Blazers",
     "opponent_abbr": "POR",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "LaMelo Ball",
@@ -321,7 +321,7 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Terrence Shannon",
+        "name": "Cody Williams",
         "position": "SF",
         "status": "Very Likely To Play"
       },
@@ -363,7 +363,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-18 00:36:07"
+    "scraped_at": "2026-11-18 03:11:05"
   },
   "MIN": {
     "team": "Minnesota Timberwolves",
@@ -371,8 +371,8 @@
     "opponent": "Portland Trail Blazers",
     "opponent_abbr": "POR",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "LaMelo Ball",
@@ -385,7 +385,7 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Terrence Shannon",
+        "name": "Cody Williams",
         "position": "SF",
         "status": "Very Likely To Play"
       },
@@ -427,7 +427,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-18 00:36:07"
+    "scraped_at": "2026-11-18 03:11:05"
   },
   "Detroit Pistons": {
     "team": "Detroit Pistons",
@@ -435,8 +435,8 @@
     "opponent": "San Antonio Spurs",
     "opponent_abbr": "SAS",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Cade Cunningham",
@@ -491,7 +491,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-18 00:36:07"
+    "scraped_at": "2026-11-18 03:11:05"
   },
   "DET": {
     "team": "Detroit Pistons",
@@ -499,8 +499,8 @@
     "opponent": "San Antonio Spurs",
     "opponent_abbr": "SAS",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Cade Cunningham",
@@ -555,7 +555,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-18 00:36:07"
+    "scraped_at": "2026-11-18 03:11:05"
   },
   "San Antonio Spurs": {
     "team": "San Antonio Spurs",
@@ -604,7 +604,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-18 00:36:07"
+    "scraped_at": "2026-11-18 03:11:05"
   },
   "SAS": {
     "team": "San Antonio Spurs",
@@ -653,7 +653,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-18 00:36:07"
+    "scraped_at": "2026-11-18 03:11:05"
   },
   "Utah Jazz": {
     "team": "Utah Jazz",
@@ -661,8 +661,8 @@
     "opponent": "Los Angeles Clippers",
     "opponent_abbr": "LAC",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Keyonte George",
@@ -712,7 +712,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-18 00:36:07"
+    "scraped_at": "2026-11-18 03:11:05"
   },
   "UTA": {
     "team": "Utah Jazz",
@@ -720,8 +720,8 @@
     "opponent": "Los Angeles Clippers",
     "opponent_abbr": "LAC",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Keyonte George",
@@ -771,7 +771,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-18 00:36:07"
+    "scraped_at": "2026-11-18 03:11:05"
   },
   "Los Angeles Clippers": {
     "team": "Los Angeles Clippers",
@@ -779,8 +779,8 @@
     "opponent": "Utah Jazz",
     "opponent_abbr": "UTA",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Darius Garland",
@@ -830,7 +830,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-18 00:36:07"
+    "scraped_at": "2026-11-18 03:11:05"
   },
   "LAC": {
     "team": "Los Angeles Clippers",
@@ -838,8 +838,8 @@
     "opponent": "Utah Jazz",
     "opponent_abbr": "UTA",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Darius Garland",
@@ -889,7 +889,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-18 00:36:07"
+    "scraped_at": "2026-11-18 03:11:05"
   },
   "Charlotte Hornets": {
     "team": "Charlotte Hornets",
@@ -928,6 +928,11 @@
     ],
     "injuries": [
       {
+        "name": "Grayson Allen",
+        "position": "G",
+        "status": "Very Unlikely To Play"
+      },
+      {
         "name": "Kon Knueppel",
         "position": "F",
         "status": "Very Unlikely To Play"
@@ -938,7 +943,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-18 00:36:07"
+    "scraped_at": "2026-11-18 03:11:05"
   },
   "CHA": {
     "team": "Charlotte Hornets",
@@ -977,6 +982,11 @@
     ],
     "injuries": [
       {
+        "name": "Grayson Allen",
+        "position": "G",
+        "status": "Very Unlikely To Play"
+      },
+      {
         "name": "Kon Knueppel",
         "position": "F",
         "status": "Very Unlikely To Play"
@@ -987,7 +997,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-18 00:36:07"
+    "scraped_at": "2026-11-18 03:11:05"
   },
   "Los Angeles Lakers": {
     "team": "Los Angeles Lakers",
@@ -1036,7 +1046,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-18 00:36:07"
+    "scraped_at": "2026-11-18 03:11:05"
   },
   "LAL": {
     "team": "Los Angeles Lakers",
@@ -1085,6 +1095,6 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-18 00:36:07"
+    "scraped_at": "2026-11-18 03:11:05"
   }
 }
