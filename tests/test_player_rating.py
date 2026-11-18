@@ -1,4 +1,4 @@
-import unittest
+﻿import unittest
 from unittest.mock import patch, MagicMock
 import pandas as pd
 from config import TEAMS, resolve_team_info, normalize_team_name
@@ -418,6 +418,117 @@ class TestInjurySnapshotRefresh(unittest.TestCase):
         self.assertRegex(res['injuries_as_of'], r'^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$')
         # The stale OUT tag cleared once the fresh report arrived.
         self.assertEqual(res['injuries'], [])
+
+
+class TestRosterRatingBaselines(unittest.TestCase):
+    """Full-health baseline, injury cap, EFF split and cold-start fallback."""
+
+    ROSTER = [
+        'Star', 'Player Two', 'Player Three', 'Player Four', 'Player Five',
+        'Sixth Man', 'Bench Seven', 'Bench Eight', 'Bench Nine',
+    ]
+    STATS = {
+        'Star': 30.0, 'Player Two': 20.0, 'Player Three': 20.0,
+        'Player Four': 20.0, 'Player Five': 20.0, 'Sixth Man': 16.0,
+        'Bench Seven': 12.0, 'Bench Eight': 10.0, 'Bench Nine': 8.0,
+    }
+
+    def _mk_engine(self, starters, stats=None, injuries=None):
+        mock_rw = MagicMock()
+        mock_rw.get_lineup_for_team.return_value = (
+            {
+                'lineup_status': 'Expected',
+                'is_confirmed': False,
+                'starters': [{'name': n, 'position': ''} for n in starters],
+            }
+            if starters else None
+        )
+        engine = PlayerRatingEngine(rotowire_collector=mock_rw)
+        engine._roster_cache[999] = pd.DataFrame([{'name': n} for n in self.ROSTER])
+        engine.draft_history = pd.DataFrame()
+        engine.prev_season_eff = {}
+        table = dict(stats if stats is not None else self.STATS)
+        rows = []
+        for name, eff in table.items():
+            rows.append({
+                'PLAYER_NAME': name, 'GP': 10, 'EFF_PG': eff,
+                'PTS': eff * 10, 'AST': eff * 2, 'OREB': eff,
+                'STL': 1.0, 'BLK': 1.0, 'DREB': eff * 2,
+            })
+        engine.player_stats = pd.DataFrame(rows)
+        engine.injuries_df = pd.DataFrame(injuries or [])
+        return engine
+
+    def _rate(self, engine):
+        with patch('config.resolve_team_info', return_value={'espn_id': 999}):
+            return engine.calculate_team_roster_rating('Mock Team')
+
+    def test_full_rating_ignores_which_five_rotowire_names(self):
+        """The healthy baseline is the best five on the roster, not tonight's five."""
+        healthy = self._rate(self._mk_engine(
+            ['Star', 'Player Two', 'Player Three', 'Player Four', 'Player Five']))
+        depleted = self._rate(self._mk_engine(
+            ['Sixth Man', 'Bench Seven', 'Bench Eight', 'Bench Nine', 'Star']))
+
+        self.assertAlmostEqual(
+            healthy['full_roster_rating'], depleted['full_roster_rating'], delta=0.01,
+            msg="RotoWire naming a bench five must not move the full-health baseline",
+        )
+
+    def test_injury_cap_applies_without_a_rotowire_lineup(self):
+        """The legacy top-8 path must obey the same 22-point ceiling."""
+        stats = dict(self.STATS)
+        stats['Star'] = 40.0
+        engine = self._mk_engine([], stats=stats,
+                                 injuries=[{'player_name': 'Star', 'status': 'Out', 'detail': 'Knee'}])
+        res = self._rate(engine)
+
+        self.assertEqual(res['status'], 'success')
+        # No RotoWire lineup -> legacy top-8 path.
+        self.assertAlmostEqual(res['full_roster_rating'] - res['roster_rating'], 22.0, delta=0.05)
+
+    def test_off_and_def_add_up_to_eff(self):
+        """off_loss + def_loss must equal the real EFF drop, with no inflation."""
+        engine = self._mk_engine(
+            ['Player Five', 'Star', 'Player Two', 'Player Three', 'Player Four'],
+            injuries=[{'player_name': 'Star', 'status': 'Out', 'detail': 'Knee'}])
+        res = self._rate(engine)
+
+        self.assertAlmostEqual(
+            res['full_off_rating'] + res['full_def_rating'], res['full_roster_rating'], delta=0.05)
+        self.assertAlmostEqual(
+            res['active_off_rating'] + res['active_def_rating'], res['roster_rating'], delta=0.05)
+        self.assertAlmostEqual(
+            res['off_loss'] + res['def_loss'],
+            res['full_roster_rating'] - res['roster_rating'], delta=0.05)
+
+    def test_cold_start_uses_previous_season_eff(self):
+        """A returning player with no current-season line must not read as 4.5."""
+        engine = self._mk_engine([])
+        # Only eight players have a current line; "Star" is the returning one.
+        stats = {k: v for k, v in self.STATS.items() if k != 'Star'}
+        engine.player_stats = pd.DataFrame([
+            {'PLAYER_NAME': n, 'GP': 10, 'EFF_PG': e} for n, e in stats.items()
+        ])
+        engine.prev_season_eff = {'star': {'eff_pg': 21.5, 'gp': 40}}
+        res = self._rate(engine)
+
+        # top-8 = 21.5 + 20 + 20 + 20 + 20 + 16 + 12 + 10
+        self.assertAlmostEqual(res['full_roster_rating'], 139.5, delta=0.1)
+
+    def test_cold_start_falls_back_to_draft_tier_without_a_sample(self):
+        """A thin previous season (GP < 10) still uses the draft tier."""
+        engine = self._mk_engine([])
+        stats = {k: v for k, v in self.STATS.items() if k != 'Star'}
+        engine.player_stats = pd.DataFrame([
+            {'PLAYER_NAME': n, 'GP': 10, 'EFF_PG': e} for n, e in stats.items()
+        ])
+        engine.prev_season_eff = {'star': {'eff_pg': 21.5, 'gp': 3}}
+        engine.draft_history = pd.DataFrame([{'PLAYER_NAME': 'Star', 'OVERALL_PICK': 3}])
+        res = self._rate(engine)
+
+        # top-8 = 14.0 (top-5 pick tier) + 20 + 20 + 20 + 20 + 16 + 12 + 10
+        self.assertAlmostEqual(res['full_roster_rating'], 132.0, delta=0.1)
 
 
 if __name__ == '__main__':

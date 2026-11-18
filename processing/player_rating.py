@@ -31,6 +31,66 @@ def _load_cached_draft_history() -> pd.DataFrame:
     return pd.DataFrame()
 
 
+@lru_cache(maxsize=8)
+def _load_prev_season_eff(path: str, mtime: float, season: int) -> Dict[str, Dict[str, float]]:
+    """Per-game EFF for one completed season, keyed by normalised player name.
+
+    ``season`` follows the ESPN/SDV convention of labelling a season by the
+    calendar year it ends in, so 2026 means 2025-26.
+    """
+    try:
+        if path.endswith('.parquet'):
+            df = pd.read_parquet(path)
+        else:
+            df = pd.read_csv(path)
+    except Exception as exc:
+        logger.warning(f"Could not read previous-season box scores from {path}: {exc}")
+        return {}
+    if df.empty:
+        return {}
+
+    required = {
+        'athlete_display_name', 'season', 'minutes', 'points', 'rebounds', 'assists',
+        'steals', 'blocks', 'field_goals_made', 'field_goals_attempted',
+        'free_throws_made', 'free_throws_attempted', 'turnovers',
+    }
+    if not required.issubset(df.columns):
+        return {}
+
+    df = df[(pd.to_numeric(df['season'], errors='coerce') == season)
+            & (pd.to_numeric(df['minutes'], errors='coerce') > 0)].copy()
+    if df.empty:
+        return {}
+
+    if 'season_type' in df.columns:
+        regular = df[pd.to_numeric(df['season_type'], errors='coerce') == 2]
+        if not regular.empty:
+            df = regular
+
+    agg = df.groupby('athlete_display_name').agg(
+        gp=('minutes', 'size'),
+        pts=('points', 'sum'),
+        reb=('rebounds', 'sum'),
+        ast=('assists', 'sum'),
+        stl=('steals', 'sum'),
+        blk=('blocks', 'sum'),
+        fgm=('field_goals_made', 'sum'),
+        fga=('field_goals_attempted', 'sum'),
+        ftm=('free_throws_made', 'sum'),
+        fta=('free_throws_attempted', 'sum'),
+        tov=('turnovers', 'sum'),
+    )
+    agg['eff_pg'] = (
+        agg['pts'] + agg['reb'] + agg['ast'] + agg['stl'] + agg['blk']
+        - (agg['fga'] - agg['fgm']) - (agg['fta'] - agg['ftm']) - agg['tov']
+    ) / agg['gp']
+
+    return {
+        normalize_name(name): {'eff_pg': float(row['eff_pg']), 'gp': int(row['gp'])}
+        for name, row in agg.iterrows()
+    }
+
+
 def normalize_name(name: str) -> str:
     """Strip unicode diacritics, generational suffixes (Jr., Sr., III), punctuation, and lowercase for matching."""
     if not name:
@@ -57,6 +117,10 @@ class PlayerRatingEngine:
     #: otherwise survive for days and drive lineups from a stale report.
     INJURY_REFRESH_TTL_SECONDS = 600
 
+    #: Missing key players moves an NBA spread by at most ~4 points, which is
+    #: roughly 22 rating points. This ceiling must apply to every rating path.
+    MAX_INJURY_LOSS = 22.0
+
     def __init__(self, season=None, rotowire_collector=None):
         from config import NBA_API_SEASON
         self.season = season or NBA_API_SEASON
@@ -66,9 +130,36 @@ class PlayerRatingEngine:
         self._roster_cache = {}
         self.player_stats = self._load_player_stats()
         self.draft_history = self._load_draft_history()
+        self.prev_season_eff = self._load_previous_season_stats()
         self.injuries_df = self._load_injuries()
         # An empty first load must not be trusted for a full TTL cycle.
         self._injuries_ts = time.time() if not self.injuries_df.empty else 0.0
+
+    def _load_previous_season_stats(self) -> Dict[str, Dict[str, float]]:
+        """Baseline ratings for players without a current-season stat line.
+
+        Without this a returning starter who has not played yet this season is
+        rated as an undrafted replacement, which is how the whole GSW rotation
+        ends up valued at 4.5 EFF.
+        """
+        try:
+            # SDV/ESPN label a season by the year it ends in, so the season
+            # before "2026-27" is labelled 2026.
+            prev_season = int(str(self.season).split('-')[0])
+        except (TypeError, ValueError, IndexError):
+            return {}
+
+        raw_dir = os.path.join(DATA_DIR, 'raw')
+        for fname in ('sdv_player_box.parquet', 'sdv_player_box.csv'):
+            path = os.path.join(raw_dir, fname)
+            if os.path.exists(path):
+                try:
+                    table = _load_prev_season_eff(path, os.path.getmtime(path), prev_season)
+                    if table:
+                        return table
+                except Exception as e:
+                    logger.warning(f"Previous-season ratings unavailable ({path}): {e}")
+        return {}
 
     def _load_injuries(self) -> pd.DataFrame:
         """Load injury data from ESPN collector or fallback cache."""
@@ -266,6 +357,9 @@ class PlayerRatingEngine:
                         eff = float(row.get('EFF_PG', 0) or 0)
                     except (ValueError, TypeError):
                         eff = 0.0
+                    # Keep one decimal so the offence/defence split below can add
+                    # back up to eff exactly, at both player and team level.
+                    eff = round(eff, 1)
                     try:
                         gp = int(row.get('GP', 0) or 0)
                     except (ValueError, TypeError):
@@ -279,12 +373,19 @@ class PlayerRatingEngine:
                     blk = float(row.get('BLK', 0) or 0) / gp if gp > 0 else 0.0
                     dreb = float(row.get('DREB', 0) or 0) / gp if gp > 0 else 0.0
                     
-                    if pts > 0 or ast > 0:
-                        off_eff = round(pts + 1.5 * ast + oreb, 1)
-                        def_eff = round(stl * 2.0 + blk * 2.0 + dreb, 1)
+                    # Split EFF into offence and defence. The raw components are
+                    # only used for their shape: they are rescaled so the two
+                    # halves always add back up to eff_pg. The old formula
+                    # ignored misses and turnovers and multiplied AST/STL/BLK,
+                    # so off_loss + def_loss was ~1.85x the real EFF drop.
+                    raw_off = pts + 1.5 * ast + oreb
+                    raw_def = stl * 2.0 + blk * 2.0 + dreb
+                    raw_total = raw_off + raw_def
+                    if raw_total > 0:
+                        off_eff = round(raw_off * eff / raw_total, 1)
                     else:
                         off_eff = round(eff * 0.65, 1)
-                        def_eff = round(eff * 0.35, 1)
+                    def_eff = round(eff - off_eff, 1)
 
                     # Base tier lookup for small-sample blend or baseline
                     pick = draft_map.get(p_name_norm, 999)
@@ -311,24 +412,32 @@ class PlayerRatingEngine:
                     elif gp > 0 and eff > 0:
                         # Small-sample blending: blend actual EFF with base rating
                         blended_eff = (eff * gp + base_eff * (5 - gp)) / 5.0
+                        off_blend = round(off_eff * gp / 5.0 + (base_eff * 0.65) * (5 - gp) / 5.0, 1)
                         matched_ratings.append({
                             'name': active_player_map[p_name_norm],
                             'clean_name': active_player_map[p_name_norm],
                             'eff_pg': round(blended_eff, 1),
-                            'off_eff': round(off_eff * gp / 5.0 + (base_eff * 0.65) * (5 - gp) / 5.0, 1),
-                            'def_eff': round(def_eff * gp / 5.0 + (base_eff * 0.35) * (5 - gp) / 5.0, 1),
+                            'off_eff': off_blend,
+                            'def_eff': round(round(blended_eff, 1) - off_blend, 1),
                             'gp': gp
                         })
                         found_players.add(p_name_norm)
                     
         # 2. Add Rookies & Cold Start players (GP < 5 or not in stats yet)
+        prev_table = getattr(self, 'prev_season_eff', None) or {}
         for p_name_norm, original_name in active_player_map.items():
             if p_name_norm not in found_players:
                 # Check if they are a recent draft pick
                 pick = draft_map.get(p_name_norm, 999)
-                
-                # Assign Replacement Level / Rookie Base Rating (elevated floor)
-                if pick <= 5:
+
+                # A player with no current-season line is usually a returning
+                # starter, not an undrafted replacement. Use last season's real
+                # EFF when there is a usable sample, and only fall back to the
+                # draft tier when there is nothing to go on.
+                prev = prev_table.get(p_name_norm)
+                if prev and prev.get('gp', 0) >= 10:
+                    eff = round(float(prev['eff_pg']), 1)
+                elif pick <= 5:
                     eff = 14.0 # Top 5 pick (Solid starter)
                 elif pick <= 14:
                     eff = 9.0  # Lottery (Key rotation)
@@ -336,13 +445,14 @@ class PlayerRatingEngine:
                     eff = 6.0  # First round (Rotation contributor)
                 else:
                     eff = 4.5  # General rotation / undrafted baseline (elevated from 3.0)
-                    
+
+                off_eff = round(eff * 0.65, 1)
                 matched_ratings.append({
                     'name': f"{original_name} (Base)",
                     'clean_name': original_name,
                     'eff_pg': eff,
-                    'off_eff': round(eff * 0.65, 1),
-                    'def_eff': round(eff * 0.35, 1),
+                    'off_eff': off_eff,
+                    'def_eff': round(eff - off_eff, 1),
                     'gp': 0
                 })
         # 3. Match Injuries for this team
@@ -373,14 +483,16 @@ class PlayerRatingEngine:
                     p['active_def_eff'] = 0.0
                     p['injury_status'] = f"OUT{detail_str}"
                 elif 'doubtful' in st_lower:
-                    p['active_eff'] = p['eff_pg'] * 0.25
+                    # Scale the total first, then split it, so the offence and
+                    # defence halves still add back up to the discounted value.
+                    p['active_eff'] = round(p['eff_pg'] * 0.25, 1)
                     p['active_off_eff'] = round(p_off * 0.25, 1)
-                    p['active_def_eff'] = round(p_def * 0.25, 1)
+                    p['active_def_eff'] = round(p['active_eff'] - p['active_off_eff'], 1)
                     p['injury_status'] = f"DOUBTFUL{detail_str}"
                 elif any(k in st_lower for k in ['questionable', 'day-to-day', 'gtd']):
-                    p['active_eff'] = p['eff_pg'] * 0.60
+                    p['active_eff'] = round(p['eff_pg'] * 0.60, 1)
                     p['active_off_eff'] = round(p_off * 0.60, 1)
-                    p['active_def_eff'] = round(p_def * 0.60, 1)
+                    p['active_def_eff'] = round(p['active_eff'] - p['active_off_eff'], 1)
                     p['injury_status'] = f"GTD/QST{detail_str}"
                 else:
                     p['active_eff'] = p['eff_pg']
@@ -466,21 +578,34 @@ class PlayerRatingEngine:
                     s['eff_pg'] = starter_baseline
                     s['active_eff'] = starter_baseline
                     s['off_eff'] = round(starter_baseline * 0.65, 1)
-                    s['def_eff'] = round(starter_baseline * 0.35, 1)
+                    s['def_eff'] = round(starter_baseline - s['off_eff'], 1)
+                    s['active_off_eff'] = s['off_eff']
+                    s['active_def_eff'] = s['def_eff']
                     s['gp'] = 0
                     s['injury_status'] = None
                     del s['is_unmatched']
 
         # Bench candidates from active roster excluding original starters
         bench_candidates = [p for p in matched_ratings if id(p) not in starter_ids]
-        bench_full_top_3 = sorted(bench_candidates, key=lambda x: x['eff_pg'], reverse=True)[:3]
 
         if not matched_ratings:
             return result
 
+        # Full-health baseline = the five best players on the roster. RotoWire's
+        # five are tonight's lineup, so when a starter is ruled out it names his
+        # replacement and the baseline collapsed to bench level (CLE read 105.57
+        # on 2026-11-15 instead of ~128, which also disabled the injury cap).
+        full_starter_players = sorted(
+            matched_ratings, key=lambda x: x.get('eff_pg', 0.0), reverse=True
+        )[:5]
+        full_starter_ids = {id(p) for p in full_starter_players}
+        bench_full_top_3 = sorted(
+            [p for p in matched_ratings if id(p) not in full_starter_ids],
+            key=lambda x: x.get('eff_pg', 0.0), reverse=True
+        )[:3]
+
         # Next-Man-Up Replacement Logic for Starters:
         # If a starter is confirmed OUT or DOUBTFUL, promote top healthy bench player
-        full_starter_players = list(starter_players)
         active_starter_players = []
 
         available_bench = sorted(
@@ -538,11 +663,6 @@ class PlayerRatingEngine:
             b_act_eff_avg = sum(b['active_eff'] for b in bench_top_3) / b_n
             active_roster_rating = 8.0 * (0.70 * s_act_eff_avg + 0.30 * b_act_eff_avg)
 
-            # Team Injury Penalty Cap: In NBA betting markets, missing key players shifts point spread by at most 3.5-4.5 pts (~22 rating pts)
-            max_injury_loss = 22.0
-            if full_roster_rating > 0 and (full_roster_rating - active_roster_rating) > max_injury_loss:
-                active_roster_rating = full_roster_rating - max_injury_loss
-
             s_act_off_avg = sum(s.get('active_off_eff', s['active_eff'] * 0.65) for s in active_starter_players) / s_act_n
             b_act_off_avg = sum(b.get('active_off_eff', b['active_eff'] * 0.65) for b in bench_top_3) / b_n
             active_off_rating = 8.0 * (0.70 * s_act_off_avg + 0.30 * b_act_off_avg)
@@ -570,8 +690,30 @@ class PlayerRatingEngine:
                 starter_players = active_top_8[:5]
             active_starter_players = starter_players
 
-        off_loss = max(0.0, full_off_rating - active_off_rating)
-        def_loss = max(0.0, full_def_rating - active_def_rating)
+        # Team Injury Penalty Cap: losing key players moves the spread by at most
+        # ~4 points. The cap used to live inside the 70/30 branch only, so teams
+        # without a RotoWire lineup (GSW on 2026-11-18: 28.8) were penalised past
+        # the ceiling. Scaling the offence/defence ratings keeps
+        # off_loss + def_loss equal to the capped total.
+        if full_roster_rating > 0 and (full_roster_rating - active_roster_rating) > self.MAX_INJURY_LOSS:
+            capped_active = full_roster_rating - self.MAX_INJURY_LOSS
+            shrink = capped_active / active_roster_rating if active_roster_rating > 0 else 0.0
+            active_roster_rating = capped_active
+            active_off_rating *= shrink
+            active_def_rating *= shrink
+
+        # Split the total drop between offence and defence. Clamping each side
+        # independently (the old way) broke additivity whenever a lineup change
+        # moved one side up and the other down, so off_loss + def_loss no longer
+        # matched the real EFF drop.
+        total_loss = max(0.0, full_roster_rating - active_roster_rating)
+        if total_loss <= 0:
+            off_loss = def_loss = 0.0
+        else:
+            full_side_total = full_off_rating + full_def_rating
+            off_share = (full_off_rating / full_side_total) if full_side_total > 0 else 0.65
+            off_loss = round(total_loss * off_share, 2)
+            def_loss = round(total_loss - off_loss, 2)
 
         # Injuries list for this team
         team_injuries = [
