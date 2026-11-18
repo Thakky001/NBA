@@ -180,8 +180,8 @@ class TestPlayerRating(unittest.TestCase):
             # Weighted expected rating: 8 * (0.70 * 20.0 + 0.30 * 10.0) = 8 * (14.0 + 3.0) = 8 * 17.0 = 136.0
             self.assertAlmostEqual(res['roster_rating'], 136.0, places=1)
 
-    def test_rotowire_missing_silent_fallback(self):
-        """Verify clean fallback to legacy top 8 unweighted calculation when RotoWire is unavailable."""
+    def test_rotowire_missing_uses_the_same_formula(self):
+        """A missing lineup must not switch the team onto a different scale."""
         mock_rw = MagicMock()
         mock_rw.get_lineup_for_team.return_value = None
         engine = PlayerRatingEngine(rotowire_collector=mock_rw)
@@ -208,8 +208,8 @@ class TestPlayerRating(unittest.TestCase):
             self.assertEqual(res['status'], 'success')
             self.assertEqual(res['lineup_status'], 'Unconfirmed')
             self.assertFalse(res['is_lineup_confirmed'])
-            # Legacy expected rating: 5 * 15.0 + 3 * 10.0 = 75.0 + 30.0 = 105.0
-            self.assertAlmostEqual(res['roster_rating'], 105.0, places=1)
+            # Same 70/30 split as a team with a lineup: 8 * (0.70 * 15.0 + 0.30 * 10.0) = 108.0
+            self.assertAlmostEqual(res['roster_rating'], 108.0, places=1)
 
 
     def test_starter_suffix_matching_and_fallback(self):
@@ -476,7 +476,7 @@ class TestRosterRatingBaselines(unittest.TestCase):
         )
 
     def test_injury_cap_applies_without_a_rotowire_lineup(self):
-        """The legacy top-8 path must obey the same 22-point ceiling."""
+        """A missing lineup must not bypass the 22-point ceiling."""
         stats = dict(self.STATS)
         stats['Star'] = 40.0
         engine = self._mk_engine([], stats=stats,
@@ -484,7 +484,7 @@ class TestRosterRatingBaselines(unittest.TestCase):
         res = self._rate(engine)
 
         self.assertEqual(res['status'], 'success')
-        # No RotoWire lineup -> legacy top-8 path.
+        # No RotoWire lineup: same formula, same ceiling.
         self.assertAlmostEqual(res['full_roster_rating'] - res['roster_rating'], 22.0, delta=0.05)
 
     def test_off_and_def_add_up_to_eff(self):
@@ -513,8 +513,9 @@ class TestRosterRatingBaselines(unittest.TestCase):
         engine.prev_season_eff = {'star': {'eff_pg': 21.5, 'gp': 40}}
         res = self._rate(engine)
 
-        # top-8 = 21.5 + 20 + 20 + 20 + 20 + 16 + 12 + 10
-        self.assertAlmostEqual(res['full_roster_rating'], 139.5, delta=0.1)
+        # top-5 = 21.5, 20, 20, 20, 20 (avg 20.3); next-3 = 16, 12, 10 (avg 12.67)
+        # 8 * (0.70 * 20.3 + 0.30 * 12.67) = 144.1
+        self.assertAlmostEqual(res['full_roster_rating'], 144.1, delta=0.1)
 
     def test_cold_start_falls_back_to_draft_tier_without_a_sample(self):
         """A thin previous season (GP < 10) still uses the draft tier."""
@@ -527,8 +528,71 @@ class TestRosterRatingBaselines(unittest.TestCase):
         engine.draft_history = pd.DataFrame([{'PLAYER_NAME': 'Star', 'OVERALL_PICK': 3}])
         res = self._rate(engine)
 
-        # top-8 = 14.0 (top-5 pick tier) + 20 + 20 + 20 + 20 + 16 + 12 + 10
-        self.assertAlmostEqual(res['full_roster_rating'], 132.0, delta=0.1)
+        # top-5 = 20, 20, 20, 20, 16 (avg 19.2); next-3 = 14.0 (top-5 pick tier), 12, 10 (avg 12.0)
+        # 8 * (0.70 * 19.2 + 0.30 * 12.0) = 136.3
+        self.assertAlmostEqual(res['full_roster_rating'], 136.3, delta=0.1)
+
+
+    def test_active_rating_ignores_which_five_rotowire_names(self):
+        """Tonight's rating comes from value, not from RotoWire's five."""
+        healthy = self._rate(self._mk_engine(
+            ['Star', 'Player Two', 'Player Three', 'Player Four', 'Player Five']))
+        depleted_lineup = self._rate(self._mk_engine(
+            ['Sixth Man', 'Bench Seven', 'Bench Eight', 'Bench Nine', 'Star']))
+
+        self.assertAlmostEqual(
+            healthy['roster_rating'], depleted_lineup['roster_rating'], delta=0.01,
+            msg="RotoWire naming a bench five must not move the active rating",
+        )
+        # The lineup card still reports what RotoWire actually said.
+        self.assertEqual(
+            [s['name'] for s in depleted_lineup['starters']],
+            ['Sixth Man', 'Bench Seven', 'Bench Eight', 'Bench Nine', 'Star'],
+        )
+
+    def test_replacement_gets_starter_minutes(self):
+        """A bench body covering an injured starter is floored to 12.0 EFF."""
+        stats = {
+            'Star': 24.0, 'Player Two': 20.0, 'Player Three': 20.0,
+            'Player Four': 20.0, 'Player Five': 20.0, 'Sixth Man': 9.0,
+            'Bench Seven': 8.0, 'Bench Eight': 7.0, 'Bench Nine': 6.0,
+        }
+        out = self._rate(self._mk_engine(
+            ['Player Two', 'Player Three', 'Player Four', 'Player Five', 'Sixth Man'],
+            stats=stats,
+            injuries=[{'player_name': 'Star', 'status': 'Out', 'detail': 'Knee'}]))
+
+        # top-5 = 24, 20, 20, 20, 20 (avg 20.8); next-3 = 9, 8, 7 (avg 8.0)
+        # full = 8 * (0.70 * 20.8 + 0.30 * 8.0) = 135.7
+        self.assertAlmostEqual(out['full_roster_rating'], 135.7, delta=0.1)
+        # Sixth Man (9.0) covers for Star, so he is valued at the 12.0 floor:
+        # 8 * (0.70 * ((80 + 12) / 5) + 0.30 * ((8 + 7 + 6) / 3)) = 119.8
+        self.assertAlmostEqual(out['roster_rating'], 119.8, delta=0.2)
+
+
+    def test_unavailable_player_is_never_given_the_floor(self):
+        """A ruled-out body stays at zero even when the roster is short."""
+        engine = self._mk_engine([])
+        engine._roster_cache[999] = pd.DataFrame(
+            [{'name': n} for n in ['A', 'B', 'C', 'D', 'E']]
+        )
+        engine.player_stats = pd.DataFrame([
+            {'PLAYER_NAME': 'A', 'GP': 10, 'EFF_PG': 20.0},
+            {'PLAYER_NAME': 'B', 'GP': 10, 'EFF_PG': 20.0},
+            {'PLAYER_NAME': 'C', 'GP': 10, 'EFF_PG': 20.0},
+            {'PLAYER_NAME': 'D', 'GP': 10, 'EFF_PG': 6.0},
+            {'PLAYER_NAME': 'E', 'GP': 10, 'EFF_PG': 8.0},
+        ])
+        engine.injuries_df = pd.DataFrame(
+            [{'player_name': 'E', 'status': 'Out', 'detail': 'Ankle'}]
+        )
+        res = self._rate(engine)
+
+        # healthy top-5 = 20, 20, 20, 8, 6 (avg 14.8), no bench left
+        self.assertAlmostEqual(res['full_roster_rating'], 82.9, delta=0.1)
+        # active core = 20, 20, 20, 6, 0 - E is out and must not take the floor
+        # 8 * 0.70 * (66 / 5) = 73.9
+        self.assertAlmostEqual(res['roster_rating'], 73.9, delta=0.2)
 
 
 if __name__ == '__main__':

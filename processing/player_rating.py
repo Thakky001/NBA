@@ -261,8 +261,11 @@ class PlayerRatingEngine:
 
     def calculate_team_roster_rating(self, team_name: str) -> Dict[str, Any]:
         """
-        Calculates a team's power rating by aggregating the EFF_PG of its top 8 
-        active players based on current ESPN roster.
+        Calculates a team's power rating from the EFF_PG of its eight best
+        players on the current ESPN roster: 70% weight on the top five and 30%
+        on the next three, scaled to an eight-man rotation. The healthy rating
+        ranks by EFF; the active rating ranks by EFF after injuries are applied.
+        Neither reads tonight's RotoWire lineup, which only drives the card.
         """
         self._refresh_injuries()
 
@@ -585,9 +588,6 @@ class PlayerRatingEngine:
                     s['injury_status'] = None
                     del s['is_unmatched']
 
-        # Bench candidates from active roster excluding original starters
-        bench_candidates = [p for p in matched_ratings if id(p) not in starter_ids]
-
         if not matched_ratings:
             return result
 
@@ -604,91 +604,86 @@ class PlayerRatingEngine:
             key=lambda x: x.get('eff_pg', 0.0), reverse=True
         )[:3]
 
-        # Next-Man-Up Replacement Logic for Starters:
-        # If a starter is confirmed OUT or DOUBTFUL, promote top healthy bench player
-        active_starter_players = []
-
+        # Tonight's lineup card, as RotoWire reports it. Display only - the
+        # rating below no longer reads it.
+        lineup_players = []
         available_bench = sorted(
-            [p for p in bench_candidates if p.get('active_eff', 0) > 0],
-            key=lambda x: x['active_eff'],
-            reverse=True
+            [p for p in matched_ratings
+             if id(p) not in starter_ids and p.get('active_eff', 0.0) > 0],
+            key=lambda x: x.get('active_eff', 0.0),
+            reverse=True,
         )
-        promoted_ids = set()
-
         for s in starter_players:
-            st = str(s.get('injury_status') or '').upper()
-            is_out_or_doubtful = ('OUT' in st) or ('DOUBTFUL' in st)
-            if is_out_or_doubtful and available_bench:
-                promoted = available_bench.pop(0)
-                promoted_ids.add(id(promoted))
-                promoted_starter = dict(promoted)
-                # Next-Man-Up Replacement Floor: Ensure replacement player has NBA rotation floor (12.0 EFF)
-                if promoted_starter.get('active_eff', 0.0) < 12.0:
-                    promoted_starter['active_eff'] = 12.0
-                    promoted_starter['active_off_eff'] = round(12.0 * 0.65, 1)
-                    promoted_starter['active_def_eff'] = round(12.0 * 0.35, 1)
-                promoted_starter['position'] = s.get('position', promoted.get('position', ''))
-                promoted_starter['promoted_from_bench'] = True
-                promoted_starter['replaced_player'] = s.get('clean_name', s.get('name'))
-                active_starter_players.append(promoted_starter)
+            status = str(s.get('injury_status') or '').upper()
+            if ('OUT' in status or 'DOUBTFUL' in status) and available_bench:
+                cover = dict(available_bench.pop(0))
+                cover['position'] = s.get('position', cover.get('position', ''))
+                cover['promoted_from_bench'] = True
+                cover['replaced_player'] = s.get('clean_name', s.get('name'))
+                lineup_players.append(cover)
             else:
-                active_starter_players.append(s)
+                lineup_players.append(s)
 
-        # Remaining active bench candidates (excluding promoted bench players)
-        active_bench_candidates = [p for p in bench_candidates if id(p) not in promoted_ids]
-        bench_top_3 = sorted(active_bench_candidates, key=lambda x: x['active_eff'], reverse=True)[:3]
+        # Tonight's strength is the same 70/30 split over the best *available*
+        # players. RotoWire's five describe the lineup, not the strength of the
+        # roster, and one in three "Expected" lineups is wrong, so they cannot
+        # move the number: ranking by active_eff already drops anyone ruled out
+        # and scales anyone carrying a designation. It also puts the healthy and
+        # active ratings on one scale, where an injury used to cost 12% less on
+        # a team without a lineup because the two branches weighted players
+        # differently.
+        active_ranked = sorted(
+            matched_ratings, key=lambda x: x.get('active_eff', 0.0), reverse=True
+        )[:8]
 
-        # Use 70/30 weighting if we matched at least 4 starters and at least 1 bench
-        if len(starter_players) >= 4 and len(bench_top_3) >= 1:
-            s_n = len(full_starter_players)
-            b_n = len(bench_top_3)
-            fb_n = len(bench_full_top_3) if bench_full_top_3 else b_n
+        # A player who only enters the top five because a better one is out
+        # will play starter minutes, which his bench rate understates. Ruled-out
+        # bodies stay at zero - the floor is for replacements, not absences.
+        active_starter_players = []
+        for p in active_ranked[:5]:
+            eff_now = p.get('active_eff', 0.0)
+            if 0.0 < eff_now < 12.0 and id(p) not in full_starter_ids:
+                p = dict(p)
+                p['active_eff'] = 12.0
+                p['active_off_eff'] = round(12.0 * 0.65, 1)
+                p['active_def_eff'] = round(12.0 - p['active_off_eff'], 1)
+                p['promoted_from_bench'] = True
+            active_starter_players.append(p)
 
-            # Full health power (70% starters, 30% bench, scaled to 8-man level)
-            s_eff_avg = sum(s['eff_pg'] for s in full_starter_players) / s_n
-            b_eff_avg = sum(b['eff_pg'] for b in (bench_full_top_3 or bench_top_3)) / fb_n
-            full_roster_rating = 8.0 * (0.70 * s_eff_avg + 0.30 * b_eff_avg)
+        bench_top_3 = active_ranked[5:8]
+        rotation_display = active_starter_players + bench_top_3
 
-            s_off_avg = sum(s.get('off_eff', s['eff_pg'] * 0.65) for s in full_starter_players) / s_n
-            b_off_avg = sum(b.get('off_eff', b['eff_pg'] * 0.65) for b in (bench_full_top_3 or bench_top_3)) / fb_n
-            full_off_rating = 8.0 * (0.70 * s_off_avg + 0.30 * b_off_avg)
+        # One formula for every team: 70% of the value sits in the five best
+        # players, 30% in the next three, scaled to an eight-man rotation. Those
+        # weights are also closer to how a rotation really spends its minutes
+        # (~77/23) than an unweighted top-8 sum (62.5/37.5).
+        s_n = len(full_starter_players) or 1
+        fb_n = len(bench_full_top_3) or 1
+        s_eff_avg = sum(s['eff_pg'] for s in full_starter_players) / s_n
+        b_eff_avg = sum(b['eff_pg'] for b in bench_full_top_3) / fb_n
+        full_roster_rating = 8.0 * (0.70 * s_eff_avg + 0.30 * b_eff_avg)
 
-            s_def_avg = sum(s.get('def_eff', s['eff_pg'] * 0.35) for s in full_starter_players) / s_n
-            b_def_avg = sum(b.get('def_eff', b['eff_pg'] * 0.35) for b in (bench_full_top_3 or bench_top_3)) / fb_n
-            full_def_rating = 8.0 * (0.70 * s_def_avg + 0.30 * b_def_avg)
+        s_off_avg = sum(s.get('off_eff', s['eff_pg'] * 0.65) for s in full_starter_players) / s_n
+        b_off_avg = sum(b.get('off_eff', b['eff_pg'] * 0.65) for b in bench_full_top_3) / fb_n
+        full_off_rating = 8.0 * (0.70 * s_off_avg + 0.30 * b_off_avg)
 
-            # Active power (70% starters, 30% bench, scaled to 8-man level)
-            s_act_n = len(active_starter_players)
-            s_act_eff_avg = sum(s['active_eff'] for s in active_starter_players) / s_act_n
-            b_act_eff_avg = sum(b['active_eff'] for b in bench_top_3) / b_n
-            active_roster_rating = 8.0 * (0.70 * s_act_eff_avg + 0.30 * b_act_eff_avg)
+        s_def_avg = sum(s.get('def_eff', s['eff_pg'] * 0.35) for s in full_starter_players) / s_n
+        b_def_avg = sum(b.get('def_eff', b['eff_pg'] * 0.35) for b in bench_full_top_3) / fb_n
+        full_def_rating = 8.0 * (0.70 * s_def_avg + 0.30 * b_def_avg)
 
-            s_act_off_avg = sum(s.get('active_off_eff', s['active_eff'] * 0.65) for s in active_starter_players) / s_act_n
-            b_act_off_avg = sum(b.get('active_off_eff', b['active_eff'] * 0.65) for b in bench_top_3) / b_n
-            active_off_rating = 8.0 * (0.70 * s_act_off_avg + 0.30 * b_act_off_avg)
+        s_act_n = len(active_starter_players) or 1
+        b_act_n = len(bench_top_3) or 1
+        s_act_eff_avg = sum(s['active_eff'] for s in active_starter_players) / s_act_n
+        b_act_eff_avg = sum(b['active_eff'] for b in bench_top_3) / b_act_n
+        active_roster_rating = 8.0 * (0.70 * s_act_eff_avg + 0.30 * b_act_eff_avg)
 
-            s_act_def_avg = sum(s.get('active_def_eff', s['active_eff'] * 0.35) for s in active_starter_players) / s_act_n
-            b_act_def_avg = sum(b.get('active_def_eff', b['active_eff'] * 0.35) for b in bench_top_3) / b_n
-            active_def_rating = 8.0 * (0.70 * s_act_def_avg + 0.30 * b_act_def_avg)
+        s_act_off_avg = sum(s.get('active_off_eff', s['active_eff'] * 0.65) for s in active_starter_players) / s_act_n
+        b_act_off_avg = sum(b.get('active_off_eff', b['active_eff'] * 0.65) for b in bench_top_3) / b_act_n
+        active_off_rating = 8.0 * (0.70 * s_act_off_avg + 0.30 * b_act_off_avg)
 
-            rotation_display = active_starter_players + bench_top_3
-        else:
-            # Fallback to legacy Top 8 calculation
-            full_top_8 = sorted(matched_ratings, key=lambda x: x['eff_pg'], reverse=True)[:8]
-            if not full_top_8:
-                return result
-            full_roster_rating = sum(p['eff_pg'] for p in full_top_8)
-            full_off_rating = sum(p.get('off_eff', p['eff_pg'] * 0.65) for p in full_top_8)
-            full_def_rating = sum(p.get('def_eff', p['eff_pg'] * 0.35) for p in full_top_8)
-
-            active_top_8 = sorted(matched_ratings, key=lambda x: x['active_eff'], reverse=True)[:8]
-            active_roster_rating = sum(p['active_eff'] for p in active_top_8)
-            active_off_rating = sum(p.get('active_off_eff', p['active_eff'] * 0.65) for p in active_top_8)
-            active_def_rating = sum(p.get('active_def_eff', p['active_eff'] * 0.35) for p in active_top_8)
-            rotation_display = active_top_8
-            if not starter_players:
-                starter_players = active_top_8[:5]
-            active_starter_players = starter_players
+        s_act_def_avg = sum(s.get('active_def_eff', s['active_eff'] * 0.35) for s in active_starter_players) / s_act_n
+        b_act_def_avg = sum(b.get('active_def_eff', b['active_eff'] * 0.35) for b in bench_top_3) / b_act_n
+        active_def_rating = 8.0 * (0.70 * s_act_def_avg + 0.30 * b_act_def_avg)
 
         # Team Injury Penalty Cap: losing key players moves the spread by at most
         # ~4 points. The cap used to live inside the 70/30 branch only, so teams
@@ -730,6 +725,8 @@ class PlayerRatingEngine:
         result['active_off_rating'] = float(round(active_off_rating, 2))
         result['active_def_rating'] = float(round(active_def_rating, 2))
         result['injuries'] = team_injuries
+        # The lineup card keeps RotoWire's five (with positions) so the UI still
+        # shows who is expected to start; the rating no longer reads it.
         result['starters'] = [
             {
                 'name': p.get('clean_name', p['name']),
@@ -738,7 +735,7 @@ class PlayerRatingEngine:
                 'active_eff': round(float(p.get('active_eff', 0.0)), 1),
                 'injury_status': p.get('injury_status')
             }
-            for p in active_starter_players
+            for p in (lineup_players or active_starter_players)
         ]
         result['lineup_status'] = lineup_status
         result['is_lineup_confirmed'] = is_confirmed
