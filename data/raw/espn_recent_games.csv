@@ -286,17 +286,17 @@ game_id,date,status,period,clock,clock_detail,season_type,home_team,home_id,home
 401910002,2026-11-18T00:30Z,STATUS_FINAL,4,12:00,Final,2,Toronto Raptors,28,102,New York Knicks,18,111,,,,,Scotiabank Arena
 401910003,2026-11-18T01:00Z,STATUS_FINAL,4,12:00,Final,2,Minnesota Timberwolves,16,106,Portland Trail Blazers,22,105,,,,,Target Center
 401910004,2026-11-18T01:00Z,STATUS_FINAL,4,12:00,Final,2,San Antonio Spurs,24,93,Detroit Pistons,8,105,,,,,Frost Bank Center
-401910006,2026-11-18T03:30Z,STATUS_IN_PROGRESS,1,2:49,2:49 - 1st Quarter,2,LA Clippers,12,24,Utah Jazz,26,25,,,,,Intuit Dome
-401910005,2026-11-18T04:00Z,STATUS_SCHEDULED,0,0.0,"Tue, November 17th at 11:00 PM EST",2,Los Angeles Lakers,13,0,Charlotte Hornets,30,0,LAL -7.5,221.5,,,crypto.com Arena
-401910007,2026-11-19T00:00Z,STATUS_SCHEDULED,0,0.0,"Wed, November 18th at 7:00 PM EST",2,Cleveland Cavaliers,5,0,Memphis Grizzlies,29,0,CLE -5.5,234.5,,,Rocket Arena
-401910008,2026-11-19T00:00Z,STATUS_SCHEDULED,0,0.0,"Wed, November 18th at 7:00 PM EST",2,Indiana Pacers,11,0,Houston Rockets,10,0,HOU -6.5,224.5,,,Gainbridge Fieldhouse
-401910009,2026-11-19T00:00Z,STATUS_SCHEDULED,0,0.0,"Wed, November 18th at 7:00 PM EST",2,Miami Heat,14,0,Milwaukee Bucks,15,0,MIA -12.5,236.5,,,Kaseya Center
+401910006,2026-11-18T03:30Z,STATUS_FINAL,4,12:00,Final,2,LA Clippers,12,107,Utah Jazz,26,132,,,,,Intuit Dome
+401910005,2026-11-18T04:00Z,STATUS_FINAL,5,5:00,Final/OT,2,Los Angeles Lakers,13,118,Charlotte Hornets,30,114,,,,,crypto.com Arena
+401910007,2026-11-19T00:00Z,STATUS_SCHEDULED,0,0.0,"Wed, November 18th at 7:00 PM EST",2,Cleveland Cavaliers,5,0,Memphis Grizzlies,29,0,CLE -4.5,234.5,,,Rocket Arena
+401910008,2026-11-19T00:00Z,STATUS_SCHEDULED,0,0.0,"Wed, November 18th at 7:00 PM EST",2,Indiana Pacers,11,0,Houston Rockets,10,0,HOU -7.5,225.5,,,Gainbridge Fieldhouse
+401910009,2026-11-19T00:00Z,STATUS_SCHEDULED,0,0.0,"Wed, November 18th at 7:00 PM EST",2,Miami Heat,14,0,Milwaukee Bucks,15,0,MIA -11.5,237.5,,,Kaseya Center
 401910010,2026-11-19T00:00Z,STATUS_SCHEDULED,0,0.0,"Wed, November 18th at 7:00 PM EST",2,Orlando Magic,19,0,Philadelphia 76ers,20,0,PHI -1.5,222.5,,,Kia Center
-401910011,2026-11-19T00:30Z,STATUS_SCHEDULED,0,0.0,"Wed, November 18th at 7:30 PM EST",2,Brooklyn Nets,17,0,Chicago Bulls,4,0,BKN -2.5,237.5,,,Barclays Center
-401910012,2026-11-19T00:30Z,STATUS_SCHEDULED,0,0.0,"Wed, November 18th at 7:30 PM EST",2,Toronto Raptors,28,0,Washington Wizards,27,0,TOR -7.5,227.5,,,Scotiabank Arena
-401910013,2026-11-19T01:00Z,STATUS_SCHEDULED,0,0.0,"Wed, November 18th at 8:00 PM EST",2,New Orleans Pelicans,3,0,Detroit Pistons,8,0,,,,,Smoothie King Center
+401910011,2026-11-19T00:30Z,STATUS_SCHEDULED,0,0.0,"Wed, November 18th at 7:30 PM EST",2,Brooklyn Nets,17,0,Chicago Bulls,4,0,BKN -2.5,239.5,,,Barclays Center
+401910012,2026-11-19T00:30Z,STATUS_SCHEDULED,0,0.0,"Wed, November 18th at 7:30 PM EST",2,Toronto Raptors,28,0,Washington Wizards,27,0,TOR -6.5,228.5,,,Scotiabank Arena
+401910013,2026-11-19T01:00Z,STATUS_SCHEDULED,0,0.0,"Wed, November 18th at 8:00 PM EST",2,New Orleans Pelicans,3,0,Detroit Pistons,8,0,DET -6.5,227.5,,,Smoothie King Center
 401910014,2026-11-19T01:00Z,STATUS_SCHEDULED,0,0.0,"Wed, November 18th at 8:00 PM EST",2,Oklahoma City Thunder,25,0,Atlanta Hawks,1,0,OKC -6.5,228.5,,,Paycom Center
-401910016,2026-11-19T01:00Z,STATUS_SCHEDULED,0,0.0,"Wed, November 18th at 8:00 PM EST",2,Dallas Mavericks,6,0,Golden State Warriors,9,0,DAL -5.5,221.5,,,American Airlines Center
-401910015,2026-11-19T02:30Z,STATUS_SCHEDULED,0,0.0,"Wed, November 18th at 9:30 PM EST",2,Denver Nuggets,7,0,Boston Celtics,2,0,BOS -2.5,221.5,,,Ball Arena
-401910017,2026-11-19T03:00Z,STATUS_SCHEDULED,0,0.0,"Wed, November 18th at 10:00 PM EST",2,Los Angeles Lakers,13,0,Utah Jazz,26,0,,,,,crypto.com Arena
-401910018,2026-11-19T03:00Z,STATUS_SCHEDULED,0,0.0,"Wed, November 18th at 10:00 PM EST",2,Sacramento Kings,23,0,Phoenix Suns,21,0,PHX -6.5,228.5,,,Golden 1 Center
+401910016,2026-11-19T01:00Z,STATUS_SCHEDULED,0,0.0,"Wed, November 18th at 8:00 PM EST",2,Dallas Mavericks,6,0,Golden State Warriors,9,0,DAL -4.5,224.5,,,American Airlines Center
+401910015,2026-11-19T02:30Z,STATUS_SCHEDULED,0,0.0,"Wed, November 18th at 9:30 PM EST",2,Denver Nuggets,7,0,Boston Celtics,2,0,BOS -2.5,220.5,,,Ball Arena
+401910017,2026-11-19T03:00Z,STATUS_SCHEDULED,0,0.0,"Wed, November 18th at 10:00 PM EST",2,Los Angeles Lakers,13,0,Utah Jazz,26,0,LAL -10.5,228.5,,,crypto.com Arena
+401910018,2026-11-19T03:00Z,STATUS_SCHEDULED,0,0.0,"Wed, November 18th at 10:00 PM EST",2,Sacramento Kings,23,0,Phoenix Suns,21,0,PHX -6.5,227.5,,,Golden 1 Center
