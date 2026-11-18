@@ -150,6 +150,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 5107199,Daniss Jenkins,24,Guard,"6' 4""",165 lbs,25,3.0,St. John's,8,Detroit Pistons
 4395702,Isaiah Joe,17,Guard,"6' 4""",165 lbs,27,7.0,Arkansas,8,Detroit Pistons
 5107818,Isaac Jones,13,Center,"6' 8""",245 lbs,26,3.0,Washington State,8,Detroit Pistons
+4700852,Chaz Lanier,8,Guard,"6' 3""",206 lbs,24,2.0,Tennessee,8,Detroit Pistons
 5258459,Ebuka Okorie,23,Guard,"6' 2""",186 lbs,19,0.0,Stanford,8,Detroit Pistons
 5037878,Ugonna Onyenso,34,Center,"7' 0""",236 lbs,22,0.0,Virginia,8,Detroit Pistons
 2990962,Taurean Prince,12,Forward,"6' 6""",218 lbs,32,11.0,Baylor,8,Detroit Pistons
@@ -489,6 +490,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 4432241,Jamal Shead,23,Guard,"6' 1""",200 lbs,24,3.0,Houston,28,Toronto Raptors
 4397784,Malachi Smith,18,Guard,"6' 4""",205 lbs,26,2.0,Gonzaga,28,Toronto Raptors
 4684272,Ja'Kobe Walter,14,Guard,"6' 4""",180 lbs,22,3.0,Baylor,28,Toronto Raptors
+4684682,Jonas Aidoo,13,Center,"6' 11""",240 lbs,23,0.0,Arkansas,26,Utah Jazz
 4873138,Ace Bailey,19,Guard,"6' 9""",200 lbs,20,2.0,Rutgers,26,Utah Jazz
 4277919,Mo Bamba,44,Center,"7' 0""",231 lbs,28,9.0,Texas,26,Utah Jazz
 4065673,Tony Bradley,13,Center,"6' 10""",248 lbs,28,9.0,North Carolina,26,Utah Jazz
