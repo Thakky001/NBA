@@ -293,13 +293,13 @@ game_id,date,status,period,clock,clock_detail,season_type,home_team,home_id,home
 401910010,2026-11-19T00:00Z,STATUS_FINAL,4,12:00,Final,2,Orlando Magic,19,116,Philadelphia 76ers,20,121,,,,,Kia Center
 401910011,2026-11-19T00:30Z,STATUS_FINAL,4,12:00,Final,2,Brooklyn Nets,17,107,Chicago Bulls,4,137,,,,,Barclays Center
 401910012,2026-11-19T00:30Z,STATUS_FINAL,4,12:00,Final,2,Toronto Raptors,28,99,Washington Wizards,27,103,,,,,Scotiabank Arena
-401910013,2026-11-19T01:00Z,STATUS_FINAL,4,0.0,Final,2,New Orleans Pelicans,3,109,Detroit Pistons,8,122,,,,,Smoothie King Center
-401910014,2026-11-19T01:00Z,STATUS_FINAL,4,0.0,Final,2,Oklahoma City Thunder,25,112,Atlanta Hawks,1,117,,,,,Paycom Center
+401910013,2026-11-19T01:00Z,STATUS_FINAL,4,12:00,Final,2,New Orleans Pelicans,3,109,Detroit Pistons,8,122,,,,,Smoothie King Center
+401910014,2026-11-19T01:00Z,STATUS_FINAL,4,12:00,Final,2,Oklahoma City Thunder,25,112,Atlanta Hawks,1,117,,,,,Paycom Center
 401910016,2026-11-19T01:00Z,STATUS_FINAL,4,12:00,Final,2,Dallas Mavericks,6,116,Golden State Warriors,9,94,,,,,American Airlines Center
-401910015,2026-11-19T02:30Z,STATUS_HALFTIME,2,0.0,Halftime,2,Denver Nuggets,7,49,Boston Celtics,2,61,,,,,Ball Arena
-401910017,2026-11-19T03:00Z,STATUS_IN_PROGRESS,2,6:15,6:15 - 2nd Quarter,2,Los Angeles Lakers,13,43,Utah Jazz,26,43,,,,,crypto.com Arena
-401910018,2026-11-19T03:00Z,STATUS_IN_PROGRESS,2,2:39,2:39 - 2nd Quarter,2,Sacramento Kings,23,52,Phoenix Suns,21,62,,,,,Golden 1 Center
-401910019,2026-11-20T01:00Z,STATUS_SCHEDULED,0,0.0,"Thu, November 19th at 8:00 PM EST",2,Memphis Grizzlies,29,0,Golden State Warriors,9,0,,,,,FedExForum
-401910020,2026-11-20T01:00Z,STATUS_SCHEDULED,0,0.0,"Thu, November 19th at 8:00 PM EST",2,Milwaukee Bucks,15,0,Portland Trail Blazers,22,0,,,,,Fiserv Forum
-401910021,2026-11-20T01:00Z,STATUS_SCHEDULED,0,0.0,"Thu, November 19th at 8:00 PM EST",2,Minnesota Timberwolves,16,0,New York Knicks,18,0,,,,,Target Center
-401910022,2026-11-20T01:00Z,STATUS_SCHEDULED,0,0.0,"Thu, November 19th at 8:00 PM EST",2,San Antonio Spurs,24,0,LA Clippers,12,0,SA -16.5,225.5,,,Frost Bank Center
+401910015,2026-11-19T02:30Z,STATUS_FINAL,4,12:00,Final,2,Denver Nuggets,7,105,Boston Celtics,2,101,,,,,Ball Arena
+401910017,2026-11-19T03:00Z,STATUS_FINAL,4,12:00,Final,2,Los Angeles Lakers,13,97,Utah Jazz,26,109,,,,,crypto.com Arena
+401910018,2026-11-19T03:00Z,STATUS_FINAL,4,12:00,Final,2,Sacramento Kings,23,107,Phoenix Suns,21,128,,,,,Golden 1 Center
+401910019,2026-11-20T01:00Z,STATUS_SCHEDULED,0,0.0,"Thu, November 19th at 8:00 PM EST",2,Memphis Grizzlies,29,0,Golden State Warriors,9,0,MEM -6.5,225.5,,,FedExForum
+401910020,2026-11-20T01:00Z,STATUS_SCHEDULED,0,0.0,"Thu, November 19th at 8:00 PM EST",2,Milwaukee Bucks,15,0,Portland Trail Blazers,22,0,POR -10.5,229.5,,,Fiserv Forum
+401910021,2026-11-20T01:00Z,STATUS_SCHEDULED,0,0.0,"Thu, November 19th at 8:00 PM EST",2,Minnesota Timberwolves,16,0,New York Knicks,18,0,NY -1.5,216.5,,,Target Center
+401910022,2026-11-20T01:00Z,STATUS_SCHEDULED,0,0.0,"Thu, November 19th at 8:00 PM EST",2,San Antonio Spurs,24,0,LA Clippers,12,0,SA -15.5,225.5,,,Frost Bank Center
