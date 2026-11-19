@@ -127,6 +127,46 @@ class TestFeatureEngineering(unittest.TestCase):
         splits = fe.get_home_away_splits('Boston Celtics', before_date='2026-01-11')
         self.assertEqual(splits['home_wins'] + splits['home_losses'], 1)
 
+    def test_impossible_game_count_fails_closed(self):
+        """A count the calendar cannot support must not read as a mature sample.
+
+        This is the shape of a real bug: a prior season's log leaked into the
+        current one, so a team "had played" 46 games three days into the season.
+        That switched off the early-season market anchor and the STRONG sample
+        floor at the same time.
+        """
+        fe = FeatureEngineer(self.sample_logs)
+        result = {}
+        count = fe._validated_games_played(
+            46, pd.Timestamp('2026-10-23'), pd.Timestamp('2026-10-01'), result)
+        self.assertEqual(count, 0)
+        self.assertTrue(result['dq_games_played_invalid'])
+
+    def test_plausible_game_count_is_untouched(self):
+        fe = FeatureEngineer(self.sample_logs)
+        result = {}
+        count = fe._validated_games_played(
+            12, pd.Timestamp('2026-11-10'), pd.Timestamp('2026-10-01'), result)
+        self.assertEqual(count, 12)
+        self.assertNotIn('dq_games_played_invalid', result)
+
+    def test_impossible_count_marks_the_matchup_unreliable(self):
+        # 23 distinct nights, duplicated to 46 rows: the duplication failure mode.
+        dates = pd.date_range('2026-10-01', '2026-10-22', freq='D')
+        rows = []
+        for day in dates:
+            for _ in range(2):
+                rows.append({
+                    'date': day, 'home_team': 'Boston Celtics', 'away_team': 'Miami Heat',
+                    'home_score': 110, 'away_score': 100,
+                })
+        fe = FeatureEngineer(pd.DataFrame(rows))
+        features = fe.compute_matchup_features(
+            'Boston Celtics', 'Miami Heat', game_date='2026-10-23')
+        self.assertEqual(features['home_games_played'], 0)
+        self.assertTrue(features['dq_games_played_invalid'])
+        self.assertFalse(features['dq_is_reliable'])
+
 
 
 

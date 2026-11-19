@@ -80,6 +80,27 @@ class FeatureEngineer:
                 from config import normalize_team_name
                 self.team_advanced['team'] = self.team_advanced['team'].apply(lambda t: normalize_team_name(str(t)) or t)
 
+    def _validated_games_played(self, count: Optional[int], game_date, season_start, result: dict) -> int:
+        """Return the game count, or zero when the calendar says it is impossible.
+
+        A team plays at most one game per day, so a count above that is a data
+        error - it happened when a previous season's log leaked into the current
+        one. Left in place the count reads as a mature sample and switches off
+        both the early-season market anchor and the STRONG sample floor, which
+        is the opposite of failing closed. There is no safe way to guess the
+        real number, so it becomes zero and the row is flagged unreliable.
+        """
+        if count is None:
+            return 0
+        try:
+            allowed = (pd.Timestamp(game_date) - pd.Timestamp(season_start)).days
+        except (TypeError, ValueError):
+            return int(count)
+        if allowed >= 0 and int(count) > allowed:
+            result['dq_games_played_invalid'] = True
+            return 0
+        return int(count)
+
     def _get_team_games(self, team: str, before_date: Optional[pd.Timestamp] = None,
                         current_season_only: bool = False,
                         regular_season_only: bool = False) -> pd.DataFrame:
@@ -674,7 +695,7 @@ class FeatureEngineer:
         if not h_games.empty:
             if 'home_score' in h_games.columns:
                 h_games = h_games[(h_games['home_score'].notna()) & (h_games['home_score'] > 0)]
-            result['home_games_played'] = len(h_games)
+            result['home_games_played'] = self._validated_games_played(len(h_games), g_dt, season_start, result)
         else:
             result['home_games_played'] = 0
             
@@ -682,7 +703,7 @@ class FeatureEngineer:
         if not a_games.empty:
             if 'home_score' in a_games.columns:
                 a_games = a_games[(a_games['home_score'].notna()) & (a_games['home_score'] > 0)]
-            result['away_games_played'] = len(a_games)
+            result['away_games_played'] = self._validated_games_played(len(a_games), g_dt, season_start, result)
         else:
             result['away_games_played'] = 0
         
@@ -712,9 +733,14 @@ class FeatureEngineer:
         dq_missing_net_rating = (result.get('home_net_rating') is None or result.get('away_net_rating') is None)
         dq_extreme_roster_gap = roster_gap >= 30.0
         dq_low_sample = min(result.get('home_games_played', 20), result.get('away_games_played', 20)) < 5
+        dq_games_played_invalid = result.get('dq_games_played_invalid', False)
 
         # Matchup is unreliable if data is stale, or if extreme roster gap is paired with missing net rating or unconfirmed lineups
-        dq_is_reliable = not (dq_stale_data or (dq_extreme_roster_gap and (dq_unconfirmed_lineup or dq_missing_net_rating)))
+        dq_is_reliable = not (
+            dq_stale_data
+            or dq_games_played_invalid
+            or (dq_extreme_roster_gap and (dq_unconfirmed_lineup or dq_missing_net_rating))
+        )
 
         result['data_freshness'] = is_fresh
         result['data_freshness_detail'] = freshness_reason
@@ -723,6 +749,7 @@ class FeatureEngineer:
         result['dq_missing_net_rating'] = dq_missing_net_rating
         result['dq_extreme_roster_gap'] = dq_extreme_roster_gap
         result['dq_low_sample'] = dq_low_sample
+        result['dq_games_played_invalid'] = dq_games_played_invalid
         result['dq_roster_gap'] = round(roster_gap, 1)
         result['dq_is_reliable'] = dq_is_reliable
         
