@@ -549,8 +549,9 @@ def main(argv: Optional[list] = None) -> int:
         return 1
     frame = _prepare(frame, load_team_game_log())
 
-    corrected = int(frame["true_gp"].ne(frame["min_games"]).sum())
-    print(f"graded rows {len(frame)}   provably wrong games-played {corrected}")
+    corrected = int((frame["min_games"].notna() & frame["true_gp"].ne(frame["min_games"])).sum())
+    missing = int(frame["min_games"].isna().sum())
+    print(f"graded rows {len(frame)}   wrong games-played {corrected}   no games count {missing}")
     print()
     print(f"{'variant':<30} {'n':>4}  {'win%':>6}  {'ROI':>7}  CLV (95% CI)")
     print("-" * 88)
