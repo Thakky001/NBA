@@ -89,6 +89,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 4431687,Patrick Williams,44,Forward,"6' 6""",215 lbs,25,7.0,Florida State,4,Chicago Bulls
 5095151,Caleb Wilson,8,Forward,"6' 9""",211 lbs,20,0.0,North Carolina,4,Chicago Bulls
 4066328,Jarrett Allen,31,Center,"6' 9""",243 lbs,28,10.0,Texas,5,Cleveland Cavaliers
+4702099,Zack Austin,55,Guard,"6' 5""",216 lbs,25,1.0,Pittsburgh,5,Cleveland Cavaliers
 3934723,Thomas Bryant,3,Center,"6' 9""",248 lbs,29,10.0,Indiana,5,Cleveland Cavaliers
 4997530,Khalifa Diop,18,Center,"6' 11""",231 lbs,24,0.0,,5,Cleveland Cavaliers
 3992,James Harden,1,Guard,"6' 5""",220 lbs,37,18.0,Arizona State,5,Cleveland Cavaliers
@@ -355,7 +356,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 4432808,James Wiseman,35,Center,"6' 11""",240 lbs,25,7.0,Memphis,18,New York Knicks
 4684208,Brooks Barnhizer,23,Forward,"6' 6""",226 lbs,24,2.0,Northwestern,25,Oklahoma City Thunder
 2991350,Alex Caruso,9,Guard,"6' 5""",186 lbs,32,10.0,Texas A&M,25,Oklahoma City Thunder
-4702384,Nique Clifford,,Guard,"6' 5""",175 lbs,24,2.0,Colorado State,25,Oklahoma City Thunder
+4702384,Nique Clifford,18,Guard,"6' 5""",175 lbs,24,2.0,Colorado State,25,Oklahoma City Thunder
 5105800,Josh Dix,21,Guard,"6' 5""",206 lbs,22,0.0,Creighton,25,Oklahoma City Thunder
 4278073,Shai Gilgeous-Alexander,2,Guard,"6' 6""",195 lbs,28,9.0,Kentucky,25,Oklahoma City Thunder
 4222252,Isaiah Hartenstein,55,Center,"7' 0""",250 lbs,28,9.0,,25,Oklahoma City Thunder
