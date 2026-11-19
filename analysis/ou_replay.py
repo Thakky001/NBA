@@ -67,6 +67,10 @@ LEDGER_DATE_OFFSET_DAYS = 1
 
 CLOSES_FILENAME = "espn_closing_lines.csv"
 
+#: Point-in-time team ratings rebuilt from the per-game log by
+#: ``scripts/backfill_ratings.py``.
+RATINGS_PIT_FILENAME = "nba_api_ratings_pit.csv"
+
 _PICK_OVER = "OVER"
 _PICK_UNDER = "UNDER"
 
@@ -223,6 +227,77 @@ def reprice(
     raw = raw - shrink + float(raw_shift)
     weight = stored_weight if new_weight is None else float(new_weight)
     return round((raw - float(line)) * (1.0 - weight), 4)
+
+
+def oliver_raw_total(
+    *,
+    home_pace: float,
+    away_pace: float,
+    league_pace: float,
+    home_ortg: float,
+    home_drtg: float,
+    away_ortg: float,
+    away_drtg: float,
+    min_games: Optional[float] = None,
+) -> float:
+    """Pre-anchor total from the possession model, mirrors the analyzer.
+
+    Kept in one place so a re-priced row differs from the recorded one only
+    where the inputs changed, never because two copies of the formula drifted.
+    """
+    expected_pace = float(home_pace) + float(away_pace) - float(league_pace)
+    home_eff = (float(home_ortg) + float(away_drtg)) / 2.0
+    away_eff = (float(away_ortg) + float(home_drtg)) / 2.0
+    raw = expected_pace * (home_eff / 100.0) + expected_pace * (away_eff / 100.0)
+    return raw - early_season_shrinkage(min_games)
+
+
+def implied_market_weight(line: float, edge: float, raw_stored: float) -> float:
+    """Recover the anchoring weight a row was scored with.
+
+    ``edge = (raw - line) * (1 - weight)`` is invertible, which lets a variant
+    reuse the weight production actually applied instead of assuming one.
+    """
+    gap = float(raw_stored) - float(line)
+    if not np.isfinite(gap) or abs(gap) < 1e-9:
+        return float("nan")
+    return 1.0 - float(edge) / gap
+
+
+def rating_edge_delta(raw_stored: float, raw_new: float, weight: float) -> float:
+    """Edge change from swapping ratings, holding the anchoring weight fixed."""
+    return round((float(raw_new) - float(raw_stored)) * (1.0 - float(weight)), 4)
+
+
+def load_ratings_pit(path: Optional[str] = None) -> pd.DataFrame:
+    """Load the point-in-time ratings table, empty frame when absent."""
+    path = path or os.path.join(RAW_DIR, RATINGS_PIT_FILENAME)
+    if not os.path.exists(path):
+        logger.warning(f"point-in-time ratings not found at {path}")
+        return pd.DataFrame(columns=["team", "snapshot_at", "gp", "pace",
+                                     "off_rating", "def_rating", "net_rating"])
+    frame = pd.read_csv(path)
+    frame["snapshot_at"] = pd.to_datetime(frame["snapshot_at"], errors="coerce", utc=True)
+    return frame
+
+
+def ratings_for(ratings: pd.DataFrame, team: str, game_date: Any) -> Optional[pd.Series]:
+    """Latest rating snapshot usable for a game on ``game_date`` (a US date).
+
+    Snapshots are stamped at 00:00 UTC of the US date and hold only games
+    played before it, so the same date is eligible and the next one is not.
+    """
+    if ratings is None or ratings.empty:
+        return None
+    norm = normalize_team_name(str(team)) or str(team)
+    cutoff = pd.Timestamp(game_date)
+    if cutoff.tzinfo is None:
+        cutoff = cutoff.tz_localize("UTC")
+    cutoff = cutoff.normalize()
+    rows = ratings[(ratings["team"] == norm) & (ratings["snapshot_at"] <= cutoff)]
+    if rows.empty:
+        return None
+    return rows.sort_values("snapshot_at").iloc[-1]
 
 
 # ---------------------------------------------------------------------------
@@ -492,10 +567,15 @@ __all__ = [
     "early_season_shrinkage",
     "format_summary",
     "games_played_as_of",
+    "implied_market_weight",
     "load_closes",
+    "load_ratings_pit",
     "load_replay_frame",
     "load_team_game_log",
+    "oliver_raw_total",
     "plays_impossible_count",
+    "rating_edge_delta",
+    "ratings_for",
     "raw_projection",
     "replay",
     "reprice",

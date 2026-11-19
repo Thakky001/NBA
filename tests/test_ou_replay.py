@@ -18,8 +18,12 @@ from analysis.ou_replay import (
     decide,
     early_season_shrinkage,
     games_played_as_of,
+    implied_market_weight,
     main,
+    oliver_raw_total,
     plays_impossible_count,
+    rating_edge_delta,
+    ratings_for,
     raw_projection,
     replay,
     reprice,
@@ -278,6 +282,66 @@ class TestCommandLine(unittest.TestCase):
         self.assertEqual(code, 0)
         self.assertIn("baseline", printed)
         self.assertIn("games-played corrected", printed)
+
+
+class TestOliverRawTotal(unittest.TestCase):
+    def test_reproduces_the_analyzer_formula(self):
+        # pace 100+100-100 = 100; efficiencies 110 and 120 -> 1.10 + 1.20
+        raw = oliver_raw_total(
+            home_pace=100.0, away_pace=100.0, league_pace=100.0,
+            home_ortg=110.0, home_drtg=115.0,
+            away_ortg=120.0, away_drtg=105.0,
+        )
+        # home_eff = (110+105)/2 = 107.5, away_eff = (120+115)/2 = 117.5
+        self.assertAlmostEqual(raw, 100.0 * (1.075 + 1.175))
+
+    def test_early_season_shrinkage_is_subtracted(self):
+        kwargs = dict(home_pace=100.0, away_pace=100.0, league_pace=100.0,
+                      home_ortg=110.0, home_drtg=115.0,
+                      away_ortg=120.0, away_drtg=105.0)
+        full = oliver_raw_total(**kwargs, min_games=25)
+        early = oliver_raw_total(**kwargs, min_games=0)
+        self.assertAlmostEqual(full - early, 2.5)
+
+
+class TestMarketWeightRecovery(unittest.TestCase):
+    def test_inverts_the_anchoring(self):
+        self.assertAlmostEqual(implied_market_weight(220.0, 3.0, 230.0), 0.70)
+        self.assertAlmostEqual(implied_market_weight(220.0, -4.0, 210.0), 0.60)
+
+    def test_degenerate_gap_is_nan(self):
+        self.assertTrue(np.isnan(implied_market_weight(220.0, 3.0, 220.0)))
+
+    def test_edge_delta_is_scaled_by_the_unanchored_share(self):
+        # +2 points of raw projection at weight 0.75 is +0.5 of edge.
+        self.assertAlmostEqual(rating_edge_delta(228.0, 230.0, 0.75), 0.5)
+
+
+class TestRatingsFor(unittest.TestCase):
+    def setUp(self):
+        self.ratings = pd.DataFrame({
+            "team": ["Boston Celtics", "Boston Celtics", "Boston Celtics"],
+            "snapshot_at": pd.to_datetime([
+                "2026-11-10 00:00", "2026-11-15 00:00", "2026-11-20 00:00"]
+            ).tz_localize("UTC"),
+            "gp": [9, 12, 15],
+            "pace": [99.0, 100.0, 101.0],
+            "off_rating": [110.0, 112.0, 114.0],
+            "def_rating": [108.0, 109.0, 110.0],
+            "net_rating": [2.0, 3.0, 4.0],
+        })
+
+    def test_uses_the_same_day_snapshot_and_never_a_later_one(self):
+        row = ratings_for(self.ratings, "Boston Celtics", "2026-11-15")
+        self.assertEqual(int(row["gp"]), 12)
+
+    def test_falls_back_to_the_last_usable_snapshot(self):
+        row = ratings_for(self.ratings, "Boston Celtics", "2026-11-17")
+        self.assertEqual(int(row["gp"]), 12)
+
+    def test_returns_none_before_the_first_snapshot(self):
+        self.assertIsNone(ratings_for(self.ratings, "Boston Celtics", "2026-11-09"))
+        self.assertIsNone(ratings_for(self.ratings, "Nowhere Kings", "2026-11-15"))
 
 
 if __name__ == "__main__":
