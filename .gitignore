@@ -9,3 +9,4 @@ build/
 venv/
 catboost_info/
 graphify-out/cache/ast/
+reports/ou/
