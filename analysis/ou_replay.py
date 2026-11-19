@@ -59,6 +59,12 @@ EARLY_SEASON_GAMES = 20.0
 #: games-played values a row was scored with.
 SEASON_START = "2026-10-20"
 
+#: The ledger stamps each row with the date it was written, in Bangkok time,
+#: which is always one day after the US game date: a 7pm ET tip is 00:00Z the
+#: next day and the app records it that morning. Verified on all 221 ledger
+#: rows (170 tips 00:00-05:00Z, 51 tips 19:00-23:00Z).
+LEDGER_DATE_OFFSET_DAYS = 1
+
 CLOSES_FILENAME = "espn_closing_lines.csv"
 
 _PICK_OVER = "OVER"
@@ -423,9 +429,9 @@ def load_team_game_log() -> Optional[pd.DataFrame]:
 def games_played_as_of(team: str, game_date: Any, logs: Optional[pd.DataFrame] = None) -> Optional[int]:
     """Games a team had completed before its game on ``game_date``.
 
-    The ledger's ``date`` is the US game date (verified: it matches ``GAME_DATE``
-    exactly for every game present in both sources), so the filter is strictly
-    before that date and the game being priced is never counted.
+    ``game_date`` must be the **US game date** (see :func:`us_game_date`), so the
+    filter is strictly before that date and the game being priced is never
+    counted.
     """
     logs = load_team_game_log() if logs is None else logs
     if logs is None or logs.empty:
@@ -448,6 +454,17 @@ def plays_impossible_count(min_games: Optional[float], game_date: Any) -> bool:
     return min_games > days
 
 
+def us_game_date(ledger_date: Any) -> pd.Timestamp:
+    """US game date for a ledger row stamped with the recording date.
+
+    Every ledger row carries the Bangkok date it was written, which is one day
+    after the US slate it prices. Using the stamp directly counts the previous
+    night's game and excludes the one being priced, so the offset is applied here
+    instead of at each call site.
+    """
+    return pd.Timestamp(ledger_date).normalize() - pd.Timedelta(days=LEDGER_DATE_OFFSET_DAYS)
+
+
 def resolve_games_played(row: pd.Series, logs: Optional[pd.DataFrame] = None) -> Optional[float]:
     """The games count a row should be scored with.
 
@@ -459,10 +476,11 @@ def resolve_games_played(row: pd.Series, logs: Optional[pd.DataFrame] = None) ->
     stored = row.get("min_games")
     if stored is None or pd.isna(stored):
         return None
-    if not plays_impossible_count(stored, row.get("date")):
+    game_date = us_game_date(row.get("date"))
+    if not plays_impossible_count(stored, game_date):
         return float(stored)
-    home_gp = games_played_as_of(row.get("home_team"), row.get("date"), logs)
-    away_gp = games_played_as_of(row.get("away_team"), row.get("date"), logs)
+    home_gp = games_played_as_of(row.get("home_team"), game_date, logs)
+    away_gp = games_played_as_of(row.get("away_team"), game_date, logs)
     candidates = [g for g in (home_gp, away_gp) if g is not None]
     return float(min(candidates)) if candidates else None
 
@@ -483,6 +501,7 @@ __all__ = [
     "reprice",
     "resolve_games_played",
     "summarize",
+    "us_game_date",
 ]
 
 

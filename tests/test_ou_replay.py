@@ -25,6 +25,7 @@ from analysis.ou_replay import (
     reprice,
     resolve_games_played,
     summarize,
+    us_game_date,
 )
 
 
@@ -103,11 +104,16 @@ class TestGamesPlayed(unittest.TestCase):
             "OREB": [10, 10, 10, 10], "TOV": [12, 12, 12, 12], "PTS": [100, 100, 100, 100],
         })
 
-    def test_counts_only_games_before_the_ledger_date(self):
-        # The ledger date is the US game date, so a game on 2026-11-10 counts
+    def test_counts_only_games_before_the_us_game_date(self):
+        # The helper takes a US game date, so a game on 2026-11-10 counts
         # everything before it and not itself.
         self.assertEqual(games_played_as_of("Boston Celtics", "2026-11-10", self.logs), 2)
         self.assertEqual(games_played_as_of("Boston Celtics", "2026-11-11", self.logs), 3)
+
+    def test_ledger_stamp_maps_to_the_previous_us_date(self):
+        # Rows are written in Bangkok the morning after the US slate.
+        self.assertEqual(us_game_date("2026-11-19"), pd.Timestamp("2026-11-18"))
+        self.assertEqual(us_game_date(pd.Timestamp("2026-10-21 00:00")), pd.Timestamp("2026-10-20"))
 
     def test_unknown_team_returns_zero_not_none(self):
         self.assertEqual(games_played_as_of("Nowhere Kings", "2026-11-10", self.logs), 0)
@@ -123,16 +129,18 @@ class TestGamesPlayed(unittest.TestCase):
             "min_games": 46.0, "date": pd.Timestamp("2026-10-23"),
             "home_team": "Boston Celtics", "away_team": "Boston Celtics",
         })
-        # Two games before 2026-10-23 in the fixture above.
-        self.assertEqual(resolve_games_played(row, self.logs), 2.0)
+        # The stamp 10-23 prices the US game on 10-22, which is after only one
+        # completed Boston game (10-20).
+        self.assertEqual(resolve_games_played(row, self.logs), 1.0)
 
     def test_plausible_count_is_left_alone(self):
         # The live app may lag a slate behind; that is its own input, not an error.
         row = pd.Series({
-            "min_games": 3.0, "date": pd.Timestamp("2026-10-23"),
+            "min_games": 2.0, "date": pd.Timestamp("2026-10-23"),
             "home_team": "Boston Celtics", "away_team": "Boston Celtics",
         })
-        self.assertEqual(resolve_games_played(row, self.logs), 3.0)
+        # Two games by the US date 10-22 is possible, so it is not rewritten.
+        self.assertEqual(resolve_games_played(row, self.logs), 2.0)
 
 
 class TestGate(unittest.TestCase):
