@@ -1,5 +1,4 @@
 game_id,date,status,period,clock,clock_detail,season_type,home_team,home_id,home_score,away_team,away_id,away_score,spread,over_under,home_ml,away_ml,venue
-401873343,2026-05-24T00:00Z,STATUS_FINAL,4,0.0,Final,3,Cleveland Cavaliers,5,108,New York Knicks,18,121,,,,,Rocket Arena
 401873200,2026-05-25T00:00Z,STATUS_FINAL,4,0.0,Final,3,San Antonio Spurs,24,103,Oklahoma City Thunder,25,82,,,,,Frost Bank Center
 401873344,2026-05-26T00:00Z,STATUS_FINAL,4,12:00,Final,3,Cleveland Cavaliers,5,93,New York Knicks,18,130,,,,,Rocket Arena
 401873201,2026-05-27T00:30Z,STATUS_FINAL,4,12:00,Final,3,Oklahoma City Thunder,25,127,San Antonio Spurs,24,114,,,,,Paycom Center
@@ -299,7 +298,16 @@ game_id,date,status,period,clock,clock_detail,season_type,home_team,home_id,home
 401910015,2026-11-19T02:30Z,STATUS_FINAL,4,12:00,Final,2,Denver Nuggets,7,105,Boston Celtics,2,101,,,,,Ball Arena
 401910017,2026-11-19T03:00Z,STATUS_FINAL,4,12:00,Final,2,Los Angeles Lakers,13,97,Utah Jazz,26,109,,,,,crypto.com Arena
 401910018,2026-11-19T03:00Z,STATUS_FINAL,4,12:00,Final,2,Sacramento Kings,23,107,Phoenix Suns,21,128,,,,,Golden 1 Center
-401910019,2026-11-20T01:00Z,STATUS_SCHEDULED,0,0.0,"Thu, November 19th at 8:00 PM EST",2,Memphis Grizzlies,29,0,Golden State Warriors,9,0,MEM -6.5,225.5,,,FedExForum
-401910020,2026-11-20T01:00Z,STATUS_SCHEDULED,0,0.0,"Thu, November 19th at 8:00 PM EST",2,Milwaukee Bucks,15,0,Portland Trail Blazers,22,0,POR -10.5,229.5,,,Fiserv Forum
-401910021,2026-11-20T01:00Z,STATUS_SCHEDULED,0,0.0,"Thu, November 19th at 8:00 PM EST",2,Minnesota Timberwolves,16,0,New York Knicks,18,0,NY -1.5,216.5,,,Target Center
-401910022,2026-11-20T01:00Z,STATUS_SCHEDULED,0,0.0,"Thu, November 19th at 8:00 PM EST",2,San Antonio Spurs,24,0,LA Clippers,12,0,SA -15.5,225.5,,,Frost Bank Center
+401910019,2026-11-20T01:00Z,STATUS_FINAL,4,0.0,Final,2,Memphis Grizzlies,29,126,Golden State Warriors,9,98,,,,,FedExForum
+401910020,2026-11-20T01:00Z,STATUS_FINAL,4,0.0,Final,2,Milwaukee Bucks,15,114,Portland Trail Blazers,22,124,,,,,Fiserv Forum
+401910021,2026-11-20T01:00Z,STATUS_FINAL,4,0.0,Final,2,Minnesota Timberwolves,16,99,New York Knicks,18,102,,,,,Target Center
+401910022,2026-11-20T01:00Z,STATUS_FINAL,4,0.0,Final,2,San Antonio Spurs,24,124,LA Clippers,12,112,,,,,Frost Bank Center
+401909305,2026-11-21T00:00Z,STATUS_SCHEDULED,0,0.0,"Fri, November 20th at 7:00 PM EST",2,Atlanta Hawks,1,0,Charlotte Hornets,30,0,ATL -5.5,218.5,,,State Farm Arena
+401909306,2026-11-21T00:30Z,STATUS_SCHEDULED,0,0.0,"Fri, November 20th at 7:30 PM EST",2,Brooklyn Nets,17,0,Orlando Magic,19,0,ORL -5.5,222.5,,,Barclays Center
+401909307,2026-11-21T00:30Z,STATUS_SCHEDULED,0,0.0,"Fri, November 20th at 7:30 PM EST",2,Cleveland Cavaliers,5,0,Indiana Pacers,11,0,CLE -7.5,234.5,,,Rocket Arena
+401909308,2026-11-21T00:30Z,STATUS_SCHEDULED,0,0.0,"Fri, November 20th at 7:30 PM EST",2,Detroit Pistons,8,0,Toronto Raptors,28,0,DET -8.5,215.5,,,Little Caesars Arena
+401909309,2026-11-21T01:00Z,STATUS_SCHEDULED,0,0.0,"Fri, November 20th at 8:00 PM EST",2,Chicago Bulls,4,0,Washington Wizards,27,0,CHI -3.5,240.5,,,United Center
+401909310,2026-11-21T01:00Z,STATUS_SCHEDULED,0,0.0,"Fri, November 20th at 8:00 PM EST",2,Oklahoma City Thunder,25,0,New Orleans Pelicans,3,0,OKC -11.5,228.5,,,Paycom Center
+401909311,2026-11-21T02:30Z,STATUS_SCHEDULED,0,0.0,"Fri, November 20th at 9:30 PM EST",2,Utah Jazz,26,0,Phoenix Suns,21,0,PHX -4.5,226.5,,,Delta Center
+401909312,2026-11-21T03:00Z,STATUS_SCHEDULED,0,0.0,"Fri, November 20th at 10:00 PM EST",2,Denver Nuggets,7,0,Houston Rockets,10,0,DEN -1.5,224.5,,,Ball Arena
+401909313,2026-11-21T03:00Z,STATUS_SCHEDULED,0,0.0,"Fri, November 20th at 10:00 PM EST",2,Los Angeles Lakers,13,0,Sacramento Kings,23,0,LAL -14.5,230.5,,,crypto.com Arena
