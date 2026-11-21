@@ -39,7 +39,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 4712896,Noah Clowney,21,Forward,"6' 10""",210 lbs,22,4.0,Alabama,17,Brooklyn Nets
 5175643,Egor Demin,8,Guard,"6' 8""",200 lbs,20,2.0,BYU,17,Brooklyn Nets
 4702177,Keon Ellis,1,Guard,"6' 4""",175 lbs,26,5.0,Alabama,17,Brooklyn Nets
-4870564,Joshua Jefferson,9,Forward,"6' 8""",246 lbs,22,0.0,Iowa State,17,Brooklyn Nets
+4870564,Joshua Jefferson,9,Forward,"6' 8""",246 lbs,23,0.0,Iowa State,17,Brooklyn Nets
 5174655,Chaney Johnson,31,Forward,"6' 8""",225 lbs,24,2.0,Auburn,17,Brooklyn Nets
 3907823,Terance Mann,14,Guard,"6' 6""",215 lbs,30,8.0,Florida State,17,Brooklyn Nets
 4687718,Josh Minott,00,Forward,"6' 8""",205 lbs,23,5.0,Memphis,17,Brooklyn Nets
@@ -317,7 +317,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 4431671,Jaden McDaniels,3,Forward,"6' 9""",185 lbs,26,7.0,Washington,16,Minnesota Timberwolves
 4592979,Zyon Pullin,15,Guard,"6' 4""",206 lbs,25,3.0,Florida,16,Minnesota Timberwolves
 4432847,Terrence Shannon Jr.,4,Guard,"6' 6""",215 lbs,26,3.0,Illinois,16,Minnesota Timberwolves
-4895758,Cody Williams,9,Forward,"6' 8""",190 lbs,21,3.0,Colorado,16,Minnesota Timberwolves
+4895758,Cody Williams,9,Forward,"6' 8""",190 lbs,22,3.0,Colorado,16,Minnesota Timberwolves
 5157587,Rocco Zikarsky,44,Center,"7' 3""",254 lbs,20,2.0,,16,Minnesota Timberwolves
 4397136,Saddiq Bey,41,Forward,"6' 8""",215 lbs,27,6.0,Villanova,3,New Orleans Pelicans
 4712862,Malik Dia,8,Forward,"6' 9""",250 lbs,22,0.0,Ole Miss,3,New Orleans Pelicans
@@ -404,7 +404,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 4873090,Labaron Philon Jr.,00,Guard,"6' 3""",179 lbs,20,0.0,Alabama,20,Philadelphia 76ers
 5099752,Rayan Rupert,12,Guard,"6' 7""",207 lbs,22,4.0,,20,Philadelphia 76ers
 4351851,Anfernee Simons,5,Guard,"6' 4""",206 lbs,27,9.0,,20,Philadelphia 76ers
-3912848,Dean Wade,45,Forward,"6' 9""",223 lbs,29,8.0,Kansas State,20,Philadelphia 76ers
+3912848,Dean Wade,45,Forward,"6' 9""",223 lbs,30,8.0,Kansas State,20,Philadelphia 76ers
 4432446,Jabari Walker,33,Forward,"6' 7""",240 lbs,24,5.0,Colorado,20,Philadelphia 76ers
 3136193,Devin Booker,15,Guard,"6' 5""",206 lbs,30,12.0,Kentucky,21,Phoenix Suns
 4280245,Jamaree Bouyea,17,Guard,"6' 2""",180 lbs,27,5.0,San Francisco,21,Phoenix Suns

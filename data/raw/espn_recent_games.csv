@@ -305,14 +305,14 @@ game_id,date,status,period,clock,clock_detail,season_type,home_team,home_id,home
 401909306,2026-11-21T00:30Z,STATUS_FINAL,4,0.0,Final,2,Brooklyn Nets,17,111,Orlando Magic,19,113,,,,,Barclays Center
 401909307,2026-11-21T00:30Z,STATUS_FINAL,4,0.0,Final,2,Cleveland Cavaliers,5,128,Indiana Pacers,11,119,,,,,Rocket Arena
 401909308,2026-11-21T00:30Z,STATUS_FINAL,4,0.0,Final,2,Detroit Pistons,8,102,Toronto Raptors,28,105,,,,,Little Caesars Arena
-401909309,2026-11-21T01:00Z,STATUS_FINAL,4,0.0,Final,2,Chicago Bulls,4,94,Washington Wizards,27,98,,,,,United Center
-401909310,2026-11-21T01:00Z,STATUS_FINAL,4,0.0,Final,2,Oklahoma City Thunder,25,126,New Orleans Pelicans,3,120,,,,,Paycom Center
-401909311,2026-11-21T02:30Z,STATUS_HALFTIME,2,0.0,Halftime,2,Utah Jazz,26,49,Phoenix Suns,21,61,,,,,Delta Center
-401909312,2026-11-21T03:00Z,STATUS_END_PERIOD,1,0.0,End of 1st Quarter,2,Denver Nuggets,7,31,Houston Rockets,10,33,,,,,Ball Arena
-401909313,2026-11-21T03:00Z,STATUS_END_PERIOD,1,0.0,End of 1st Quarter,2,Los Angeles Lakers,13,28,Sacramento Kings,23,28,,,,,crypto.com Arena
-401910023,2026-11-21T18:00Z,STATUS_SCHEDULED,0,0.0,"Sat, November 21st at 1:00 PM EST",2,Philadelphia 76ers,20,0,Milwaukee Bucks,15,0,PHI -11.5,228.5,,,Xfinity Mobile Arena
-401910024,2026-11-22T00:30Z,STATUS_SCHEDULED,0,0.0,"Sat, November 21st at 7:30 PM EST",2,New York Knicks,18,0,Portland Trail Blazers,22,0,NY -5.5,218.5,,,Madison Square Garden
-401910025,2026-11-22T01:00Z,STATUS_SCHEDULED,0,0.0,"Sat, November 21st at 8:00 PM EST",2,Dallas Mavericks,6,0,LA Clippers,12,0,DAL -5.5,229.5,,,American Airlines Center
-401910026,2026-11-22T01:00Z,STATUS_SCHEDULED,0,0.0,"Sat, November 21st at 8:00 PM EST",2,Minnesota Timberwolves,16,0,Memphis Grizzlies,29,0,MIN -5.5,227.5,,,Target Center
-401910027,2026-11-22T01:00Z,STATUS_SCHEDULED,0,0.0,"Sat, November 21st at 8:00 PM EST",2,San Antonio Spurs,24,0,New Orleans Pelicans,3,0,SA -16.5,226.5,,,Frost Bank Center
-401910028,2026-11-22T03:00Z,STATUS_SCHEDULED,0,0.0,"Sat, November 21st at 10:00 PM EST",2,Sacramento Kings,23,0,Boston Celtics,2,0,,,,,Golden 1 Center
+401909309,2026-11-21T01:00Z,STATUS_FINAL,4,12:00,Final,2,Chicago Bulls,4,94,Washington Wizards,27,98,,,,,United Center
+401909310,2026-11-21T01:00Z,STATUS_FINAL,4,12:00,Final,2,Oklahoma City Thunder,25,126,New Orleans Pelicans,3,120,,,,,Paycom Center
+401909311,2026-11-21T02:30Z,STATUS_FINAL,4,12:00,Final,2,Utah Jazz,26,101,Phoenix Suns,21,111,,,,,Delta Center
+401909312,2026-11-21T03:00Z,STATUS_FINAL,4,12:00,Final,2,Denver Nuggets,7,133,Houston Rockets,10,124,,,,,Ball Arena
+401909313,2026-11-21T03:00Z,STATUS_FINAL,4,12:00,Final,2,Los Angeles Lakers,13,106,Sacramento Kings,23,104,,,,,crypto.com Arena
+401910023,2026-11-21T18:00Z,STATUS_SCHEDULED,0,0.0,"Sat, November 21st at 1:00 PM EST",2,Philadelphia 76ers,20,0,Milwaukee Bucks,15,0,PHI -11.5,229.5,,,Xfinity Mobile Arena
+401910024,2026-11-22T00:30Z,STATUS_SCHEDULED,0,0.0,"Sat, November 21st at 7:30 PM EST",2,New York Knicks,18,0,Portland Trail Blazers,22,0,NY -5.5,216.5,,,Madison Square Garden
+401910025,2026-11-22T01:00Z,STATUS_SCHEDULED,0,0.0,"Sat, November 21st at 8:00 PM EST",2,Dallas Mavericks,6,0,LA Clippers,12,0,DAL -5.5,231.5,,,American Airlines Center
+401910026,2026-11-22T01:00Z,STATUS_SCHEDULED,0,0.0,"Sat, November 21st at 8:00 PM EST",2,Minnesota Timberwolves,16,0,Memphis Grizzlies,29,0,MIN -6.5,228.5,,,Target Center
+401910027,2026-11-22T01:00Z,STATUS_SCHEDULED,0,0.0,"Sat, November 21st at 8:00 PM EST",2,San Antonio Spurs,24,0,New Orleans Pelicans,3,0,SA -17.5,228.5,,,Frost Bank Center
+401910028,2026-11-22T03:00Z,STATUS_SCHEDULED,0,0.0,"Sat, November 21st at 10:00 PM EST",2,Sacramento Kings,23,0,Boston Celtics,2,0,BOS -13.5,216.5,,,Golden 1 Center
