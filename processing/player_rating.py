@@ -117,9 +117,13 @@ class PlayerRatingEngine:
     #: otherwise survive for days and drive lineups from a stale report.
     INJURY_REFRESH_TTL_SECONDS = 600
 
-    #: Missing key players moves an NBA spread by at most ~4 points, which is
-    #: roughly 22 rating points. This ceiling must apply to every rating path.
+    #: Missing key players moves an NBA spread by at most ~4 points for a single
+    #: star (~22 rating points). But when multiple starters/key rotation players
+    #: are out simultaneously (e.g. 3-5 starters sitting out), a rigid 22.0 cap
+    #: severely overvalues depleted bench lineups. The ceiling scales dynamically
+    #: with the number of missing core players up to MAX_MULTI_INJURY_LOSS.
     MAX_INJURY_LOSS = 22.0
+    MAX_MULTI_INJURY_LOSS = 48.0
 
     def __init__(self, season=None, rotowire_collector=None):
         from config import NBA_API_SEASON
@@ -689,20 +693,32 @@ class PlayerRatingEngine:
         b_act_def_avg = sum(b.get('active_def_eff', b['active_eff'] * 0.35) for b in bench_top_3) / b_act_n
         active_def_rating = 8.0 * (0.70 * s_act_def_avg + 0.30 * b_act_def_avg)
 
-        # Team Injury Penalty Cap: losing key players moves the spread by at most
-        # ~4 points. The cap used to live inside the 70/30 branch only, so teams
-        # without a RotoWire lineup (GSW on 2026-11-18: 28.8) were penalised past
-        # the ceiling. Scaling the offence/defence ratings keeps
-        # off_loss + def_loss equal to the capped total.
-        # The pre-cap value is kept so the cap's cost can be measured later;
-        # once clipped it is unrecoverable.
+        # Team Injury Penalty Cap:
+        # A single star missing moves an NBA spread by at most ~4 points (~22 rating
+        # points). For multi-star/starter absences (e.g. GSW missing 5 starters on
+        # 11/20 with raw drop 45.8), a rigid 22.0 cap severely overvalues bench
+        # lineups. Scale the ceiling dynamically with the fraction of missing core
+        # starters up to MAX_MULTI_INJURY_LOSS (48.0).
         uncapped_active_rating = active_roster_rating
+        missing_starter_impact = sum(
+            max(0.0, min(1.0, 1.0 - (max(0.0, p.get('active_eff', 0.0)) / p['eff_pg'])))
+            for p in full_starter_players
+            if p.get('eff_pg', 0) > 0
+        )
+        effective_cap = (
+            self.MAX_INJURY_LOSS
+            if missing_starter_impact <= 1.0
+            else min(
+                self.MAX_MULTI_INJURY_LOSS,
+                self.MAX_INJURY_LOSS + 7.5 * (missing_starter_impact - 1.0)
+            )
+        )
         cap_bound = (
             full_roster_rating > 0
-            and (full_roster_rating - active_roster_rating) > self.MAX_INJURY_LOSS
+            and (full_roster_rating - active_roster_rating) > effective_cap
         )
         if cap_bound:
-            capped_active = full_roster_rating - self.MAX_INJURY_LOSS
+            capped_active = full_roster_rating - effective_cap
             shrink = capped_active / active_roster_rating if active_roster_rating > 0 else 0.0
             active_roster_rating = capped_active
             active_off_rating *= shrink

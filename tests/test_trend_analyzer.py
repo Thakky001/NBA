@@ -157,6 +157,26 @@ class TestTrendAnalyzer(unittest.TestCase):
         # Net impact = -(2.0 * 0.20) + (18.0 * 0.16) = -0.4 + 2.88 = +2.48 pts (drives OVER!)
         self.assertEqual(res_def['raw_projected_total'], 220.0)
 
+    def test_small_residual_sample_does_not_use_empirical_probabilities(self):
+        """12 graded rows must not quantise the fair probability into 1/12 steps."""
+        small = [(-4.0 if i % 2 else 4.0) for i in range(12)]
+        sp_small = self.analyzer.analyze_spread(
+            'Boston Celtics', 'Miami Heat', spread_line=-4.5, training_residuals=small)
+        ou_small = self.analyzer.analyze_over_under(
+            'Boston Celtics', 'Miami Heat', over_under_line=220.0, training_residuals=small)
+
+        self.assertEqual(sp_small['probability_method'], 'normal_residual_sigma')
+        self.assertEqual(ou_small['probability_method'], 'normal_residual_sigma')
+
+        enough = [(-4.0 if i % 2 else 4.0) for i in range(30)]
+        sp_big = self.analyzer.analyze_spread(
+            'Boston Celtics', 'Miami Heat', spread_line=-4.5, training_residuals=enough)
+        ou_big = self.analyzer.analyze_over_under(
+            'Boston Celtics', 'Miami Heat', over_under_line=220.0, training_residuals=enough)
+
+        self.assertEqual(sp_big['probability_method'], 'empirical_training_residuals')
+        self.assertEqual(ou_big['probability_method'], 'empirical_training_residuals')
+
     def test_early_season_prior_ramp_and_dynamic_sigma(self):
         """Verify early season (<10 GP) ramps prior weight, anchors market at 0.70, and widens sigma."""
         # Opening game (1 GP)

@@ -130,6 +130,7 @@ def decide_pick(
     suppressed_reason = None
     rec = 'NEUTRAL'
     pick_side = None
+    cand_prob = 0.50
     pick_prob = 0.50
 
     abs_edge = abs(edge_vs_curr)
@@ -236,7 +237,8 @@ def decide_pick(
     is_act = ('STRONG' in rec)
     if rec == 'NEUTRAL':
         pick_side = None
-        pick_prob = 0.50
+        # Preserve the unmasked candidate probability that was evaluated by the gate
+        pick_prob = round(float(cand_prob), 4) if cand_prob is not None else 0.50
     else:
         # Bug 2.3 Assertion: Actionable picks MUST NOT have pick_prob == 0.50
         if abs(pick_prob - 0.50) < 0.001:

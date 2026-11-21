@@ -507,6 +507,21 @@ class TestRosterRatingBaselines(unittest.TestCase):
         self.assertAlmostEqual(
             healthy['uncapped_roster_rating'], healthy['roster_rating'], delta=0.01)
 
+    def test_multi_starter_injury_expands_ceiling(self):
+        """When multiple starters sit out, the ceiling must expand beyond 22 points."""
+        stats = dict(self.STATS)
+        injuries = [
+            {'player_name': 'Star', 'status': 'Out', 'detail': 'Rest'},
+            {'player_name': 'Player Two', 'status': 'Out', 'detail': 'Rest'},
+            {'player_name': 'Player Three', 'status': 'Out', 'detail': 'Rest'},
+        ]
+        engine = self._mk_engine([], stats=stats, injuries=injuries)
+        res = self._rate(engine)
+
+        actual_loss = res['full_roster_rating'] - res['roster_rating']
+        self.assertGreater(actual_loss, 22.0)
+        self.assertLessEqual(actual_loss, engine.MAX_MULTI_INJURY_LOSS)
+
     def test_off_and_def_add_up_to_eff(self):
         """off_loss + def_loss must equal the real EFF drop, with no inflation."""
         engine = self._mk_engine(

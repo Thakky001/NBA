@@ -205,6 +205,41 @@ class TestPredictionTracker(unittest.TestCase):
                 saved_df = mock_save.call_args[0][0]
                 self.assertEqual(saved_df.iloc[0]['game_id'], 'G_30M')
 
+    def test_neutral_predictions_keep_unmasked_model_prob(self):
+        """NEUTRAL rows must preserve the model's real probability for audit."""
+        from unittest.mock import MagicMock, patch
+        from datetime import datetime, timezone, timedelta
+
+        THAI_TZ = timezone(timedelta(hours=7))
+        now_thai = datetime.now(THAI_TZ)
+        today_str = now_thai.strftime('%Y-%m-%d')
+        time_30m = (now_thai + timedelta(minutes=30)).isoformat()
+
+        mock_scoreboard = pd.DataFrame([
+            {'game_id': 'G_NEUTRAL', 'home_team': 'BOS', 'away_team': 'MIA',
+             'status': 'STATUS_SCHEDULED', 'thai_datetime': time_30m,
+             'spread': -4.5, 'over_under': 218.0},
+        ])
+
+        mock_analyzer = MagicMock()
+        mock_analyzer.full_matchup_analysis.return_value = {
+            'over_under': {'recommendation': 'NEUTRAL', 'total_edge': 0.4,
+                           'win_prob': 0.5731, 'model_prob': 0.5731},
+            'spread': {'recommendation': 'NEUTRAL', 'cover_edge': 0.6,
+                       'win_prob': 0.6128, 'model_prob': 0.6128},
+        }
+
+        with patch('analysis.prediction_tracker.load_ledger', return_value=pd.DataFrame()):
+            with patch('analysis.prediction_tracker.save_ledger') as mock_save:
+                record_slate_predictions(today_str, mock_scoreboard, mock_analyzer,
+                                         max_minutes_before=60.0)
+                saved_df = mock_save.call_args[0][0]
+                row = saved_df.iloc[0]
+                self.assertAlmostEqual(row['sp_win_prob'], 0.6128, places=4)
+                self.assertAlmostEqual(row['ou_win_prob'], 0.5731, places=4)
+                self.assertAlmostEqual(row['sp_model_prob'], 0.6128, places=4)
+                self.assertAlmostEqual(row['ou_model_prob'], 0.5731, places=4)
+
     def test_load_ledger_purges_future_pending_rows(self):
         """load_ledger must auto-purge any premature future pending predictions."""
         from unittest.mock import patch

@@ -6,6 +6,13 @@ from typing import Dict, Any, Optional, Tuple
 
 logger = logging.getLogger(__name__)
 
+#: Empirical line probabilities are a step function: with n residuals the
+#: probability can only move in 1/n increments. At n=12 a single residual moves
+#: the fair probability by 8.3 points, which can manufacture a STRONG pick from
+#: noise. Until the sample is large enough for the steps to be finer than the
+#: gate thresholds, use the normal approximation instead.
+MIN_EMPIRICAL_RESIDUALS = 30
+
 
 class TrendAnalyzer:
     """Analyzes Over/Under and Spread trends for NBA matchups.
@@ -243,13 +250,22 @@ class TrendAnalyzer:
             raw_edge = 0.0
             
         from analysis.betting_math import estimate_residual_sigma, empirical_line_probabilities
-        sigma_ou = estimate_residual_sigma(training_residuals) if training_residuals and len(training_residuals) >= 2 else 12.5
-        probability_method = 'empirical_training_residuals' if training_residuals is not None and len(training_residuals) >= 2 else 'normal_unvalidated_sigma'
+        residual_n = len(training_residuals) if training_residuals is not None else 0
+        use_empirical = residual_n >= MIN_EMPIRICAL_RESIDUALS
+        sigma_ou = estimate_residual_sigma(training_residuals) if residual_n >= 2 else 12.5
+        probability_method = (
+            'empirical_training_residuals' if use_empirical
+            else 'normal_residual_sigma' if residual_n >= 2
+            else 'normal_unvalidated_sigma'
+        )
+        #: Probability that the OVER covers, before any pick-side masking. The
+        #: ledger keeps this even for NEUTRAL games so the gate can be audited.
+        cal_win_prob_over = 0.50
 
         # Calculate realistic win probability and EV-based conviction filter
         if over_under_line and over_under_line > 0:
             total_probs = (empirical_line_probabilities(-over_under_line, projected_total, training_residuals)
-                           if training_residuals else None)
+                           if use_empirical else None)
             if total_probs:
                 win_prob_over = total_probs['win']
                 win_prob_under = total_probs['loss']
@@ -333,7 +349,7 @@ class TrendAnalyzer:
         
         # Pure Raw Mode: Use pure unconstrained cand_prob for raw diagnostics
         raw_win_prob = cand_prob
-        calibrated_pick_prob = pick_win_prob if recommendation != 'NEUTRAL' else 0.50
+        calibrated_pick_prob = pick_win_prob
         confidence = abs(calibrated_pick_prob - 0.5) * 2.0
         
         # Value and sizing are calculated with calibrated probabilities.
@@ -379,6 +395,8 @@ class TrendAnalyzer:
             'recommendation': recommendation,
             'confidence': confidence,
             'win_prob': calibrated_pick_prob,
+            # Unmasked probability of OVER covering, kept for NEUTRAL rows too.
+            'model_prob': round(float(cal_win_prob_over), 6),
             'raw_win_prob': raw_win_prob,
             'is_anomaly': is_anomaly,
             'anomaly_warning': anomaly_warning,
@@ -672,6 +690,8 @@ class TrendAnalyzer:
         cover_edge = 0.0
         raw_cover_edge = 0.0
         win_prob = 0.50
+        #: Probability that HOME covers, before any pick-side masking.
+        cal_win_prob = 0.50
         spread_probs = None
         anchor_spread = open_spread if open_spread is not None else spread_line
         # Evaluate against spread_line (Against The Spread - ATS)
@@ -693,11 +713,17 @@ class TrendAnalyzer:
             cover_edge = projected_margin + s_line
 
             from analysis.betting_math import estimate_residual_sigma, empirical_line_probabilities, calculate_spread_probabilities, dynamic_early_season_sigma, calibrate_win_probability
-            base_sigma = estimate_residual_sigma(training_residuals) if training_residuals and len(training_residuals) >= 2 else 12.5
+            residual_n = len(training_residuals) if training_residuals is not None else 0
+            use_empirical = residual_n >= MIN_EMPIRICAL_RESIDUALS
+            base_sigma = estimate_residual_sigma(training_residuals) if residual_n >= 2 else 12.5
             sigma = dynamic_early_season_sigma(base_sigma, min_games)
-            probability_method = 'empirical_training_residuals' if training_residuals is not None and len(training_residuals) >= 2 else 'normal_unvalidated_sigma'
+            probability_method = (
+                'empirical_training_residuals' if use_empirical
+                else 'normal_residual_sigma' if residual_n >= 2
+                else 'normal_unvalidated_sigma'
+            )
             spread_probs = (empirical_line_probabilities(s_line, projected_margin, training_residuals)
-                            if training_residuals else calculate_spread_probabilities(s_line, projected_margin, sigma))
+                            if use_empirical else calculate_spread_probabilities(s_line, projected_margin, sigma))
             win_prob = spread_probs['win']
             push_prob = spread_probs['push']
             cal_win_prob = calibrate_win_probability(win_prob, push_prob=push_prob)
@@ -770,7 +796,7 @@ class TrendAnalyzer:
         raw_win_prob = cand_prob
         
         # Recommendation already used calibrated probability in decide_pick
-        calibrated_pick_prob = pick_win_prob if recommendation != 'NEUTRAL' else 0.50
+        calibrated_pick_prob = pick_win_prob
         confidence = abs(calibrated_pick_prob - 0.5) * 2.0
 
         # Value and sizing are calculated with calibrated probabilities.
@@ -817,6 +843,8 @@ class TrendAnalyzer:
             'recommendation': recommendation,
             'confidence': confidence,
             'win_prob': calibrated_pick_prob,
+            # Unmasked probability of HOME covering, kept for NEUTRAL rows too.
+            'model_prob': round(float(cal_win_prob), 6),
             'raw_win_prob': raw_win_prob,
             'is_anomaly': is_anomaly,
             'anomaly_warning': anomaly_warning,

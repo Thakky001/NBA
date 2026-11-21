@@ -594,15 +594,15 @@
     "semantic_hash": ""
   },
   "analysis/trend_analyzer.py": {
-    "mtime": 1794832041.3491108,
-    "seen": 1794832895.9730127,
-    "ast_hash": "d10416d071318201480ccd3d9d33ac6d",
+    "mtime": 1795269241.6639376,
+    "seen": 1795269320.5282106,
+    "ast_hash": "d83d338d2c2275c2be1b6c161d0824ab",
     "semantic_hash": ""
   },
   "app.py": {
-    "mtime": 1794752785.1060593,
-    "seen": 1794754435.5791519,
-    "ast_hash": "7abcf9c04c9a110190cd7f12559dde6f",
+    "mtime": 1795006344.4752314,
+    "seen": 1795176810.727325,
+    "ast_hash": "f23fc107567efb827faa53e7ac8967a8",
     "semantic_hash": ""
   },
   "collectors/__init__.py": {
@@ -654,21 +654,21 @@
     "semantic_hash": ""
   },
   "processing/data_merger.py": {
-    "mtime": 1794314103.619395,
-    "seen": 1794314169.883076,
+    "mtime": 1795004237.9131799,
+    "seen": 1795176810.7273438,
     "ast_hash": "bf8f3e40e42999270850756e188a0d27",
     "semantic_hash": ""
   },
   "processing/feature_engineering.py": {
-    "mtime": 1794756086.142799,
-    "seen": 1794756502.6291351,
-    "ast_hash": "840c68fee2674fdb54b465b9416da62c",
+    "mtime": 1795049079.8127606,
+    "seen": 1795176810.7273452,
+    "ast_hash": "87fb6f84b76aa0d62770cc2326b20ba0",
     "semantic_hash": ""
   },
   "processing/player_rating.py": {
-    "mtime": 1794748313.3311205,
-    "seen": 1794748593.0061212,
-    "ast_hash": "a3bb9e7b14bc249046a156d634362e12",
+    "mtime": 1795269241.7192202,
+    "seen": 1795269320.528249,
+    "ast_hash": "c37b2ea48a125ab7acc19639aafdf614",
     "semantic_hash": ""
   },
   "reports/__init__.py": {
@@ -714,15 +714,15 @@
     "semantic_hash": ""
   },
   "tests/test_feature_engineering.py": {
-    "mtime": 1794756458.004316,
-    "seen": 1794756502.6291509,
-    "ast_hash": "0b4816f33d8414671aa17abd513a48c2",
+    "mtime": 1795049079.8127606,
+    "seen": 1795176810.7273695,
+    "ast_hash": "be794f942ffe41b97c0834b310767b28",
     "semantic_hash": ""
   },
   "tests/test_player_rating.py": {
-    "mtime": 1794754211.131089,
-    "seen": 1794754435.579207,
-    "ast_hash": "db9c9a7d4f29cd38d8f45763fe5cbfc0",
+    "mtime": 1795269241.7214434,
+    "seen": 1795269320.528297,
+    "ast_hash": "9316ddeee8a290bd3b313f569a1fb51c",
     "semantic_hash": ""
   },
   "tests/test_reports.py": {
@@ -738,9 +738,9 @@
     "semantic_hash": ""
   },
   "tests/test_trend_analyzer.py": {
-    "mtime": 1794754116.3544705,
-    "seen": 1794754435.5792172,
-    "ast_hash": "2b09fa148d3470128dee0d9e61e44948",
+    "mtime": 1795269241.7228334,
+    "seen": 1795269320.5283132,
+    "ast_hash": "e59e1f0e3f2c113f05925729861d8cc0",
     "semantic_hash": ""
   },
   ".agents/skills/deploy-to-vercel/SKILL.md": {
@@ -2088,9 +2088,9 @@
     "semantic_hash": ""
   },
   "run_alerts.py": {
-    "mtime": 1794832304.9241135,
-    "seen": 1794832895.9730504,
-    "ast_hash": "a9c59295e9fcdf23feb8822fff0441a0",
+    "mtime": 1795004237.9131799,
+    "seen": 1795176810.7273524,
+    "ast_hash": "52e34e3795ac7ff9d6cc6511ffb01cbb",
     "semantic_hash": ""
   },
   "tests/test_telegram_alerts.py": {
@@ -2118,21 +2118,21 @@
     "semantic_hash": ""
   },
   "data/raw/alerted_games.json": {
-    "mtime": 1794831452.8149607,
-    "seen": 1794832895.973028,
-    "ast_hash": "be2a54cc5de6cfd4ab70647b7833bfcc",
+    "mtime": 1795269241.4399765,
+    "seen": 1795269320.52823,
+    "ast_hash": "47ded50496665c4f3ff51ac656c049a5",
     "semantic_hash": ""
   },
   "analysis/prediction_tracker.py": {
-    "mtime": 1794832082.4902523,
-    "seen": 1794832895.9730043,
-    "ast_hash": "799589d93d05b74939ab722194002825",
+    "mtime": 1795269241.660954,
+    "seen": 1795269320.5282025,
+    "ast_hash": "50053d2f0f73801e486a4e0be869ab93",
     "semantic_hash": ""
   },
   "tests/test_prediction_tracker.py": {
-    "mtime": 1794756442.2354586,
-    "seen": 1794756502.6291542,
-    "ast_hash": "7dbd488c0ab27b8e47d6d84ed3bf6657",
+    "mtime": 1795269241.7223155,
+    "seen": 1795269320.5282989,
+    "ast_hash": "068e12ddd9c5f56dac475ec8e5f5c738",
     "semantic_hash": ""
   },
   "docs/QUANT_BETTING_GUIDE.md": {
@@ -2154,8 +2154,8 @@
     "semantic_hash": ""
   },
   "analysis/ai_residual_model.py": {
-    "mtime": 1794399748.718777,
-    "seen": 1794487541.9495466,
+    "mtime": 1795004237.904948,
+    "seen": 1795176810.7273118,
     "ast_hash": "28daf6e5b89556d208a0e4de52e038d7",
     "semantic_hash": ""
   },
@@ -2178,9 +2178,9 @@
     "semantic_hash": ""
   },
   "data/raw/rotowire_lineups.json": {
-    "mtime": 1794832849.5895023,
-    "seen": 1794832895.9730296,
-    "ast_hash": "b6bb2a9930bb1d66af58d083ae522a16",
+    "mtime": 1795269241.450619,
+    "seen": 1795269320.528233,
+    "ast_hash": "358cece03b9616ebcd0eb1d96fa787a2",
     "semantic_hash": ""
   },
   "tests/test_rotowire_collector.py": {
@@ -2412,15 +2412,93 @@
     "semantic_hash": ""
   },
   "analysis/recommendation.py": {
-    "mtime": 1794832272.4687583,
-    "seen": 1794832895.9730084,
-    "ast_hash": "b04481cd2af2f324a1a37062e065ad2e",
+    "mtime": 1795269241.6622217,
+    "seen": 1795269320.5282068,
+    "ast_hash": "00e632c7da81691e263a8706ddd0c224",
     "semantic_hash": ""
   },
   "analysis/replay_backtest.py": {
-    "mtime": 1794832569.1088119,
-    "seen": 1794832895.973011,
-    "ast_hash": "514475b733fb6fe78516cb8579153155",
+    "mtime": 1794915570.3871136,
+    "seen": 1795176810.7273226,
+    "ast_hash": "b4f8a0bda3841109414b255ba14219e2",
+    "semantic_hash": ""
+  },
+  "analysis/ou_replay.py": {
+    "mtime": 1795091367.8970354,
+    "seen": 1795176810.7273164,
+    "ast_hash": "79bf534def37244f9df2777185764519",
+    "semantic_hash": ""
+  },
+  "analysis/ou_shadow.py": {
+    "mtime": 1795091944.8612585,
+    "seen": 1795176810.727318,
+    "ast_hash": "fc28a307241d280a72f6836ba72c0914",
+    "semantic_hash": ""
+  },
+  "processing/snapshot_archive.py": {
+    "mtime": 1795004237.9131799,
+    "seen": 1795176810.7273476,
+    "ast_hash": "94b1e7b1dbfd2560d5f8c239131b7f4c",
+    "semantic_hash": ""
+  },
+  "scripts/backfill_closing_lines.py": {
+    "mtime": 1795049079.8127606,
+    "seen": 1795176810.7273533,
+    "ast_hash": "f3098bf5c57b5e2a78fbea55ef6e7c77",
+    "semantic_hash": ""
+  },
+  "scripts/backfill_ratings.py": {
+    "mtime": 1795091318.020962,
+    "seen": 1795176810.7273543,
+    "ast_hash": "cfc117b3ddef0bde44feed2601b0ea47",
+    "semantic_hash": ""
+  },
+  "scripts/ou_rating_ablation.py": {
+    "mtime": 1795091774.089212,
+    "seen": 1795176810.7273555,
+    "ast_hash": "59e1e26a2a6d47af3f18eec09103c675",
+    "semantic_hash": ""
+  },
+  "tests/test_advanced_stats_fallback.py": {
+    "mtime": 1794915570.3871136,
+    "seen": 1795176810.7273612,
+    "ast_hash": "61f4bbbb3870b16914c01dcb6fdf267f",
+    "semantic_hash": ""
+  },
+  "tests/test_backfill_ratings.py": {
+    "mtime": 1795091842.097278,
+    "seen": 1795176810.7273648,
+    "ast_hash": "c29134a8e98245f25b0269250c254de4",
+    "semantic_hash": ""
+  },
+  "tests/test_ou_replay.py": {
+    "mtime": 1795091806.373034,
+    "seen": 1795176810.7273715,
+    "ast_hash": "0bcb607aae6300210029a15d89540d29",
+    "semantic_hash": ""
+  },
+  "tests/test_ou_shadow.py": {
+    "mtime": 1795091930.520619,
+    "seen": 1795176810.7273726,
+    "ast_hash": "4cc3fe53a1fb3c52295829bcc896509e",
+    "semantic_hash": ""
+  },
+  "tests/test_recommendation_gate.py": {
+    "mtime": 1795004237.9131799,
+    "seen": 1795176810.7273755,
+    "ast_hash": "bb538759f4715463b39eeefdc0796635",
+    "semantic_hash": ""
+  },
+  "tests/test_replay_backtest.py": {
+    "mtime": 1794915570.3901346,
+    "seen": 1795176810.7273765,
+    "ast_hash": "d39545cd8d7bce81fee5b379f739dbd0",
+    "semantic_hash": ""
+  },
+  "reports/system_status_2026-11-20.md": {
+    "mtime": 1795175695.7361686,
+    "seen": 1795176810.7276707,
+    "ast_hash": "e4a1dc9eb13f5180df8e219ec650a672",
     "semantic_hash": ""
   }
 }
