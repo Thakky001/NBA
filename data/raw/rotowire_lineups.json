@@ -41,7 +41,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:35:52"
+    "scraped_at": "2026-11-22 02:35:58"
   },
   "MIL": {
     "team": "Milwaukee Bucks",
@@ -85,7 +85,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:35:52"
+    "scraped_at": "2026-11-22 02:35:58"
   },
   "Philadelphia 76ers": {
     "team": "Philadelphia 76ers",
@@ -144,7 +144,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:35:52"
+    "scraped_at": "2026-11-22 02:35:58"
   },
   "PHI": {
     "team": "Philadelphia 76ers",
@@ -203,7 +203,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:35:52"
+    "scraped_at": "2026-11-22 02:35:58"
   },
   "Portland Trail Blazers": {
     "team": "Portland Trail Blazers",
@@ -262,7 +262,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:35:52"
+    "scraped_at": "2026-11-22 02:35:58"
   },
   "POR": {
     "team": "Portland Trail Blazers",
@@ -321,7 +321,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:35:52"
+    "scraped_at": "2026-11-22 02:35:58"
   },
   "New York Knicks": {
     "team": "New York Knicks",
@@ -375,7 +375,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:35:52"
+    "scraped_at": "2026-11-22 02:35:58"
   },
   "NYK": {
     "team": "New York Knicks",
@@ -429,7 +429,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:35:52"
+    "scraped_at": "2026-11-22 02:35:58"
   },
   "Los Angeles Clippers": {
     "team": "Los Angeles Clippers",
@@ -437,8 +437,8 @@
     "opponent": "Dallas Mavericks",
     "opponent_abbr": "DAL",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Darius Garland",
@@ -483,7 +483,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:35:52"
+    "scraped_at": "2026-11-22 02:35:58"
   },
   "LAC": {
     "team": "Los Angeles Clippers",
@@ -491,8 +491,8 @@
     "opponent": "Dallas Mavericks",
     "opponent_abbr": "DAL",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Darius Garland",
@@ -537,7 +537,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:35:52"
+    "scraped_at": "2026-11-22 02:35:58"
   },
   "Dallas Mavericks": {
     "team": "Dallas Mavericks",
@@ -545,8 +545,8 @@
     "opponent": "Los Angeles Clippers",
     "opponent_abbr": "LAC",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Kyrie Irving",
@@ -564,7 +564,7 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Naji Marshall",
+        "name": "Zaccharie Risacher",
         "position": "PF",
         "status": "Very Likely To Play"
       },
@@ -601,7 +601,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:35:52"
+    "scraped_at": "2026-11-22 02:35:58"
   },
   "DAL": {
     "team": "Dallas Mavericks",
@@ -609,8 +609,8 @@
     "opponent": "Los Angeles Clippers",
     "opponent_abbr": "LAC",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Kyrie Irving",
@@ -628,7 +628,7 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Naji Marshall",
+        "name": "Zaccharie Risacher",
         "position": "PF",
         "status": "Very Likely To Play"
       },
@@ -665,7 +665,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:35:52"
+    "scraped_at": "2026-11-22 02:35:58"
   },
   "Memphis Grizzlies": {
     "team": "Memphis Grizzlies",
@@ -673,8 +673,8 @@
     "opponent": "Minnesota Timberwolves",
     "opponent_abbr": "MIN",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Ty Jerome",
@@ -692,7 +692,7 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Taylor Hendricks",
+        "name": "Jahmai Mashack",
         "position": "PF",
         "status": "Very Likely To Play"
       },
@@ -729,7 +729,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:35:52"
+    "scraped_at": "2026-11-22 02:35:58"
   },
   "MEM": {
     "team": "Memphis Grizzlies",
@@ -737,8 +737,8 @@
     "opponent": "Minnesota Timberwolves",
     "opponent_abbr": "MIN",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Ty Jerome",
@@ -756,7 +756,7 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Taylor Hendricks",
+        "name": "Jahmai Mashack",
         "position": "PF",
         "status": "Very Likely To Play"
       },
@@ -793,7 +793,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:35:52"
+    "scraped_at": "2026-11-22 02:35:58"
   },
   "Minnesota Timberwolves": {
     "team": "Minnesota Timberwolves",
@@ -801,8 +801,8 @@
     "opponent": "Memphis Grizzlies",
     "opponent_abbr": "MEM",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "LaMelo Ball",
@@ -847,7 +847,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:35:52"
+    "scraped_at": "2026-11-22 02:35:58"
   },
   "MIN": {
     "team": "Minnesota Timberwolves",
@@ -855,8 +855,8 @@
     "opponent": "Memphis Grizzlies",
     "opponent_abbr": "MEM",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "LaMelo Ball",
@@ -901,7 +901,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:35:52"
+    "scraped_at": "2026-11-22 02:35:58"
   },
   "New Orleans Pelicans": {
     "team": "New Orleans Pelicans",
@@ -909,8 +909,8 @@
     "opponent": "San Antonio Spurs",
     "opponent_abbr": "SAS",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Jeremiah Fears",
@@ -963,9 +963,14 @@
         "name": "Trendon Watford",
         "position": "F",
         "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Zion Williamson",
+        "position": "F",
+        "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:35:52"
+    "scraped_at": "2026-11-22 02:35:58"
   },
   "NOP": {
     "team": "New Orleans Pelicans",
@@ -973,8 +978,8 @@
     "opponent": "San Antonio Spurs",
     "opponent_abbr": "SAS",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Jeremiah Fears",
@@ -1027,9 +1032,14 @@
         "name": "Trendon Watford",
         "position": "F",
         "status": "Very Unlikely To Play"
+      },
+      {
+        "name": "Zion Williamson",
+        "position": "F",
+        "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:35:52"
+    "scraped_at": "2026-11-22 02:35:58"
   },
   "San Antonio Spurs": {
     "team": "San Antonio Spurs",
@@ -1037,8 +1047,8 @@
     "opponent": "New Orleans Pelicans",
     "opponent_abbr": "NOP",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "De'Aaron Fox",
@@ -1083,7 +1093,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:35:52"
+    "scraped_at": "2026-11-22 02:35:58"
   },
   "SAS": {
     "team": "San Antonio Spurs",
@@ -1091,8 +1101,8 @@
     "opponent": "New Orleans Pelicans",
     "opponent_abbr": "NOP",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "De'Aaron Fox",
@@ -1137,7 +1147,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:35:52"
+    "scraped_at": "2026-11-22 02:35:58"
   },
   "Boston Celtics": {
     "team": "Boston Celtics",
@@ -1191,7 +1201,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:35:52"
+    "scraped_at": "2026-11-22 02:35:58"
   },
   "BOS": {
     "team": "Boston Celtics",
@@ -1245,7 +1255,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:35:52"
+    "scraped_at": "2026-11-22 02:35:58"
   },
   "Sacramento Kings": {
     "team": "Sacramento Kings",
@@ -1289,17 +1299,12 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Precious Achiuwa",
-        "position": "F",
-        "status": "Toss Up To Play"
-      },
-      {
         "name": "Maxime Raynaud",
         "position": "C",
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:35:52"
+    "scraped_at": "2026-11-22 02:35:58"
   },
   "SAC": {
     "team": "Sacramento Kings",
@@ -1343,16 +1348,11 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Precious Achiuwa",
-        "position": "F",
-        "status": "Toss Up To Play"
-      },
-      {
         "name": "Maxime Raynaud",
         "position": "C",
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:35:52"
+    "scraped_at": "2026-11-22 02:35:58"
   }
 }
