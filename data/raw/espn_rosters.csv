@@ -62,7 +62,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 4576060,Ryan Kalkbrenner,11,Center,"7' 1""",256 lbs,24,2.0,Creighton,30,Charlotte Hornets
 5061575,Kon Knueppel,7,Guard,"6' 6""",215 lbs,21,2.0,Duke,30,Charlotte Hornets
 5239590,Liam McNeeley,33,Guard,"6' 7""",210 lbs,21,2.0,UConn,30,Charlotte Hornets
-4433287,Brandon Miller,24,Forward,"6' 7""",200 lbs,23,4.0,Alabama,30,Charlotte Hornets
+4433287,Brandon Miller,24,Forward,"6' 7""",200 lbs,24,4.0,Alabama,30,Charlotte Hornets
 2583632,Royce O'Neale,00,Forward,"6' 6""",226 lbs,33,10.0,Baylor,30,Charlotte Hornets
 4396971,Naz Reid,0,Center,"6' 9""",264 lbs,27,8.0,LSU,30,Charlotte Hornets
 5211176,Tidjane Salaun,31,Forward,"6' 10""",207 lbs,21,3.0,,30,Charlotte Hornets
@@ -176,7 +176,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 3102531,Kristaps Porzingis,7,Center,"7' 2""",240 lbs,31,12.0,,9,Golden State Warriors
 4897262,Will Richard,3,Guard,"6' 3""",206 lbs,23,2.0,Florida,9,Golden State Warriors
 4997536,Gui Santos,15,Forward,"6' 7""",185 lbs,24,4.0,,9,Golden State Warriors
-4397040,Brandon Williams,12,Guard,"6' 1""",190 lbs,26,5.0,Arizona,9,Golden State Warriors
+4397040,Brandon Williams,12,Guard,"6' 1""",190 lbs,27,5.0,Arizona,9,Golden State Warriors
 2991235,Steven Adams,12,Center,"6' 11""",265 lbs,33,14.0,Pittsburgh,10,Houston Rockets
 3037789,Bogdan Bogdanovic,31,Guard,"6' 5""",225 lbs,34,10.0,,10,Houston Rockets
 3102529,Clint Capela,30,Center,"6' 10""",256 lbs,32,13.0,,10,Houston Rockets
@@ -230,7 +230,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 4065778,Max Strus,31,Guard,"6' 5""",215 lbs,30,8.0,DePaul,12,LA Clippers
 5254165,Keaton Wagler,1,Guard,"6' 5""",188 lbs,19,0.0,Illinois,12,LA Clippers
 4683935,Blake Wesley,20,Guard,"6' 4""",190 lbs,23,5.0,Notre Dame,12,LA Clippers
-5113969,Cameron Carr,43,Guard,"6' 5""",184 lbs,21,0.0,Baylor,13,Los Angeles Lakers
+5113969,Cameron Carr,43,Guard,"6' 5""",184 lbs,22,0.0,Baylor,13,Los Angeles Lakers
 5105817,Carson Cooper,,Center,"6' 11""",245 lbs,22,0.0,Michigan State,13,Los Angeles Lakers
 3945274,Luka Doncic,77,Guard,"6' 8""",230 lbs,27,9.0,,13,Los Angeles Lakers
 4397014,Quentin Grimes,5,Guard,"6' 4""",210 lbs,26,6.0,Houston,13,Los Angeles Lakers
@@ -253,7 +253,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 4903027,Cedric Coward,23,Forward,"6' 5""",206 lbs,23,2.0,Washington State,29,Memphis Grizzlies
 4600663,Zach Edey,14,Center,"7' 3""",305 lbs,24,3.0,Purdue,29,Memphis Grizzlies
 2991070,Jerami Grant,3,Forward,"6' 7""",213 lbs,32,13.0,Syracuse,29,Memphis Grizzlies
-4684806,Taylor Hendricks,22,Forward,"6' 9""",215 lbs,22,4.0,UCF,29,Memphis Grizzlies
+4684806,Taylor Hendricks,22,Forward,"6' 9""",215 lbs,23,4.0,UCF,29,Memphis Grizzlies
 5105550,GG Jackson,45,Forward,"6' 9""",210 lbs,21,4.0,South Carolina,29,Memphis Grizzlies
 4065733,Ty Jerome,2,Guard,"6' 5""",195 lbs,29,8.0,Virginia,29,Memphis Grizzlies
 5231919,Karim Lopez,35,Forward,"6' 8""",222 lbs,19,0.0,,29,Memphis Grizzlies
@@ -382,7 +382,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 4397204,Colin Castleton,14,Center,"6' 10""",250 lbs,26,4.0,Florida,19,Orlando Magic
 4702382,Tristan da Silva,23,Forward,"6' 8""",217 lbs,25,3.0,Colorado,19,Orlando Magic
 4065654,Jonathan Isaac,1,Forward,"6' 10""",230 lbs,29,10.0,Florida State,19,Orlando Magic
-4593034,Alex Morales,30,Guard,"6' 6""",180 lbs,28,2.0,Wagner,19,Orlando Magic
+4593034,Alex Morales,30,Guard,"6' 6""",180 lbs,29,2.0,Wagner,19,Orlando Magic
 5107251,Izaiyah Nelson,25,Forward,"6' 8""",219 lbs,23,0.0,South Florida,19,Orlando Magic
 5214637,Noah Penda,93,Forward,"6' 7""",215 lbs,21,2.0,,19,Orlando Magic
 5239561,Jase Richardson,11,Guard,"6' 1""",180 lbs,21,2.0,Michigan State,19,Orlando Magic
