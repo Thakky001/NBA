@@ -41,7 +41,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:10:59"
+    "scraped_at": "2026-11-22 00:35:52"
   },
   "MIL": {
     "team": "Milwaukee Bucks",
@@ -85,7 +85,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:10:59"
+    "scraped_at": "2026-11-22 00:35:52"
   },
   "Philadelphia 76ers": {
     "team": "Philadelphia 76ers",
@@ -144,7 +144,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:10:59"
+    "scraped_at": "2026-11-22 00:35:52"
   },
   "PHI": {
     "team": "Philadelphia 76ers",
@@ -203,7 +203,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:10:59"
+    "scraped_at": "2026-11-22 00:35:52"
   },
   "Portland Trail Blazers": {
     "team": "Portland Trail Blazers",
@@ -262,7 +262,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:10:59"
+    "scraped_at": "2026-11-22 00:35:52"
   },
   "POR": {
     "team": "Portland Trail Blazers",
@@ -321,7 +321,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:10:59"
+    "scraped_at": "2026-11-22 00:35:52"
   },
   "New York Knicks": {
     "team": "New York Knicks",
@@ -375,7 +375,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:10:59"
+    "scraped_at": "2026-11-22 00:35:52"
   },
   "NYK": {
     "team": "New York Knicks",
@@ -429,7 +429,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:10:59"
+    "scraped_at": "2026-11-22 00:35:52"
   },
   "Los Angeles Clippers": {
     "team": "Los Angeles Clippers",
@@ -483,7 +483,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:10:59"
+    "scraped_at": "2026-11-22 00:35:52"
   },
   "LAC": {
     "team": "Los Angeles Clippers",
@@ -537,7 +537,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:10:59"
+    "scraped_at": "2026-11-22 00:35:52"
   },
   "Dallas Mavericks": {
     "team": "Dallas Mavericks",
@@ -601,7 +601,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:10:59"
+    "scraped_at": "2026-11-22 00:35:52"
   },
   "DAL": {
     "team": "Dallas Mavericks",
@@ -665,7 +665,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:10:59"
+    "scraped_at": "2026-11-22 00:35:52"
   },
   "Memphis Grizzlies": {
     "team": "Memphis Grizzlies",
@@ -729,7 +729,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:10:59"
+    "scraped_at": "2026-11-22 00:35:52"
   },
   "MEM": {
     "team": "Memphis Grizzlies",
@@ -793,7 +793,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:10:59"
+    "scraped_at": "2026-11-22 00:35:52"
   },
   "Minnesota Timberwolves": {
     "team": "Minnesota Timberwolves",
@@ -847,7 +847,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:10:59"
+    "scraped_at": "2026-11-22 00:35:52"
   },
   "MIN": {
     "team": "Minnesota Timberwolves",
@@ -901,7 +901,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:10:59"
+    "scraped_at": "2026-11-22 00:35:52"
   },
   "New Orleans Pelicans": {
     "team": "New Orleans Pelicans",
@@ -928,7 +928,7 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Zion Williamson",
+        "name": "Derik Queen",
         "position": "PF",
         "status": "Very Likely To Play"
       },
@@ -965,7 +965,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:10:59"
+    "scraped_at": "2026-11-22 00:35:52"
   },
   "NOP": {
     "team": "New Orleans Pelicans",
@@ -992,7 +992,7 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Zion Williamson",
+        "name": "Derik Queen",
         "position": "PF",
         "status": "Very Likely To Play"
       },
@@ -1029,7 +1029,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:10:59"
+    "scraped_at": "2026-11-22 00:35:52"
   },
   "San Antonio Spurs": {
     "team": "San Antonio Spurs",
@@ -1083,7 +1083,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:10:59"
+    "scraped_at": "2026-11-22 00:35:52"
   },
   "SAS": {
     "team": "San Antonio Spurs",
@@ -1137,7 +1137,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:10:59"
+    "scraped_at": "2026-11-22 00:35:52"
   },
   "Boston Celtics": {
     "team": "Boston Celtics",
@@ -1191,7 +1191,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:10:59"
+    "scraped_at": "2026-11-22 00:35:52"
   },
   "BOS": {
     "team": "Boston Celtics",
@@ -1245,7 +1245,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:10:59"
+    "scraped_at": "2026-11-22 00:35:52"
   },
   "Sacramento Kings": {
     "team": "Sacramento Kings",
@@ -1299,7 +1299,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:10:59"
+    "scraped_at": "2026-11-22 00:35:52"
   },
   "SAC": {
     "team": "Sacramento Kings",
@@ -1353,6 +1353,6 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-22 00:10:59"
+    "scraped_at": "2026-11-22 00:35:52"
   }
 }
