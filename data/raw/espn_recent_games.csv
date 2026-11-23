@@ -319,15 +319,15 @@ game_id,date,status,period,clock,clock_detail,season_type,home_team,home_id,home
 401910031,2026-11-23T00:00Z,STATUS_FINAL,4,12:00,Final,2,Washington Wizards,27,116,Orlando Magic,19,96,,,,,Capital One Arena
 401910032,2026-11-23T00:00Z,STATUS_FINAL,5,5:00,Final/OT,2,Chicago Bulls,4,145,Denver Nuggets,7,151,,,,,United Center
 401910033,2026-11-23T00:00Z,STATUS_FINAL,4,12:00,Final,2,Utah Jazz,26,114,Dallas Mavericks,6,116,,,,,Delta Center
-401910034,2026-11-23T01:00Z,STATUS_IN_PROGRESS,4,4:06,4:06 - 4th Quarter,2,New York Knicks,18,106,Indiana Pacers,11,93,,,,,Madison Square Garden
-401910035,2026-11-23T01:30Z,STATUS_IN_PROGRESS,4,8:13,8:13 - 4th Quarter,2,Golden State Warriors,9,81,Boston Celtics,2,79,,,,,Chase Center
-401910036,2026-11-24T00:00Z,STATUS_SCHEDULED,0,0.0,"Mon, November 23rd at 7:00 PM EST",2,Charlotte Hornets,30,0,Memphis Grizzlies,29,0,MEM -3.5,216.5,,,Spectrum Center
-401910037,2026-11-24T00:00Z,STATUS_SCHEDULED,0,0.0,"Mon, November 23rd at 7:00 PM EST",2,Philadelphia 76ers,20,0,Portland Trail Blazers,22,0,PHI -3.5,229.5,,,Xfinity Mobile Arena
-401910038,2026-11-24T00:30Z,STATUS_SCHEDULED,0,0.0,"Mon, November 23rd at 7:30 PM EST",2,Indiana Pacers,11,0,Oklahoma City Thunder,25,0,OKC -4.5,222.5,,,Gainbridge Fieldhouse
-401910039,2026-11-24T00:30Z,STATUS_SCHEDULED,0,0.0,"Mon, November 23rd at 7:30 PM EST",2,Toronto Raptors,28,0,Milwaukee Bucks,15,0,TOR -10.5,223.5,,,Scotiabank Arena
-401910040,2026-11-24T00:30Z,STATUS_SCHEDULED,0,0.0,"Mon, November 23rd at 7:30 PM EST",2,Minnesota Timberwolves,16,0,Brooklyn Nets,17,0,MIN -12.5,224.5,,,Target Center
-401910041,2026-11-24T01:00Z,STATUS_SCHEDULED,0,0.0,"Mon, November 23rd at 8:00 PM EST",2,Chicago Bulls,4,0,Cleveland Cavaliers,5,0,CLE -9.5,241.5,,,United Center
-401910042,2026-11-24T01:00Z,STATUS_SCHEDULED,0,0.0,"Mon, November 23rd at 8:00 PM EST",2,New Orleans Pelicans,3,0,Phoenix Suns,21,0,PHX -3.5,232.5,,,Smoothie King Center
-401910043,2026-11-24T01:30Z,STATUS_SCHEDULED,0,0.0,"Mon, November 23rd at 8:30 PM EST",2,Houston Rockets,10,0,LA Clippers,12,0,HOU -12.5,224.5,,,Toyota Center (Houston)
-401910044,2026-11-24T03:00Z,STATUS_SCHEDULED,0,0.0,"Mon, November 23rd at 10:00 PM EST",2,Los Angeles Lakers,13,0,Utah Jazz,26,0,LAL -13.5,230.5,,,crypto.com Arena
-401910045,2026-11-24T03:00Z,STATUS_SCHEDULED,0,0.0,"Mon, November 23rd at 10:00 PM EST",2,Sacramento Kings,23,0,San Antonio Spurs,24,0,SA -10.5,224.5,,,Golden 1 Center
+401910034,2026-11-23T01:00Z,STATUS_FINAL,4,12:00,Final,2,New York Knicks,18,113,Indiana Pacers,11,106,,,,,Madison Square Garden
+401910035,2026-11-23T01:30Z,STATUS_FINAL,4,12:00,Final,2,Golden State Warriors,9,88,Boston Celtics,2,87,,,,,Chase Center
+401910036,2026-11-24T00:00Z,STATUS_SCHEDULED,0,0.0,"Mon, November 23rd at 7:00 PM EST",2,Charlotte Hornets,30,0,Memphis Grizzlies,29,0,MEM -2.5,213.5,,,Spectrum Center
+401910037,2026-11-24T00:00Z,STATUS_SCHEDULED,0,0.0,"Mon, November 23rd at 7:00 PM EST",2,Philadelphia 76ers,20,0,Portland Trail Blazers,22,0,PHI -2.5,231.5,,,Xfinity Mobile Arena
+401910038,2026-11-24T00:30Z,STATUS_SCHEDULED,0,0.0,"Mon, November 23rd at 7:30 PM EST",2,Indiana Pacers,11,0,Oklahoma City Thunder,25,0,,,,,Gainbridge Fieldhouse
+401910039,2026-11-24T00:30Z,STATUS_SCHEDULED,0,0.0,"Mon, November 23rd at 7:30 PM EST",2,Toronto Raptors,28,0,Milwaukee Bucks,15,0,TOR -10.5,222.5,,,Scotiabank Arena
+401910040,2026-11-24T00:30Z,STATUS_SCHEDULED,0,0.0,"Mon, November 23rd at 7:30 PM EST",2,Minnesota Timberwolves,16,0,Brooklyn Nets,17,0,MIN -10.5,223.5,,,Target Center
+401910041,2026-11-24T01:00Z,STATUS_SCHEDULED,0,0.0,"Mon, November 23rd at 8:00 PM EST",2,Chicago Bulls,4,0,Cleveland Cavaliers,5,0,CLE -8.5,241.5,,,United Center
+401910042,2026-11-24T01:00Z,STATUS_SCHEDULED,0,0.0,"Mon, November 23rd at 8:00 PM EST",2,New Orleans Pelicans,3,0,Phoenix Suns,21,0,PHX -3.5,233.5,,,Smoothie King Center
+401910043,2026-11-24T01:30Z,STATUS_SCHEDULED,0,0.0,"Mon, November 23rd at 8:30 PM EST",2,Houston Rockets,10,0,LA Clippers,12,0,HOU -12.5,223.5,,,Toyota Center (Houston)
+401910044,2026-11-24T03:00Z,STATUS_SCHEDULED,0,0.0,"Mon, November 23rd at 10:00 PM EST",2,Los Angeles Lakers,13,0,Utah Jazz,26,0,LAL -13.5,224.5,,,crypto.com Arena
+401910045,2026-11-24T03:00Z,STATUS_SCHEDULED,0,0.0,"Mon, November 23rd at 10:00 PM EST",2,Sacramento Kings,23,0,San Antonio Spurs,24,0,SA -10.5,223.5,,,Golden 1 Center
