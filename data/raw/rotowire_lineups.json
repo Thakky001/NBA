@@ -56,7 +56,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-23 00:36:00"
+    "scraped_at": "2026-11-23 01:11:05"
   },
   "DET": {
     "team": "Detroit Pistons",
@@ -115,7 +115,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-23 00:36:00"
+    "scraped_at": "2026-11-23 01:11:05"
   },
   "Atlanta Hawks": {
     "team": "Atlanta Hawks",
@@ -179,7 +179,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-23 00:36:00"
+    "scraped_at": "2026-11-23 01:11:05"
   },
   "ATL": {
     "team": "Atlanta Hawks",
@@ -243,7 +243,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-23 00:36:00"
+    "scraped_at": "2026-11-23 01:11:05"
   },
   "Oklahoma City Thunder": {
     "team": "Oklahoma City Thunder",
@@ -327,7 +327,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-23 00:36:00"
+    "scraped_at": "2026-11-23 01:11:05"
   },
   "OKC": {
     "team": "Oklahoma City Thunder",
@@ -411,7 +411,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-23 00:36:00"
+    "scraped_at": "2026-11-23 01:11:05"
   },
   "Miami Heat": {
     "team": "Miami Heat",
@@ -455,7 +455,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-23 00:36:00"
+    "scraped_at": "2026-11-23 01:11:05"
   },
   "MIA": {
     "team": "Miami Heat",
@@ -499,7 +499,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-23 00:36:00"
+    "scraped_at": "2026-11-23 01:11:05"
   },
   "Denver Nuggets": {
     "team": "Denver Nuggets",
@@ -543,7 +543,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-23 00:36:00"
+    "scraped_at": "2026-11-23 01:11:05"
   },
   "DEN": {
     "team": "Denver Nuggets",
@@ -587,7 +587,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-23 00:36:00"
+    "scraped_at": "2026-11-23 01:11:05"
   },
   "Chicago Bulls": {
     "team": "Chicago Bulls",
@@ -641,7 +641,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-23 00:36:00"
+    "scraped_at": "2026-11-23 01:11:05"
   },
   "CHI": {
     "team": "Chicago Bulls",
@@ -695,7 +695,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-23 00:36:00"
+    "scraped_at": "2026-11-23 01:11:05"
   },
   "Dallas Mavericks": {
     "team": "Dallas Mavericks",
@@ -759,7 +759,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-23 00:36:00"
+    "scraped_at": "2026-11-23 01:11:05"
   },
   "DAL": {
     "team": "Dallas Mavericks",
@@ -823,7 +823,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-23 00:36:00"
+    "scraped_at": "2026-11-23 01:11:05"
   },
   "Utah Jazz": {
     "team": "Utah Jazz",
@@ -862,6 +862,11 @@
     ],
     "injuries": [
       {
+        "name": "Jaxson Hayes",
+        "position": "C",
+        "status": "Very Likely To Play"
+      },
+      {
         "name": "Jaren Jackson",
         "position": "F",
         "status": "Very Unlikely To Play"
@@ -877,7 +882,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-23 00:36:00"
+    "scraped_at": "2026-11-23 01:11:05"
   },
   "UTA": {
     "team": "Utah Jazz",
@@ -916,6 +921,11 @@
     ],
     "injuries": [
       {
+        "name": "Jaxson Hayes",
+        "position": "C",
+        "status": "Very Likely To Play"
+      },
+      {
         "name": "Jaren Jackson",
         "position": "F",
         "status": "Very Unlikely To Play"
@@ -931,7 +941,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-23 00:36:00"
+    "scraped_at": "2026-11-23 01:11:05"
   },
   "Orlando Magic": {
     "team": "Orlando Magic",
@@ -990,7 +1000,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-23 00:36:00"
+    "scraped_at": "2026-11-23 01:11:05"
   },
   "ORL": {
     "team": "Orlando Magic",
@@ -1049,7 +1059,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-23 00:36:00"
+    "scraped_at": "2026-11-23 01:11:05"
   },
   "Washington Wizards": {
     "team": "Washington Wizards",
@@ -1108,7 +1118,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-23 00:36:00"
+    "scraped_at": "2026-11-23 01:11:05"
   },
   "WAS": {
     "team": "Washington Wizards",
@@ -1167,7 +1177,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-23 00:36:00"
+    "scraped_at": "2026-11-23 01:11:05"
   },
   "Indiana Pacers": {
     "team": "Indiana Pacers",
@@ -1175,8 +1185,8 @@
     "opponent": "New York Knicks",
     "opponent_abbr": "NYK",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Andrew Nembhard",
@@ -1226,7 +1236,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-23 00:36:00"
+    "scraped_at": "2026-11-23 01:11:05"
   },
   "IND": {
     "team": "Indiana Pacers",
@@ -1234,8 +1244,8 @@
     "opponent": "New York Knicks",
     "opponent_abbr": "NYK",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Andrew Nembhard",
@@ -1285,7 +1295,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-23 00:36:00"
+    "scraped_at": "2026-11-23 01:11:05"
   },
   "New York Knicks": {
     "team": "New York Knicks",
@@ -1293,8 +1303,8 @@
     "opponent": "Indiana Pacers",
     "opponent_abbr": "IND",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Jalen Brunson",
@@ -1339,7 +1349,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-23 00:36:00"
+    "scraped_at": "2026-11-23 01:11:05"
   },
   "NYK": {
     "team": "New York Knicks",
@@ -1347,8 +1357,8 @@
     "opponent": "Indiana Pacers",
     "opponent_abbr": "IND",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Jalen Brunson",
@@ -1393,7 +1403,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-23 00:36:00"
+    "scraped_at": "2026-11-23 01:11:05"
   },
   "Boston Celtics": {
     "team": "Boston Celtics",
@@ -1442,7 +1452,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-23 00:36:00"
+    "scraped_at": "2026-11-23 01:11:05"
   },
   "BOS": {
     "team": "Boston Celtics",
@@ -1491,7 +1501,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-23 00:36:00"
+    "scraped_at": "2026-11-23 01:11:05"
   },
   "Golden State Warriors": {
     "team": "Golden State Warriors",
@@ -1499,8 +1509,8 @@
     "opponent": "Boston Celtics",
     "opponent_abbr": "BOS",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "De'Anthony Melton",
@@ -1555,7 +1565,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-23 00:36:00"
+    "scraped_at": "2026-11-23 01:11:05"
   },
   "GSW": {
     "team": "Golden State Warriors",
@@ -1563,8 +1573,8 @@
     "opponent": "Boston Celtics",
     "opponent_abbr": "BOS",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "De'Anthony Melton",
@@ -1619,6 +1629,6 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-23 00:36:00"
+    "scraped_at": "2026-11-23 01:11:05"
   }
 }
