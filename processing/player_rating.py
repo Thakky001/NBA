@@ -287,6 +287,8 @@ class PlayerRatingEngine:
             #: the cap destroys the only evidence that could tune the cap.
             'uncapped_roster_rating': 0.0,
             'injury_cap_bound': False,
+            'injury_cap': self.MAX_INJURY_LOSS,
+            'missing_starter_impact': 0.0,
             'off_loss': 0.0,
             'def_loss': 0.0,
             'full_off_rating': 0.0,
@@ -747,6 +749,10 @@ class PlayerRatingEngine:
         result['full_roster_rating'] = float(round(full_roster_rating, 2))
         result['uncapped_roster_rating'] = float(round(uncapped_active_rating, 2))
         result['injury_cap_bound'] = bool(cap_bound)
+        #: Effective ceiling and the missing-starter load that selected it, so
+        #: the dynamic cap can be audited from the ledger snapshot.
+        result['injury_cap'] = float(round(effective_cap, 2))
+        result['missing_starter_impact'] = float(round(missing_starter_impact, 2))
         result['off_loss'] = float(round(off_loss, 2))
         result['def_loss'] = float(round(def_loss, 2))
         result['full_off_rating'] = float(round(full_off_rating, 2))

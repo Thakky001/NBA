@@ -485,6 +485,8 @@ class TestRosterRatingBaselines(unittest.TestCase):
 
         self.assertEqual(res['status'], 'success')
         # No RotoWire lineup: same formula, same ceiling.
+        self.assertAlmostEqual(res['injury_cap'], 22.0, delta=0.01)
+        self.assertAlmostEqual(res['missing_starter_impact'], 1.0, delta=0.01)
         self.assertAlmostEqual(res['full_roster_rating'] - res['roster_rating'], 22.0, delta=0.05)
 
     def test_cap_is_reported_with_its_uncapped_value(self):
@@ -519,8 +521,26 @@ class TestRosterRatingBaselines(unittest.TestCase):
         res = self._rate(engine)
 
         actual_loss = res['full_roster_rating'] - res['roster_rating']
+        self.assertAlmostEqual(res['missing_starter_impact'], 3.0, delta=0.01)
+        self.assertAlmostEqual(res['injury_cap'], 37.0, delta=0.01)
         self.assertGreater(actual_loss, 22.0)
+        self.assertAlmostEqual(actual_loss, 37.0, delta=0.05)
         self.assertLessEqual(actual_loss, engine.MAX_MULTI_INJURY_LOSS)
+
+    def test_five_missing_starters_hits_the_multi_injury_ceiling(self):
+        """The GSW-style case (five core players out) must reach, not exceed, 48."""
+        injuries = [
+            {'player_name': name, 'status': 'Out', 'detail': 'Rest'}
+            for name in ['Star', 'Player Two', 'Player Three', 'Player Four', 'Player Five']
+        ]
+        engine = self._mk_engine([], injuries=injuries)
+        res = self._rate(engine)
+
+        self.assertAlmostEqual(res['missing_starter_impact'], 5.0, delta=0.01)
+        self.assertAlmostEqual(res['injury_cap'], engine.MAX_MULTI_INJURY_LOSS, delta=0.01)
+        self.assertAlmostEqual(
+            res['full_roster_rating'] - res['roster_rating'],
+            engine.MAX_MULTI_INJURY_LOSS, delta=0.05)
 
     def test_off_and_def_add_up_to_eff(self):
         """off_loss + def_loss must equal the real EFF drop, with no inflation."""

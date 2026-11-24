@@ -224,9 +224,9 @@ class TestPredictionTracker(unittest.TestCase):
         mock_analyzer = MagicMock()
         mock_analyzer.full_matchup_analysis.return_value = {
             'over_under': {'recommendation': 'NEUTRAL', 'total_edge': 0.4,
-                           'win_prob': 0.5731, 'model_prob': 0.5731},
+                           'win_prob': 0.50, 'model_prob': 0.5731},
             'spread': {'recommendation': 'NEUTRAL', 'cover_edge': 0.6,
-                       'win_prob': 0.6128, 'model_prob': 0.6128},
+                       'win_prob': 0.50, 'model_prob': 0.6128},
         }
 
         with patch('analysis.prediction_tracker.load_ledger', return_value=pd.DataFrame()):
@@ -235,8 +235,10 @@ class TestPredictionTracker(unittest.TestCase):
                                          max_minutes_before=60.0)
                 saved_df = mock_save.call_args[0][0]
                 row = saved_df.iloc[0]
-                self.assertAlmostEqual(row['sp_win_prob'], 0.6128, places=4)
-                self.assertAlmostEqual(row['ou_win_prob'], 0.5731, places=4)
+                # No pick side: win_prob stays at 0.5, the real probability is
+                # stored in the canonical model_prob columns.
+                self.assertEqual(row['sp_win_prob'], 0.50)
+                self.assertEqual(row['ou_win_prob'], 0.50)
                 self.assertAlmostEqual(row['sp_model_prob'], 0.6128, places=4)
                 self.assertAlmostEqual(row['ou_model_prob'], 0.5731, places=4)
 

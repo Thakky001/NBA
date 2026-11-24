@@ -157,6 +157,15 @@ class TestTrendAnalyzer(unittest.TestCase):
         # Net impact = -(2.0 * 0.20) + (18.0 * 0.16) = -0.4 + 2.88 = +2.48 pts (drives OVER!)
         self.assertEqual(res_def['raw_projected_total'], 220.0)
 
+    def test_neutral_keeps_pick_prob_masked_and_model_prob_unmasked(self):
+        """NEUTRAL has no side, so win_prob stays 0.5; model_prob keeps the real value."""
+        res = self.analyzer.analyze_spread(
+            'Boston Celtics', 'Miami Heat', spread_line=-4.5)
+        self.assertEqual(res['recommendation'], 'NEUTRAL')
+        self.assertEqual(res['win_prob'], 0.50)
+        self.assertNotAlmostEqual(res['model_prob'], 0.50, places=3)
+        self.assertTrue(0.0 < res['model_prob'] < 1.0)
+
     def test_small_residual_sample_does_not_use_empirical_probabilities(self):
         """12 graded rows must not quantise the fair probability into 1/12 steps."""
         small = [(-4.0 if i % 2 else 4.0) for i in range(12)]

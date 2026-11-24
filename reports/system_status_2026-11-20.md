@@ -1,8 +1,9 @@
 # รายงานสถานะระบบ NBA Betting — 20 พ.ย. 2026
 
-> **ขอบเขต:** ตรวจจาก repo `D:\git\NBA` (branch `main`, commit `14fe46b` หลัง pull 2026-11-20) และ ledger ณ วันที่ 2026-11-20
+> **ขอบเขต:** ตรวจจาก repo `D:\git\NBA` (branch `main`, commit `14fe46b` เป็นฐานรายงาน 11/20; ข้อมูลอัปเดตถึง commit `d927d08` ณ 2026-11-24) และ ledger ณ วันที่ 2026-11-24
+> **อัปเดต 2026-11-24:** สามข้อที่ค้างถูกแก้แล้ว และ v3 มี 45 แถว — ดูภาคผนวก 9
 > **โหมดปัจจุบัน:** PAPER ONLY — `BETTING_PAUSED=true` (ค่า default ใน `run_alerts.py`, alert ติดป้าย `[PAPER TEST ONLY]`)
-> **คำตัดสิน:** **ยังไม่พร้อมเงินจริง** — go-live ผ่าน 0 ข้อ, โมเดล v3 เพิ่งเริ่ม 2 วัน (16 แถว, STRONG = 0) และยังไม่มี out-of-sample sample ที่ใช้ตัดสินได้
+> **คำตัดสิน:** **ยังไม่พร้อมเงินจริง** — go-live ผ่าน 0 ข้อ, v3 เริ่ม 11/19 (45 แถว ณ 11/24; STRONG graded = 0, pending 2) และยังไม่มี out-of-sample sample ที่ใช้ตัดสินได้
 
 ---
 
@@ -133,7 +134,7 @@
 
 | # | เกณฑ์ | ผล |
 |---|---|---|
-| 1 | POST-split STRONG ≥ 100 ไม้ | **FAIL** — 0 ไม้ |
+| 1 | POST-split STRONG ≥ 100 ไม้ | **FAIL** — 1 ไม้ (ณ 11/24) |
 | 2 | STRONG ROI > 2% | N/A (sample ไม่พอ) |
 | 3 | Calibration error < 5% | N/A |
 | 4 | Max drawdown < 10u | N/A |
@@ -146,6 +147,8 @@ Replay ล่าสุด: 57 LEAN picks, 33–24 (57.9%), +10.5% ROI — **ห�
 - ใช้ injury/lineup/roster จากไฟล์ *ปัจจุบัน* ย้อนหลัง → lookahead
 - snapshot coverage 0/17 วัน
 - ตัว replay เองพิมพ์เตือนว่า "numbers above are NOT a clean out-of-sample estimate"
+
+> **อัปเดต 11/24:** replay ล่าสุด (basis POST ตั้งแต่ 11/6) มี 54 ไม้ 38.89% ROI −25.76%; POST STRONG มีเพียง 1 ไม้; snapshot coverage 0/21 วัน; go-live ทั้ง 4 เกณฑ์ยัง FAIL/N/A และ `BETTING_PAUSED=True`
 
 ### 3.2 เกณฑ์ครบ 8 ข้อตามเอกสารวิจัย
 
@@ -188,6 +191,8 @@ Replay ล่าสุด: 57 LEAN picks, 33–24 (57.9%), +10.5% ROI — **ห�
 | P1-8 | **injury sensitivity ของ v3 ยังไม่มี regression test** | ตรวจ 30 ทีม: `active > full` = 0 แล้ว (bug เก่าไม่ reproduce) แต่ยังไม่มี test guard; ทีมที่ injury สำคัญลด 7–8 หน่วย |
 | P1-9 | **fair prob จาก residual ชุดเล็กไม่เสถียร** | `empirical_line_probabilities` ใช้ residual ของ v3 ที่เกรดแล้วเพียง 12 แถว → prob เป็นขั้น 1/12 (0.167/0.833); 11/20 ทุกเกมได้ SP fair = 0.167 จาก residual ติดลบ 10/12 |
 | P1-10 | **ledger masking ค่า prob ของ NEUTRAL** | `sp_win_prob`/`ou_win_prob` ถูกบังคับเป็น 0.5 เมื่อ NEUTRAL ทำให้ audit ย้อนหลังไม่เห็น fair prob จริงที่ใช้ตัดสิน |
+
+> **อัปเดต 11/24:** P1-9 และ P1-10 แก้แล้ว — residual guard 30 (§9.1), ledger `*_model_prob` (§9.2), dynamic injury cap พร้อม test (§9.3)
 
 ### P2 — Observability / ops
 
@@ -311,4 +316,42 @@ git rev-list --left-right --count main...feat/ou-research-program   # 32  2
 
 ---
 
-**สรุปสุดท้าย:** ระบบยังเดินในโหมด paper อย่างปลอดภัย แต่ยัง**ไม่มีหลักฐานว่ามี edge** และเพิ่งเปลี่ยนโมเดลเมื่อวานนี้ สิ่งที่ต้องทำอันดับแรกคือ "เริ่มนับ v3 ใหม่ + เก็บ closing line/CLV ให้อัตโนมัติ + บังคับ kill switch" ไม่ใช่การผ่อนเกตหรือเพิ่มสูตรใหม่
+## 9. อัปเดตหลังแก้ไข — 24 พ.ย. 2026
+
+สามข้อที่ค้างจากรายงานนี้ถูกแก้แล้ว (ต่อจาก commit `0ff9019`):
+
+### 9.1 Residual guard
+
+- เพิ่ม `MIN_EMPIRICAL_RESIDUALS = 30` ใน `analysis/trend_analyzer.py`
+- residual < 30 → ใช้ normal approximation (`normal_residual_sigma`) ไม่ใช้ขั้น 1/n
+- residual ≥ 30 → ใช้ `empirical_training_residuals`
+- ผลจริง: 11/19–11/22 ใช้ normal (residual 0/12/16/25); 11/23 เป็นต้นไปใช้ empirical (30, 37); 11/24 เกิด STRONG 2 ไม้แรก (ยัง pending)
+
+### 9.2 Ledger fair probability
+
+- เพิ่ม `sp_model_prob` = P(HOME cover) และ `ou_model_prob` = P(OVER) ใน ledger
+- `sp_win_prob`/`ou_win_prob` ยังเป็น probability ของฝั่งที่เลือก และคง 0.5 เมื่อ NEUTRAL — เพื่อไม่ให้ตีความผิดว่าฝั่งไหน
+- **ข้อควรระวัง:** ใน 20 แถวของ 11/22–11/24 ที่บันทึกโดย commit `0ff9019` แถว NEUTRAL มี candidate prob อยู่ใน `win_prob` และ `pick_prob` แทน 0.5; ห้ามใช้สองคอลัมน์นี้ของแถว NEUTRAL เป็น pick prob — ให้ใช้ `*_model_prob` คู่กับ recommendation (แถว actionable ยังใช้ได้ตามปกติ)
+- 20 แถวใหม่ (11/22–11/24) มีค่า model prob; 234 แถวก่อนหน้าเป็น NaN และ**ไม่ backfill** เพราะจะเป็นการใช้ข้อมูลอนาคตแต่งอดีต
+- โค้ดที่แก้รอบนี้ยังไม่ commit; semantics ใหม่ (0.5 เมื่อ NEUTRAL) จะมีผลกับแถวใหม่หลัง deploy
+
+### 9.3 Injury cap
+
+- สูตร: `cap = 22 + 7.5 × (missing_starter_impact − 1)` เพดาน 48
+- `missing_starter_impact` = ผลรวมสัดส่วนที่หายของ top-5 (OUT = 1.0, GTD = 0.4, doubtful = 0.75)
+- ตัวอย่างจริง 11/24: GSW ขาด 3 ใน top-5 → cap 37, active 108.81 vs uncapped 100.66
+- กรณีแบบ 11/20 (ขาด 5) → cap 48 จึงไม่ถูกตัดที่ 22 อีก
+- เพิ่ม `injury_cap` และ `missing_starter_impact` ใน result และ features snapshot เพื่อ audit
+
+### 9.4 สถานะ ณ 11/24
+
+- v3: **45 แถว** (37 graded, 8 pending), 11/19–11/24
+- SP actionable 6 → 3–3; O/U actionable 5 → 2–3
+- STRONG: 2 ไม้ pending 11/24 (MEM +2.5, MIN −10.5) — ยัง paper mode
+- Tests: **249 ตัวผ่าน**
+- Go-live: ยังไม่ผ่าน; `BETTING_PAUSED=true` ยังคงอยู่
+- ข้อจำกัด: `model_prob` มีเพียง 20 แถว และ calibration ยังสรุปไม่ได้ (graded ที่มี model prob = 12)
+
+---
+
+**สรุปสุดท้าย:** ระบบยังเดินในโหมด paper อย่างปลอดภัย แต่ยัง**ไม่มีหลักฐานว่ามี edge** และเพิ่งเปลี่ยนโมเดลเมื่อ 11/19 สิ่งที่ต้องทำอันดับแรกคือ "เริ่มนับ v3 ใหม่ + เก็บ closing line/CLV ให้อัตโนมัติ + บังคับ kill switch" ไม่ใช่การผ่อนเกตหรือเพิ่มสูตรใหม่

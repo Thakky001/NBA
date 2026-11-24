@@ -69,6 +69,20 @@ class TestStrictSampleGate(unittest.TestCase):
         self.assertEqual(res['recommendation'], 'STRONG AWAY')
         self.assertGreater(res['pick_prob'], 0.50)
 
+    def test_neutral_has_no_pick_probability(self):
+        """NEUTRAL has no side, so pick_prob must not carry the candidate prob."""
+        res = decide_pick(
+            market_type='spread',
+            current_line=-3.5,
+            projected_val=3.0,
+            edge=0.3,
+            fair_prob=0.51,
+            data_quality_flags=_flags(20, 20),
+        )
+        self.assertEqual(res['recommendation'], 'NEUTRAL')
+        self.assertIsNone(res['pick_side'])
+        self.assertEqual(res['pick_prob'], 0.50)
+
     def test_unknown_sample_size_fails_closed(self):
         res = decide_pick(
             market_type='spread',

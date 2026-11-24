@@ -27,6 +27,9 @@ THAI_TZ = timezone(timedelta(hours=7))
 #: v3: one 70/30 rating formula for every team, RotoWire lineup removed.
 MODEL_VERSION = "nba-baseline-v3"
 
+#: `*_win_prob` is the probability of the pick side (0.5 when NEUTRAL).
+#: `*_model_prob` is the unmasked canonical probability: P(HOME covers) for the
+#: spread and P(OVER) for the total, so NEUTRAL decisions stay auditable.
 LEDGER_COLUMNS = [
     'game_id',
     'date',

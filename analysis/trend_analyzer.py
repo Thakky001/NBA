@@ -349,7 +349,7 @@ class TrendAnalyzer:
         
         # Pure Raw Mode: Use pure unconstrained cand_prob for raw diagnostics
         raw_win_prob = cand_prob
-        calibrated_pick_prob = pick_win_prob
+        calibrated_pick_prob = pick_win_prob if recommendation != 'NEUTRAL' else 0.50
         confidence = abs(calibrated_pick_prob - 0.5) * 2.0
         
         # Value and sizing are calculated with calibrated probabilities.
@@ -796,7 +796,7 @@ class TrendAnalyzer:
         raw_win_prob = cand_prob
         
         # Recommendation already used calibrated probability in decide_pick
-        calibrated_pick_prob = pick_win_prob
+        calibrated_pick_prob = pick_win_prob if recommendation != 'NEUTRAL' else 0.50
         confidence = abs(calibrated_pick_prob - 0.5) * 2.0
 
         # Value and sizing are calculated with calibrated probabilities.
