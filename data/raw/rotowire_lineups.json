@@ -61,7 +61,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-25 00:12:09"
+    "scraped_at": "2026-11-25 02:19:39"
   },
   "DET": {
     "team": "Detroit Pistons",
@@ -125,7 +125,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-25 00:12:09"
+    "scraped_at": "2026-11-25 02:19:39"
   },
   "Orlando Magic": {
     "team": "Orlando Magic",
@@ -184,7 +184,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-25 00:12:09"
+    "scraped_at": "2026-11-25 02:19:39"
   },
   "ORL": {
     "team": "Orlando Magic",
@@ -243,7 +243,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-25 00:12:09"
+    "scraped_at": "2026-11-25 02:19:39"
   },
   "Boston Celtics": {
     "team": "Boston Celtics",
@@ -251,8 +251,8 @@
     "opponent": "Washington Wizards",
     "opponent_abbr": "WAS",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Derrick White",
@@ -260,7 +260,7 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Jordan Walsh",
+        "name": "Sam Hauser",
         "position": "SG",
         "status": "Very Likely To Play"
       },
@@ -287,7 +287,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-25 00:12:09"
+    "scraped_at": "2026-11-25 02:19:39"
   },
   "BOS": {
     "team": "Boston Celtics",
@@ -295,8 +295,8 @@
     "opponent": "Washington Wizards",
     "opponent_abbr": "WAS",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Derrick White",
@@ -304,7 +304,7 @@
         "status": "Very Likely To Play"
       },
       {
-        "name": "Jordan Walsh",
+        "name": "Sam Hauser",
         "position": "SG",
         "status": "Very Likely To Play"
       },
@@ -331,7 +331,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-25 00:12:09"
+    "scraped_at": "2026-11-25 02:19:39"
   },
   "Washington Wizards": {
     "team": "Washington Wizards",
@@ -339,8 +339,8 @@
     "opponent": "Boston Celtics",
     "opponent_abbr": "BOS",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Trae Young",
@@ -370,11 +370,6 @@
     ],
     "injuries": [
       {
-        "name": "Tre Mann",
-        "position": "G",
-        "status": "Toss Up To Play"
-      },
-      {
         "name": "Reece Beekman",
         "position": "G",
         "status": "Very Unlikely To Play"
@@ -395,7 +390,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-25 00:12:09"
+    "scraped_at": "2026-11-25 02:19:39"
   },
   "WAS": {
     "team": "Washington Wizards",
@@ -403,8 +398,8 @@
     "opponent": "Boston Celtics",
     "opponent_abbr": "BOS",
     "is_home": true,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
         "name": "Trae Young",
@@ -434,11 +429,6 @@
     ],
     "injuries": [
       {
-        "name": "Tre Mann",
-        "position": "G",
-        "status": "Toss Up To Play"
-      },
-      {
         "name": "Reece Beekman",
         "position": "G",
         "status": "Very Unlikely To Play"
@@ -459,7 +449,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-25 00:12:09"
+    "scraped_at": "2026-11-25 02:19:39"
   },
   "Dallas Mavericks": {
     "team": "Dallas Mavericks",
@@ -523,7 +513,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-25 00:12:09"
+    "scraped_at": "2026-11-25 02:19:39"
   },
   "DAL": {
     "team": "Dallas Mavericks",
@@ -587,7 +577,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-25 00:12:09"
+    "scraped_at": "2026-11-25 02:19:39"
   },
   "Denver Nuggets": {
     "team": "Denver Nuggets",
@@ -625,7 +615,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-11-25 00:12:09"
+    "scraped_at": "2026-11-25 02:19:39"
   },
   "DEN": {
     "team": "Denver Nuggets",
@@ -663,6 +653,6 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-11-25 00:12:09"
+    "scraped_at": "2026-11-25 02:19:39"
   }
 }
