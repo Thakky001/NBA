@@ -332,13 +332,13 @@ game_id,date,status,period,clock,clock_detail,season_type,home_team,home_id,home
 401910045,2026-11-24T03:00Z,STATUS_FINAL,4,12:00,Final,2,Sacramento Kings,23,107,San Antonio Spurs,24,123,,,,,Golden 1 Center
 401909314,2026-11-25T00:00Z,STATUS_FINAL,4,12:00,Final,2,Orlando Magic,19,86,Detroit Pistons,8,104,,,,,Kia Center
 401909315,2026-11-25T01:00Z,STATUS_FINAL,4,12:00,Final,2,Washington Wizards,27,116,Boston Celtics,2,131,,,,,Capital One Arena
-401909316,2026-11-25T03:00Z,STATUS_IN_PROGRESS,4,6:01,6:01 - 4th Quarter,2,Denver Nuggets,7,88,Dallas Mavericks,6,99,,,,,Ball Arena
+401909316,2026-11-25T03:00Z,STATUS_FINAL,4,0.0,Final,2,Denver Nuggets,7,101,Dallas Mavericks,6,120,,,,,Ball Arena
 401909317,2026-11-25T22:00Z,STATUS_SCHEDULED,0,0.0,"Wed, November 25th at 5:00 PM EST",2,Philadelphia 76ers,20,0,Miami Heat,14,0,PHI -1.5,237.5,,,Xfinity Mobile Arena
-401909318,2026-11-26T00:00Z,STATUS_SCHEDULED,0,0.0,"Wed, November 25th at 7:00 PM EST",2,Charlotte Hornets,30,0,Chicago Bulls,4,0,CHA -3.5,221.5,,,Spectrum Center
-401909319,2026-11-26T00:30Z,STATUS_SCHEDULED,0,0.0,"Wed, November 25th at 7:30 PM EST",2,New York Knicks,18,0,Cleveland Cavaliers,5,0,NY -3.5,219.5,,,Madison Square Garden
-401909320,2026-11-26T00:30Z,STATUS_SCHEDULED,0,0.0,"Wed, November 25th at 7:30 PM EST",2,Oklahoma City Thunder,25,0,Minnesota Timberwolves,16,0,OKC -1.5,223.5,,,Paycom Center
-401909321,2026-11-26T01:00Z,STATUS_SCHEDULED,0,0.0,"Wed, November 25th at 8:00 PM EST",2,Memphis Grizzlies,29,0,LA Clippers,12,0,MEM -6.5,229.5,,,FedExForum
-401909322,2026-11-26T01:00Z,STATUS_SCHEDULED,0,0.0,"Wed, November 25th at 8:00 PM EST",2,Milwaukee Bucks,15,0,Brooklyn Nets,17,0,MIL -1.5,231.5,,,Fiserv Forum
-401909323,2026-11-26T01:30Z,STATUS_SCHEDULED,0,0.0,"Wed, November 25th at 8:30 PM EST",2,Houston Rockets,10,0,Phoenix Suns,21,0,HOU -9.5,224.5,,,Toyota Center (Houston)
-401909324,2026-11-26T03:00Z,STATUS_SCHEDULED,0,0.0,"Wed, November 25th at 10:00 PM EST",2,Golden State Warriors,9,0,Sacramento Kings,23,0,GS -5.5,218.5,,,Chase Center
-401909325,2026-11-26T03:00Z,STATUS_SCHEDULED,0,0.0,"Wed, November 25th at 10:00 PM EST",2,Portland Trail Blazers,22,0,San Antonio Spurs,24,0,SA -3.5,226.5,,,Moda Center
+401909318,2026-11-26T00:00Z,STATUS_SCHEDULED,0,0.0,"Wed, November 25th at 7:00 PM EST",2,Charlotte Hornets,30,0,Chicago Bulls,4,0,CHA -3.5,219.5,,,Spectrum Center
+401909319,2026-11-26T00:30Z,STATUS_SCHEDULED,0,0.0,"Wed, November 25th at 7:30 PM EST",2,New York Knicks,18,0,Cleveland Cavaliers,5,0,NY -3.5,218.5,,,Madison Square Garden
+401909320,2026-11-26T00:30Z,STATUS_SCHEDULED,0,0.0,"Wed, November 25th at 7:30 PM EST",2,Oklahoma City Thunder,25,0,Minnesota Timberwolves,16,0,OKC -1.5,222.5,,,Paycom Center
+401909321,2026-11-26T01:00Z,STATUS_SCHEDULED,0,0.0,"Wed, November 25th at 8:00 PM EST",2,Memphis Grizzlies,29,0,LA Clippers,12,0,MEM -7.5,227.5,,,FedExForum
+401909322,2026-11-26T01:00Z,STATUS_SCHEDULED,0,0.0,"Wed, November 25th at 8:00 PM EST",2,Milwaukee Bucks,15,0,Brooklyn Nets,17,0,MIL -1.5,234.5,,,Fiserv Forum
+401909323,2026-11-26T01:30Z,STATUS_SCHEDULED,0,0.0,"Wed, November 25th at 8:30 PM EST",2,Houston Rockets,10,0,Phoenix Suns,21,0,HOU -9.5,223.5,,,Toyota Center (Houston)
+401909324,2026-11-26T03:00Z,STATUS_SCHEDULED,0,0.0,"Wed, November 25th at 10:00 PM EST",2,Golden State Warriors,9,0,Sacramento Kings,23,0,GS -6.5,216.5,,,Chase Center
+401909325,2026-11-26T03:00Z,STATUS_SCHEDULED,0,0.0,"Wed, November 25th at 10:00 PM EST",2,Portland Trail Blazers,22,0,San Antonio Spurs,24,0,SA -2.5,225.5,,,Moda Center

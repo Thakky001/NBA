@@ -42,7 +42,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 4870564,Joshua Jefferson,9,Forward,"6' 8""",246 lbs,23,0.0,Iowa State,17,Brooklyn Nets
 5174655,Chaney Johnson,31,Forward,"6' 8""",225 lbs,24,2.0,Auburn,17,Brooklyn Nets
 3907823,Terance Mann,14,Guard,"6' 6""",215 lbs,30,8.0,Florida State,17,Brooklyn Nets
-4687718,Josh Minott,00,Forward,"6' 8""",205 lbs,23,5.0,Memphis,17,Brooklyn Nets
+4687718,Josh Minott,00,Forward,"6' 8""",205 lbs,24,5.0,Memphis,17,Brooklyn Nets
 4702670,Grant Nelson,16,Forward,"6' 11""",230 lbs,24,2.0,Alabama,17,Brooklyn Nets
 4278104,Michael Porter Jr.,17,Forward,"6' 10""",218 lbs,28,8.0,Missouri,17,Brooklyn Nets
 5037873,Drake Powell,4,Guard,"6' 5""",195 lbs,21,2.0,North Carolina,17,Brooklyn Nets
@@ -401,7 +401,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 1966,LeBron James,23,Forward,"6' 9""",250 lbs,41,24.0,,20,Philadelphia 76ers
 4433144,Caleb Love,8,Guard,"6' 3""",214 lbs,25,2.0,Arizona,20,Philadelphia 76ers
 4431678,Tyrese Maxey,0,Guard,"6' 2""",204 lbs,26,7.0,Kentucky,20,Philadelphia 76ers
-4873090,Labaron Philon Jr.,00,Guard,"6' 3""",179 lbs,20,0.0,Alabama,20,Philadelphia 76ers
+4873090,Labaron Philon Jr.,00,Guard,"6' 3""",179 lbs,21,0.0,Alabama,20,Philadelphia 76ers
 5099752,Rayan Rupert,12,Guard,"6' 7""",207 lbs,22,4.0,,20,Philadelphia 76ers
 4351851,Anfernee Simons,5,Guard,"6' 4""",206 lbs,27,9.0,,20,Philadelphia 76ers
 3912848,Dean Wade,45,Forward,"6' 9""",223 lbs,30,8.0,Kansas State,20,Philadelphia 76ers
