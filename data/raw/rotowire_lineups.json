@@ -5,16 +5,16 @@
     "opponent": "Orlando Magic",
     "opponent_abbr": "ORL",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
-        "name": "Cade Cunningham",
+        "name": "Daniss Jenkins",
         "position": "PG",
-        "status": "Likely To Play"
+        "status": "Very Likely To Play"
       },
       {
-        "name": "Daniss Jenkins",
+        "name": "Isaiah Joe",
         "position": "SG",
         "status": "Very Likely To Play"
       },
@@ -61,7 +61,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-24 23:35:50"
+    "scraped_at": "2026-11-25 00:12:09"
   },
   "DET": {
     "team": "Detroit Pistons",
@@ -69,16 +69,16 @@
     "opponent": "Orlando Magic",
     "opponent_abbr": "ORL",
     "is_home": false,
-    "lineup_status": "Expected",
-    "is_confirmed": false,
+    "lineup_status": "Confirmed",
+    "is_confirmed": true,
     "starters": [
       {
-        "name": "Cade Cunningham",
+        "name": "Daniss Jenkins",
         "position": "PG",
-        "status": "Likely To Play"
+        "status": "Very Likely To Play"
       },
       {
-        "name": "Daniss Jenkins",
+        "name": "Isaiah Joe",
         "position": "SG",
         "status": "Very Likely To Play"
       },
@@ -125,7 +125,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-24 23:35:50"
+    "scraped_at": "2026-11-25 00:12:09"
   },
   "Orlando Magic": {
     "team": "Orlando Magic",
@@ -184,7 +184,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-24 23:35:50"
+    "scraped_at": "2026-11-25 00:12:09"
   },
   "ORL": {
     "team": "Orlando Magic",
@@ -243,7 +243,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-24 23:35:50"
+    "scraped_at": "2026-11-25 00:12:09"
   },
   "Boston Celtics": {
     "team": "Boston Celtics",
@@ -287,7 +287,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-24 23:35:50"
+    "scraped_at": "2026-11-25 00:12:09"
   },
   "BOS": {
     "team": "Boston Celtics",
@@ -331,7 +331,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-24 23:35:50"
+    "scraped_at": "2026-11-25 00:12:09"
   },
   "Washington Wizards": {
     "team": "Washington Wizards",
@@ -395,7 +395,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-24 23:35:50"
+    "scraped_at": "2026-11-25 00:12:09"
   },
   "WAS": {
     "team": "Washington Wizards",
@@ -459,7 +459,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-24 23:35:50"
+    "scraped_at": "2026-11-25 00:12:09"
   },
   "Dallas Mavericks": {
     "team": "Dallas Mavericks",
@@ -523,7 +523,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-24 23:35:50"
+    "scraped_at": "2026-11-25 00:12:09"
   },
   "DAL": {
     "team": "Dallas Mavericks",
@@ -587,7 +587,7 @@
         "status": "Very Unlikely To Play"
       }
     ],
-    "scraped_at": "2026-11-24 23:35:50"
+    "scraped_at": "2026-11-25 00:12:09"
   },
   "Denver Nuggets": {
     "team": "Denver Nuggets",
@@ -625,7 +625,7 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-11-24 23:35:50"
+    "scraped_at": "2026-11-25 00:12:09"
   },
   "DEN": {
     "team": "Denver Nuggets",
@@ -663,6 +663,6 @@
       }
     ],
     "injuries": [],
-    "scraped_at": "2026-11-24 23:35:50"
+    "scraped_at": "2026-11-25 00:12:09"
   }
 }
