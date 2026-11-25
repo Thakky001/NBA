@@ -391,6 +391,9 @@ def translate_recommendation(
             return f"{icon} {label} (น่าสนใจ)"
         return label
 
+    if 'PASS' in rec_str:
+        return '⚖️ ข้าม (PASS) — ตลาดสวนทาง'
+
     # Neutral variants
     if 'NEUTRAL' in rec_str:
         if 'HOME' in rec_str:

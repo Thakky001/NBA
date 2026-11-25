@@ -283,8 +283,8 @@ def run_alert_cycle(
     target_date_str: Optional[str] = None,
     dry_run: bool = False,
     force: bool = False,
-    window_min: int = 20,
-    window_max: int = 45,
+    window_min: int = 8,
+    window_max: int = 25,
     dashboard_url: str = DEFAULT_DASHBOARD_URL
 ) -> int:
     """Run one alert check cycle. Returns count of dispatched games."""
@@ -432,23 +432,7 @@ def run_alert_cycle(
         except Exception as exc:
             logger.warning(f"Error computing unified analysis for game {gid}: {exc}")
 
-    # 3. Record pre-game predictions in ledger (locks lines & picks before tip-off using the exact same analyses)
-    try:
-        n_rec = record_slate_predictions(
-            date_str,
-            scoreboard,
-            analyzer,
-            espn=espn,
-            odds_coll=odds_coll,
-            max_minutes_before=window_max,
-            precomputed_analyses=candidate_analyses
-        )
-        if n_rec > 0:
-            logger.info(f"Locked and recorded {n_rec} pre-game prediction(s) into ledger.")
-    except Exception as exc:
-        logger.warning(f"Error recording slate predictions: {exc}")
-
-    # 4. Format Telegram alert cards using the EXACT SAME analysis object
+    # 3. Format Telegram alert cards using the EXACT SAME analysis object
     cards = []
     alerted_gids = []
 
@@ -473,13 +457,13 @@ def run_alert_cycle(
         header = (
             f"⚠️ <b>[PAPER TEST ONLY / BETTING PAUSED]</b>\n"
             f"🧪 โมเดลอยู่ในโหมดจำลองกระดาษ (งดวางเงินจริงจนกว่าจะผ่านเกณฑ์ Go-Live)\n"
-            f"📅 ข้อมูลวิเคราะห์ล่วงหน้า 30 นาทีก่อนเริ่มแข่งขัน\n"
+            f"📅 ข้อมูลวิเคราะห์ล่วงหน้า 15 นาทีก่อนเริ่มแข่งขัน\n"
             f"━━━━━━━━━━━━━━━━━━━━\n"
         )
     else:
         header = (
             f"🔔 <b>[NBA PRE-GAME INTELLIGENCE]</b>\n"
-            f"📅 ข้อมูลวิเคราะห์ล่วงหน้า 30 นาทีก่อนเริ่มแข่งขัน\n"
+            f"📅 ข้อมูลวิเคราะห์ล่วงหน้า 15 นาทีก่อนเริ่มแข่งขัน\n"
             f"━━━━━━━━━━━━━━━━━━━━\n"
         )
     separator = "\n────────────────────\n"
@@ -495,7 +479,7 @@ def run_alert_cycle(
         print("\n=== [DRY RUN MESSAGE PREVIEW] ===")
         print(full_message)
         print("=================================\n")
-        logger.info(f"Dry-run complete for {len(alerted_gids)} games (no Telegram API call made).")
+        logger.info(f"Dry-run complete for {len(alerted_gids)} games (no Telegram API call made, ledger untouched).")
         return len(alerted_gids)
 
     # Dispatch to Telegram (Sound enabled 24/7 as requested)
@@ -503,6 +487,27 @@ def run_alert_cycle(
     if success:
         mark_games_alerted(date_str, alerted_gids)
         logger.info(f"Successfully dispatched alert for {len(alerted_gids)} game(s): {alerted_gids}")
+
+        # Single writer: record into predictions ledger ONLY after alert is successfully sent
+        published_at = datetime.now(timezone.utc).isoformat()
+        try:
+            n_rec = record_slate_predictions(
+                date_str,
+                scoreboard,
+                analyzer,
+                espn=espn,
+                odds_coll=odds_coll,
+                force=True,
+                only_game_ids=alerted_gids,
+                precomputed_analyses=candidate_analyses,
+                record_source='alert',
+                published_at=published_at
+            )
+            if n_rec > 0:
+                logger.info(f"Locked and recorded {n_rec} published prediction(s) into ledger.")
+        except Exception as exc:
+            logger.warning(f"Error recording published slate predictions into ledger: {exc}")
+
         return len(alerted_gids)
     else:
         logger.error("Failed to deliver alert via Telegram.")
@@ -510,13 +515,13 @@ def run_alert_cycle(
 
 
 def main():
-    parser = argparse.ArgumentParser(description="NBA 30-Minute Pre-Game Alert Dispatcher")
+    parser = argparse.ArgumentParser(description="NBA 15-Minute Pre-Game Alert Dispatcher")
     parser.add_argument('--date', type=str, default=None, help="Target date YYYY-MM-DD (default: today in Thai time)")
     parser.add_argument('--dry-run', action='store_true', help="Preview output without sending Telegram message")
-    parser.add_argument('--force', action='store_true', help="Force evaluate upcoming games regardless of 20-45m window")
+    parser.add_argument('--force', action='store_true', help="Force evaluate upcoming games regardless of 8-25m window")
     parser.add_argument('--test-message', action='store_true', help="Send test ping to Telegram to verify setup")
-    parser.add_argument('--window-min', type=int, default=20, help="Min minutes before tip-off (default: 20)")
-    parser.add_argument('--window-max', type=int, default=45, help="Max minutes before tip-off (default: 45)")
+    parser.add_argument('--window-min', type=int, default=8, help="Min minutes before tip-off (default: 8)")
+    parser.add_argument('--window-max', type=int, default=25, help="Max minutes before tip-off (default: 25)")
     parser.add_argument('--dashboard-url', type=str, default=DEFAULT_DASHBOARD_URL, help="URL to Streamlit Dashboard")
 
     args = parser.parse_args()
@@ -528,7 +533,7 @@ def main():
             sys.exit(1)
         test_txt = (
             "🏀 <b>NBA Analytics Bot Connected!</b>\n"
-            "ระบบแจ้งเตือนผลวิเคราะห์บาสเกตบอลล่วงหน้า 30 นาทีก่อนแข่งพร้อมทำงานเรียบร้อยครับ! 🔔"
+            "ระบบแจ้งเตือนผลวิเคราะห์บาสเกตบอลล่วงหน้า 15 นาทีก่อนแข่งพร้อมทำงานเรียบร้อยครับ! 🔔"
         )
         if notifier.send_message(test_txt, disable_notification=False):
             print("✅ Test notification dispatched successfully with sound!")

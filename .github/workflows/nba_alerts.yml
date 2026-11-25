@@ -1,10 +1,10 @@
-name: NBA 30-Min Pre-Game Alerts
+name: NBA 15-Min Pre-Game Alerts
 
 on:
   schedule:
-    # Run at :10 and :35 of every hour during NBA hours (18:00 - 05:00 UTC = 01:00 - 12:00 Thai Time)
-    - cron: '10,35 18-23 * * *'
-    - cron: '10,35 0-5 * * *'
+    # Run at :15 and :45 of every hour during NBA hours (17:00 - 05:00 UTC = 00:00 - 12:00 Thai Time)
+    - cron: '15,45 17-23 * * *'
+    - cron: '15,45 0-5 * * *'
   workflow_dispatch: # Allows manual trigger anytime from GitHub Web UI
 
 permissions:
@@ -26,20 +26,20 @@ jobs:
         with:
           python-version: '3.11'
           cache: 'pip'
-
+        
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run 30-Min Pre-Game Alerts
+      - name: Run 15-Min Pre-Game Alerts
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
           STREAMLIT_APP_URL: ${{ secrets.STREAMLIT_APP_URL }}
         run: |
-          python run_alerts.py --window-min 10 --window-max 48
+          python run_alerts.py --window-min 8 --window-max 25
 
       - name: Commit & Push Alert State
         run: |

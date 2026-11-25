@@ -14,6 +14,7 @@ import pandas as pd
 import numpy as np
 
 from config import RAW_DIR, normalize_team_name, calculate_home_spread
+from analysis.publication import resolve_analysis, resolve_row
 
 logger = logging.getLogger('prediction_tracker')
 
@@ -80,7 +81,34 @@ LEDGER_COLUMNS = [
     'ou_is_actionable',
     'ou_suppressed_reason',
     'gate_version',
-    'data_quality_flags'
+    'data_quality_flags',
+    # Publication layer (what users actually received)
+    'sp_model_is_actionable',
+    'sp_is_published',
+    'sp_publish_reason',
+    'sp_published_recommendation',
+    'sp_published_result',
+    'ou_model_is_actionable',
+    'ou_is_published',
+    'ou_publish_reason',
+    'ou_published_recommendation',
+    'ou_published_result',
+    'published_at',
+    'record_source'
+]
+
+
+PUBLISHED_COLUMNS = [
+    'sp_model_is_actionable', 'sp_is_published', 'sp_publish_reason',
+    'sp_published_recommendation', 'sp_published_result',
+    'ou_model_is_actionable', 'ou_is_published', 'ou_publish_reason',
+    'ou_published_recommendation', 'ou_published_result',
+    'published_at', 'record_source'
+]
+
+BOOL_COLUMNS = [
+    'sp_model_is_actionable', 'sp_is_published',
+    'ou_model_is_actionable', 'ou_is_published'
 ]
 
 
@@ -89,7 +117,10 @@ STRING_COLUMNS = [
     'ou_recommendation', 'ou_verdict', 'sp_recommendation', 'sp_verdict',
     'ou_result', 'sp_result', 'verdict_result', 'status',
     'sp_pick_side', 'sp_suppressed_reason', 'ou_pick_side', 'ou_suppressed_reason',
-    'gate_version', 'data_quality_flags'
+    'gate_version', 'data_quality_flags',
+    'sp_publish_reason', 'sp_published_recommendation', 'sp_published_result',
+    'ou_publish_reason', 'ou_published_recommendation', 'ou_published_result',
+    'published_at', 'record_source'
 ]
 
 
@@ -132,6 +163,101 @@ def save_ledger(df: pd.DataFrame) -> None:
         df[cols].to_csv(LEDGER_PATH, index=False, encoding='utf-8')
     except Exception as exc:
         logger.error(f"Failed to save predictions ledger to {LEDGER_PATH}: {exc}")
+
+
+def _is_blank(value: Any) -> bool:
+    """True for None / NaN / empty-string values."""
+    if value is None:
+        return True
+    try:
+        if pd.isna(value):
+            return True
+    except (TypeError, ValueError):
+        pass
+    return str(value).strip().lower() in ('', 'nan', 'none', 'nat')
+
+
+def _as_bool(value: Any, default: bool = False) -> bool:
+    """Coerce CSV round-tripped booleans to bool."""
+    if isinstance(value, bool):
+        return value
+    if _is_blank(value):
+        return default
+    text = str(value).strip().lower()
+    if text in ('true', '1', '1.0', 'yes'):
+        return True
+    if text in ('false', '0', '0.0', 'no'):
+        return False
+    return default
+
+
+def _row_gate(row: Any, prefix: str) -> Dict[str, Any]:
+    """Read stored publication fields, deriving them only when absent."""
+    stored_rec = row.get(f'{prefix}_published_recommendation')
+    if not _is_blank(stored_rec):
+        return {
+            'is_published': _as_bool(row.get(f'{prefix}_is_published')),
+            'published_recommendation': str(stored_rec),
+            'publish_reason': None if _is_blank(row.get(f'{prefix}_publish_reason')) else str(row.get(f'{prefix}_publish_reason')),
+        }
+    return resolve_row(row, prefix)
+
+
+def ensure_published_columns(df: pd.DataFrame, derive: bool = True) -> pd.DataFrame:
+    """Return a ledger copy with publication columns populated.
+
+    Missing columns are added. When ``derive`` is True, rows written before the
+    publication layer existed get their published recommendation/reason,
+    effective ``is_actionable`` and published result derived from the raw
+    recommendation/verdict and final score. Raw columns are never modified.
+    """
+    if df is None:
+        return pd.DataFrame(columns=LEDGER_COLUMNS)
+    out = df.copy()
+    for col in LEDGER_COLUMNS:
+        if col not in out.columns:
+            out[col] = None
+    if not derive:
+        return out
+
+    for idx, row in out.iterrows():
+        status = str(row.get('status', '')).upper()
+        for prefix in ('sp', 'ou'):
+            gate = _row_gate(row, prefix)
+            model_act_raw = row.get(f'{prefix}_model_is_actionable')
+            if _is_blank(model_act_raw):
+                model_act = _as_bool(row.get(f'{prefix}_is_actionable'), gate['is_published'])
+            else:
+                model_act = _as_bool(model_act_raw)
+            effective_act = bool(model_act) and bool(gate['is_published'])
+
+            out.at[idx, f'{prefix}_is_published'] = bool(gate['is_published'])
+            out.at[idx, f'{prefix}_published_recommendation'] = gate['published_recommendation']
+            out.at[idx, f'{prefix}_publish_reason'] = gate['publish_reason']
+            out.at[idx, f'{prefix}_model_is_actionable'] = bool(model_act)
+            out.at[idx, f'{prefix}_is_actionable'] = effective_act
+            if not effective_act and not gate['is_published'] and not _is_blank(gate['publish_reason']):
+                if _is_blank(row.get(f'{prefix}_suppressed_reason')):
+                    out.at[idx, f'{prefix}_suppressed_reason'] = gate['publish_reason']
+
+            if status == 'GRADED' and _is_blank(row.get(f'{prefix}_published_result')):
+                if gate['is_published']:
+                    if prefix == 'sp':
+                        out.at[idx, 'sp_published_result'] = grade_spread_pick(
+                            gate['published_recommendation'],
+                            row.get('spread_line'),
+                            row.get('actual_margin')
+                        )
+                    else:
+                        out.at[idx, 'ou_published_result'] = grade_over_under_pick(
+                            gate['published_recommendation'],
+                            row.get('total_line'),
+                            row.get('actual_total')
+                        )
+                else:
+                    out.at[idx, f'{prefix}_published_result'] = 'SKIPPED'
+    return out
+
 
 
 def get_historical_residuals(
@@ -265,7 +391,10 @@ def record_slate_predictions(
     max_minutes_before: Optional[float] = 60.0,
     force: bool = False,
     precomputed_analyses: Optional[Dict[str, Dict[str, Any]]] = None,
-    return_analyses: bool = False
+    return_analyses: bool = False,
+    only_game_ids: Optional[Any] = None,
+    record_source: str = 'alert',
+    published_at: Optional[str] = None
 ) -> Union[int, Tuple[int, Dict[str, Dict[str, Any]]]]:
     """Record pre-game predictions for games in the slate within the pre-game window.
 
@@ -283,12 +412,21 @@ def record_slate_predictions(
         force: If True, bypass timing filters (used in tests or offline grading).
         precomputed_analyses: Optional mapping of game_id -> pre-computed analysis dict.
         return_analyses: If True, return (count, analyses_dict).
+        only_game_ids: Optional iterable of game ids that were actually published.
+            When provided the tip-off window guard is skipped (selection is done
+            by the caller) but future/completed games are still rejected.
+        record_source: Who wrote the row ('alert' is the only production writer).
+        published_at: UTC timestamp of the successful alert send.
 
     Returns:
         int or (int, dict): Number of new predictions recorded (and analyses dict if return_analyses=True).
     """
     if scoreboard_df is None or scoreboard_df.empty:
         return (0, {}) if return_analyses else 0
+
+    allowed_gids = None
+    if only_game_ids is not None:
+        allowed_gids = {str(g).strip() for g in only_game_ids}
 
     now_thai = datetime.now(THAI_TZ)
     today_thai_str = now_thai.strftime('%Y-%m-%d')
@@ -311,6 +449,8 @@ def record_slate_predictions(
         gid = str(game.get('game_id', '')).strip()
         if not gid:
             continue
+        if allowed_gids is not None and gid not in allowed_gids:
+            continue
 
         # Fast bypass: if already recorded in ledger and caller didn't ask for analyses, skip immediately
         if not return_analyses and gid in existing_gids:
@@ -324,7 +464,7 @@ def record_slate_predictions(
             continue
 
         # Guard 3: Check tip-off time window (only record if within max_minutes_before, e.g. 60m)
-        if not force and max_minutes_before is not None:
+        if not force and max_minutes_before is not None and allowed_gids is None:
             thai_dt = game.get('thai_datetime')
             if thai_dt is not None and not pd.isna(thai_dt):
                 if isinstance(thai_dt, pd.Timestamp):
@@ -390,6 +530,18 @@ def record_slate_predictions(
 
         eff_ou_rec = ou_res.get('recommendation', 'NEUTRAL')
         eff_sp_rec = sp_res.get('recommendation', 'NEUTRAL')
+        publication = resolve_analysis(analysis)
+
+        sp_model_actionable = bool(sp_decision.get('is_actionable', eff_sp_rec != 'NEUTRAL'))
+        ou_model_actionable = bool(ou_decision.get('is_actionable', eff_ou_rec != 'NEUTRAL'))
+        sp_gate = publication['spread']
+        ou_gate = publication['over_under']
+        sp_suppressed = sp_decision.get('suppressed_reason')
+        ou_suppressed = ou_decision.get('suppressed_reason')
+        if not sp_gate['is_published'] and sp_gate['publish_reason']:
+            sp_suppressed = sp_suppressed or sp_gate['publish_reason']
+        if not ou_gate['is_published'] and ou_gate['publish_reason']:
+            ou_suppressed = ou_suppressed or ou_gate['publish_reason']
 
         dq_summary = {
             k: v for k, v in analysis.get('features', {}).items() if str(k).startswith('dq_')
@@ -434,18 +586,31 @@ def record_slate_predictions(
             'sp_current_line': sp_val,
             'sp_edge_vs_open': sp_decision.get('edge_vs_open'),
             'sp_edge_vs_current': sp_decision.get('edge_vs_current') if sp_decision.get('edge_vs_current') is not None else sp_res.get('cover_edge'),
-            'sp_is_actionable': sp_decision.get('is_actionable', eff_sp_rec != 'NEUTRAL'),
-            'sp_suppressed_reason': sp_decision.get('suppressed_reason'),
+            'sp_is_actionable': bool(sp_model_actionable and sp_gate['is_published']),
+            'sp_suppressed_reason': sp_suppressed,
             'ou_pick_side': ou_decision.get('pick_side'),
             'ou_pick_prob': ou_decision.get('pick_prob'),
             'ou_anchor_line': ou_decision.get('anchor_line') or ou_val,
             'ou_current_line': ou_val,
             'ou_edge_vs_open': ou_decision.get('edge_vs_open'),
             'ou_edge_vs_current': ou_decision.get('edge_vs_current') if ou_decision.get('edge_vs_current') is not None else ou_res.get('total_edge'),
-            'ou_is_actionable': ou_decision.get('is_actionable', eff_ou_rec != 'NEUTRAL'),
-            'ou_suppressed_reason': ou_decision.get('suppressed_reason'),
+            'ou_is_actionable': bool(ou_model_actionable and ou_gate['is_published']),
+            'ou_suppressed_reason': ou_suppressed,
             'gate_version': sp_decision.get('gate_version') or ou_decision.get('gate_version') or 'gate-v2.1',
-            'data_quality_flags': json.dumps(dq_summary)
+            'data_quality_flags': json.dumps(dq_summary),
+            # Publication layer fields
+            'sp_model_is_actionable': sp_model_actionable,
+            'sp_is_published': bool(sp_gate['is_published']),
+            'sp_publish_reason': sp_gate['publish_reason'],
+            'sp_published_recommendation': sp_gate['published_recommendation'],
+            'sp_published_result': None,
+            'ou_model_is_actionable': ou_model_actionable,
+            'ou_is_published': bool(ou_gate['is_published']),
+            'ou_publish_reason': ou_gate['publish_reason'],
+            'ou_published_recommendation': ou_gate['published_recommendation'],
+            'ou_published_result': None,
+            'published_at': published_at,
+            'record_source': record_source
         })
         existing_gids.add(gid)
 
@@ -491,7 +656,7 @@ def grade_finished_games(scoreboard_df: pd.DataFrame) -> int:
     if not final_games:
         return 0
 
-    for col in ['ou_result', 'sp_result', 'verdict_result', 'status']:
+    for col in ['ou_result', 'sp_result', 'verdict_result', 'status', 'sp_published_result', 'ou_published_result']:
         if col in ledger_df.columns:
             ledger_df[col] = ledger_df[col].astype(object)
 
@@ -510,6 +675,20 @@ def grade_finished_games(scoreboard_df: pd.DataFrame) -> int:
             sp_res = grade_spread_pick(row['sp_recommendation'], s_line, act_margin)
             v_res = grade_verdict_pick(row['ou_verdict'], row['ou_recommendation'], t_line, act_total)
 
+            # Published picks grading
+            sp_gate = _row_gate(row, 'sp')
+            ou_gate = _row_gate(row, 'ou')
+
+            if sp_gate['is_published']:
+                sp_pub_res = grade_spread_pick(sp_gate['published_recommendation'], s_line, act_margin)
+            else:
+                sp_pub_res = 'SKIPPED'
+
+            if ou_gate['is_published']:
+                ou_pub_res = grade_over_under_pick(ou_gate['published_recommendation'], t_line, act_total)
+            else:
+                ou_pub_res = 'SKIPPED'
+
             ledger_df.at[idx, 'home_score'] = h_pts
             ledger_df.at[idx, 'away_score'] = a_pts
             ledger_df.at[idx, 'actual_total'] = act_total
@@ -517,6 +696,8 @@ def grade_finished_games(scoreboard_df: pd.DataFrame) -> int:
             ledger_df.at[idx, 'ou_result'] = ou_res
             ledger_df.at[idx, 'sp_result'] = sp_res
             ledger_df.at[idx, 'verdict_result'] = v_res
+            ledger_df.at[idx, 'sp_published_result'] = sp_pub_res
+            ledger_df.at[idx, 'ou_published_result'] = ou_pub_res
             ledger_df.at[idx, 'status'] = 'GRADED'
             graded_count += 1
 
@@ -583,8 +764,19 @@ def grade_verdict_pick(verdict: Any, recommendation: Any, total_line: Any, actua
     return 'SKIPPED'
 
 
-def calculate_track_record(ledger_df: pd.DataFrame) -> Dict[str, Any]:
-    """Compute comprehensive performance metrics and win rates from ledger."""
+def calculate_track_record(
+    ledger_df: pd.DataFrame,
+    published_only: bool = False,
+    v3_only: bool = False
+) -> Dict[str, Any]:
+    """Compute comprehensive performance metrics and win rates from ledger.
+
+    Args:
+        ledger_df: Ledger DataFrame.
+        published_only: If True, computes metrics strictly on published picks
+            (sp_is_published / ou_is_published with sp_published_result / ou_published_result).
+        v3_only: If True, filters strictly to model_version == 'nba-baseline-v3'.
+    """
     empty_stats = {
         'total_predictions': 0,
         'graded_games': 0,
@@ -594,11 +786,24 @@ def calculate_track_record(ledger_df: pd.DataFrame) -> Dict[str, Any]:
         'lean': {'bets': 0, 'wins': 0, 'losses': 0, 'pushes': 0, 'win_rate': 0.0, 'net_units': 0.0, 'roi_pct': 0.0},
         'over_under': {'bets': 0, 'wins': 0, 'losses': 0, 'pushes': 0, 'win_rate': 0.0, 'net_units': 0.0, 'roi_pct': 0.0},
         'spread': {'bets': 0, 'wins': 0, 'losses': 0, 'pushes': 0, 'win_rate': 0.0, 'net_units': 0.0, 'roi_pct': 0.0},
+        'strong_spread': {'bets': 0, 'wins': 0, 'losses': 0, 'pushes': 0, 'win_rate': 0.0, 'net_units': 0.0, 'roi_pct': 0.0},
+        'strong_ou': {'bets': 0, 'wins': 0, 'losses': 0, 'pushes': 0, 'win_rate': 0.0, 'net_units': 0.0, 'roi_pct': 0.0},
+        'lean_spread': {'bets': 0, 'wins': 0, 'losses': 0, 'pushes': 0, 'win_rate': 0.0, 'net_units': 0.0, 'roi_pct': 0.0},
+        'lean_ou': {'bets': 0, 'wins': 0, 'losses': 0, 'pushes': 0, 'win_rate': 0.0, 'net_units': 0.0, 'roi_pct': 0.0},
         'verdict': {'bets': 0, 'wins': 0, 'losses': 0, 'pushes': 0, 'win_rate': 0.0, 'net_units': 0.0, 'roi_pct': 0.0},
     }
 
     if ledger_df is None or ledger_df.empty:
         return empty_stats
+
+    df_calc = ledger_df.copy()
+    if v3_only:
+        df_calc = df_calc[df_calc.get('model_version', '') == MODEL_VERSION]
+        if df_calc.empty:
+            return empty_stats
+
+    if published_only:
+        df_calc = ensure_published_columns(df_calc, derive=True)
 
     def _calc_subset(results: List[str]) -> Dict[str, Any]:
         valid = [r for r in results if r in ['WIN', 'LOSS', 'PUSH']]
@@ -622,8 +827,8 @@ def calculate_track_record(ledger_df: pd.DataFrame) -> Dict[str, Any]:
             'roi_pct': roi
         }
 
-    graded = ledger_df[ledger_df['status'] == 'GRADED']
-    pending_count = len(ledger_df[ledger_df['status'] != 'GRADED'])
+    graded = df_calc[df_calc['status'] == 'GRADED']
+    pending_count = len(df_calc[df_calc['status'] != 'GRADED'])
 
     all_results = []
     ou_results = []
@@ -637,11 +842,24 @@ def calculate_track_record(ledger_df: pd.DataFrame) -> Dict[str, Any]:
     lean_ou_results = []
 
     for _, row in graded.iterrows():
-        ou_r = row.get('ou_result')
-        sp_r = row.get('sp_result')
-        v_r = row.get('verdict_result')
-        ou_rec = str(row.get('ou_recommendation', ''))
-        sp_rec = str(row.get('sp_recommendation', ''))
+        if published_only:
+            ou_pub = _as_bool(row.get('ou_is_published'))
+            sp_pub = _as_bool(row.get('sp_is_published'))
+            ou_r = row.get('ou_published_result')
+            sp_r = row.get('sp_published_result')
+            v_r = row.get('verdict_result') if (ou_pub or sp_pub) else None
+            ou_rec = str(row.get('ou_published_recommendation', ''))
+            sp_rec = str(row.get('sp_published_recommendation', ''))
+            if not ou_pub:
+                ou_r = 'SKIPPED'
+            if not sp_pub:
+                sp_r = 'SKIPPED'
+        else:
+            ou_r = row.get('ou_result')
+            sp_r = row.get('sp_result')
+            v_r = row.get('verdict_result')
+            ou_rec = str(row.get('ou_recommendation', ''))
+            sp_rec = str(row.get('sp_recommendation', ''))
 
         if ou_r in ['WIN', 'LOSS', 'PUSH']:
             ou_results.append(ou_r)
@@ -667,7 +885,7 @@ def calculate_track_record(ledger_df: pd.DataFrame) -> Dict[str, Any]:
             verdict_results.append(v_r)
 
     return {
-        'total_predictions': len(ledger_df),
+        'total_predictions': len(df_calc),
         'graded_games': len(graded),
         'pending_games': pending_count,
         'overall': _calc_subset(all_results),

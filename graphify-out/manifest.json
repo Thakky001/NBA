@@ -594,15 +594,15 @@
     "semantic_hash": ""
   },
   "analysis/trend_analyzer.py": {
-    "mtime": 1795269241.6639376,
-    "seen": 1795269320.5282106,
-    "ast_hash": "d83d338d2c2275c2be1b6c161d0824ab",
+    "mtime": 1795510564.8087924,
+    "seen": 1795582724.697865,
+    "ast_hash": "f03c781ee03037156315938928b21316",
     "semantic_hash": ""
   },
   "app.py": {
-    "mtime": 1795006344.4752314,
-    "seen": 1795176810.727325,
-    "ast_hash": "f23fc107567efb827faa53e7ac8967a8",
+    "mtime": 1795583067.4700994,
+    "seen": 1795583111.4512784,
+    "ast_hash": "fa6f5b257b0f3f7a1578950c520aaf6d",
     "semantic_hash": ""
   },
   "collectors/__init__.py": {
@@ -636,9 +636,9 @@
     "semantic_hash": ""
   },
   "config.py": {
-    "mtime": 1794315972.0661695,
-    "seen": 1794316145.4287248,
-    "ast_hash": "6845586afdd71c7316c69b0edcadf11c",
+    "mtime": 1795582508.9424458,
+    "seen": 1795582724.6978736,
+    "ast_hash": "00413dfeebb91cf6bb8f50b921fe0c08",
     "semantic_hash": ""
   },
   "main.py": {
@@ -660,15 +660,15 @@
     "semantic_hash": ""
   },
   "processing/feature_engineering.py": {
-    "mtime": 1795049079.8127606,
-    "seen": 1795176810.7273452,
-    "ast_hash": "87fb6f84b76aa0d62770cc2326b20ba0",
+    "mtime": 1795510564.8087924,
+    "seen": 1795582724.6978831,
+    "ast_hash": "cf4061c90e013a60a3273301001596de",
     "semantic_hash": ""
   },
   "processing/player_rating.py": {
-    "mtime": 1795269241.7192202,
-    "seen": 1795269320.528249,
-    "ast_hash": "c37b2ea48a125ab7acc19639aafdf614",
+    "mtime": 1795510564.8097825,
+    "seen": 1795582724.697884,
+    "ast_hash": "d65c645a7f43cc685057485b995cd797",
     "semantic_hash": ""
   },
   "reports/__init__.py": {
@@ -714,15 +714,15 @@
     "semantic_hash": ""
   },
   "tests/test_feature_engineering.py": {
-    "mtime": 1795049079.8127606,
-    "seen": 1795176810.7273695,
-    "ast_hash": "be794f942ffe41b97c0834b310767b28",
+    "mtime": 1795510564.8108318,
+    "seen": 1795582724.6979058,
+    "ast_hash": "f79aec8e6527f013c83c5ac4c7b72842",
     "semantic_hash": ""
   },
   "tests/test_player_rating.py": {
-    "mtime": 1795269241.7214434,
-    "seen": 1795269320.528297,
-    "ast_hash": "9316ddeee8a290bd3b313f569a1fb51c",
+    "mtime": 1795510564.811833,
+    "seen": 1795582724.6979134,
+    "ast_hash": "037d7c103b26b285b057934c425cbef7",
     "semantic_hash": ""
   },
   "tests/test_reports.py": {
@@ -738,9 +738,9 @@
     "semantic_hash": ""
   },
   "tests/test_trend_analyzer.py": {
-    "mtime": 1795269241.7228334,
-    "seen": 1795269320.5283132,
-    "ast_hash": "e59e1f0e3f2c113f05925729861d8cc0",
+    "mtime": 1795510564.811833,
+    "seen": 1795582724.6979241,
+    "ast_hash": "247ff1ac20d53716ff3359dd29182f8b",
     "semantic_hash": ""
   },
   ".agents/skills/deploy-to-vercel/SKILL.md": {
@@ -2088,9 +2088,9 @@
     "semantic_hash": ""
   },
   "run_alerts.py": {
-    "mtime": 1795004237.9131799,
-    "seen": 1795176810.7273524,
-    "ast_hash": "52e34e3795ac7ff9d6cc6511ffb01cbb",
+    "mtime": 1795583041.783653,
+    "seen": 1795583111.4513235,
+    "ast_hash": "38c58e7047dff90d36e797ae14bd1053",
     "semantic_hash": ""
   },
   "tests/test_telegram_alerts.py": {
@@ -2106,9 +2106,9 @@
     "semantic_hash": ""
   },
   ".github/workflows/nba_alerts.yml": {
-    "mtime": 1792844445.2787993,
-    "seen": 1792913066.3104415,
-    "ast_hash": "eeeddb4bc79fbec8a07c8c455a86f32f",
+    "mtime": 1795583056.9159722,
+    "seen": 1795583111.4518,
+    "ast_hash": "43c1f687cfdbc199bb0d8a5a26ef5f82",
     "semantic_hash": ""
   },
   ".devcontainer/devcontainer.json": {
@@ -2118,21 +2118,21 @@
     "semantic_hash": ""
   },
   "data/raw/alerted_games.json": {
-    "mtime": 1795269241.4399765,
-    "seen": 1795269320.52823,
-    "ast_hash": "47ded50496665c4f3ff51ac656c049a5",
+    "mtime": 1795580213.5933826,
+    "seen": 1795582724.6978745,
+    "ast_hash": "f4c4314c7c0499d3197770bbae91fe3e",
     "semantic_hash": ""
   },
   "analysis/prediction_tracker.py": {
-    "mtime": 1795269241.660954,
-    "seen": 1795269320.5282025,
-    "ast_hash": "50053d2f0f73801e486a4e0be869ab93",
+    "mtime": 1795582346.4051843,
+    "seen": 1795582724.6978583,
+    "ast_hash": "2c03d6470210bf26077e182841db1888",
     "semantic_hash": ""
   },
   "tests/test_prediction_tracker.py": {
-    "mtime": 1795269241.7223155,
-    "seen": 1795269320.5282989,
-    "ast_hash": "068e12ddd9c5f56dac475ec8e5f5c738",
+    "mtime": 1795510564.811833,
+    "seen": 1795582724.6979141,
+    "ast_hash": "7355c80c0febff62cb3b4aab89f35b99",
     "semantic_hash": ""
   },
   "docs/QUANT_BETTING_GUIDE.md": {
@@ -2178,9 +2178,9 @@
     "semantic_hash": ""
   },
   "data/raw/rotowire_lineups.json": {
-    "mtime": 1795269241.450619,
-    "seen": 1795269320.528233,
-    "ast_hash": "358cece03b9616ebcd0eb1d96fa787a2",
+    "mtime": 1795580213.5993924,
+    "seen": 1795582724.697876,
+    "ast_hash": "8ac81f402f8a353a577bd99cf6e7a769",
     "semantic_hash": ""
   },
   "tests/test_rotowire_collector.py": {
@@ -2412,9 +2412,9 @@
     "semantic_hash": ""
   },
   "analysis/recommendation.py": {
-    "mtime": 1795269241.6622217,
-    "seen": 1795269320.5282068,
-    "ast_hash": "00e632c7da81691e263a8706ddd0c224",
+    "mtime": 1795510564.8077824,
+    "seen": 1795582724.6978626,
+    "ast_hash": "63161aba9fbcb421902001e8b0be961d",
     "semantic_hash": ""
   },
   "analysis/replay_backtest.py": {
@@ -2484,9 +2484,9 @@
     "semantic_hash": ""
   },
   "tests/test_recommendation_gate.py": {
-    "mtime": 1795004237.9131799,
-    "seen": 1795176810.7273755,
-    "ast_hash": "bb538759f4715463b39eeefdc0796635",
+    "mtime": 1795510564.811833,
+    "seen": 1795582724.6979165,
+    "ast_hash": "2d4c538ef5f475d63e8d3ab86a1b1d3e",
     "semantic_hash": ""
   },
   "tests/test_replay_backtest.py": {
@@ -2496,9 +2496,21 @@
     "semantic_hash": ""
   },
   "reports/system_status_2026-11-20.md": {
-    "mtime": 1795175695.7361686,
-    "seen": 1795176810.7276707,
-    "ast_hash": "e4a1dc9eb13f5180df8e219ec650a672",
+    "mtime": 1795510564.8097825,
+    "seen": 1795582724.698165,
+    "ast_hash": "73ce6ae89cd6bc42eaf537729d078ef7",
+    "semantic_hash": ""
+  },
+  "analysis/publication.py": {
+    "mtime": 1795582243.9488263,
+    "seen": 1795582724.6978612,
+    "ast_hash": "910c490dbb68cb9b8b38956cfeb24bc8",
+    "semantic_hash": ""
+  },
+  "tests/test_publication.py": {
+    "mtime": 1795582683.1158676,
+    "seen": 1795582724.697915,
+    "ast_hash": "87987652c84f7dab465e75ad388cd866",
     "semantic_hash": ""
   }
 }

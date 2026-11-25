@@ -196,6 +196,8 @@ try:
         calculate_track_record,
         record_slate_predictions,
         get_available_ledger_dates,
+        ensure_published_columns,
+        MODEL_VERSION,
     )
 except (ImportError, AttributeError):
     try:
@@ -207,12 +209,16 @@ except (ImportError, AttributeError):
             calculate_track_record,
             record_slate_predictions,
             get_available_ledger_dates,
+            ensure_published_columns,
+            MODEL_VERSION,
         )
     except Exception:
         def load_ledger(): return pd.DataFrame()
         def grade_finished_games(*a, **k): return 0
         def calculate_track_record(*a, **k): return {}
         def record_slate_predictions(*a, **k): return 0
+        def ensure_published_columns(df, *a, **k): return df
+        MODEL_VERSION = 'nba-baseline-v3'
         def get_available_ledger_dates(*a, **k): return []
 from config import parse_spread, calculate_home_spread, resolve_team_info, normalize_team_name, t_rec, DATA_DIR, RAW_DIR
 
@@ -2332,9 +2338,9 @@ def _render_spread_analysis_card(home, away, sp_val, open_spread, sp_res, rec_te
                 fav_team, fav_pts = home, "0.0"
                 dog_team, dog_pts = away, "0.0"
 
-            roles_html = f'''<div class="matchup-roles-card"><div class="matchup-roles-header" style="font-size:0.75rem; color:#94A3B8; margin-bottom:6px; font-weight:600;">📌 เรตราคาเปิดจากบ่อน (Market Odds)</div><div class="matchup-role-row"><div class="matchup-team-side"><span class="role-pill fav">🏷️ บ่อนเปิดต่อ</span><span class="matchup-team-name">{fav_team}</span></div><span class="matchup-point-val fav">{fav_pts}</span></div><div class="matchup-role-row"><div class="matchup-team-side"><span class="role-pill dog">🏷️ บ่อนเปิดรอง</span><span class="matchup-team-name">{dog_team}</span></div><span class="matchup-point-val dog">{dog_pts}</span></div></div>'''
+            roles_html = f'''<div class="matchup-roles-card"><div class="matchup-roles-header" style="font-size:0.75rem; color:#94A3B8; margin-bottom:6px; font-weight:600;">📌 เส้นปัจจุบัน (Current Market Line)</div><div class="matchup-role-row"><div class="matchup-team-side"><span class="role-pill fav">🏷️ บ่อนเปิดต่อ</span><span class="matchup-team-name">{fav_team}</span></div><span class="matchup-point-val fav">{fav_pts}</span></div><div class="matchup-role-row"><div class="matchup-team-side"><span class="role-pill dog">🏷️ บ่อนเปิดรอง</span><span class="matchup-team-name">{dog_team}</span></div><span class="matchup-point-val dog">{dog_pts}</span></div></div>'''
         except Exception:
-            roles_html = f'''<div class="matchup-roles-card"><div class="matchup-roles-header" style="font-size:0.75rem; color:#94A3B8; margin-bottom:6px; font-weight:600;">📌 เรตราคาเปิดจากบ่อน (Market Odds)</div><div class="matchup-role-row"><div class="matchup-team-side"><span class="role-pill neutral">⚖️ เรตราคาบ่อน</span><span class="matchup-team-name">{sp_line_pill}</span></div></div></div>'''
+            roles_html = f'''<div class="matchup-roles-card"><div class="matchup-roles-header" style="font-size:0.75rem; color:#94A3B8; margin-bottom:6px; font-weight:600;">📌 เส้นปัจจุบัน (Current Market Line)</div><div class="matchup-role-row"><div class="matchup-team-side"><span class="role-pill neutral">⚖️ เรตราคาบ่อน</span><span class="matchup-team-name">{sp_line_pill}</span></div></div></div>'''
 
     # 3. Live Pace Banner if in-play
     live_banner_html = ""
@@ -2853,21 +2859,8 @@ def render_game_slate(selected_date, is_live_refresh):
         if scoreboard.empty:
             st.info(f"ไม่มีโปรแกรมแข่งขันในวันที่ {selected_date.strftime('%d/%m/%Y')} (เวลาไทย) ครับ")
         else:
-            # Auto-grade finished games (for today or past dates) & lock pre-game predictions for today only
-            try:
-                if selected_date <= today_thai:
-                    grade_finished_games(scoreboard)
-                if selected_date == today_thai:
-                    record_slate_predictions(
-                        selected_date.strftime('%Y-%m-%d'),
-                        scoreboard,
-                        analyzer,
-                        espn=espn,
-                        odds_coll=odds_coll,
-                        max_minutes_before=60.0
-                    )
-            except Exception:
-                pass
+            # Single-writer architecture: web app is read-only.
+            # Ledger records and auto-grading are handled exclusively by background alert workflows.
 
             def is_team_match(abbr, full_name):
                 if not abbr or not full_name: return False
@@ -3500,36 +3493,42 @@ def _render_daily_recap_card(filter_date: str, daily_ledger: pd.DataFrame, d_sta
 
 def render_track_record_tab():
     st.subheader("🏆 สถิติความแม่นยำและการตรวจสอบผลย้อนหลัง (Track Record)")
-    st.caption("ระบบบันทึกราคาปิด (Closing Line) และคำทำนายก่อนเริ่มแข่งอัตโนมัติ พร้อมตรวจผลสกอร์จริงเมื่อจบการแข่งขัน (`WIN` / `LOSS` / `PUSH`)")
+    st.caption("ระบบบันทึกเส้นราคา ณ เวลาส่งและคำทำนายก่อนเริ่มแข่งอัตโนมัติ พร้อมตรวจผลสกอร์จริงเมื่อจบการแข่งขัน (`WIN` / `LOSS` / `PUSH`)")
 
     # Sync button row
     c_btn1, c_btn2 = st.columns([3, 1])
+    with c_btn1:
+        st.caption("ℹ️ ระบบตรวจผลและบันทึกสถิติถูกจัดการโดย Background Alert Workflow อัตโนมัติทุกรอบการรัน")
     with c_btn2:
         btn_clicked = False
         try:
-            btn_clicked = st.button("🔄 ตรวจผลและอัปเดตสถิติทันที", width="stretch", key="btn_sync_ledger")
+            btn_clicked = st.button("🔄 รีเฟรชข้อมูลสถิติ", width="stretch", key="btn_sync_ledger")
         except Exception:
-            btn_clicked = st.button("🔄 ตรวจผลและอัปเดตสถิติทันที", key="btn_sync_ledger")
+            btn_clicked = st.button("🔄 รีเฟรชข้อมูลสถิติ", key="btn_sync_ledger")
         if btn_clicked:
-            with st.spinner("กำลังดึงผลการแข่งขันล่าสุดและอัปเดตสถานะ..."):
-                g1 = grade_finished_games(espn.get_scoreboard_by_thai_date(today_thai))
-                g2 = grade_finished_games(espn.get_scoreboard_by_thai_date(today_thai - timedelta(days=1)))
-                st.success(f"ตรวจผลสำเร็จ! มีการอัปเดตผลใหม่ {g1 + g2} รายการ")
-                st.rerun()
+            st.cache_data.clear()
+            st.cache_resource.clear()
+            st.rerun()
 
-    ledger_df = load_ledger()
-    if ledger_df.empty:
-        st.info("ยังไม่มีข้อมูลบันทึกคำทำนายในระบบ (ระบบจะบันทึกอัตโนมัติก่อนเริ่มแข่ง 15-30 นาที)")
+    raw_ledger = load_ledger()
+    if raw_ledger.empty:
+        st.info("ยังไม่มีข้อมูลบันทึกคำทำนายในระบบ (ระบบจะบันทึกอัตโนมัติก่อนเริ่มแข่ง 15 นาที)")
         return
 
-    stats = calculate_track_record(ledger_df)
+    ledger_df = ensure_published_columns(raw_ledger, derive=True)
+    v3_mask = ledger_df.get('model_version', '') == MODEL_VERSION
+    v3_df = ledger_df[v3_mask]
+    legacy_df = ledger_df[~v3_mask]
+
+    # Headline stats: v3 published only
+    stats = calculate_track_record(v3_df, published_only=True)
 
     # 4 Main KPI Cards
     col1, col2, col3, col4 = st.columns(4)
     with col1:
         wr = stats['overall']['win_rate']
         st.metric(
-            label="🎯 Overall Win Rate",
+            label=f"🎯 v3 Win Rate ({MODEL_VERSION})",
             value=f"{wr:.1f}%",
             delta=f"{stats['overall']['wins']}W - {stats['overall']['losses']}L ({stats['overall']['bets']} บิล)"
         )
@@ -3559,10 +3558,15 @@ def render_track_record_tab():
             delta_color=d_color
         )
 
+    st.warning(
+        f"⚠️ **ข้อมูลสถิติของโมเดลปัจจุบัน ({MODEL_VERSION}) อ้างอิงเฉพาะไม้ที่ส่งจริงสู่ผู้ใช้ (Published Only: n = {stats['overall']['bets']} ไม้)** "
+        f"— เนื่องจากอยู่ในช่วง Early Season / ขนาดตัวอย่างเริ่มต้น ค่า Win Rate และ ROI อาจมีความผันผวนสูงตามธรรมชาติของตัวเลขสถิติ"
+    )
+
     st.markdown("---")
 
     # Detailed Category Breakdown in expander (2 rows: Strong vs Lean + Verdict summary)
-    with st.expander("📊 ดูรายละเอียดแยกตามหมวดหมู่ (Breakdown by Category)", expanded=True):
+    with st.expander(f"📊 ดูรายละเอียดแยกตามหมวดหมู่ ({MODEL_VERSION} Published Breakdown)", expanded=True):
         st.markdown("#### 🔥 ไม้เน้น (Strong Picks - โมเดลมั่นใจสูง)")
         b_r1_c1, b_r1_c2 = st.columns(2)
         with b_r1_c1:
@@ -3600,6 +3604,42 @@ def render_track_record_tab():
             f"🌊 **สรุปฟันธงกระแสเงิน (Verdict Summary):** ชนะ/แพ้ **{vd.get('wins', 0)}W - {vd.get('losses', 0)}L - {vd.get('pushes', 0)}P** "
             f"| Win Rate **{vd.get('win_rate', 0.0):.1f}%** | กำไร/ขาดทุน **{vd.get('net_units', 0.0):+.2f} Units** (`{vd.get('roi_pct', 0.0):+.1f}% ROI`)"
         )
+
+    # Legacy & Research Archive Expander
+    if not legacy_df.empty:
+        with st.expander("📜 ข้อมูลสถิติโมเดลรุ่นเก่า (v2 Legacy & Research Archive)", expanded=False):
+            st.caption(
+                "ℹ️ สถิติด้านล่างนี้เป็นบันทึกคำทำนายของโมเดลรุ่นเก่า (v2) ในอดีต (คำนวณจาก Raw Model ทั้งหมด ไม่ได้ผ่านการคัดกรองเฉพาะไม้ที่ส่งจริงสู่ผู้ใช้ จึงแยกไว้สำหรับอ้างอิงงานวิจัยเท่านั้น)"
+            )
+            leg_stats = calculate_track_record(legacy_df, published_only=False)
+            leg_col1, leg_col2, leg_col3, leg_col4 = st.columns(4)
+            with leg_col1:
+                leg_wr = leg_stats['overall']['win_rate']
+                st.metric(
+                    label="v2 Overall Win Rate",
+                    value=f"{leg_wr:.1f}%",
+                    delta=f"{leg_stats['overall']['wins']}W - {leg_stats['overall']['losses']}L ({leg_stats['overall']['bets']} บิล)"
+                )
+            with leg_col2:
+                leg_swr = leg_stats['strong']['win_rate']
+                st.metric(
+                    label="v2 ไม้เน้น (Strong)",
+                    value=f"{leg_swr:.1f}%",
+                    delta=f"{leg_stats['strong']['wins']}W - {leg_stats['strong']['losses']}L ({leg_stats['strong']['bets']} บิล)"
+                )
+            with leg_col3:
+                st.metric(
+                    label="v2 O/U vs แต้มต่อ",
+                    value=f"{leg_stats['over_under']['win_rate']:.0f}% / {leg_stats['spread']['win_rate']:.0f}%",
+                    delta=f"สูง-ต่ำ {leg_stats['over_under']['wins']}W | แต้มต่อ {leg_stats['spread']['wins']}W"
+                )
+            with leg_col4:
+                st.metric(
+                    label="v2 ผลตอบแทน (ROI)",
+                    value=f"{leg_stats['overall']['roi_pct']:+.1f}%",
+                    delta=f"{leg_stats['overall']['net_units']:+.2f} Units",
+                    delta_color="normal" if leg_stats['overall']['roi_pct'] >= 0 else "inverse"
+                )
 
     st.markdown("### 📋 ตารางประวัติคำทำนายย้อนหลัง")
 
@@ -3693,8 +3733,18 @@ def render_track_record_tab():
 
     display_rows = []
     for _, row in filtered_df.iterrows():
-        ou_rec = str(row.get('ou_recommendation', ''))
-        sp_rec = str(row.get('sp_recommendation', ''))
+        is_v3 = row.get('model_version') == MODEL_VERSION
+        if is_v3:
+            ou_rec = row.get('ou_published_recommendation') or row.get('ou_recommendation') or 'NEUTRAL'
+            sp_rec = row.get('sp_published_recommendation') or row.get('sp_recommendation') or 'NEUTRAL'
+            ou_res_val = row.get('ou_published_result') if pd.notna(row.get('ou_published_result')) else row.get('ou_result')
+            sp_res_val = row.get('sp_published_result') if pd.notna(row.get('sp_published_result')) else row.get('sp_result')
+        else:
+            ou_rec = str(row.get('ou_recommendation', ''))
+            sp_rec = str(row.get('sp_recommendation', ''))
+            ou_res_val = row.get('ou_result')
+            sp_res_val = row.get('sp_result')
+
         ou_line = f"O/U {row.get('total_line')}" if pd.notna(row.get('total_line')) else "-"
         sp_line = f"{row.get('spread_line'):+g}" if pd.notna(row.get('spread_line')) else "-"
 
@@ -3702,11 +3752,12 @@ def render_track_record_tab():
             "วันที่": row.get('date', '-'),
             "คู่แข่งขัน": f"{row.get('away_team', '')} @ {row.get('home_team', '')}",
             "สกอร์จริง": format_score(row),
-            "เรตราคาปิด": f"{ou_line} | ต่อ {sp_line}",
-            "คำทำนาย สูง/ต่ำ": f"{t_rec(ou_rec)} [{format_badge(row.get('ou_result'))}]",
+            "เส้น ณ เวลาส่ง": f"{ou_line} | ต่อ {sp_line}",
+            "คำทำนาย สูง/ต่ำ": f"{t_rec(ou_rec)} [{format_badge(ou_res_val)}]",
             "กระแสเงิน O/U": t_verdict(row.get('ou_verdict')),
-            "คำทำนาย แต้มต่อ": f"{t_rec(sp_rec, spread_line=row.get('spread_line'))} [{format_badge(row.get('sp_result'))}]",
+            "คำทำนาย แต้มต่อ": f"{t_rec(sp_rec, spread_line=row.get('spread_line'))} [{format_badge(sp_res_val)}]",
             "กระแสเงิน แต้มต่อ": t_verdict(row.get('sp_verdict')),
+            "เวอร์ชัน": str(row.get('model_version', 'v2')),
             "สถานะ": "✅ จบแล้ว" if row.get('status') == 'GRADED' else "⏳ รอผล"
         })
 
