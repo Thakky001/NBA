@@ -6,10 +6,10 @@ Atlanta Hawks,Mouhamed Gueye,Out,Fracture,Left,Foot,2026-12-12
 Atlanta Hawks,Henri Veesaar,Out,,Right,Knee,2027-07-01
 Boston Celtics,Mitchell Robinson,Out,,,Illness,2026-11-27
 Brooklyn Nets,Nolan Traore,Out,Strain,Right,Hamstring,2027-01-27
-Charlotte Hornets,Ryan Kalkbrenner,Day-To-Day,Soreness,Left,Hip,2026-11-25
+Charlotte Hornets,Ryan Kalkbrenner,Out,Soreness,Left,Hip,2026-11-28
+Charlotte Hornets,Grayson Allen,Out,,,Concussion,2026-11-28
 Charlotte Hornets,Dennis Schroder,Out,Strain,Left,Hamstring,2026-12-12
 Charlotte Hornets,Sion James,Day-To-Day,,Left,Undisclosed,2026-11-25
-Charlotte Hornets,Grayson Allen,Out,,,Concussion,2026-11-25
 Charlotte Hornets,Kon Knueppel,Out,Strain,Left,Hamstring,2026-12-12
 Chicago Bulls,Jalen Smith,Day-To-Day,,,Illness,2026-11-25
 Chicago Bulls,Norman Powell,Out,Strain,Right,Hamstring,2026-11-28
@@ -20,7 +20,7 @@ Dallas Mavericks,Tobi Lawal,Out,,Right,Groin,2026-11-27
 Dallas Mavericks,Dereck Lively II,Out,Surgery,Right,Foot,2026-11-27
 Dallas Mavericks,Sergio de Larrea,Out,Strain,Right,Knee,2026-11-27
 Dallas Mavericks,Tarik Biberovic,Out,Inflammation,Right,Heel,2026-11-27
-Detroit Pistons,Cade Cunningham,Out,,,Knee,2026-11-27
+Detroit Pistons,Cade Cunningham,Day-To-Day,,,Knee,2026-11-27
 Detroit Pistons,Ebuka Okorie,Out,Strain,Left,Oblique,2026-12-13
 Detroit Pistons,Taurean Prince,Out,Surgery,Right,Knee,2026-12-26
 Detroit Pistons,Duncan Robinson,Out,Strain,Left,Quadriceps,2026-11-27
@@ -44,18 +44,19 @@ Memphis Grizzlies,Cameron Boozer,Out,Sprain,Right,Ankle,2026-12-21
 Memphis Grizzlies,Jerami Grant,Out,Not Specified,Left,Calf,2026-12-12
 Memphis Grizzlies,GG Jackson,Out,Surgery,Left,Foot,2027-01-18
 Memphis Grizzlies,Richie Saunders,Out,Surgery,Right,Knee,2026-12-01
-Miami Heat,Giannis Antetokounmpo,Day-To-Day,,,Groin,2026-11-25
 Minnesota Timberwolves,Donte DiVincenzo,Out,Surgery,Right,Achilles,2027-01-03
 Minnesota Timberwolves,Jaylen Clark,Out,Not Specified,Right,Hamstring,2026-11-29
 Minnesota Timberwolves,Anthony Edwards,Out,Surgery,Right,Knee,2026-12-21
+New Orleans Pelicans,Julian Reese,Day-To-Day,,Right,Knee,2026-11-25
 New Orleans Pelicans,Trendon Watford,Out,Sprain,Right,Ankle,2026-11-27
 New Orleans Pelicans,Bennedict Mathurin,Out,Plantar Fasciitis,Left,Foot,2026-11-27
 New Orleans Pelicans,Dejounte Murray,Out,,,Ankle,2026-11-27
-New York Knicks,Miles McBride,Day-To-Day,Soreness,Left,Groin,2026-11-25
-New York Knicks,Jordan Clarkson,Out,Plantar Fasciitis,Right,Foot,2026-11-27
+New York Knicks,Jalen Brunson,Day-To-Day,,,Illness,2026-11-25
 New York Knicks,Josh Hart,Day-To-Day,Sprain,Right,Shoulder,2026-11-25
+New York Knicks,Miles McBride,Out,Soreness,Left,Groin,2026-11-27
+New York Knicks,Karl-Anthony Towns,Day-To-Day,Inflammation,Right,Knee,2026-11-25
+New York Knicks,Jordan Clarkson,Out,Plantar Fasciitis,Right,Foot,2026-11-27
 New York Knicks,OG Anunoby,Out,Soreness,Left,Calf,2026-11-27
-New York Knicks,Karl-Anthony Towns,Day-To-Day,,,Knee,2026-11-25
 Oklahoma City Thunder,Nikola Topic,Out,Strain,Left,Hip,2026-11-28
 Oklahoma City Thunder,Jaylin Williams,Out,Spasms,,Back,2026-11-28
 Oklahoma City Thunder,Aday Mara,Out,Bruise,Right,Lower Leg,2026-11-28
@@ -67,7 +68,7 @@ Orlando Magic,Jonathan Isaac,Out,Not Specified,Left,Knee,2026-11-29
 Orlando Magic,Izaiyah Nelson,Out,Surgery,Left,Ankle,2026-11-29
 Orlando Magic,Noah Penda,Out,Strain,Right,Hamstring,2026-11-29
 Orlando Magic,Paolo Banchero,Out,Sprain,Right,Ankle,2026-11-29
-Philadelphia 76ers,Joel Embiid,Day-To-Day,,,Illness,2026-11-27
+Philadelphia 76ers,Joel Embiid,Out,,,Illness,2026-11-27
 Philadelphia 76ers,Ariel Hukporti,Out,Surgery,Right,Achilles,2027-10-01
 Phoenix Suns,Mark Williams,Out,Surgery,Left,Shoulder,2027-02-03
 Portland Trail Blazers,Chris Youngblood,Out,Bruise,Right,Heel,2026-11-27
@@ -75,6 +76,7 @@ Portland Trail Blazers,Vit Krejci,Out,,Left,Ankle,2027-01-12
 Portland Trail Blazers,Ja Morant,Out,Not Specified,Left,Hamstring,2026-12-01
 Portland Trail Blazers,Shaedon Sharpe,Out,Surgery,Right,Knee,2027-03-02
 Sacramento Kings,Maxime Raynaud,Out,Dislocated,Right,Knee,2026-12-02
+Sacramento Kings,Zach LaVine,Day-To-Day,Soreness,Right,Knee,2026-11-25
 Sacramento Kings,Ben Simmons,Out,Surgery,Right,Achilles,2027-10-01
 San Antonio Spurs,De'Aaron Fox,Day-To-Day,Bruise,Right,Lower Leg,2026-11-25
 San Antonio Spurs,Victor Wembanyama,Day-To-Day,,,Back,2026-11-25
