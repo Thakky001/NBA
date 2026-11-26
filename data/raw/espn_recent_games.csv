@@ -340,5 +340,5 @@ game_id,date,status,period,clock,clock_detail,season_type,home_team,home_id,home
 401909321,2026-11-26T01:00Z,STATUS_FINAL,4,0.0,Final,2,Memphis Grizzlies,29,115,LA Clippers,12,97,,,,,FedExForum
 401909322,2026-11-26T01:00Z,STATUS_FINAL,4,0.0,Final,2,Milwaukee Bucks,15,97,Brooklyn Nets,17,104,,,,,Fiserv Forum
 401909323,2026-11-26T01:30Z,STATUS_FINAL,4,0.0,Final,2,Houston Rockets,10,116,Phoenix Suns,21,104,,,,,Toyota Center (Houston)
-401909324,2026-11-26T03:00Z,STATUS_IN_PROGRESS,3,4:07,4:07 - 3rd Quarter,2,Golden State Warriors,9,88,Sacramento Kings,23,81,,,,,Chase Center
-401909325,2026-11-26T03:00Z,STATUS_IN_PROGRESS,3,8:45,8:45 - 3rd Quarter,2,Portland Trail Blazers,22,69,San Antonio Spurs,24,69,,,,,Moda Center
+401909324,2026-11-26T03:00Z,STATUS_FINAL,4,0.0,Final,2,Golden State Warriors,9,129,Sacramento Kings,23,110,,,,,Chase Center
+401909325,2026-11-26T03:00Z,STATUS_FINAL,4,0.0,Final,2,Portland Trail Blazers,22,116,San Antonio Spurs,24,111,,,,,Moda Center
