@@ -192,7 +192,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 3136777,Jae'Sean Tate,8,Forward,"6' 4""",230 lbs,31,7.0,Ohio State,10,Houston Rockets
 4684740,Amen Thompson,1,Guard,"6' 7""",200 lbs,23,4.0,,10,Houston Rockets
 5105837,Bruce Thornton,2,Guard,"6' 0""",229 lbs,23,0.0,Ohio State,10,Houston Rockets
-4432827,Oscar Tshiebwe,9,Center,"6' 8""",255 lbs,26,4.0,Kentucky,10,Houston Rockets
+4432827,Oscar Tshiebwe,9,Center,"6' 8""",255 lbs,27,4.0,Kentucky,10,Houston Rockets
 2991230,Fred VanVleet,5,Guard,"6' 0""",197 lbs,32,11.0,Wichita State,10,Houston Rockets
 4431752,Kobe Brown,24,Guard,"6' 7""",250 lbs,26,4.0,Missouri,11,Indiana Pacers
 5157066,Johnny Furphy,12,Guard,"6' 8""",200 lbs,21,3.0,Kansas,11,Indiana Pacers
@@ -461,7 +461,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 3137259,Gabe Vincent,,Guard,"6' 2""",200 lbs,30,7.0,UC Santa Barbara,23,Sacramento Kings
 6578,Harrison Barnes,40,Forward,"6' 8""",225 lbs,34,15.0,North Carolina,24,San Antonio Spurs
 5105337,Maliq Brown,15,Forward,"6' 9""",235 lbs,23,0.0,Duke,24,San Antonio Spurs
-5061568,Carter Bryant,11,Forward,"6' 7""",230 lbs,20,2.0,Arizona,24,San Antonio Spurs
+5061568,Carter Bryant,11,Forward,"6' 7""",230 lbs,21,2.0,Arizona,24,San Antonio Spurs
 4845367,Stephon Castle,5,Guard,"6' 6""",220 lbs,22,3.0,UConn,24,San Antonio Spurs
 4592479,Julian Champagnie,30,Forward,"6' 7""",215 lbs,25,5.0,St. John's,24,San Antonio Spurs
 4066259,De'Aaron Fox,4,Guard,"6' 3""",190 lbs,28,10.0,Kentucky,24,San Antonio Spurs
@@ -503,7 +503,7 @@ player_id,name,jersey,position,height,weight,age,experience,college,team_id,team
 4433627,Keyonte George,3,Guard,"6' 4""",185 lbs,23,4.0,Baylor,26,Utah Jazz
 4432811,Josh Green,5,Guard,"6' 6""",200 lbs,26,7.0,Arizona,26,Utah Jazz
 4397077,Jaxson Hayes,11,Center,"7' 0""",220 lbs,26,8.0,Texas,26,Utah Jazz
-4433618,Harrison Ingram,00,Forward,"6' 5""",230 lbs,23,3.0,North Carolina,26,Utah Jazz
+4433618,Harrison Ingram,00,Forward,"6' 5""",230 lbs,24,3.0,North Carolina,26,Utah Jazz
 4277961,Jaren Jackson Jr.,20,Forward,"6' 10""",242 lbs,27,9.0,Michigan State,26,Utah Jazz
 4066336,Lauri Markkanen,23,Forward,"7' 1""",240 lbs,29,10.0,Arizona,26,Utah Jazz
 3133602,Svi Mykhailiuk,10,Guard,"6' 7""",205 lbs,29,9.0,Kansas,26,Utah Jazz
